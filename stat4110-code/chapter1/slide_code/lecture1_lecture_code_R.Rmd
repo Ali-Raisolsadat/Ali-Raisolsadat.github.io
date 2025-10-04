@@ -1,0 +1,180 @@
+---
+title: "Chapter 1 Lecture Notes"
+author: "Ali Raisolsadat"
+date: "2025-09-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Part 1
+```{r}
+# slide 6
+U <- runif(1, min = 0, max = 1)
+if (U < 1/6) {
+  X <- 1
+} else if (U < 1/2) {
+  X <- 2
+} else {
+  X <- 3
+}
+print(X)
+
+# slide 9
+k <- 50
+U <- runif(1, min = 0, max = 1)
+X <- floor(k * U)
+print(X)
+
+# slide 10
+n <- 10
+p <- 0.4
+U <- runif(1, min = 0, max = 1)
+X <- ceiling(log(1-U) / log(p))
+print(X)
+```
+
+### Part 2
+```{r}
+# slide 5
+n <- 5
+U <- runif(n, min = 0, max = 1)
+X <- (16*U)^(1/4)
+print(X)
+
+# slide 7
+n <- 100
+lambda <- 2
+U <- runif(n, min = 0, max = 1)
+X <- -log(1-U)/lambda
+print(X)
+hist(X, breaks = 15, main = "Histogram of Exponential(λ=2) Sample", 
+     xlab = "X", ylab = "Frequency", col = "grey", border = "black")
+
+```
+
+### Part 3
+```{r}
+# slide 11
+counter <- 1
+U <- vector()
+A <- vector()
+
+for (i in c(1:2000)) {
+  U[i] <- runif(1)
+  D <- runif(1)
+  if (D < U[i]) {
+    A[counter] <- U[i]
+    counter <- counter + 1
+  }
+}
+accepted <- counter - 1
+
+# Histogram of all proposals
+png("Chapter1-Rejection-Sampling-HistogramU.png", width = 4096, height = 2160, res = 300)  # high resolution
+hist(U,breaks = 20, main = "Histogram of U",
+     xlab = "U", ylab = "Frequency", col = "grey", border = "black")
+dev.off()  # close the device
+
+# Histogram of accepted values
+png("Chapter1-Rejection-Sampling-HistogramX.png", width = 4096, height = 2160, res = 300)  # high resolution
+hist(A, breaks = 20, main = "Histogram of X",
+     xlab = "X", ylab = "Frequency", col = "grey", border = "black")
+dev.off()  # close the device
+
+# slide 16
+X <- seq(-6, 6, 0.1)
+eq = pi*(1+X^2) / (1+X^4)
+plot(X, eq, type='l')
+
+# slide 17
+n <- 100
+counter <- 1
+c <- 3.8
+target_samples <- vector()
+
+while (counter < n+1) {
+  U <- runif(2)
+  proposal <- tan(pi*U[1])
+  f <- 1 / (1 + proposal^4)
+  g <- 1 / (pi * (1 + proposal^2))
+  
+  if (U[2] < f/(c*g)) {
+    target_samples[counter] <- proposal
+    counter <- counter+1
+  }
+}
+
+hist(target_samples, breaks = 15, main = "Histogram of Samples from f(x) ~ 1/(1+x^4)",
+     xlab = "x",ylab = "Frequency", col = "grey", border = "black")
+
+```
+
+### Part 4
+```{r}
+# slide 2
+n <- 1000
+counter <- 1
+target_sample <- vector()
+
+while (counter < n+1) {
+  proposal <- rnorm(1)
+  
+  if(proposal > 0) {
+    target_sample[counter] <- proposal
+    counter <- counter+1
+  }
+}
+
+hist(target_sample, breaks = 30,            
+     main = "Histogram of Positive Normal Samples (Rejection Sampling)",
+     xlab = "X", ylab = "Frequency", col = "grey", border = "black")
+
+
+# slide 3
+n <- 1000
+mu <- 0
+sigma <- 1
+samples <- rnorm(n*2, mean = mu, sd = sigma)
+target_sample <- samples[samples > 0]
+target_sample <- target_sample[1:n]
+
+hist(target_sample, breaks = 30,
+     main = "Histogram of Positive Normal Samples (Vectorized)",
+     xlab = "X", ylab = "Frequency", col = "grey", border = "black")
+```
+
+### Part 5
+```{r}
+n <- 1000
+X <- rnorm(n)
+Z <- dnorm(X)
+Y <- runif(n, min = 0, max = Z)
+
+plot(X, Y, pch = 16, col = rgb(0, 0.5, 0.5, alpha = 0.7),  
+     xlab = "X", ylab = "Y", cex = 1.2,
+     main = "Uniform Samples Under Standard Normal PDF")                          
+```
+
+### Part 6
+```{r}
+n <- 1000
+m <- n/2
+X <- vector()
+R <- vector()
+U <- runif(m, min=0, max =1)
+Theta <- 
+  runif(m, min=0, max = 2*pi) 
+
+for (i in c(1:m)) {
+  R[i] <- sqrt(-2*log(U[i])) 
+  X[2*i-1]<- R[i]*cos(Theta[i]) 
+  X[2*i]<- R[i]*sin(Theta[i])
+} 
+
+hist(X,breaks = 30, xlab = "X", ylab = "Frequency",
+     main = "Histogram of Standard Normal Samples", 
+     col = "grey", border = "black")
+```
