@@ -1,0 +1,258 @@
+---
+title: "Chapter 2 Lecture Code"
+author: "Ali Raisolsadat"
+date: "2025-10-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Part 1
+```{r}
+# slide 8 example - bivariate normal distribution
+n <- 1000
+mu <- matrix(c(4,2), 2, 1)
+Sigma <- matrix(c(1, 2, 2, 9), 2, 2)
+A <- t(chol(Sigma))
+X <- matrix(nrow=2, ncol=n)
+for(i in c(1:n)) {
+  Z <- rnorm(2)
+  X[1:2, i] <- A %*% Z + mu
+}
+
+# plot
+x1 <- X[1, ]
+x2 <- X[2, ]
+plot(x1, x2, col="darkgray", cex=1.2,
+     xlab = expression(X[1]),
+     ylab = expression(X[2]),
+     main = "Bivariate Normal Distribution (via Cholesky)",
+     las = 1,
+     xlim = range(x1) + c(-1, 1),
+     ylim = range(x2) + c(-1, 1))
+grid(col = "lightgrey", lty = 2, lwd = 0.5)
+```
+```{r}
+# slide 11 - algorithm 3 code
+n <- 1000
+lambda <- 1
+mu_zero <- 5
+alpha <- 2
+sigma <- rexp(1, rate=lambda)
+mu <- rnorm(1, mean=mu_zero, sd=sigma*alpha)
+X <- rnorm(n, mean=mu, sigma)
+
+# plot
+hist(X, breaks = 30, col = "grey80", border = "black",  
+     main = "Histogram of X",
+     xlab = "X values",
+     ylab = "Frequency",
+     cex.main = 1.3, font.main = 2,las = 1)               
+abline(v = mean(X), col = "red", lwd = 2, lty = 2)
+legend("topright", legend = c("Mean"),
+       col = c("red"),
+       lwd = 2, lty = c(2, 1), bty = "n")
+```
+
+```{r}
+# slide 12 - algorithm 4 code
+n <- 1000
+lambda <- 1
+mu_zero <- 5
+alpha <- 2
+mu <- c()
+X <- c()
+sigma <- rexp(n, rate=lambda)
+for(i in c(1:n)) {
+  mu[i] <- rnorm(1, mean = mu_zero, sd = sigma[i]*alpha)
+  X[i] <- rnorm(1, mean = mu[i], sigma[i])
+}
+
+# plot
+hist(X, breaks = 30, col = "grey80", border = "black",  
+     main = "Histogram of X",
+     xlab = "X values",
+     ylab = "Frequency",
+     cex.main = 1.3, font.main = 2,las = 1)               
+abline(v = mean(X), col = "red", lwd = 2, lty = 2)
+legend("topright", legend = c("Mean"),
+       col = c("red"),
+       lwd = 2, lty = c(2, 1), bty = "n")
+```
+
+### Comparison of Two Simulation Methods
+
+The first method (slide 11 / Algorithm 3) generates a single `sigma` and a single `mu`, then produces all `n` observations from a normal distribution with these fixed parameters. This means that all data points share the same mean and standard deviation, resulting in a histogram that resembles a classic bell-shaped Gaussian curve. The slight randomness comes only from the initial draw of `mu` and `sigma`, so the overall spread and shape remain consistent across simulations. This approach is suitable when modeling a single population or cluster, where each observation is expected to follow the same underlying distribution.  
+
+In contrast, the second method (slide 12 / Algorithm 4) generates a unique `sigma` and `mu` for each observation, effectively creating a mixture of `n` Gaussian distributions. Each data point comes from a slightly different normal distribution, leading to a histogram that is broader, more irregular, and sometimes skewed. This hierarchical or mixture structure produces heavier tails and greater variability than the single-cluster method. It reflects scenarios where each observation can have its own latent parameters, which is common in Bayesian hierarchical modeling or when modeling populations with inherent heterogeneity.  
+
+The difference in histogram appearance illustrates the conceptual distinction between the two approaches. Method 1 produces smooth, narrow, and symmetric distributions, making it appropriate for single-cluster simulations or when all observations share the same underlying parameters. Method 2 produces wider, mixture-like distributions that capture the variability of individual observations, making it suitable for hierarchical modeling, uncertainty propagation, or simulating populations with variable characteristics. Understanding the underlying assumptions of each method helps guide which approach is preferable depending on the modeling goal.
+
+
+```{r}
+# slide 14 - algorithm 5 code
+n <- 1000
+X <- c()
+U <- runif(n)
+for(i in c(1:n)) {
+  if(U[i] < 0.4) {
+    X[i] <- rnorm(1, mean=-1, sd=2)
+  } else {
+    X[i] <- rnorm(1, mean=5, sd=1)
+  }
+}
+# plot
+hist(X, breaks = 30, col = "grey80", border = "black",  
+     main = "Histogram of X",
+     xlab = "X values",
+     ylab = "Frequency",
+     cex.main = 1.3, font.main = 2,las = 1)        
+abline(v = -1, col = "red", lwd = 2, lty = 2)
+abline(v = 5, col = "darkgreen", lwd = 2, lty = 2)
+legend("topright", legend = c("Mean f1", "Mean f2"),
+       col = c("red", "darkgreen"),
+       lwd = 2, lty = c(2, 1), bty = "n")
+```
+
+```{r}
+# slide 17 - Weighted sum of random variables
+n <- 1000
+X1 <- rnorm(n, mean=-1, sd=4)
+X2 <- rnorm(n, mean=5, sd=1)
+Y <- 0.4*X1 + 0.6*X2
+
+# plot
+hist(Y, breaks = 30, col = "grey80", border = "black",  
+     main = "Histogram of Y",
+     xlab = "X values",
+     ylab = "Frequency",
+     cex.main = 1.3, font.main = 2,las = 1)
+abline(v = mean(Y), col = "red", lwd = 2, lty = 2)
+legend("topright", legend = c("Mean"),
+       col = c("red"),
+       lwd = 2, lty = c(2, 1), bty = "n")
+```
+
+### Part 2
+```{r}
+# slide 24
+n <- 40
+P <- matrix (c(0.5, 0.6, 0.5, 0.4), 2, 2)
+X <- c()
+U <- runif (1)
+U1 <- runif(n)
+
+if(U < 0.3) {
+  X [1] <- 1 
+} else { 
+  X [1] <- 2
+}
+
+for (i in c(1:n)) {
+  if(U1[i] < P[X[i], 1]) {
+    X[i+1] <- 1} 
+  else {X[i+1] <- 2}
+}
+
+# plot
+A <- 0:n
+plot(A, X, type = "s", lwd = 2, col = "darkblue",
+     xlab = "Step (t)", ylab = "State",
+     main = "Two-State Markov Chain Simulation",
+     xaxt = "n", yaxt = "n", ylim = c(0.5, 2.5),
+     cex.main = 1.3, font.main = 2)
+axis(1, at = seq(0, n, by = 5))
+axis(2, at = c(1, 2), labels = c("State 1", "State 2"))
+grid(nx = NULL, ny = NULL, col = "lightgrey", lty = 2)
+points(A, X, col = "black", cex = 1, pch = 16)
+```
+
+### Part 3
+```{r}
+# slide 3 - generation of markov chain paths (continuous stat space)
+n <- 40
+X <- c()
+X[1] <- 0
+for(i in c(1:n)){
+  X[i+1] <- rnorm(1, mean=X[i]/2, sd=1)
+}
+
+# plot
+A <- 0:n
+plot(A, X, type = "s", lwd = 2, col = "darkblue",
+     xlab = "Step (t)", ylab = expression(X[t]),
+     main = "Continuous-State Markov Chain Simulation",
+     font.main = 2)
+grid(nx = NULL, ny = NULL, col = "lightgrey", lty = 2)
+points(A, X, col = "black", cex = 1, pch = 16)
+```
+
+### Part 4
+```{r}
+# slide 7 algorithm
+N <- rpois(1, 50)
+X <- runif(N, min = 0, max = 10)
+Y <- rep(0, N)
+
+# plot
+plot(X, Y, pch = 21, bg = "darkgrey", cex = 1.5,
+     ylim = c(-0.5, 0.5), xlim = c(0, 10),
+     main = "Poisson Process on [0, 10]",
+     xlab = "x", ylab = "", yaxt = "n")                    
+abline(h = 0, col = "gray60", lty = 2)
+```
+
+```{r}
+# slide 11 example
+lam_tilde <- 7.05
+a <- 0; b <- 15
+Lambda_tilde <- lam_tilde * (b - a)
+N <- rpois(1, Lambda_tilde)
+X <- runif(N, min = 0, max = b)
+
+# thinning
+R <- X/50 + 3*X^2/100
+U <- runif(N)
+Y <- numeric()
+k <- 1
+for (i in 1:N) {
+  if (R[i] > lam_tilde * U[i]) {
+    Y[k] <- X[i]
+    k <- k + 1
+  }
+}
+
+# rejected points
+reject <- !X %in% Y
+
+# plot
+plot(NA, NA, xlim = c(a, b), ylim = c(-0.5, 0.5),
+     xlab = "X", ylab = "",
+     main = "Poisson Process via Thinning Method",
+     yaxt = "n",  # remove y-axis
+     cex.main = 1.3, font.main = 2)
+points(X[reject], rep(0, sum(reject)), col = rgb(0.5, 0.5, 0.5, 0.6), pch = 19, cex = 1.5)
+points(Y, rep(0, length(Y)), col = "red", pch = 19, cex = 2, lwd = 1.2)
+grid(nx = NULL, ny = NULL, col = "lightgrey", lty = 2, lwd = 0.5)
+legend("top", legend = c("Rejected", "Accepted"),
+       col = c(rgb(0.5, 0.5, 0.5, 0.6), "red"),
+       pch = 19, pt.cex = c(1.5, 2), bty = "n", ncol = 2)
+```
+
+```{r}
+# slide 13 example
+N <- rpois(1, 200)
+U1 <- runif(N, min = 0, max = 1)
+X1 <- sqrt(4 * U1)
+X2 <- runif(N, min = 0, max = 1)
+
+# plot
+plot(X1, X2, pch = 19, col = rgb(0.2, 0.5, 0.8, 0.6),
+     cex = 1.5, xlab = expression(X[1]),
+     ylab = expression(X[2]),
+     main = "Scatter Plot of X1 vs X2",las = 1)
+grid(nx = NULL, ny = NULL, col = "lightgrey", lty = 2, lwd = 0.5)
+abline(h = seq(0, 1, by = 0.2), v = seq(0, 2, by = 0.5), col = "lightgrey", lty = 3)
+```
