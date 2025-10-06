@@ -1,0 +1,617 @@
+%========================
+% Theme
+%========================
+\documentclass[8pt]{beamer}
+\setbeamersize{text margin left=10mm,text margin right=10mm} 
+\usetheme[progressbar=frametitle]{metropolis}
+\usepackage{appendixnumberbeamer} % handles appendix slide numbering
+
+%========================
+% Packages: Icons and Tables
+%========================
+\usepackage{booktabs}        % professional tables
+\usepackage[scale=1]{ccicons} % Creative Commons icons
+
+%========================
+% Packages: Plots and TikZ
+%========================
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+%========================
+% Packages: Algorithms
+%========================
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%========================
+% Packages: Math
+%========================
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\newtheorem{prop}{Proposition}
+
+%========================
+% Custom commands
+%========================
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%========================
+% Custom footline
+%========================
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.35\paperwidth,ht=2.5ex,dp=1.5ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+%========================
+% Remove default navigation symbols
+%========================
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+
+\lstset{language=R,
+    basicstyle=\small\ttfamily,
+    stringstyle=\color{DarkGreen},
+    otherkeywords={0,1,2,3,4,5,6,7,8,9},
+    morekeywords={TRUE,FALSE},
+    deletekeywords={data,frame,length,as,character},
+    keywordstyle=\color{blue},
+    commentstyle=\color{DarkGreen},
+}
+
+\usepackage{xcolor}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    breaklines=true,
+    numbers=left,
+    numberstyle=\tiny
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% AQUI SE DEFINEN LAS IMAGENES PARA UTILIZAR DESPUES
+%\pgfdeclareimage[interpolate=true, height=7cm,width=16cm]{halton-points}{halton-points}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]
+%{serie-petroleo-reducido}{serie-petroleo-reducido}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{rectangle-triangle}{rectangle-triangle}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{any-angle}{any-angle}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{Pythagoras}{Pythagoras}
+
+
+\title{Chapter 1 - Random Number Generation}
+\subtitle{Generating Random Variables in R and Python. Discrete Distributions.}
+\author{Prof. Alex Alvarez, Ali Raisolsadat}
+\institute{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
+\date{} % leave empty or add \today
+%\title[Stat 4110]{Stat 4110 Statistical Simulation}
+%\subtitle{}
+%\author[University of Prince Edward Island]{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
+
+%========================
+% Begin document
+%========================
+\begin{document}
+
+%-------------------
+% Title frame
+%-------------------
+\maketitle
+
+%-------------------
+% SLIDE 1: Introduction to Random Numbers
+%-------------------
+\begin{frame}{Introduction to Random Numbers}
+\vspace{1mm}
+
+Randomness has played an important role for centuries in games, gambling, and statistics.
+
+\vspace{1mm}
+
+Historically, random numbers were generated manually or mechanically (e.g., spinning wheels, rolling dice, shuffling cards, or using random number tables).
+
+\vspace{2mm}
+
+The main building block for all the simulation algorithms that we will study in this course is the generation of random numbers with a given distribution. This includes both discrete and continuous random variables.
+\vspace{1mm}
+
+If we are using a powerful statistical software such as \textbf{R} (but also \textbf{Python} or \textbf{MATLAB}, and most used programming languages) there are already some built-in functions that can hep us generate random numbers with well known probability distributions.
+\vspace{1mm}
+
+On the other hand, we will also learn some techniques to deal with arbitrary probability distributions (generally not supported by any software).
+\end{frame}
+
+%-------------------
+% SLIDE 2: Concept of Randomness
+%-------------------
+\begin{frame}{Pseudo Random Numbers Generators}
+{\bf Pseudo random numbers generators}
+\vspace{2mm}
+
+The algorithms used by most software packages to generate random numbers with a given distribution are {\bf deterministic} algorithms, meaning that the generated random numbers are not ``truly random''. We call them {\bf pseudo random number generators} (PRNG).
+\vspace{2mm}
+
+In other words, a PRNG is an algorithm which outputs a sequence of random numbers with properties that are very similar to the properties of sequences of true random numbers. PRNGs are fast and efficient, and for most applications they generate sequences of random numbers that can replace true random numbers without major issues.  
+
+\vspace{2mm}
+\textbf{Example}: The most common method generates numbers starting from an initial value $x_0$ (the \textbf{seed}) and recursively computes successive values $x_n$ for $n \ge 1$ using
+\begin{equation*}
+	x_n = a x_{n-1} \quad \text{mod } m
+\end{equation*}
+where $a$ and $m$ are positive integers. The remainder operation ensures that $x_n \in \{0,1,\dots,m-1\}$. On a 32-bit machine (with the first bit as a sign bit), the choice $m = 2^{31}-1$ and $a = 7^5 = 16807$ produces desirable properties.
+\end{frame}
+
+%-------------------
+% SLIDE 3: Probability Distirbution by Programming languages
+%-------------------
+\begin{frame}{\bf Some Probability Distributions Supported by R and Python}
+\begin{tabular}{lll}
+Distribution & Name in R & Name in Python (SciPy)\\
+\hline
+Uniform distribution & \texttt{unif} & \texttt{uniform}\\
+Normal distribution & \texttt{norm} & \texttt{norm}\\
+Poisson distribution & \texttt{pois} & \texttt{poisson}\\
+Binomial distribution & \texttt{binom} & \texttt{binom}\\
+\end{tabular}
+\vspace{3mm}
+
+In {\bf R}, the names of functions associated with these probability distributions are constructed by adding a prefix letter to the distribution name:
+\vspace{2mm}
+
+\begin{itemize}
+	\item {\bf r}: random number generation (e.g., \texttt{runif})
+	\item {\bf d}: density (or probability mass function for discrete distributions
+	\item {\bf p}: cumulative distribution function (CDF)
+	\item {\bf q}: quantile function
+\end{itemize}
+\end{frame}
+
+%-------------------
+% SLIDE 4: Probability Distirbution by Programming languages
+%-------------------
+\begin{frame}{Some Probability Distributions Supported by R and Python}
+\begin{tabular}{lll}
+Distribution & Name in R & Name in Python (SciPy)\\
+\hline
+Uniform distribution & \texttt{unif} & \texttt{uniform}\\
+Normal distribution & \texttt{norm} & \texttt{norm}\\
+Poisson distribution & \texttt{pois} & \texttt{poisson}\\
+Binomial distribution & \texttt{binom} & \texttt{binom}\\
+\end{tabular}
+\vspace{3mm}
+
+In {\bf Python} (\textbf{SciPy} and \textbf{Numpy}), these distributions are typically accessed via \texttt{scipy.stats}. For example:
+\begin{itemize}
+  \item \texttt{stats.uniform.rvs(size=10)} generates random samples.
+  \item \texttt{stats.uniform.pdf(x)} evaluates the probability density function.
+  \item \texttt{stats.uniform.cdf(x)} computes the CDF.
+  \item \texttt{stats.uniform.ppf(q)} gives the quantile function (percent-point function).
+\end{itemize}
+
+{\bf Example:}  
+\texttt{runif(10)} in {\bf R} or \texttt{stats.uniform.rvs(size=10)} in {\bf Python} generate 10 random numbers from a uniform distribution.
+\end{frame}
+
+%-------------------
+% SLIDE 5: Generation of Random Numbers with Discrete Distributions
+%-------------------
+\begin{frame}{Generation of Random Numbers with Discrete Distributions}
+\vspace{2mm}
+
+{\bf Example:} Generate a random number from a random variable $X$ with discrete probability distribution given by the p.m.f.  $p(i)=i/6$ for $i=1,2,3$. That is $P(X=1)=1/6$,
+$P(X=2)=1/3$ and $P(X=3)=1/2$.
+\vspace{2mm}
+
+{\bf Algorithm}
+\vspace{2mm}
+
+\begin{enumerate}
+\item Generate $U\sim U(0,1)$
+\item Define $X=\left\{   
+\begin{array}{ll} 
+1 &  \text { if } 0 \leq U<1/6\\
+2 &  \text { if }   1/6 \leq U<1/2\\ 
+3 &  \text { if }   1/2 \leq U \leq 1  
+\end{array}  
+\right. $
+\item Return $X$
+\end{enumerate}
+\end{frame}
+
+%-------------------
+% SLIDE 6: Generation of Random Numbers with Discrete Distributions
+%-------------------
+\begin{frame}[fragile]{Generation of Random Numbers with Discrete Distributions}
+\alert{Code}
+\begin{columns}[T]
+\begin{column}{0.4\textwidth}
+\textbf{R Code}
+\begin{lstlisting}
+U <- runif(1, min=0, max=1)
+if (U < 1/6) {
+    X <- 1
+} else if (U < 1/2) {
+    X <- 2
+} else {
+    X <- 3
+}
+print(X)
+\end{lstlisting}
+\end{column}
+
+\begin{column}{0.4\textwidth}
+\textbf{Python Code}
+\begin{lstlisting}
+import numpy as np
+
+U = np.random.uniform(0, 1)
+if U < 1/6:
+    X = 1
+elif U < 1/2:
+    X = 2
+else:
+    X = 3
+
+print(X)
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+%-------------------
+% SLIDE 7: Generation of random numbers with discrete distributions
+%-------------------
+\begin{frame}{Generation of Random Numbers with Discrete Distributions}
+Suppose that we want to generate the value of a discrete random variable $X$ having probability mass function
+\begin{equation*}
+	P\{X = x_j\} = p_j, \quad j = 0, 1, \dots, \quad \sum_{j=0}^{\infty} p_j = 1.
+\end{equation*}
+
+To accomplish this, we generate a random number $U \sim \text{Uniform}(0,1)$ and set
+\begin{equation*}
+X =
+\begin{cases}
+x_0, & \text{if $U < p_0$},\\
+x_1, & \text{if $p_0 \leq U < p_0 + p_1$},\\
+        \vdots
+\end{cases}
+\end{equation*}
+
+Since for $0 < a < b < 1$, $P\{a \leq U < b\} = b-a$, we have
+\begin{equation*}
+	P\{X = x_j\} = P\!\Bigl\{\sum_{i=0}^{j-1} p_i \leq U < \sum_{i=0}^{j} p_i\Bigr\} = p_j
+\end{equation*}
+and so $X$ has the desired distribution.
+\end{frame}
+
+%-------------------
+% SLIDE 8: Generation of Random Numbers with Discrete Distributions
+%-------------------
+\begin{frame}[fragile]{Generation of Random Numbers with Discrete Distributions}
+\textbf{Example:} If $P\{X = j\} = 1/n,\ j = 0,\dots,n-1$, then
+\begin{equation*}
+X = j \quad \text{if} \quad \frac{j-1}{n} \leq U < \frac{j}{n}
+\end{equation*}
+If U is uniformly distributed in $[0,1]$ we can see that by defining $X=\lfloor nU \rfloor$, the random variable $X$ follows the target distribution. 
+$$
+X = \lfloor nU \rfloor
+$$
+where $\lfloor \cdot \rfloor$ denotes the rounding down operation.
+\vspace{2mm}
+\end{frame}
+
+
+%-------------------
+% SLIDE 9: Generation of random numbers with discrete distributions
+%-------------------
+\begin{frame}[fragile]{Generation of random numbers with discrete distributions}
+
+\textbf{Problem}: Consider $n=50$. Generate a random number from a random variable $X$ with discrete probability distribution given by the p.m.f. 
+$p(i)=1/n$ for $i=0,1,\ldots,n-1$.
+
+\vspace{2mm}
+
+\alert{Algorithm}
+\begin{enumerate}
+\item Generate $U\sim U(0,1)$
+\item Define $X=\lfloor nU \rfloor$
+\item Return $X$
+\end{enumerate}
+
+\vspace{2mm}
+
+\alert{Code}
+
+\begin{columns}[T]
+\begin{column}{0.4\textwidth}
+\begin{lstlisting}
+k <- 50
+U <- runif(1, min=0, max=1)
+X <- floor(k*U)
+print(X)
+\end{lstlisting}
+\end{column}
+
+\begin{column}{0.4\textwidth}
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+k = 50
+U = np.random.uniform(0, 1)
+X = np.floor(k*U)
+print(int(X))
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+%-------------------
+% SLIDE 10: General Algorithm
+%-------------------
+\begin{frame}{General Algorithm}
+The preceding can be written algorithmically as:
+\begin{equation*}
+	\begin{cases}
+		\text{Generate a random number $U$},\\
+		\text{If $U < p_0$, set $X = x_0$ and stop},\\
+		\text{If $U < p_0 + p_1$, set $X = x_1$ and stop},\\
+		\text{If $U < p_0 + p_1 + p_2$, set $X = x_2$ and stop},\\
+		\vdots
+	\end{cases}
+\end{equation*}
+
+\vspace{2mm}
+
+If the $x_i, i \geq 0$ are ordered so that $x_0 < x_1 < x_2 < \dots$, and if we let $F$ denote the distribution function of $X$, then $F(x_k) = \sum_{i=0}^{k} p_i$, and
+\begin{equation*}
+	X = x_j \quad \text{if and only if} \quad F(x_{j-1}) \leq U < F(x_j).
+\end{equation*}
+
+\vspace{2mm}
+
+In other words, after generating $U$, we determine $X$ by finding the interval $[F(x_{j-1}), F(x_j))$ in which $U$ lies.
+
+\vspace{1mm}
+This is equivalent to computing the inverse transform $X = F^{-1}(U)$.
+
+\end{frame}
+
+%-------------------
+% SLIDE 11: Generate Discrete Random Variable Algorithm 1
+%-------------------
+\begin{frame}{Generate Discrete Random Variable Algorithm}
+\begin{algorithm}[H]
+    \caption{Generate $X$ with probabilities $p_0, \dots, p_n$ using Uniform$(0,1)$ numbers}\label{alg:discrete-inverse}
+    \begin{algorithmic}[1]
+        \small  % <-- makes all algorithmic text smaller
+        \State \textbf{Input:} Probabilities $p_0, \dots, p_n$
+        \State Draw $U \sim \text{Uniform}(0,1)$
+        \State Initialize cumulative probability: $C \gets 0$
+        \For{$i = 0$ to $n$} \Comment{Loop over outcomes}
+            \State Update cumulative probability: $C \gets C + p_i$
+            \If{$U < C$}
+                \State Set $X \gets x_i$ and \textbf{stop}
+            \EndIf
+        \EndFor
+        \State \textbf{Output:} Sampled value $X$
+    \end{algorithmic}
+\end{algorithm}
+\end{frame}
+
+%-------------------
+% SLIDE 12: Example: Step-by-Step Calculation
+%-------------------
+\begin{frame}{Example: Step-by-Step Calculation}
+
+{\bf Refer to the previous example:} Generate a random number from $X$ with
+\[
+P(X=1)=1/6, \quad P(X=2)=1/3, \quad P(X=3)=1/2
+\]
+
+\vspace{2mm}
+{\bf Assume we draw $U = 0.42$}
+
+\begin{itemize}
+    \item Initialize cumulative probability: $C = 0$
+    \item Step 1: $i=1$, $x_1 = 1$, $p_1 = 1/6 \approx 0.1667$  
+    \[
+    C \gets C + p_1 = 0 + 0.1667 = 0.1667
+    \]  
+    Check: $U < C$? $0.42 < 0.1667$ → \textbf{No}
+    
+    \item Step 2: $i=2$, $x_2 = 2$, $p_2 = 1/3 \approx 0.3333$  
+    \[
+    C \gets C + p_2 = 0.1667 + 0.3333 = 0.5
+    \]  
+    Check: $U < C$? $0.42 < 0.5$ → \textbf{Yes!} → $X = 2$
+    
+    \item Step 3: Not needed, algorithm stops.
+\end{itemize}
+
+\vspace{1mm}
+\textbf{Result:} $X = 2$
+
+\end{frame}
+
+
+%-------------------
+% SLIDE 13:  Generate Discrete Random Variable Algorithm 2
+%-------------------
+\begin{frame}{Generate Discrete Random Variable Efficient Algorithm}
+
+\begin{algorithm}[H]
+    \caption{Generate $X$ with probabilities $p_1, \dots, p_n$ using cumulative sums}\label{alg:discrete-cumsum-sorted}
+    \begin{algorithmic}[1]
+        \small
+        \State \textbf{Input:} Probabilities $p_1, \dots, p_n$ (with $\sum_{i=1}^n p_i = 1$)
+        \State Sort probabilities in \textbf{descending order} and reorder outcomes accordingly:
+		$$
+ 		p_{(1)} \ge p_{(2)} \ge \dots \ge p_{(n)}
+		$$
+        \State Compute cumulative sums array:
+        $$
+            S_j = \sum_{i=1}^{j} p_{(i)}, \quad j = 1, \dots, n
+        $$
+        \State Draw $U \sim \text{Uniform}(0,1)$
+        \For{$j = 1$ \textbf{to} $n$}
+            \If{$U < S_j$}
+                \State Set $X \gets x_{(j)}$ and \textbf{stop}
+            \EndIf
+        \EndFor
+        \State \textbf{Output:} Sampled value $X$
+    \end{algorithmic}
+\end{algorithm}
+\end{frame}
+
+
+%-------------------
+% SLIDE 14: Generation of random numbers with discrete distributions
+%-------------------
+\begin{frame}{Generate Discrete Random Variable -- Efficient Algorithm}
+What is different here? 
+
+\vspace{2mm}
+
+By ordering outcomes by probability, the algorithm reduces the \textbf{expected number of comparisons}.
+
+\vspace{2mm}
+
+The expected number of comparisons is
+\begin{equation*}
+	\mathbb{E}[\text{comparisons}] = \sum_{i=1}^{n} i \cdot p_{(i)}.
+\end{equation*}
+\end{frame}
+
+%-------------------
+% SLIDE 15: Geometric Distribution Example
+%-------------------
+\begin{frame}{Example: Geometric Distribution}
+In some cases however, we would prefer an explicit expression connecting $X$ and $U$, instead of listing all possible cases.
+
+\vspace{1mm} 
+
+Let $X$ be a geometric random variable with parameter $p$ if 
+    \begin{equation*}
+        P\{X = i\} = p_i = p^{i-1}(1-p), \quad i \geq 1
+    \end{equation*}
+    
+\vspace{1mm}
+
+From this expression we can see that:
+
+\[\sum_{i=1}^j p_i =\sum_{i=1}^j p^{i-1}(1-p)=(1-p)\frac{1-p^j}{1-p}=1-p^j\]
+
+The event $\displaystyle{\left\{ U< \sum_{i=1}^{j} p_i \right\}}$ is equivalent to the event 
+$\displaystyle{\left\{ j>\frac{\ln(1-U)}{\ln (p)} \right\}}$
+
+This means that by rounding up $\displaystyle{\frac{\ln(1-U)}{\ln (p)}}$ we find the appropriate value of $j$.
+
+\vspace{1mm}
+
+Note that $\log(p) < 0$ for $0 < p < 1$, so the inequality flips as shown above.
+\end{frame}
+
+%-------------------
+% SLIDE 16: Geometric Distribution Example Algorithm
+%-------------------
+\begin{frame}{Algorithm to Generate a Random Number From the Geometric Distribution}
+\alert{Algorithm}
+
+\vspace{2mm}
+
+\begin{enumerate}
+\item Generate $U\sim U(0,1)$
+\item Define $\displaystyle{X=\Bigg\lceil \frac{\ln(1-U)}{\ln (p)} \Bigg\rceil}$
+\item Return $X$
+\end{enumerate}
+
+\textbf{Remark:} The expression $\lceil \cdot \rceil$ denotes the operation of rounding up to the nearest integer.
+\end{frame}
+
+%-------------------
+% SLIDE 17: Geometric Distribution Example
+%-------------------
+\begin{frame}[fragile]{Algorithm to Generate a Random Number From the Geometric Distribution}
+\textbf{Problem:} Generate a sample of 10 independent random numbers from the Geometric distribution with parameter $p=0.4$.
+
+\vspace{2mm}
+
+\alert{Code}
+
+\begin{columns}[T]
+\begin{column}{0.4\textwidth}
+\textbf{R Code}
+\begin{lstlisting}
+n <- 10
+p <- 0.4
+U <- runif(n, min=0, max=1)
+X <- ceiling(log(1-U)/log(p))
+print(X)
+\end{lstlisting}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Python Code}
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+n = 10
+p = 0.4
+U = np.random.uniform(0, 1, n)
+X = np.ceil(np.log(1-U) / np.log(p)).astype(int)
+print(X)
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+%-------------------
+% SLIDE 18: Homework
+%-------------------
+\begin{frame}{Homework Problems}
+\begin{enumerate}
+\item Implement Algorithm 1 and Algorithm 2 and test them on the slide 5 example.
+
+\item Consider a discrete random variable taking values $1, 3, 5$ with probabilities $1/9$, $3/9$, and $5/9$ respectively. Write a computer program to generate samples of arbitrary size $n$ from this distribution. Create a histogram with a sample of size 1000.
+
+\item Consider a random variable taking values $1, 3, 5, \dots, 99$ with probabilities $1/50^2, 3/50^2, \dots, 99/50^2$. Write a computer program to generate samples of arbitrary size $n$ from this distribution. Create a histogram with a sample of size 1000.
+
+\item  For the slide 5 example, compute the expected number of comparisons using Algorithm 1 and Algorithm 2.
+
+\item Write an algorithm to generate samples from a Poisson distribution:
+$$
+	p_i = P\{X = i\} = \frac{e^{-\lambda}\lambda^i}{i!}, \quad i = 0,1,2,\dots
+$$
+using the recursive identity:  
+$$
+	p_{i+1} = \frac{\lambda}{i+1} p_i, \quad i \ge 0
+$$
+\end{enumerate}
+\end{frame}
+
+\end{document}
