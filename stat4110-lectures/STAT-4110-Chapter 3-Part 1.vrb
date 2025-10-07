@@ -1,0 +1,48 @@
+\frametitle{Monte Carlo Integration Example}
+\textbf{Example}: Compute by Monte Carlo integration
+\begin{equation*}
+^^I\int_0^1 \int_0^1 \sqrt{x+y} e^{xy} dxdy
+\end{equation*}
+
+\begin{algorithm}[H]
+\caption{Monte Carlo Estimator for $\mathbb{E}\!\left[\sqrt{U+V}\, e^{UV}\right]$}
+\begin{algorithmic}[1]
+  \State \textbf{Input:} Number of samples $n$
+  \State \textbf{Generate} $U_1, U_2, \ldots, U_n \sim \text{Uniform}(0,1)$
+  \State \textbf{Generate} $V_1, V_2, \ldots, V_n \sim \text{Uniform}(0,1)$
+  \State \textbf{Compute:}
+  \begin{equation*}
+^^I\text{Empirical Mean} = \frac{1}{n} \sum_{j=1}^{n} \sqrt{U_j + V_j}\, e^{U_j V_j}
+  \end{equation*}
+  \State \textbf{Output:} Estimated value of $\mathbb{E}\!\left[\sqrt{U+V}\, e^{UV}\right]$
+\end{algorithmic}
+\end{algorithm}
+
+%\begin{columns}[t]
+%\column{0.48\textwidth}
+%\textbf{Code in R}
+%\vspace{-2mm}
+%\begin{lstlisting}[language=R]
+%n <- 1000
+%U <- runif(n)
+%V <- runif(n)
+%Y <- vector()
+%for (j in 1:n) {
+ % Y[j] <- sqrt(U[j] + V[j]) * exp(U[j] * V[j])
+%}
+%Estimator <- mean(Y)
+%\end{lstlisting}
+
+%\column{0.48\textwidth}
+%\textbf{Code in Python}
+%\vspace{-2mm}
+%\begin{lstlisting}[language=PythonCustom]
+%import numpy as np
+%
+%n = 1000
+%U = np.random.uniform(0, 1, n)
+%V = np.random.uniform(0, 1, n)
+%Y = np.sqrt(U + V) * np.exp(U * V)
+%Estimator = np.mean(Y)
+%\end{lstlisting}
+%\end{columns}

@@ -125,18 +125,120 @@
 \maketitle
 
 %-------------------
-% Slide 1: Introduction to Monte Carlo Methods
+% Slide 1: Origins of Monte Carlo
+%-------------------
+\begin{frame}{History of the Monte Carlo Method}
+\begin{columns}
+    % Left column: history text
+    \begin{column}{0.65\textwidth}
+        \begin{itemize}
+            \item The Monte Carlo method was developed in the 1940s during research for the Manhattan Project.
+            \item Mathematician Stanislaw Ulam conceived the idea while recovering from an illness, inspired by thinking about solitaire.
+            \item He wondered: \textit{“What is the expected number of winning hands in a game of solitaire?”}
+            \item This question led to the use of repeated random sampling to estimate expectations — the foundation of Monte Carlo simulation.
+        \end{itemize}
+    \end{column}
+
+    % Right column: Ulam picture
+    \begin{column}{0.35\textwidth}
+        \begin{center}
+            \includegraphics[width=\textwidth]{ulam.jpg} % Replace with actual file
+            \\[0.5em]
+            \footnotesize Stanislaw Ulam (1909–1984)
+        \end{center}
+    \end{column}
+\end{columns}
+\end{frame}
+
+%-------------------
+% Slide 2: Early Development
+%-------------------
+\begin{frame}{Early Development and Implementation}
+\begin{columns}
+    % Left column: history text
+    \begin{column}{0.65\textwidth}
+    \begin{itemize}
+        \item Ulam proposed using random sampling to solve complex problems in neutron diffusion.
+        \item John von Neumann and colleagues formalized the method and implemented it on the ENIAC computer, one of the earliest electronic computers.
+        \item The name \textit{“Monte Carlo”} was inspired by the frequent trips of Ulam's uncle to the casino in Monte Carlo, Monaco.
+    \end{itemize}
+    \end{column}
+
+    % Right column: images
+    \begin{column}{0.35\textwidth}
+        \begin{center}
+        \includegraphics[width=\textwidth]{oppenheimer-neuman-ecp.jpg} % Replace with actual file
+        \\[0.5em]
+        \footnotesize ENIAC - John von Neumann and Oppenheimer
+
+        \vspace{1em}
+
+        \includegraphics[width=\textwidth]{von-neumann-architecture-gcse-ocr.png} % Replace with actual file
+        \\[0.5em]
+        \footnotesize Von Neumann architecture
+        \end{center}
+    \end{column}
+\end{columns}
+\end{frame}
+
+%-------------------
+% Slide 3: Introduction to Monte Carlo Methods
 %-------------------
 \begin{frame}{Introduction to Monte Carlo Methods}
-Monte Carlo methods are a general class of computational algorithms that generate random scenarios to obtain  numerical results.
 
-\vspace{3mm}
+\begin{itemize}
+	\item Monte Carlo methods are a general class of computational algorithms that generate random scenarios to obtain  numerical results.
+	\vspace{2mm}
+    \item These methods are widely used in statistical physics, computational chemistry, statistical inference, genetics, and finance.
+	\vspace{2mm}
+    \item The Metropolis algorithm, a key Monte Carlo technique, was named one of the top algorithms of the 20th century by a committee of mathematicians, computer scientists, and physicists.
+    \vspace{2mm}
+    \item The increasing availability of computational power has greatly expanded the use of Monte Carlo simulations.
+    \vspace{2mm}
+    \item Monte Carlo methods can be used to solve a variety of mathematical problems. \textbf{In its most basic form, we use it as a numerical integration method} for integrals with no explicit solution. In this course we will also explore other uses of Monte Carlo methods.
+\end{itemize}
+\end{frame}
 
-The method was originally developed by Stanislaw Ulam and John von Neumann at the Los Alamos Laboratory, to solve some physical problems that were difficult to solve analytically.
+%-------------------
+% Slide 4: Particle in Random Medium
+%-------------------
+\begin{frame}[fragile]{Motivation: Particle in a Random Medium}
+\begin{itemize}
+    \item Consider a particle $(X_t)_{t=1,2,\dots}$ moving in space $\Omega = \mathbb{R}^d$ according to a stochastic model (e.g., random walk, diffusion, or Markov chain). Randomness may arise from the environment ("medium") or from the particle's motion.
+    \item \textbf{Absorption rule:} At each time step $t$, the particle can be absorbed with probability $1 - G(X_t)$, where $G: \Omega \to [0,1]$ is the \textbf{survival weight} at location $X_t$.
+    \begin{itemize}
+        \item $G(x) \approx 1$: safe location (low absorption risk)
+        \item $G(x) \approx 0$: high absorption risk (almost surely absorbed)
+    \end{itemize}
+    \item The survival probability up to time $T$ is
+    \begin{equation*}
+        \mathbb{P}(\text{not absorbed at time } T) 
+        = \mathbb{E}\Big[ \prod_{t=1}^{T} G(X_t) \Big].
+    \end{equation*}
+\end{itemize}
+\end{frame}
 
-\vspace{3mm}
-
-Monte Carlo methods can be used to solve a variety of mathematical problems. {\bf In its most basic form, we use it as a numerical integration method} for integrals with no explicit solution. In this course we will also explore other uses of Monte Carlo methods.
+%-------------------
+% Slide 5: Multiple Particles
+%-------------------
+\begin{frame}[fragile]{Multiple Particles in a Random Medium}
+\begin{itemize}
+    \item Suppose we have $n$ independent particles, each evolving over $T$ time steps according to the stochastic model.
+    \item Let $X_{i,t}$ denote the position of particle $i$ at time $t$, for $i = 1,\dots,n$ and $t = 1,\dots,T$.
+    \item Let $G(X_{i,t})$ denote the survival weight at that position.
+    \item The joint survival probability for all particles is
+    \begin{equation*}
+        \mathbb{P}(\text{all particles survive up to } T)
+        = \mathbb{E}\Big[ \prod_{i=1}^{n} \prod_{t=1}^{T} G(X_{i,t}) \Big].
+    \end{equation*}
+    \item For continuous positions, this is a $(n \cdot T)$-dimensional integral:
+    \begin{align*}
+        \mathbb{E}\Big[ \prod_{i=1}^{n} \prod_{t=1}^{T} G(X_{i,t}) \Big] 
+        = \int \cdots \int \prod_{i=1}^{n} \prod_{t=1}^{T} G(x_{i,t})
+        \, p(x_{1,1},\dots,x_{n,T}) \, dx_{1,1} \cdots dx_{n,T}
+    \end{align*}
+    where $p(\cdot)$ is the joint density of all particle positions.
+\end{itemize}
 \end{frame}
 
 %\frame
@@ -159,7 +261,7 @@ Monte Carlo methods can be used to solve a variety of mathematical problems. {\b
 %}
 
 %-------------------
-% Slide 2: Computing Expected Values
+% Slide 6: Computing Expected Values
 %-------------------
 \begin{frame}{Computing Expected Values}
 Let $X=(X_1,X_2,\ldots,X_d)$ be a random vector with joint density $f(x_1,x_2,\ldots,x_d)$ and $g: \mathbb{R}^d \rightarrow \mathbb{R}$. We want to compute:
@@ -168,13 +270,14 @@ Let $X=(X_1,X_2,\ldots,X_d)$ be a random vector with joint density $f(x_1,x_2,\l
 \end{equation*}
 
 If the integral on the right hand side cannot be solved explicitly, we are only left with numerical methods to get an approximated value of that integral. 
+
 \vspace{3mm}
 
 To simplify the presentation we will assume next that we are in the one-dimensional case ($d=1$) but most results apply also in the multidimensional case.
 \end{frame}
 
 %-------------------
-% Slide 3: The Law of Large Numbers
+% Slide 7: The Law of Large Numbers
 %-------------------
 \begin{frame}{The Law of Large Numbers}
 The main theoretical justification to use Monte Carlo methods is the Law of large numbers:
@@ -190,7 +293,7 @@ with probability 1.
 \end{frame}
 
 %-------------------
-% Slide 4: The Law of Large Numbers Consequences
+% Slide 8: The Law of Large Numbers Consequences
 %-------------------
 \begin{frame}{Consequences}
 If $X_1,X_2,\ldots,X_n$ is a simulated random sample with the same probability law as $X$  \\
@@ -208,7 +311,7 @@ In particular if $U_1,U_2,\ldots,U_n$ are independent and uniformly distributed 
 \end{frame}
 
 %-------------------
-% Slide 5: Monte Carlo Integration Example
+% Slide 9: Monte Carlo Integration Example
 %-------------------
 \begin{frame}[fragile]{Monte Carlo Integration Example} 
 \textbf{Example}: Compute by Monte Carlo integration $\displaystyle{\int_0^{\pi} \sin x dx}$.
@@ -262,7 +365,7 @@ In particular if $U_1,U_2,\ldots,U_n$ are independent and uniformly distributed 
 \end{frame}
 
 %-------------------
-% Slide 5: Monte Carlo Integration Example
+% Slide 10: Monte Carlo Integration Example
 %-------------------
 \begin{frame}[fragile]{Monte Carlo Integration Example}
 \textbf{Example}: Compute by Monte Carlo integration 
@@ -315,7 +418,7 @@ In particular if $U_1,U_2,\ldots,U_n$ are independent and uniformly distributed 
 \end{frame}
 
 %-------------------
-% Slide 6: Homework
+% Slide 11: Homework
 %-------------------
 \begin{frame}{Homework}
 
