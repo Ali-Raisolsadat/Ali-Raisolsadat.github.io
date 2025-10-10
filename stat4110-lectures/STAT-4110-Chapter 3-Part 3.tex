@@ -1,0 +1,358 @@
+%========================
+% Document class and theme
+%========================
+\documentclass[8pt]{beamer}
+\usetheme[progressbar=frametitle]{metropolis}
+\setbeamersize{text margin left=10mm, text margin right=10mm}
+\usepackage{appendixnumberbeamer} % appendix slide numbering
+\setbeamertemplate{theorems}[numbered]
+
+%========================
+% Core packages
+%========================
+\usepackage{amsmath, amsfonts, amssymb, amsthm} % math + theorems
+\usepackage{booktabs}        % professional tables
+\usepackage{hyperref}        % hyperlinks
+\usepackage{xcolor}          % colors
+\usepackage{xspace}          % spacing for custom commands
+
+%========================
+% Algorithms
+%========================
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\newtheorem{proposition}{Proposition}
+\usepackage{bbm}
+
+
+%========================
+% Plots and TikZ
+%========================
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+% ==========================================
+% Professional Code Listing Setup
+% ==========================================
+\usepackage{listings}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+
+%========================
+% Custom commands
+%========================
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%========================
+% Custom footline
+%========================
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.35\paperwidth,ht=2.5ex,dp=1.5ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+%========================
+% Beamer tweaks
+%========================
+\setbeamertemplate{navigation symbols}{} % remove default navigation symbols
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% AQUI SE DEFINEN LAS IMAGENES PARA UTILIZAR DESPUES
+%\pgfdeclareimage[interpolate=true, height=7cm,width=16cm]{halton-points}{halton-points}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]
+%{serie-petroleo-reducido}{serie-petroleo-reducido}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{rectangle-triangle}{rectangle-triangle}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{any-angle}{any-angle}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{Pythagoras}{Pythagoras}
+
+
+\title{Chapter 3 - Monte Carlo Methods}
+\subtitle{Variance Reduction Methods. Antithetic Variates.}
+\author{Prof. Alex Alvarez, Ali Raisolsadat}
+\institute{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
+\date{} % leave empty or add \today
+%\title[Stat 4110]{Stat 4110 Statistical Simulation}
+%\subtitle{}
+%\author[University of Prince Edward Island]{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
+
+%========================
+% Begin document
+%========================
+\begin{document}
+
+%-------------------
+% Title frame
+%-------------------
+\maketitle
+
+%-------------------
+% Slide 1: Previously
+%-------------------
+\begin{frame}{Previously}
+If $\hat{\theta}_n$ is the Monte Carlo estimator for $\theta=E(g(X))$ and we want $P\left(|\hat{\theta}_n-\theta|\leq \epsilon\right)\geq 1-\alpha$, then we need to use a number of simulations $n$ such that
+\begin{equation*}
+n \geq \frac{Z_{1-\alpha/2}^2\sigma^2}{\epsilon ^2}
+\end{equation*}
+where $Z_{\alpha}$ is the $\alpha$-level percentile of the standard normal distribution and $\sigma^2=Var(g(X))$.
+
+\vspace{2mm}
+
+Then, the accuracy of the estimator depends strongly on $\sigma^2=Var(g(X))$
+\end{frame}
+
+%-------------------
+% Slide 2: Variance Reduction Methods
+%-------------------
+\begin{frame}{Variance Reduction Methods}
+There are more elaborate variants of the Monte Carlo method that try to deal with this issue. Many of these algorithms are referred to as \textbf{variance reduction methods}.
+ 
+One way of describing   variance reduction methods is that they try to generate  ``smart'' random samples for the problem at hand. Some well known variance reduction methods are:
+
+\begin{itemize}
+	\item Antithetic Variates Method
+	\item Control Variates Method
+	\item Importance Sampling 
+\end{itemize}
+
+This is not an exhaustive list. 
+
+\vspace{3mm}
+
+We will study these methods in more details, including their theoretical justification, when to use them, etc.
+
+\vspace{3mm}
+
+In this lecture we will cover the \textbf{Antithetic Variable Method}
+\end{frame}
+
+%-------------------
+% Slide 3: Antithetic Variable Method
+%-------------------
+\begin{frame}{Antithetic Variable Method}
+Consider two \alert{non-independent} random variables $X$ and $X'$ with the same distribution. These are some classic examples of such pairs of random variables:
+
+\begin{itemize}
+	\item $U \sim U[0,1]$ and $U'=1-U$ have the same distribution
+	\item If $f$ is a density function symmetric around 0, the random variables $X \sim f$ and $X'=-X$  have the the same distribution.
+\end{itemize}
+
+If we consider the random quantity $\frac{g(X)+g(X')}{2}$ we have 
+\begin{equation*}
+E\left(\frac{g(X)+g(X')}{2}\right)=E(g(X))
+\end{equation*}
+and
+\begin{align*}
+Var\left(\frac{g(X)+g(X')}{2}\right) &= \frac{Var(g(X))+2Cov(g(X),g(X'))+Var(g(X'))}{4}\\
+									 &= \frac{1}{2}Var(g(X))+\frac{1}{2}Cov(g(X),g(X'))
+\end{align*}
+\end{frame}
+
+
+%-------------------
+% Slide 4: Antithetic Variable Method
+%-------------------
+\begin{frame}{Antithetic Variates Method}
+Comparing the previous expression to the case where $X$ and $X'$ are independent, we have an additional covariance term.
+
+\vspace{1mm}
+
+\textbf{How can we exploit this observation?}
+
+\vspace{1mm}
+
+\textbf{Usual Monte Carlo estimator:} 
+\begin{equation*}
+\hat{\theta}_n=\frac{1}{n}\sum_{j=1}^n g(X_j) \quad \text{and} \quad MSE(\hat{\theta}_n)=\frac{1}{n}Var(g(X))
+\end{equation*}
+
+\vspace{1mm}
+
+\textbf{Antithetic Variates estimator:} 
+\begin{equation*}
+	\hat{\theta}_n^{AV}=\frac{1}{n}\sum_{j=1}^{n/2} (g(X_j)+g(X'_j)) \quad \text{and} \quad MSE(\hat{\theta}_n^{AV})=\frac{1}{n}Var(g(X))(1+\rho)
+\end{equation*}
+where $\rho$ is the correlation coefficient between $X_j,X'_j$, and
+\begin{equation*}
+	E(\hat{\theta}_n^{AV})=\theta \quad \text{(unbiased)}
+\end{equation*}
+If $\rho<0$ then this estimator is more efficient than the usual Monte Carlo estimator.
+\end{frame}
+
+%-------------------
+% Slide 5: Antithetic Variates Algorithm
+%-------------------
+\begin{frame}{Antithetic Variates Algorithm}
+\begin{algorithm}[H]
+\caption{Monte Carlo with Antithetic Variates}\label{alg:antithetic-variates}
+\begin{algorithmic}[1]
+  \State \textbf{Input:} Sample size $n$ (assume $n$ is even)
+  \For{$j = 1$ to $n/2$}
+    \State Generate an antithetic pair $(X_j, X'_j)$
+  \EndFor
+  \State Compute the estimator:
+  \[
+  \hat{\theta}_n^{AV} = \frac{1}{n} \sum_{j=1}^{n/2} \bigl(g(X_j) + g(X'_j)\bigr)
+  \]
+  \State \textbf{Output:} Antithetic variates estimator $\hat{\theta}_n^{AV}$
+\end{algorithmic}
+\end{algorithm}
+
+\vspace{2mm}
+\textbf{Remark}: For this algorithm to be more efficient than the usual Monte Carlo estimator,  
+$g(X_j)$ and $g(X'_j)$ should be \alert{negatively correlated}. The stronger the negative correlation, the greater the variance reduction and efficiency.
+\end{frame}
+
+%-------------------
+% Slide 6: Antithetic Variates Example
+%-------------------
+\begin{frame}{Example: Antithetic Variates for $E(e^U)$}
+\textbf{Example:} Use the antithetic variates method to estimate $\mathbb{E}[e^U]$ where $U \sim \text{Uniform}(0,1)$, and compare the results with the basic Monte Carlo estimator.
+
+Consider the antithetic pair $(U, 1-U)$. Because the function $g(x) = e^x$ is \alert{increasing}, the values $g(U)$ and $g(1-U)$ are \alert{negatively correlated}.
+
+\vspace{1mm}
+
+\textbf{Analytical Results:}
+\begin{align*}
+  \mathbb{E}[e^U] &= \int_0^1 e^x \, dx = e - 1 \\
+  \mathrm{Var}(e^U) &= \mathbb{E}[e^{2U}] - (\mathbb{E}[e^U])^2 = \frac{e^2 - 1}{2} - (e - 1)^2 \\
+  \mathrm{Cov}(e^U, e^{1-U}) &= \mathbb{E}[e^U e^{1-U}] - \mathbb{E}[e^U]\mathbb{E}[e^{1-U}] = e - (e - 1)^2
+\end{align*}
+Hence, the correlation coefficient is
+\begin{equation*}
+	\rho(e^U, e^{1-U}) = \frac{\mathrm{Cov}(e^U, e^{1-U})}{\sqrt{\mathrm{Var}(e^U)\,\mathrm{Var}(e^{1-U})}} \simeq -0.9677
+\end{equation*}
+showing a strong negative correlation, 
+and a variance reduction by roughly a factor of \textbf{30}.
+\end{frame}
+
+%-------------------
+% Slide 6: Antithetic Variates Example
+%-------------------
+%\begin{frame}[fragile]{Antithetic Variates vs Basic Monte Carlo}
+%\begin{columns}[T]
+%\begin{column}{0.48\textwidth}
+%\textbf{R Code}
+%\begin{lstlisting}[language=R]
+%n <- 1000
+%m <- n/2
+
+%ant_u <- runif(m)
+%ant_g <- (exp(ant_u) + exp(1 - ant_u)) / 2
+%ant_estimator <- mean(ant_g)
+%ant_error <- ant_estimator - (exp(1) - 1)
+%ant_ci <- c(
+ % ant_estimator - 1.96 * sd(ant_g) / sqrt(m),
+  %ant_estimator + 1.96 * sd(ant_g) / sqrt(m)
+%)
+%
+%mc_u <- runif(n)
+%mc_g <- exp(mc_u)
+%mc_estimator <- mean(mc_g)
+%mc_error <- mc_estimator - (exp(1) - 1)
+%mc_ci <- c(
+ % mc_estimator - 1.96 * sd(mc_g) / sqrt(n),
+  %mc_estimator + 1.96 * sd(mc_g) / sqrt(n)
+%)
+%\end{lstlisting}
+%\end{column}
+%
+%\begin{column}{0.48\textwidth}
+%\textbf{Python Code}
+%\begin{lstlisting}[language=Python]
+%n = 1000
+%m = n // 2
+%
+%ant_u = np.random.uniform(0, 1, m)
+%ant_g = (np.exp(ant_u) + np.exp(1 - ant_u)) / 2
+%ant_estimator = np.mean(ant_g)
+%ant_error = ant_estimator - (np.e - 1)
+%ant_ci = (
+ %   ant_estimator - 1.96 * np.std(ant_g, ddof=1) / np.sqrt(m),
+  %  ant_estimator + 1.96 * np.std(ant_g, ddof=1) / np.sqrt(m)
+%)
+%
+%mc_u = np.random.uniform(0, 1, n)
+%mc_g = np.exp(mc_u)
+%mc_estimator = np.mean(mc_g)
+%mc_error = mc_estimator - (np.e - 1)
+%mc_ci = (
+ %   mc_estimator - 1.96 * np.std(mc_g, ddof=1) / np.sqrt(n),
+  %  mc_estimator + 1.96 * np.std(mc_g, ddof=1) / np.sqrt(n)
+%)
+%\end{lstlisting}
+%\end{column}
+%\end{columns}
+%
+%\vspace{2mm}
+%\textbf{Remark:}  
+%Left: \alert{Antithetic Variates and Monte Carlo in R.}  
+%Right: \alert{Equivalent implementation in Python.}
+%\end{frame}
+
+%-------------------
+% Slide 7: Homework
+%-------------------
+\begin{frame}{Homework }
+\textbf{Monte Carlo Estimation using Antithetic Variates}
+
+We want to estimate 
+\begin{equation*}
+\theta = E(e^{1 + Z}),
+\end{equation*}
+where $Z$ is a standard normal random variable ($Z \sim N(0,1)$).
+
+\begin{enumerate}
+  \item Compute the exact analytical value of $\theta$.
+  \item Write a computer program to estimate $\theta$ using the \textbf{Basic Monte Carlo} method.
+        Provide a 95\% confidence interval for your estimator.
+  \item Write a computer program to estimate $\theta$ using the \textbf{Antithetic Variates} method.
+        Provide a 95\% confidence interval for this estimator as well.
+\end{enumerate}
+
+\textbf{Hint}: Consider the antithetic pair $(Z, Z')$ where $Z' = -Z$.
+\end{frame}
+
+
+\end{document} 
+
+

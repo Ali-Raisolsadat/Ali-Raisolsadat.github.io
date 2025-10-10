@@ -1,0 +1,135 @@
+---
+title: "Chapter 3 Lecture Code"
+author: "Ali Raisolsadat"
+date: "2025-10-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(pracma)
+```
+
+### Lecture 1
+```{r}
+# Algorithm 1 - Slide 9
+n <- 1000
+U <- runif(n, min = 0, max = 1)
+Y <- sin(pi * U)
+estimator <- pi * mean(Y)
+print(estimator)
+```
+
+```{r}
+# true value of the integral
+true_value <- 2
+n_values <- seq(1, 5001, by = 10)
+estimates <- numeric(length(n_values))
+
+# compute Monte Carlo estimator for each n
+for (i in seq_along(n_values)) {
+  n <- n_values[i]
+  U <- runif(n, min = 0, max = 1)
+  Y <- sin(pi * U)
+  estimates[i] <- pi * mean(Y)
+}
+
+# plot
+plot(n_values, estimates, type = "l", col = "black", lwd = 1, 
+     xlab = "Sample Size (n)", ylab = "Estimator Value",
+     main = "Convergence of Monte Carlo Estimator")
+abline(h = true_value, col = "red", lty = 2, lwd = 2)
+legend("bottomright", legend = c("Monte Carlo Estimates", "True Value = 2"),
+       col = c("black", "red"), lty = c(1,2), lwd = c(1,2))
+grid()
+```
+
+```{r}
+# Algorithm 2 - Slide 10
+n <- 1000
+U <- runif(n, min = 0, max = 1)
+V <- runif(n, min = 0, max = 1)
+Y <- sqrt(U + V) * exp(U * V)
+estimator <- mean(Y)
+print(estimator)
+```
+
+```{r}
+# approximate true value using a very large n
+n_true <- 2e6
+U_true <- runif(n_true)
+V_true <- runif(n_true)
+Y_true <- sqrt(U_true + V_true) * exp(U_true * V_true)
+true_value <- mean(Y_true)
+
+# range of sample sizes
+n_values <- seq(1, 5001, by = 10)
+estimates <- numeric(length(n_values))
+
+# compute Monte Carlo estimator for each n
+for (i in seq_along(n_values)) {
+  n <- n_values[i]
+  U <- runif(n)
+  V <- runif(n)
+  Y <- sqrt(U + V) * exp(U * V)
+  estimates[i] <- mean(Y)
+}
+
+# plot
+plot(n_values, estimates, type = "l", col = "black", lwd = 1,
+     xlab = "Sample Size (n)", ylab = "Estimator Value",
+     main = "Convergence of Monte Carlo Estimator")
+abline(h = true_value, col = "red", lty = 2, lwd = 2)
+legend("bottomright", 
+       legend = c("Monte Carlo Estimates", paste0("True Value ≈ ", round(true_value, 4))),
+       col = c("black", "red"), lty = c(1,2), lwd = c(1,2))
+grid()
+```
+
+### Lecture 3
+```{r}
+set.seed(123)
+
+n <- 1000
+m <- n/2
+true_value <- exp(1) - 1
+
+# antithetic variates
+ant_u <- runif(m)
+ant_g <- (exp(ant_u) + exp(1 - ant_u)) / 2
+ant_estimator <- mean(ant_g)
+ant_ci <- c(
+  ant_estimator - 1.96 * sd(ant_g) / sqrt(m),
+  ant_estimator + 1.96 * sd(ant_g) / sqrt(m)
+)
+
+# monte carlo
+mc_u <- runif(n)
+mc_g <- exp(mc_u)
+mc_estimator <- mean(mc_g)
+mc_ci <- c(
+  mc_estimator - 1.96 * sd(mc_g) / sqrt(n),
+  mc_estimator + 1.96 * sd(mc_g) / sqrt(n)
+)
+
+df <- data.frame(
+  Method = c("Monte Carlo", "Antithetic"),
+  Estimate = c(mc_estimator, ant_estimator),
+  Lower = c(mc_ci[1], ant_ci[1]),
+  Upper = c(mc_ci[2], ant_ci[2])
+)
+
+# plot
+ggplot(df, aes(x = Method, y = Estimate)) +
+  geom_point(size = 3, color = "blue") +
+  geom_errorbar(aes(ymin = Lower, ymax = Upper), width = 0.1, color = "blue") +
+  geom_hline(yintercept = true_value, linetype = "dashed", color = "red") +
+  labs(title = "Monte Carlo vs Antithetic Variates Estimation of E(e^U)", 
+       y = "Estimated Value") +
+  theme_bw(base_size = 14)
+```
