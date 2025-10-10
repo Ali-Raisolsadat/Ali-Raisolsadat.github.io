@@ -1,0 +1,477 @@
+%========================
+% Document class and theme
+%========================
+\documentclass[8pt]{beamer}
+\usetheme[progressbar=frametitle]{metropolis}
+\setbeamersize{text margin left=10mm, text margin right=10mm}
+\usepackage{appendixnumberbeamer} % appendix slide numbering
+\setbeamertemplate{theorems}[numbered]
+
+%========================
+% Core packages
+%========================
+\usepackage{amsmath, amsfonts, amssymb, amsthm} % math + theorems
+\usepackage{booktabs}        % professional tables
+\usepackage{hyperref}        % hyperlinks
+\usepackage{xcolor}          % colors
+\usepackage{xspace}          % spacing for custom commands
+
+%========================
+% Algorithms
+%========================
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\newtheorem{proposition}{Proposition}
+\usepackage{bbm}
+
+
+%========================
+% Plots and TikZ
+%========================
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+% ==========================================
+% Professional Code Listing Setup
+% ==========================================
+\usepackage{listings}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+
+%========================
+% Custom commands
+%========================
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%========================
+% Custom footline
+%========================
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.35\paperwidth,ht=2.5ex,dp=1.5ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+%========================
+% Beamer tweaks
+%========================
+\setbeamertemplate{navigation symbols}{} % remove default navigation symbols
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% AQUI SE DEFINEN LAS IMAGENES PARA UTILIZAR DESPUES
+%\pgfdeclareimage[interpolate=true, height=7cm,width=16cm]{halton-points}{halton-points}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]
+%{serie-petroleo-reducido}{serie-petroleo-reducido}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{rectangle-triangle}{rectangle-triangle}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{any-angle}{any-angle}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{Pythagoras}{Pythagoras}
+
+
+\title{Chapter 3 - Monte Carlo Methods}
+\subtitle{Monte Carlo Methods.}
+\author{Prof. Alex Alvarez, Ali Raisolsadat}
+\institute{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
+\date{} % leave empty or add \today
+%\title[Stat 4110]{Stat 4110 Statistical Simulation}
+%\subtitle{}
+%\author[University of Prince Edward Island]{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
+
+%========================
+% Begin document
+%========================
+\begin{document}
+
+%-------------------
+% Title frame
+%-------------------
+\maketitle
+
+%-------------------
+% Slide 1: Monte Carlo Estimation Error Rate
+%-------------------
+\begin{frame}{Monte Carlo Estimation Error Rate (fixed $n$)}
+\textbf{Goal:} compute $\theta=E(g(X)), \;\;X \sim f(x)$, assume $Var(g(X))<\infty$
+
+\vspace{3mm}
+
+\textbf{Simulation:} $X_1,X_2,\ldots,X_n$ generated random numbers/vectors from probability distribution $f(x)$, i.e. $X_k \stackrel{d}{=} X$.
+
+\vspace{3mm}
+
+\textbf{Estimator:} $\displaystyle{\hat{\theta}_n= \frac{1}{n} \sum_{j=1}^n g(X_j)}$
+
+\vspace{3mm}
+
+\textbf{Error in the estimation:} $\epsilon_n= \hat{\theta}_n-\theta$
+\begin{equation*}
+    E(\epsilon_n)=E(\hat{\theta}_n-\theta)=E(\hat{\theta}_n)-\theta=0
+\end{equation*}
+
+\textbf{The estimator is unbiased: there is not systematic error.}
+\end{frame}
+
+%-------------------
+% Slide 2: Mean Square Error (MSE) and Standard Error(SE)
+%-------------------
+\begin{frame}{Mean Square Error (MSE) and Standard Error(SE)}
+\begin{align*}
+    MSE(\hat{\theta}_n)&= E(\hat{\theta}_n-\theta)^2\\
+    &= Var(\hat{\theta}_n)+(\text{bias}(\hat{\theta}_n))^2\\
+    &= Var(\hat{\theta}_n)=\frac{1}{n^2} Var\left(\sum_{j=1}^n g(X_j)\right)=\frac{1}{n} Var(g(X))
+\end{align*}
+and
+\begin{equation*}
+    RMSE(\hat{\theta}_n) = \sqrt{MSE(\hat{\theta}_n)}=\frac{1}{\sqrt{n}} \sigma(g(X))
+\end{equation*}
+
+\textbf{Note}: You will be asked to prove MSE ($MSE(\hat{\theta}_n) = Var(\hat{\theta}_n)+(\text{bias}(\hat{\theta}_n))^2$) on the assignment. 
+\end{frame}
+
+%-------------------
+% Slide 3: Remarks on Monte Carlo Integration
+%-------------------
+\begin{frame}{Remarks on Monte Carlo Integration}
+\begin{itemize}
+  \item The estimator 
+  \begin{equation*}
+  	\hat{\theta}_n = \frac{1}{n} \sum_{j=1}^n g(X_j)
+  \end{equation*}
+  is unbiased, i.e. $\mathbb{E}[\hat{\theta}_n] = \theta$. By the \textbf{Law of Large Numbers (LLN)}, the error converges to zero as $n \to \infty$:
+  \begin{equation*}
+  	\hat{\theta}_n \xrightarrow{a.s.} \theta
+  \end{equation*}
+
+  \item The \textbf{speed of convergence} of Monte Carlo integration is 
+  \begin{equation*}
+  O(n^{-1/2})
+  \end{equation*}
+  regardless of the dimension of the integral.
+
+  \item \alert{The convergence rate of Monte Carlo integration does not depend on the dimension $d$ of the problem.}
+
+  \item In contrast, the convergence rate of conventional deterministic methods (e.g. trapezoidal or Simpson’s rule) is 
+  \begin{equation*}
+  O(n^{-2/d}),
+  \end{equation*}
+  which deteriorates rapidly as $d$ increases.
+\end{itemize}
+\end{frame}
+
+%-------------------
+% Slide 4: Monte Carlo and the Curse of Dimensionality
+%-------------------
+\begin{frame}{Monte Carlo and the Curse of Dimensionality}
+\begin{itemize}
+  \item \textbf{Theoretical Perspective}:
+  The convergence rate of Monte Carlo integration,
+  \begin{equation*}
+  	\text{RMSE}(\hat{\theta}_n) = O(n^{-1/2}),
+  \end{equation*}
+  is \alert{independent of the dimension} of the problem.
+  \item \textbf{Practical Perspective:}  
+  Although the rate does not worsen with dimension, the \alert{variance of the estimator} may increase rapidly:
+  \begin{equation*}
+  	Var(g(X)) \text{ may grow with } d,
+  \end{equation*}
+  making the estimator less efficient in high dimensions.
+  \item \textbf{Comparison}:
+  \begin{equation*}
+  	\begin{array}{lcl}
+  	\text{Monte Carlo:} & O(n^{-1/2}) & \text{(dimension-free)} \\[3pt]
+  	\text{Trapezoid / Quadrature:} & O(n^{-2/d}) & \text{(slower as $d \uparrow$)}
+  	\end{array}
+  \end{equation*}
+  \item \textbf{Note}: Monte Carlo does not suffer from the curse of dimensionality in its convergence rate,  
+  but it faces a \alert{practical curse} due to increasing variance and sampling difficulty in high dimensions.
+\end{itemize}
+\end{frame}
+
+%-------------------
+% Slide 5: Choice of Sample Size
+%-------------------
+\begin{frame}{Choice of Sample Size}
+By using that the Mean Square Error of the Monte Carlo estimator is given by
+
+$$ MSE(\hat{\theta}_n)=\frac{1}{n} Var(g(X))$$
+
+If we want $MSE\leq\epsilon^2$ (or equivalently that the $SE \leq \epsilon$) then we must perform a number of simulations $n$ such that:
+
+$$n\geq \frac{Var(g(x))}{\epsilon^2}$$
+\end{frame} 
+
+%-------------------
+% Slide 6: Choice of Sample Size Example
+%-------------------
+\begin{frame}{Choice of Sample Size Example}
+\textbf{Example}: Assume that $Var(g(x))=5$.  What should be the minimum sample size that we use for the basic Monte Carlo estimator assuming that we want to achieve a standard error $SE\leq 0.1$.
+$$n\geq \frac{Var(g(x))}{\epsilon^2}=\frac{5}{(0.1)^2}=500$$.
+
+\vspace{3mm}
+
+Notice that if we want $SE\leq 0.05$ (meaning that we reduce the standard error by a half) we will need to use a sample size given by 
+$$n\geq \frac{Var(g(x))}{\epsilon^2}=\frac{5}{(0.05)^2}=2000$$
+or four times the number of simulations.
+\end{frame}
+
+%-------------------
+% Slide 7: Improved error bounds
+%-------------------
+\begin{frame}{Improved error bounds}
+Assume that $Var(g(X))=\sigma^2$ is known.  We can get better error bounds by using the Central Limit Theorem. We know that for large values of $n$ we have approximately:
+
+\begin{equation*}
+\frac{\sqrt{n}}{\sigma}\left(\hat{\theta}_n-\theta \right) \sim N(0,1)
+\end{equation*}
+
+Then, if we want $P\left(|\hat{\theta}_n-\theta|\leq \epsilon\right)\geq 1-\alpha$ ( a confidence interval) then we only need to use a number of simulations $n$ such that
+\begin{equation*}
+\displaystyle{n \geq \frac{Z_{1-\alpha/2}^2\sigma^2}{\epsilon ^2}}
+\end{equation*}
+where $Z_{\alpha}$ is the $\alpha$-level percentile of the standard normal distribution.
+
+In particular, if $\alpha=0.05$ we get $\displaystyle{n \geq \frac{1.96^2 \sigma^2}{\epsilon ^2}}$
+\end{frame}
+
+%-------------------
+% Slide 8: Remarks on Sample Size
+%-------------------
+\begin{frame}{Remarks on Sample Size}
+\begin{itemize}
+\item A critical assumption is that $Var(g(X)) <\infty$. 
+
+If $Var(g(X))=\infty$ the law of large numbers still applies but not the central limit theorem. Convergence is slower in that case, and more sophisticated results are needed to stablish error bounds.
+
+\item The  number of simulations  $n$ needed to achieve a specified error is proportional to the variance of $g(X)$. For large values of the variance we will need a large amount of simulations.
+
+\item There are more elaborate variants of the Monte Carlo method that try to deal with this issue. Many of these methods are referred to as \alert{methods of variance reduction}. We will study some of these methods during the next few classes.
+\end{itemize}
+\end{frame}
+
+%-------------------
+% Slide 9: Unknown Variance
+%-------------------
+\begin{frame}{Unknown Variance}
+\textbf{What if the variance is not known?}
+
+\vspace{2mm}
+
+In most cases, the variance is not known. There may be different alternatives to deal with this issue.
+
+\vspace{2mm}
+
+One alternative is to use an upper bound for the variance (if available) in place of the variance.
+
+\vspace{2mm}
+
+Another alternative is to get an estimate for the variance $\sigma^2$ from a relatively small generated sample, and then use the estimate in place of the variance. 
+\end{frame}
+
+%-------------------
+% Slide 10: Homework
+%-------------------
+\begin{frame}{Homework} 
+Consider a random variable $U$ uniformly distributed on $[0,1]$ 
+
+\vspace{3mm}
+
+a) Find the exact value of $\theta= E(U^3)$\\
+b) Find $Var(U^3)$\\
+c) Using the result in part b), determine the number of simulations $n$ that are needed in order to achieve an absolute error of less than $0.005$ in the Monte Carlo estimation of $\theta$ with confidence level given by $\alpha=0.01$.\\
+d) Write a computer program  implementing the Monte Carlo method with the required number of simulations according to part c) and verify that we get the pre-determined accuracy.
+\end{frame}
+
+\end{document}
+
+\frame
+{
+
+{\bf Methods of variance reduction}
+
+\begin{itemize}
+\item Antithetic Variable Method .
+\item Control Variate Method
+\item Importance Sampling 
+
+\end{itemize}
+
+This is not an exhaustive list. 
+\vspace{3mm}
+
+These non-basic methods are covered in the Statistical Simulation course.
+
+}
+
+
+
+
+\frame
+{
+
+{\bf Monte Carlo method for the pricing of European options}
+\vspace{3mm}
+
+Under some conditions, an option price can be written as a discounted expected value of the option payoff:
+
+$$C=e^{-rT}E_Q(\Pi(S_T))$$
+
+where $Q$ refers to the risk neutral probability and $\Pi(S_T)$ refers to the option payoff at time $T$.
+
+
+}
+
+
+
+\frame
+{
+
+{\bf Algorithm}
+
+\vspace{3mm}
+
+Assume that $S_0$, $T$, $\sigma$, $K$, $\delta$, $r$ are given.
+\vspace{3mm}
+
+{\bf Monte Carlo algorithm for the pricing of a European Call}
+
+
+
+\begin{enumerate}
+
+\item Generate $Z^{(1)},Z^{(2)},\ldots, Z^{(n)}$ independent standard normal random variables.
+
+\item Compute $S_T^{(j)}=S_0e^{(r-\delta-\sigma^2/2)T+\sigma\sqrt{T}Z_j}$ for $j=1,2,\ldots n$
+
+\item Compute $\displaystyle{\hat{C}_n=e^{-rT} \left[\frac{1}{n}\sum_{j=1}^n \left(S_T^{(j)}-K\right)^+\right]=\frac{1}{n}\sum_{j=1}^n \xi_j}$ where
+
+$\xi_j=e^{-rT}\left(S_T^{(j)}-K\right)^+$
+
+\end{enumerate}
+
+The value $\hat{C}_n$ will be the estimated price for the option.
+
+}
+
+\frame
+{
+
+{\bf Remarks}
+
+\begin{itemize}
+
+
+
+\item Two people (A and B) using the same Monte Carlo code to price an option will get different estimated prices $\hat{C}_n^A$ and $\hat{C}_n^B$. This is because the generated normal random variables will be different in general.
+
+\item In theory, if $n$ is ``large enough'', the estimated price will be ``close'' to the actual exact price of the option.
+
+\item \alert{Which values of $n$ are ``large enough''?}
+
+\item \alert{What can we say about the estimation error?}
+
+\end{itemize}
+
+}
+
+\frame
+{
+
+{\bf Confidence interval for the option price}
+
+\vspace{3mm}
+
+Let $s_n$ be the sample standard deviation of the generated random values $\xi_j$ ($j=1,2,\ldots,n$) which represent the sample discounted payoffs. $s_n$ is an estimator of the standard deviation of $\xi_j$, so $s_n/\sqrt{n}$ estimates the standard deviation of $\hat{C}_n$.
+\vspace{3mm}
+
+Based on the asymptotic normality of $\hat{C}_n$, we can construct the following confidence interval for the actual option price C.
+
+$$P\left(\hat{C}_n-\frac{s_n}{\sqrt{n}}Z_{1-\alpha/2}<C<\hat{C}_n+\frac{s_n}{\sqrt{n}}Z_{1-\alpha/2}\right)=1-\alpha$$
+
+The notation $Z_{p}$ represents the percentile at the level $p$ of the standard normal distribution, or $N^{-1}(p)$.
+
+
+}
+
+\frame
+{
+
+{\bf How to find $n$ to achieve a certain level of accuracy}
+\vspace{3mm}
+
+If we want to have an absolute error smaller than $\epsilon$ with a high probability $1-\alpha$, we have to select $n$ such that
+
+$$\frac{s_n}{\sqrt{n}}Z_{1-\alpha/2}<\epsilon$$.
+
+Here we run into the problem that $s_n$ is not known in advance.
+\vspace{3mm}
+
+This practical problem may be solved by using first a relatively small number of simulations $n_1$, so that we get $s_{n_1}$ (a rough, preliminary estimation of the standard deviation of the discounted payoff). Then we find:
+
+$$n>\left(\frac{s_{n_1}Z_{1-\alpha/2}}{\epsilon}\right)^2$$
+
+}
+
+\frame
+{
+
+{\bf Remarks:}
+
+\begin{itemize}
+
+\item This procedure explained for the call option can clearly be extended to cover other European, \alert{non path-dependent} options. 
+
+\item The Monte Carlo method is especially useful for non-standard payoffs, and also to study other types of models for which  we do not have explicit option prices. 
+
+\item Using methods of variance reduction, we can improve the estimator's efficiency.
+
+\item The Monte Carlo method can also be used to estimate the sensitivities of the prices (Greeks) with respect to the different parameters, in models for which these quantities cannot be obtained explicitly.
+
+\end{itemize}
+
+
+}
+
+
+
+
+
+\end{document} 
+
+
