@@ -1,0 +1,273 @@
+%========================
+% Document class and theme
+%========================
+\documentclass[8pt]{beamer}
+\usetheme[progressbar=frametitle]{metropolis}
+\setbeamersize{text margin left=10mm, text margin right=10mm}
+\usepackage{appendixnumberbeamer} % appendix slide numbering
+\setbeamertemplate{theorems}[numbered]
+
+%========================
+% Core packages
+%========================
+\usepackage{amsmath, amsfonts, amssymb, amsthm} % math + theorems
+\usepackage{booktabs}        % professional tables
+\usepackage{hyperref}        % hyperlinks
+\usepackage{xcolor}          % colors
+\usepackage{xspace}          % spacing for custom commands
+
+%========================
+% Algorithms
+%========================
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\newtheorem{proposition}{Proposition}
+\usepackage{bbm}
+
+%========================
+% Plots and TikZ
+%========================
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+% ==========================================
+% Professional Code Listing Setup
+% ==========================================
+\usepackage{listings}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+%========================
+% Custom commands
+%========================
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%========================
+% Custom footline
+%========================
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.35\paperwidth,ht=2.5ex,dp=1.5ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+%========================
+% Beamer tweaks
+%========================
+\setbeamertemplate{navigation symbols}{} % remove default navigation symbols
+
+\title{Chapter 3 - Monte Carlo Methods}
+\subtitle{Variance Reduction Methods.\\ Importance Sampling.}
+\author{Prof. Alex Alvarez, Ali Raisolsadat}
+\institute{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
+\date{} % leave empty or add \today
+
+%========================
+% Begin document
+%========================
+\begin{document}
+
+%-------------------
+% Title frame
+%-------------------
+\maketitle
+
+%-------------------
+% Slide 1: Importance Sampling Method Rationale
+%-------------------
+\begin{frame}{Importance Sampling Method Rationale}
+\begin{itemize}
+	\item In the standard Monte Carlo method, some simulated random values will have more impact in the parameter that is being estimated.
+	\item The rationale of the \textbf{Importance Sampling} method is to generate more
+of these ``relevant" values and fewer not-so-relevant values. 
+	\item This bias (towards ``relevant'' values) is corrected by considering a weighted sum.
+There will be more ``relevant'' values but they are given less weight compared to the Basic Monte Carlo method.
+\end{itemize}
+\end{frame}
+
+%-------------------
+% Slide 2: Importance Sampling (Mathematical Justification)
+%-------------------
+\begin{frame}{Importance Sampling (Mathematical Justification)}
+Let $X$ be a random vector with $X \sim f(x)$.\\
+\begin{equation*}
+    \theta=E_f[g(X)]=\int_{\mathbb{R}^d} g(x)f(x)dx
+\end{equation*}
+The notation $E_f$ means the expected value under the probability density $f$.
+We want to improve the standard MC estimator. \\
+Let $h(x)$ be another density function such that $f(x)=0$ whenever $h(x)=0$, then:
+\begin{align*}
+	\theta &= E_f[g(X)] = \int_{\mathbb{R}^d} g(x)f(x)dx \\
+		   & = \int_{\mathbb{R}^d} \frac{g(x)f(x)}{h(x)}h(x) dx  \\
+ 		   &= E \left(\frac{g(X) f(X)}{h(X)}\right)\;\; \text{when}\;\; X \sim h(x)\\
+           &= E_h \left( \frac{g(X) f(X)}{h(X)}\right)
+\end{align*}
+\end{frame}
+
+%-------------------
+% Slide 3: Importance Sampling Algorithm
+%-------------------
+\begin{frame}
+We just proved that $\theta =\displaystyle{ E_f[g(X)]= E_h \left( \frac{g(X) f(X)}{h(X)}\right)}$. 
+
+Then, in order to a approximate $\theta$ we could also apply a basic Monte Carlo estimator based on the second expected value above.
+
+\begin{algorithm}[H]
+\caption{Monte Carlo Estimation via Importance Sampling}\label{alg:importance-sampling}
+\begin{algorithmic}[1]
+  \State \textbf{Input:} Number of samples $n$, target density $f(x)$, proposal density $h(x)$, and function $g(x)$
+  \For{$j = 1$ to $n$}
+    \State Generate $X_j \sim h(x)$
+    \State Compute weight $w_j = \dfrac{f(X_j)}{h(X_j)}$
+    \State Compute sample value $Y_j = g(X_j) \cdot w_j$
+  \EndFor
+  \State \textbf{Output:} $\hat{\theta}_n^{IS} = \frac{1}{n} \sum_{j=1}^n Y_j$
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Remark:} The estimator is unbiased, since 
+$$ E_h[\hat{\theta}_n^{IS}] = \theta $$
+\end{frame}
+
+%-------------------
+% Slide 4: Importance Sampling Remarks
+%-------------------
+\begin{frame}{Importance Sampling Remarks}
+\begin{itemize}
+	\item The variance of the importance sampling estimator depends strongly on the choice of the function $h$. 
+	\item If $h$ is poorly chosen, the variance of the estimator may actually increase instead of decrease. 	
+	\item Ideally, $h$ should be chosen such that the function $\frac{g(X) f(X)}{h(X)}$ is nearly constant (therefore with a small variance).
+	\item In other words, a good choice of $h$ should be a function with shape similar to $g(x)f(x)$, meaning that more samples are generated in regions where $g(x)f(x)$ is larger.
+	\item At the same time, we should be able to sample efficiently from density $h$.
+	\item In the textbook you can find a more detailed analysis  of the MSE for the importance sampling estimator.
+\end{itemize} 
+\end{frame} 
+
+%-------------------
+% Slide 5: Importance Sampling Example
+%-------------------
+\begin{frame}{Importance Sampling Example}
+\textbf{Problem}: Estimate
+\begin{equation*}
+	\theta=\mathbb{E}\!\bigl(e^{-U^4}\bigr)=\int_0^1 e^{-x^4} \, dx, \qquad U\sim\text{Uniform}(0,1)
+\end{equation*}
+\textbf{Basic Monte Carlo estimator:}
+\begin{equation*}
+	U_1,\dots,U_n\overset{\text{i.i.d.}}{\sim}\text{Uniform}(0,1), \qquad \hat{\theta}_n^{\text{MC}}=\frac{1}{n}\sum_{j=1}^n e^{-U_j^4}
+\end{equation*}
+
+To reduce variance we choose a proposal density $h(x)$ on $[0,1]$ that resembles $g(x)=e^{-x^4}$.  
+A convenient (unnormalized) choice is $\tilde h(x)=e^{-x}$ on $[0,1]$.
+Normalize:
+\begin{equation*}
+	\int_0^1 e^{-x}\,dx = 1-e^{-1},\qquad C=\frac{1}{1-e^{-1}}=\frac{e}{e-1}
+\end{equation*}
+so the normalized proposal is
+\begin{equation*}
+	h(x)=C e^{-x},\qquad x\in[0,1]
+\end{equation*}
+\end{frame}
+
+%-------------------
+% Slide 6: Importance Sampling Example
+%-------------------
+\begin{frame}{Importance Sampling Example}
+\textbf{Inverse CDF for $h$.} The CDF of $h$ is
+\begin{equation*}
+	F(x)=\int_0^x C e^{-t}\,dt = C\bigl(1-e^{-x}\bigr),\qquad 0\le x\le1
+\end{equation*}
+and the inverse is:
+\begin{equation*}
+	F^{-1}(x) = \ln\biggl(\frac{C}{C - x}\biggl)
+\end{equation*}
+
+\textbf{Importance Sampling Estimator:} 
+The original density is $f(x)=1$ on $[0,1]$, so the importance weight is
+
+\begin{align*}
+w(x) &= \frac{f(x)}{h(x)} 
+      = \frac{1}{C e^{-x}} 
+      = \frac{e^{x}}{C}, \\[1em]
+\hat{\theta}_n^{\text{IS}} 
+      &= \frac{1}{n}\sum_{j=1}^n g(X_j)w(X_j) 
+       = \frac{1}{nC}\sum_{j=1}^n e^{X_j - X_j^4},
+\end{align*}
+where $X_1, \dots, X_n \overset{\text{i.i.d.}}{\sim} h(x) = C e^{-x}$.
+\end{frame}
+
+
+%\begin{frame}[fragile]
+%{\bf Code in R}
+%\begin{lstlisting}
+%n<-1000
+%U<-runif(n)
+
+%G<-exp(-U^4)
+%BasicMCEstimator<-mean(G)
+%CI<-c(BasicMCEstimator-1.96*sd(G)/sqrt(n), 
+ %      BasicMCEstimator+1.96*sd(G)/sqrt(n))
+       
+%C<-exp(1)/(exp(1)-1)       
+%Y<-log(C/(C-U))
+%G1<-exp(-Y^4)/(C*exp(-Y))
+%ISEstimator<-mean(G1)
+%CI1<-c(ISEstimator-1.96*sd(G1)/sqrt(n), 
+ %     ISEstimator+1.96*sd(G1)/sqrt(n))
+      
+%\end{lstlisting}
+%\end{frame}
+
+%-------------------
+% Slide 7: Importance Sampling Example
+%-------------------
+\begin{frame}{Homework}
+Let $X \sim N(0,1)$ and $A=[3,4]$. 
+\begin{enumerate}
+	\item Use Basic Monte Carlo to approximate the probability $P(X \in A)$.
+	\item Use an Importance Sampling estimate for the probability  $P(X \in A)$ by generating samples from the distribution  $N(3.5, 1)$ (meaning this is the density $h$).
+\end{enumerate}
+\textbf{Hint}: The probability $P(X \in A)$ is equal to $E(1_A(X))$ where the random variable $1_A$ is defined as
+\vspace{2mm}
+
+$1_A(X)=\left\{\begin{array}{ll} 1& \text{ if } X \in A\\
+0 & \text{ if } X \notin A \end{array} \right.
+$
+\end{frame}
+
+\end{document} 
+
+

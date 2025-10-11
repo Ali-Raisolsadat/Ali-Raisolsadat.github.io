@@ -133,3 +133,56 @@ ggplot(df, aes(x = Method, y = Estimate)) +
        y = "Estimated Value") +
   theme_bw(base_size = 14)
 ```
+
+### Part 4
+```{r}
+# basic Monte Carlo estimator
+n <- 1000
+U <-  runif(n)
+G <-  exp(-U^4)
+mc_estimator <- mean(G)
+mc_ci <- c(
+  mc_estimator - 1.96 * sd(G) / sqrt(n),
+  mc_estimator + 1.96 * sd(G) / sqrt(n)
+)
+
+# importance sampling estimator
+C <-  exp(1) / (exp(1) - 1)
+U <-  runif(n)
+Y <-  log(C / (C - U))
+G1 <- 1/C * exp(Y - Y^4)
+is_estimator <- mean(G1)
+is_ci <- c(
+  is_estimator - 1.96 * sd(G1) / sqrt(n),
+  is_estimator + 1.96 * sd(G1) / sqrt(n)
+)
+
+# results
+cat("Basic Monte Carlo Estimate:", mc_estimator, "\n95% CI:", mc_ci, "\n\n")
+cat("Importance Sampling Estimate:", is_estimator, "\n95% CI:", is_ci, "\n")
+```
+
+### Part 5
+```{r}
+# basic Monte Carlo estimator
+n <- 1000
+U <- runif(n)
+G <- log(2*U^2+1)
+mc_estimator <- mean(G)
+mc_ci <- c(
+  mc_estimator - 1.96 * sd(G) / sqrt(n),
+  mc_estimator + 1.96 * sd(G) / sqrt(n)
+)
+
+G1 <- log(2*U^2+1) - U
+cv_estimator <- mean(G1) + 0.5
+cv_ci <- c(
+  cv_estimator - 1.96 * sd(G1) / sqrt(n),
+  cv_estimator + 1.96 * sd(G1) / sqrt(n)
+)
+
+# results
+cat("Basic Monte Carlo Estimate:", mc_estimator, "\n95% CI:", mc_ci, "\n\n")
+cat("Control Variates Estimate:", cv_estimator, "\n95% CI:", cv_ci, "\n")
+
+```

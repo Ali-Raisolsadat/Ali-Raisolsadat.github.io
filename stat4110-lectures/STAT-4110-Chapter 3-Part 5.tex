@@ -1,0 +1,288 @@
+%========================
+% Document class and theme
+%========================
+\documentclass[8pt]{beamer}
+\usetheme[progressbar=frametitle]{metropolis}
+\setbeamersize{text margin left=10mm, text margin right=10mm}
+\usepackage{appendixnumberbeamer} % appendix slide numbering
+\setbeamertemplate{theorems}[numbered]
+
+%========================
+% Core packages
+%========================
+\usepackage{amsmath, amsfonts, amssymb, amsthm} % math + theorems
+\usepackage{booktabs}        % professional tables
+\usepackage{hyperref}        % hyperlinks
+\usepackage{xcolor}          % colors
+\usepackage{xspace}          % spacing for custom commands
+
+%========================
+% Algorithms
+%========================
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\newtheorem{proposition}{Proposition}
+\usepackage{bbm}
+
+%========================
+% Plots and TikZ
+%========================
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+% ==========================================
+% Professional Code Listing Setup
+% ==========================================
+\usepackage{listings}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+%========================
+% Custom commands
+%========================
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%========================
+% Custom footline
+%========================
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.35\paperwidth,ht=2.5ex,dp=1.5ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+%========================
+% Beamer tweaks
+%========================
+\setbeamertemplate{navigation symbols}{} % remove default navigation symbols
+
+\title{Chapter 3 - Monte Carlo Methods}
+\subtitle{Variance Reduction Methods.\\ Control Variates.}
+\author{Prof. Alex Alvarez, Ali Raisolsadat}
+\institute{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
+\date{} % leave empty or add \today
+
+%========================
+% Begin document
+%========================
+\begin{document}
+
+%-------------------
+% Title frame
+%-------------------
+\maketitle
+
+%-------------------
+% Slide 1: Control Variates Method Rationale
+%-------------------
+\begin{frame}{Control Variates Method Rationale}
+Suppose that we want to find $\theta=E(g(X))$. If we know of another "simpler" function $h$ that is close to $g$, such that $E(h(x))$ can be found analytically then we can write
+
+$$E\left(g(X)\right)=E\left[g(X)-h(X)\right]+E\left(h(X)\right)$$
+
+Now, we can use Monte Carlo methods to find $E\left[g(X)-h(X)\right]$. 
+\vspace{2mm}
+
+Because $g$ and $h$ are close, the random variable $g(X)-h(X)$ has a small variance, so the Monte Carlo error should be smaller than the Monte Carlo error for $g$ on its own.
+\vspace{2mm}
+
+We refer to $h(X)$ as a \textbf{Control Variate} for $g(X)$.
+\end{frame}
+
+%-------------------
+% Slide 2: Control Variates Method Algorithm
+%-------------------
+\begin{frame}{Monte Carlo Estimation via Control Variates}
+\begin{algorithm}[H]
+\caption{Monte Carlo Estimation via Control Variates}\label{alg:control-variates}
+\begin{algorithmic}[1]
+  \State \textbf{Input:} Number of samples $n$, random variable $X$, target function $g(x)$, control function $h(x)$ with known $E[h(X)]$
+  \For{$j = 1$ to $n$}
+    \State Generate $X_j \sim$ distribution of $X$
+    \State Compute control-adjusted value $Y_j = g(X_j) - h(X_j)$
+  \EndFor
+  \State Compute sample mean $s = \dfrac{1}{n} \sum_{j=1}^n Y_j$
+  \State \textbf{Output:} $\displaystyle \hat{\theta}_n^{CV} = s + E[h(X)]$
+\end{algorithmic}
+\end{algorithm}
+The estimator $\theta_n^{CV}$ is unbiased and 
+$$MSE(\theta_n^{CV})=\frac{1}{n}Var(g(X)-h(x))$$
+\end{frame}
+
+%-------------------
+% Slide 3: Control Variates Method Example
+%-------------------
+\begin{frame}{Control Variates Method Example}
+Find an estimate of 
+\begin{equation*}
+	\theta = E\!\left[\log(2U^2 + 1)\right], \quad U \sim \text{Uniform}(0,1)
+\end{equation*}
+using the \textbf{Control Variates Method}.
+
+The target function is $g(x) = \log(2x^2 + 1)$, which satisfies $g(0) = 0$ and $g(1) = \log(3) \approx 1.10$.
+
+As a control variate, consider $h(x) = x$. The functions $g$ and $h$ are positively correlated, and
+\begin{equation*}
+E[h(U)] = E[U] = \frac{1}{2}
+\end{equation*}
+
+\alert{Algorithm}
+\begin{enumerate}
+  \item Generate $U_1, U_2, \ldots, U_n \sim \text{Uniform}(0,1)$
+  \item Compute $s = \frac{1}{n} \sum_{j=1}^n \left(\log(2U_j^2 + 1) - U_j \right)$
+  \item Compute the control variates estimator $\hat{\theta}_n^{CV} = s + E[h(U)] = s + \frac{1}{2}$
+\end{enumerate}
+
+\textbf{Remark}: The efficiency gain depends on the strength of the correlation between $g(U)$ and $h(U)$. Higher (positive) correlation leads to greater variance reduction.
+\end{frame}
+
+
+%\begin{frame}[fragile]
+%{\bf Code in R:}
+%\begin{lstlisting}
+%n<-1000
+%U<-runif(n)
+%G<-log(2*U^2+1)
+%BasicMCEstimator<-mean(G) 
+%CI<-c(BasicMCEstimator-1.96*sd(G)/sqrt(n), 
+ %     BasicMCEstimator+1.96*sd(G)/sqrt(n))
+
+%G1<-log(2*U^2+1)-U
+%CVEstimator<-mean(G1)+0.5
+%CI1<-c(CVEstimator-1.96*sd(G1)/sqrt(n), 
+ %      CVEstimator+1.96*sd(G1)/sqrt(n))
+%
+%\end{lstlisting}
+%
+%\end{frame}
+
+%-------------------
+% Slide 4: Control Variates Method -- General Approach
+%-------------------
+\begin{frame}{Control Variates Method -- General Approach}
+There is a more general approach to the control variates method.
+
+\vspace{2mm}
+ 
+As usual we are trying to estimate  $\theta=E(g(X))$,$ X \sim f$.
+
+\vspace{2mm}
+
+If we generate random numbers/vectors $X_1,X_2,\ldots X_n$ with distribution $f$ we can get the basic MC estimator $\hat{\theta}_n=\frac{1}{n}\sum_{j=1}^n g(X_j)$.
+
+\vspace{2mm}
+
+Consider a function $h(x)$ where $E(h(X))=\mu_h$ is known and define a new MC estimator that depends on a real parameter $c$:
+\begin{equation*}
+    \hat{\theta}_n^{c,h}=\hat{\theta}_n - c(\hat{\theta}^{h}_n-\mu_h)
+\end{equation*}
+where:
+\begin{equation*}
+    \hat{\theta}^{h}_n=\frac{1}{n} \sum_{j=1}^n h(X_j)
+\end{equation*}
+\end{frame}
+
+%-------------------
+% Slide 5: Optimal Estimator
+%-------------------
+\begin{frame}{Optimal Estimator}
+Notice that $ \hat{\theta}_n^c$ is unbiased and
+\begin{equation*}
+     MSE(\hat{\theta}_n^{c,h})=Var( \hat{\theta}_n)+c^2 Var( \hat{\theta}^{h}_n)-2 c \cdot cov(\hat{\theta}_n,\hat{\theta}^{h}_n)
+\end{equation*}
+As a function of $c$ we see that its MSE is minimized at
+\begin{equation*}
+    c_0=\frac{cov(\hat{\theta}_n,\hat{\theta}^{h}_n)}{Var( \hat{\theta}^{h}_n)}=\frac{Cov(g(X),h(X))}{Var(h(X))}
+\end{equation*}
+\begin{equation*}
+     MSE\left(\hat{\theta}_n^{c_0,h}\right)=\frac{1}{n}\left(Var(g(X))-\frac{cov^2(g(X),h(X))}{Var(h(X))}\right)
+\end{equation*}
+\end{frame}
+
+%-------------------
+% Slide 6: Variance Reduction
+%-------------------
+\begin{frame}{Variance Reduction}
+The relative variance reduction using control variates (compared to the basic Monte Carlo estimator) is:
+\begin{align*}
+  \frac{MSE(\hat{\theta}_n^{c_0,h})}{MSE(\hat{\theta}_n)} &= \frac{\frac{1}{n}(Var(g(X))-\frac{cov^2(g(X),h(X))}{Var(h(X))})}{\frac{1}{n}Var(g(X))}\\
+  														  &= 1-\rho^2(g(X),h(X))
+\end{align*}
+where $\rho(g(X),h(X))$ is the correlation coefficient between $g(X)$ and $h(X)$.
+
+\vspace{2mm}
+
+\textbf{Remarks}:
+\begin{itemize}
+	\item The control variates \textbf{optimal estimator} is not worse (it has the same or smaller variance) than the standard Monte Carlo estimator.
+	\item The method works better if there's a strong correlation (either positive or negative) between $g(X)$ and $h(X)$.
+\end{itemize}
+\end{frame}
+
+%-------------------
+% Slide 7: Control Variates Remarks
+%-------------------
+\begin{frame}{Control Variates Remarks}
+\begin{itemize}
+	\item The choice of $c$ in the estimator is important, and in general we are not able to find the optimal value $c_0$ analytically. That is  because the quantities $Var(h(X))$ and $cov(g(X),h(X))$ are, in general, unknown. 
+	\item An alternative is  to estimate them from standard statistical methods using an initial (relatively small) sample of size $m$, and then provide an estimation of $c_0$ as:
+\begin{equation*}
+    \hat{c}_0=\frac{\sum_{j=1}^m (g(X_j)-\hat{\theta}_m)(h(X_j)-\hat{\theta}^{h}_n)}{\sum_{j=1}^m (h(X_j)-\hat{\theta}^{h}_n)^2}
+\end{equation*}
+	\item The choice $c=1$ corresponds to the basic approach to the control variate method, covered in previous slides.
+\end{itemize}
+\end{frame}
+
+%-------------------
+% Slide 8: Control Variates Remarks
+%-------------------
+\begin{frame}{Homework}
+Let $\theta=E(g(U))$ with $U \sim U[0,1]$ and $g(x)=e^x$.
+
+\vspace{2mm}
+
+\begin{enumerate}
+	\item Find the exact value of $\theta$.
+	\item Write a computer program to estimate $\theta$ using basic Monte Carlo integration. 
+	\item Consider $h(x)=x$. Find the optimal control variates Monte Carlo estimator (essentially finding $c_0$ theoretically)
+	\item Write a computer program to estimate $\theta$ using the optimal control variates estimator from part (3)
+	\item How much is the variance reduced by using the control variates estimator, compared to the basic Monte Carlo estimator in your program outcomes?
+	\item Does the answer to (5) match the theoretical variance reduction given by $1-\rho^2(g(U),h(U))$?
+\end{enumerate}
+\end{frame}
+
+\end{document} 
