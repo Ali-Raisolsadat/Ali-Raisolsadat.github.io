@@ -186,3 +186,92 @@ cat("Basic Monte Carlo Estimate:", mc_estimator, "\n95% CI:", mc_ci, "\n\n")
 cat("Control Variates Estimate:", cv_estimator, "\n95% CI:", cv_ci, "\n")
 
 ```
+
+### Part 6
+```{r}
+n <- 1000
+m <- 10
+J <- 100
+bias <- numeric(J)
+theta <- numeric(J)
+
+for (j in 1:J) {
+  rational_p <- 3 + 2 * j / J
+  theta[j] <- rational_p
+  e <- numeric(n)
+  
+  for (i in 1:n) {
+    u <- runif(m, 0, rational_p)
+    e[i] <- max(u)
+  }
+  
+  bias[j] <- mean(e) - rational_p
+}
+
+# plot
+plot(theta, bias, col = "black", type='p', pch=19,
+     xlab = expression(theta), ylab = "Estimated Bias")
+title(main = expression("Monte Carlo Bias: " ~ hat(theta)))
+grid()
+```
+
+```{r}
+# OR
+n <- 1000
+m <- 10
+J <- 100
+theta <- 3 + 2 * (0:(J - 1)) / 100
+bias <- numeric(J)
+
+for (j in 1:J) {
+  t <- theta[j]
+  U <- matrix(runif(n * m, 0, t), nrow = n, ncol = m)  # n x m matrix
+  est <- apply(U, 1, max)                              # row-wise max
+  bias[j] <- mean(est) - t
+}
+
+# plot
+plot(theta, bias, col = "black", type='p', pch=19,
+     xlab = expression(theta), ylab = "Estimated Bias")
+title(main = expression("Monte Carlo Bias: " ~ hat(theta)))
+grid()
+```
+### Part 7
+```{r}
+theta <- c()
+sd1 <- c()
+sd2 <- c()
+n <- 5000
+m <- 20
+J = 100
+
+for (j in 1:(J+1)) {
+  
+  theta[j] <- 10 + (j - 1) / 10
+  estim1 <- c()
+  estim2 <- c()
+  
+  for (i in 1:n) {
+    U <- runif(m, min = 0, max = theta[j])
+    estim1[i] <- 21 * max(U) / 20
+    estim2[i] <- 2 * mean(U)
+  }
+  
+  sd1[j] <- sd(estim1)
+  sd2[j] <- sd(estim2)
+}
+
+# Plots
+par(mfrow = c(1, 2))
+
+plot(theta, sd1, type = "p", col = "black", pch = 19,
+     xlab = expression(theta), ylab = "SD of Estimator 1",
+     main = expression("Monte Carlo SD:" ~ hat(theta)[1]))
+grid()
+
+plot(theta, sd2, type = "p", col = "black", pch = 19,
+     xlab = expression(theta), ylab = "SD of Estimator 2",
+     main = expression("Monte Carlo SD:" ~ hat(theta)[2]))
+grid()
+
+```

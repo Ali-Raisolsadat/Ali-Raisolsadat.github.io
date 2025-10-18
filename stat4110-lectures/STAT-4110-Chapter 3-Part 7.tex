@@ -1,0 +1,237 @@
+%========================
+% Document class and theme
+%========================
+\documentclass[8pt]{beamer}
+\usetheme[progressbar=frametitle]{metropolis}
+\setbeamersize{text margin left=10mm, text margin right=10mm}
+\usepackage{appendixnumberbeamer} % appendix slide numbering
+\setbeamertemplate{theorems}[numbered]
+
+%========================
+% Core packages
+%========================
+\usepackage{amsmath, amsfonts, amssymb, amsthm} % math + theorems
+\usepackage{booktabs}        % professional tables
+\usepackage{hyperref}        % hyperlinks
+\usepackage{xcolor}          % colors
+\usepackage{xspace}          % spacing for custom commands
+
+%========================
+% Algorithms
+%========================
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\newtheorem{proposition}{Proposition}
+\usepackage{bbm}
+
+%========================
+% Plots and TikZ
+%========================
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+% ==========================================
+% Professional Code Listing Setup
+% ==========================================
+\usepackage{listings}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+%========================
+% Custom commands
+%========================
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%========================
+% Custom footline
+%========================
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.35\paperwidth,ht=2.5ex,dp=1.5ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+%========================
+% Beamer tweaks
+%========================
+\setbeamertemplate{navigation symbols}{} % remove default navigation symbols
+
+\title{Chapter 3 - Monte Carlo Methods}
+\subtitle{Monte Carlo Applications to Statistical Inference.\\ Point Estimators.}
+\author{Prof. Alex Alvarez, Ali Raisolsadat}
+\institute{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
+\date{} % leave empty or add \today
+
+%========================
+% Begin document
+%========================
+\begin{document}
+
+%-------------------
+% Title frame
+%-------------------
+\maketitle
+
+%-------------------
+% Slide 1: Standard Error of an Estimator
+%-------------------
+\begin{frame}{Standard Error of an Estimator}
+In this lecture we will see how to use Monte Carlo methods to estimate the standard error of an estimator.
+
+\vspace{3mm}
+
+A reminder that our framework consists on having some observations $x=(x_1,x_2,...,x_n)$ that are considered a random sample of a random variable $X=(X_1,X_2,...,X_n)\sim P_{\theta}$, where $\theta \in \Theta$
+is unknown.
+
+\vspace{3mm}
+
+Let $\hat{\theta}=\hat{\theta}(X)$ be an estimator of $\theta$. One important quantity that we study on estimators is their standard deviation.
+\begin{equation*}
+s.e._{\theta}(\hat{\theta})=stdev\left(\hat{\theta}(X)\right)=\sqrt{Var\left(\hat{\theta}(X) \right)}
+\end{equation*}
+\end{frame}
+
+%-------------------
+% Slide 2: Standard Error of an Estimator
+%-------------------
+\begin{frame}{Standard Error of an Estimator}
+In some cases we can estimate $s.e._{\theta}(\hat{\theta})$ easily.
+\vspace{3mm}
+
+For example, for estimators of the form $\hat{\theta}=\frac{1}{n} \sum_{j=1}^n X_j$ we can estimate their standard deviation as 
+\begin{equation*}
+\widehat{s.e.}_{\theta}(\hat{\theta})=\frac{\hat{s}}{\sqrt{n}}
+\end{equation*}
+where $\hat{s}$ is the sample standard deviation of the observations $(x_1,x_2,..,x_n)$.
+
+\vspace{3mm}
+
+(we used this in previous sections of this chapter to give a confidence interval of a Monte Carlo estimator)
+
+\vspace{3mm}
+
+However, for estimators $\hat{\theta}$ that are not given as a sample mean, estimating their standard error may be more complicated.
+\end{frame}
+
+%-------------------
+% Slide 3: Estimating the Standard Error
+%-------------------
+\begin{frame}{Estimating the Standard Error}
+For a given value of $\theta$, if we are able to generate $N$ samples: $\left\{x^{(j)}\right\}_{j=1,2,...,N}$ of the random variable $X$ we could estimate the standard error of the estimator $\hat{\theta}$ as:
+\begin{equation*}
+	\widehat{s.e.}_{\theta}(\hat{\theta})=\sqrt{\frac{1}{N} \sum_{j=1}^N\left(\hat{\theta}(x^{(j)}) -\overline{\hat{\theta}^{(\cdot)}}\right)^2}
+\end{equation*}
+where $\overline{\hat{\theta}^{(\cdot)}}=\frac{1}{N} \sum_{j=1}^N\hat{\theta}(x^{(j)})$
+
+If necessary, we can do this for a range of values of $\theta$ to get a better idea of the standard error of the estimator as a function of $\theta$. 
+\end{frame}
+
+%-------------------
+% Slide 4: Example
+%-------------------
+\begin{frame}{Example} 
+Assume that we would like to estimate an unknown parameter $\theta$ from a sample of 20 random numbers that are distributed according to the uniform distribution on $[0,\theta]$.
+Two unbiased estimators for $\theta$ are proposed and we would like to find out which of these two estimators has a smaller variance.
+
+\vspace{3mm}
+
+\textbf{Estimator 1}: $\hat{\theta}_1(X)=\frac{21}{20}\max(X_1,X_2,...X_{20})$
+\vspace{3mm}
+
+\textbf{Estimator 2}: $\hat{\theta}_2(X)=\frac{2}{N} \sum_{j=1}^{20} X_j$
+
+\vspace{3mm}
+
+Use Monte Carlo methods to estimate the standard error for both estimators, for values of $\theta$ on $[10,20]$. 
+\end{frame}
+
+
+%-------------------
+% Slide 5: Estimating the Standard Error
+%-------------------
+\begin{frame}
+\begin{algorithm}[H]
+\caption{Monte Carlo Estimation of Estimator Variability}
+\label{alg:generalized-sd-estimation}
+\begin{algorithmic}[1]
+  \State \textbf{Input:} Number of simulations $N$, sample size $m$, parameter grid $\{\theta_j\}_{j=1}^J$
+  \For{$j = 1$ to $J$}
+    \State Initialize empty vectors for estimator values
+    \For{$i = 1$ to $N$}
+      \State Generate $U_{i1}, \ldots, U_{im} \sim \text{Uniform}(0,\, \theta_j)$
+      \State Compute estimators $\hat{\theta}_{1i} = a_1 \max(U_i) + b_1$ and $\hat{\theta}_{2i} = a_2 \, \overline{U_i} + b_2$
+    \EndFor
+    \State Compute standard deviations: $\texttt{sd1}_j = \text{sd}(\hat{\theta}_{1})$, \quad $\texttt{sd2}_j = \text{sd}(\hat{\theta}_{2})$
+  \EndFor
+  \State \textbf{Output:} Standard deviation profiles $\{\texttt{sd1}_j, \texttt{sd2}_j\}_{j=1}^J$
+\end{algorithmic}
+\end{algorithm}
+\end{frame}
+
+%-------------------
+% Slide 6: Example plot
+%-------------------
+\begin{frame}
+\begin{center}
+\includegraphics[width=\textwidth]{sdestim.png}
+\end{center}
+
+\textbf{Note}: Estimator 1 would be preferable as it has a small standard error.
+\end{frame}
+
+%-------------------
+% Slide 7: Homework
+%-------------------
+\begin{frame}{Homework} 
+Assume that we would like to estimate the unknown parameter $\mu$ from a sample of 10 random numbers that are distributed according to the normal distribution $N(\mu,1)$. We don't have the full information about these observations, we only have the min, median and max.
+
+Two unbiased estimators for $\mu$ are proposed and we would like to find out which of these two estimators has a smaller variance.
+
+\vspace{3mm}
+
+Estimator 1: $\displaystyle{\hat{\mu}_1(X)=\frac{\min(X)+\max(X)}{2}}$
+
+Estimator 2: $\hat{\mu}_2(X)=median(X)$
+
+\vspace{3mm}
+
+Use Monte Carlo methods to estimate the standard error for both estimators, for values of $\mu$ on $[-5,5]$ 
+\end{frame}
+
+\end{document} 
+
+
