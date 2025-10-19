@@ -16,7 +16,7 @@ library(pracma)
 ```
 
 ### Lecture 1
-```{r}
+```{r, out.width="100%"}
 # Algorithm 1 - Slide 9
 n <- 1000
 U <- runif(n, min = 0, max = 1)
@@ -25,7 +25,7 @@ estimator <- pi * mean(Y)
 print(estimator)
 ```
 
-```{r}
+```{r, out.width="100%"}
 # true value of the integral
 true_value <- 2
 n_values <- seq(1, 5001, by = 10)
@@ -49,7 +49,7 @@ legend("bottomright", legend = c("Monte Carlo Estimates", "True Value = 2"),
 grid()
 ```
 
-```{r}
+```{r, out.width="100%"}
 # Algorithm 2 - Slide 10
 n <- 1000
 U <- runif(n, min = 0, max = 1)
@@ -59,7 +59,7 @@ estimator <- mean(Y)
 print(estimator)
 ```
 
-```{r}
+```{r, out.width="100%"}
 # approximate true value using a very large n
 n_true <- 2e6
 U_true <- runif(n_true)
@@ -92,9 +92,7 @@ grid()
 ```
 
 ### Lecture 3
-```{r}
-set.seed(123)
-
+```{r, out.width="100%"}
 n <- 1000
 m <- n/2
 true_value <- exp(1) - 1
@@ -135,7 +133,7 @@ ggplot(df, aes(x = Method, y = Estimate)) +
 ```
 
 ### Part 4
-```{r}
+```{r, out.width="100%"}
 # basic Monte Carlo estimator
 n <- 1000
 U <-  runif(n)
@@ -163,7 +161,7 @@ cat("Importance Sampling Estimate:", is_estimator, "\n95% CI:", is_ci, "\n")
 ```
 
 ### Part 5
-```{r}
+```{r, out.width="100%"}
 # basic Monte Carlo estimator
 n <- 1000
 U <- runif(n)
@@ -188,7 +186,7 @@ cat("Control Variates Estimate:", cv_estimator, "\n95% CI:", cv_ci, "\n")
 ```
 
 ### Part 6
-```{r}
+```{r, out.width="100%"}
 n <- 1000
 m <- 10
 J <- 100
@@ -215,7 +213,7 @@ title(main = expression("Monte Carlo Bias: " ~ hat(theta)))
 grid()
 ```
 
-```{r}
+```{r, out.width="100%"}
 # OR
 n <- 1000
 m <- 10
@@ -237,7 +235,7 @@ title(main = expression("Monte Carlo Bias: " ~ hat(theta)))
 grid()
 ```
 ### Part 7
-```{r}
+```{r, out.width="100%"}
 theta <- c()
 sd1 <- c()
 sd2 <- c()
@@ -272,6 +270,37 @@ grid()
 plot(theta, sd2, type = "p", col = "black", pch = 19,
      xlab = expression(theta), ylab = "SD of Estimator 2",
      main = expression("Monte Carlo SD:" ~ hat(theta)[2]))
+grid()
+
+```
+
+### Part 8
+```{r, out.width="100%"}
+n <- 10
+N <- 5000
+lambda <- numeric(19)
+P <- numeric(19)
+
+for (i in 1:19) {
+  lambda[i] <- 0.05 * (i + 1)
+  k <- 0
+  for (j in 1:N) {
+    X <- rpois(n, lambda[i])
+    m <- mean(X)
+    d <- sd(X) * qt(0.975, df = n - 1) / sqrt(n)
+    if (m - d <= lambda[i] && lambda[i] <= m + d) {
+      k <- k + 1
+    }
+  }
+  P[i] <- k / N
+}
+
+# plot
+plot(lambda, P, 
+     type = "b", pch = 19, lwd = 2, col = "black",
+     xlab = expression(lambda), ylab = "Coverage Probability (P)",
+     main = expression("Confidence Coefficients for " * lambda),
+     cex.main = 1.2, cex.lab = 1.1, cex.axis = 0.9)
 grid()
 
 ```

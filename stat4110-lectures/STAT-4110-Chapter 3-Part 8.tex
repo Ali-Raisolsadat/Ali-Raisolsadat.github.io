@@ -1,0 +1,309 @@
+%========================
+% Document class and theme
+%========================
+\documentclass[8pt]{beamer}
+\usetheme[progressbar=frametitle]{metropolis}
+\setbeamersize{text margin left=10mm, text margin right=10mm}
+\usepackage{appendixnumberbeamer} % appendix slide numbering
+\setbeamertemplate{theorems}[numbered]
+
+%========================
+% Core packages
+%========================
+\usepackage{amsmath, amsfonts, amssymb, amsthm} % math + theorems
+\usepackage{booktabs}        % professional tables
+\usepackage{hyperref}        % hyperlinks
+\usepackage{xcolor}          % colors
+\usepackage{xspace}          % spacing for custom commands
+
+%========================
+% Algorithms
+%========================
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\newtheorem{proposition}{Proposition}
+\usepackage{bbm}
+
+%========================
+% Plots and TikZ
+%========================
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+% ==========================================
+% Professional Code Listing Setup
+% ==========================================
+\usepackage{listings}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+%========================
+% Custom commands
+%========================
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%========================
+% Custom footline
+%========================
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.35\paperwidth,ht=2.5ex,dp=1.5ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+%========================
+% Beamer tweaks
+%========================
+\setbeamertemplate{navigation symbols}{} % remove default navigation symbols
+
+\title{Chapter 3 - Monte Carlo Methods}
+\subtitle{Monte Carlo applications to Statistical Inference. \\ Confidence Intervals.}
+\author{Prof. Alex Alvarez, Ali Raisolsadat}
+\institute{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
+\date{} % leave empty or add \today
+
+%========================
+% Begin document
+%========================
+\begin{document}
+
+%-------------------
+% Title frame
+%-------------------
+\maketitle
+
+%-------------------
+% Slide 1: Confidence Intervals
+%-------------------
+\begin{frame}{Confidence Intervals}
+\textbf{Definition:} A confidence interval with confidence coefficient $1-\alpha$ for a parameter $\theta$ is a random interval $[U,V] \subset \mathbb{R}$ where $U=U(X)$ and $V=V(X)$ are functions of the random sample $X=(X_1,X_2,...,X_n)$ such that:
+\begin{equation*}
+P_{\theta}\left(\theta \in [U(X),V(X)]\right) \geq 1-\alpha
+\end{equation*}
+for all $\theta \in \Theta$. The subscript $\theta$ on the probability $P$ indicates that the random sample $X$ is assumed to be distributed according to the distribution with parameter $\theta$
+
+\vspace{3mm}
+
+\textbf{Remark}: For the purpose of today's class, $\theta$ is a one-dimensional parameter. Some of these ideas can also be considered in multidimensional parametric spaces.
+\end{frame}
+
+%-------------------
+% Slide 2: Confidence Intervals
+%-------------------
+\begin{frame}{Confidence Intervals}
+In many cases we can construct (analytically) confidence intervals $[U(X),V(X)]$ that satisfy the definition above.
+
+\vspace{3mm}
+
+One well know example of that is the case in which $X_1,X_2,\ldots,X_n $ are i.i.d. with distribution $\sim N(\mu, \sigma^2)$ where the variance $\sigma^2$ is known.
+
+\vspace{3mm}
+
+Let $\displaystyle{\hat{\mu}(X)=\frac{1}{n}\sum_{i=1}^{n}X_i}$. The confidence interval for the parameter $\mu$ given by
+\vspace{3mm}
+\begin{equation*}
+U(X)=\hat{\mu}(X)-Z_{1-\alpha/2} \frac{ \sigma}{\sqrt{n}} \quad V(X)=\hat{\mu}(X)+Z_{1-\alpha/2} \frac{ \sigma}{\sqrt{n}}
+\end{equation*}
+satisfies that $P_\mu( \mu \in [U(X),V(X)])=1-\alpha$.
+
+\vspace{3mm} 
+
+We can do this because we know the exact distribution of our point estimator $\hat{\mu}(X)$.
+\end{frame}
+
+%-------------------
+% Slide 3: Confidence Intervals
+%-------------------
+\begin{frame}{Confidence Intervals}
+This interval estimator for the mean can be extended to other situations as long as $n$ is large. We might need to replace $\sigma$ with $s$ (the standard deviation of the sample $X$). That is because for large values of $n$, the Central Limit Theorem applies.
+\vspace{3mm} 
+
+In other situations, for instance if the data is not normally distributed, or if $n$ is small it might be more complicated to construct confidence intervals.
+\vspace{3mm} 
+
+Today we will see how we can use Monte Carlo simulations to assess whether a confidence interval $[U,V]$ is appropriate.
+\vspace{3mm} 
+
+For simplicity we will still consider a confidence interval of the mean parameter of some distribution.
+\end{frame}
+
+%-------------------
+% Slide 4: Confidence Intervals Example
+%-------------------
+\begin{frame}{Example}
+\textbf{Example 3.38} Consider $X=(X_1,X_2, \ldots, X_n)$ i.i.d. Poisson distributed with unknown parameter $\lambda \in [0.1,1]$. Assume that $n=10$; meaning that Central Limit Theorem approximations do not apply.
+
+\vspace{3mm} 
+
+Consider the approximated confidence interval for the mean parameter $\lambda$ given by:
+\begin{equation*}
+U(X)=\hat{\lambda}(X)-t_{1-\alpha/2}^{(n-1)}  \frac{s}{\sqrt{n}} \quad V(X)=\hat{\lambda}(X)+t_{1-\alpha/2}^{(n-1)} \frac{s}{\sqrt{n}}
+\end{equation*}
+where $t_{1-\alpha/2}^{(n-1)}$ is the percentile at level $1-\alpha/2$ of the Student's t distribution with n-1 degrees of freedom, and $s$ is the sample standard deviation. Use $\alpha=0.05$.
+
+\vspace{3mm} 
+
+\textbf{Problem}: Do we actually have that 
+\[P_\lambda(U(X)\leq \lambda \leq V(X)) \geq 0.95\]
+for all $\lambda \in [0.1,1] $?
+\end{frame}
+
+%-------------------
+% Slide 5: Confidence Intervals Example Algorithm
+%-------------------
+\begin{frame}
+
+{\bf Algorithm:}
+
+\begin{enumerate}
+
+\item For fixed $\lambda$ generate samples $\left\{X^{(j)} \right\}_{j=1,2,...N}$ of size $10$ and compute $U^{(j)}$, $V^{(j)}$ for each sample.
+
+\item Approximate \[P_\lambda(U(X)\leq \lambda \leq V(X)) \approx \frac{1}{N}\sum_{j=1}^N 1_{\left[U^{(j)}, V^{(j)}\right]}(\lambda)\]
+
+\item Repeat steps 1 and 2 for as many values of $\lambda$ as needed
+
+\end{enumerate}
+\end{frame}
+
+%-------------------
+% Slide 6: Confidence Intervals Example
+%-------------------
+\begin{frame}
+\begin{algorithm}[H]
+\caption{Monte Carlo Estimation of Confidence Coefficients for Poisson Mean}
+\label{alg:poisson-confidence}
+\begin{algorithmic}[1]
+  \State \textbf{Input:} Number of samples $n$, number of simulations $N$, Poisson rate grid $\{\lambda_i\}_{i=1}^K$
+  \For{$i = 1$ to $K$}
+    \State Initialize counter $k \gets 0$
+    \For{$j = 1$ to $N$}
+      \State Generate $X_{j1}, \ldots, X_{jn} \sim \text{Poisson}(\lambda_i)$
+      \State Compute sample mean $\bar{X}_j = \frac{1}{n} \sum_{t=1}^{n} X_{jt}$
+      \State Compute standard deviation $s_j = \text{sd}(X_j)$
+      \State Compute margin of error $d_j = s_j \cdot t_{0.975,\, n-1} / \sqrt{n}$
+      \If{$\bar{X}_j - d_j \leq \lambda_i \leq \bar{X}_j + d_j$}
+        \State Increment counter: $k \gets k + 1$
+      \EndIf
+    \EndFor
+    \State Estimate coverage probability: $P_i = k / N$
+  \EndFor
+  \State \textbf{Output:} Coverage probabilities $\{P_i\}_{i=1}^K$ as a function of $\lambda_i$
+\end{algorithmic}
+\end{algorithm}
+\end{frame}
+
+\begin{frame}{From Nested Loops to Vectorized Mathematics}
+\small
+\textbf{Nested-loop formulation:}
+\[
+\text{For each } \lambda_i,\; i=1,\ldots,K \quad 
+\text{and each simulation } j=1,\ldots,N:
+\]
+\[
+X_{ij1}, \ldots, X_{ijn} \sim \text{Poisson}(\lambda_i)
+\]
+\[
+\bar{X}_{ij} = \frac{1}{n}\sum_{t=1}^{n} X_{ijt}, \qquad
+s_{ij} = \sqrt{\frac{1}{n-1}\sum_{t=1}^{n} (X_{ijt}-\bar{X}_{ij})^2}
+\]
+\[
+d_{ij} = s_{ij} \cdot \frac{t_{0.975,\, n-1}}{\sqrt{n}}, \qquad
+I_{ij} = 
+\begin{cases}
+1, & \text{if } \bar{X}_{ij} - d_{ij} \leq \lambda_i \leq \bar{X}_{ij} + d_{ij} \\
+0, & \text{otherwise}
+\end{cases}
+\]
+\[
+P_i = \frac{1}{N}\sum_{j=1}^{N} I_{ij}
+\]
+
+\vspace{0.5em}
+\textbf{Matrix/vectorized representation:}
+\[
+\mathbf{X} = [X_{ijt}] \in \mathbb{R}^{K \times N \times n}, \quad X_{ijt} \sim \text{Poisson}(\lambda_i)
+\]
+\[
+\bar{\mathbf{X}} = \text{mean}(\mathbf{X}, \text{axis}=3), \quad
+\mathbf{S} = \text{sd}(\mathbf{X}, \text{axis}=3)
+\]
+\[
+\mathbf{D} = \mathbf{S} \cdot \frac{t_{0.975,\, n-1}}{\sqrt{n}}, \quad
+\boldsymbol{\Lambda} = [\lambda_i]_{i=1}^{K} \in \mathbb{R}^{K \times 1}
+\]
+\[
+\mathbf{I} = (\bar{\mathbf{X}} - \mathbf{D} \leq \boldsymbol{\Lambda} \leq \bar{\mathbf{X}} + \mathbf{D}), \quad
+\mathbf{P} = \frac{1}{N} \sum_{j=1}^{N} \mathbf{I}_{ij}
+\]
+\end{frame}
+
+%-------------------
+% Slide 7: Confidence Intervals Example Plot
+%-------------------
+\begin{frame}
+\begin{center}
+\includegraphics[width=\textwidth]{CIPoisson.png}
+\end{center}
+\end{frame}
+
+%-------------------
+% Slide 8: Confidence Intervals Remarks
+%-------------------
+\begin{frame}{Remarks}
+\begin{itemize}
+	\item We can see that for small values of $\lambda$, the confidence interval will contain the actual value of $\lambda$ much less frequently than the desired 95\% of the time. This indicates that proper 95\% confidence intervals must be larger.
+	\item A more detailed analysis would be needed in  order to decide how to much increase should we increase that interval.
+	\item Not necessarily the confidence interval has to be symmetric around the point estimator. 
+\end{itemize}
+\end{frame}
+
+%-------------------
+% Slide 9: Homework
+%-------------------
+\begin{frame}{Homework}  
+Perform an analysis similar to what we did in {\bf Example 3.38} but now using samples of size $n=8$ from the exponential distribution with mean $\mu \in [5,10]$.  Do you think that $U$ and $V$ as defined in \textbf{Example 3.38} can be used as an appropriate 95\% confidence interval for $\mu \in [5,10]$
+
+\vspace{3mm}
+
+\textbf{Reminder}: Random variables with exponential distributions with intensity $\lambda$ have expected value $\mu=1/\lambda$.
+\end{frame}
+
+
+\end{document} 
+
+
