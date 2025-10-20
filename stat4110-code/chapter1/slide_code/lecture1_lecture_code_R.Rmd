@@ -144,6 +144,41 @@ target_sample <- target_sample[1:n]
 hist(target_sample, breaks = 30,
      main = "Histogram of Positive Normal Samples (Vectorized)",
      xlab = "X", ylab = "Frequency", col = "grey", border = "black")
+
+# Slide 8: Uniform points on [0,2] x [1,4]
+n <- 500
+X <- runif(n, 0, 2)
+Y <- runif(n, 1, 4)
+plot(X, Y, pch = 19, col = 'gray', xlab = "U1 ~ U[0, 2]", ylab = "U2 ~ U[1, 4]",
+     main = "Uniform Points on the Rectangle [0,2] × [1,4]",
+     xlim = c(-0.1, 2.1), ylim = c(0.8, 4.2), asp = 1)
+rect(0, 1, 2, 4, border = "black", lwd = 2)
+
+
+# ---------------------------------------------
+# Algorithm: Rejection Sampling Inside Unit Semicircle
+# ---------------------------------------------
+sample_semicircle <- function(n, seed = NULL) {
+  U1 <- runif(n, -1, 1)
+  U2 <- runif(n, 0, 1)
+  mask <- (U1^2 + U2^2) < 1
+  X1 <- U1[mask]
+  X2 <- U2[mask]
+  return(list(X1 = X1, X2 = X2))
+}
+
+n <- 5000
+points <- sample_semicircle(n, seed = 42)
+X1 <- points$X1
+X2 <- points$X2
+
+plot(X1, X2, pch = 20, 
+     col = "gray", xlab = "X1", ylab = "X2", 
+     main = "Uniform Points Inside the Upper Unit Semicircle",
+     asp = 1, xlim = c(-1.1, 1.1), ylim = c(-0.1, 1.1))
+theta <- seq(0, pi, length.out = 200)
+lines(cos(theta), sin(theta), lwd = 2)
+
 ```
 
 ### Part 5

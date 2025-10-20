@@ -1,0 +1,18 @@
+\frametitle{Algorithm: Vectorized Rejection Sampling Inside Unit Semicircle}
+\begin{algorithm}[H]
+    \caption{Generate $n$ points $(X_1, X_2)$ uniformly inside the semicircle (vectorized)}
+    \begin{algorithmic}[1]
+        \State \textbf{Input:} Integer $n$
+        \State Generate candidate points:
+        \Statex \quad $U_1 \gets \text{runif}(n \times 2, -1, 1)$
+        \Statex \quad $U_2 \gets \text{runif}(n \times 2, 0, 1)$
+        \State Compute mask for points inside the unit circle:
+        \Statex \quad $\text{inside} \gets (U_1^2 + U_2^2 < 1)$
+        \State Keep only the accepted points:
+        \Statex \quad $X_1 \gets U_1[\text{inside}]; X_1 \gets X_1[1:n]$
+        \Statex \quad $X_2 \gets U_2[\text{inside}]; X_2 \gets X_2[1:n]$
+        \State \textbf{Output:} $X_1, X_2$ (vectors of $n$ points inside the semicircle)
+    \end{algorithmic}
+\end{algorithm}
+
+\textbf{Note}: In vectorized rejection sampling, we often generate more candidate points than needed (e.g., $n\times 2$) to ensure that enough points satisfy the acceptance condition. Since only a fraction of the candidates fall inside the desired region, oversampling increases the likelihood that we can select exactly $n$ accepted points without looping. The factor 2 is a simple heuristic; larger factors may be needed if the acceptance rate is low.
