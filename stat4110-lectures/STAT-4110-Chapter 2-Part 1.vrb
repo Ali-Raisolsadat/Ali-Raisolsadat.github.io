@@ -1,0 +1,8 @@
+\frametitle{Mixture of Random Variables Example}
+\begin{center}
+\includegraphics[width=0.95\textwidth]{chapter2-part1-plot5.png}
+\end{center}
+
+\vspace{-3mm}
+
+{\bf Remark:} We can clearly see the difference between the histogram of the weighted sum of random variables and the histogram of the mixture distribution.

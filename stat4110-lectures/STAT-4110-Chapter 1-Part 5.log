@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.4) (preloaded format=xelatex 2025.9.4)  20 OCT 2025 15:50
+This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.4) (preloaded format=xelatex 2025.9.4)  22 OCT 2025 17:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1314,8 +1314,7 @@ File: lstlang1.sty 2024/09/23 1.10c listings language file
 pgfplotsthemetol.sty
 Package: pgfplotsthemetol 2017/01/23 PGFplots colors based on Paul Tol's SRON t
 echnical note
-)
-No file "STAT-4110-Chapter 1-Part 5".aux.
+) (STAT-4110-Chapter 1-Part 5.aux)
 \openout1 = `"STAT-4110-Chapter 1-Part 5.aux"'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 119.
@@ -1338,6 +1337,7 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 119.
 LaTeX Font Info:    ... okay on input line 119.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 119.
 LaTeX Font Info:    ... okay on input line 119.
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
 *geometry* verbose mode - [ preamble ] result:
@@ -1373,11 +1373,9 @@ LaTeX Font Info:    ... okay on input line 119.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 Package hyperref Info: Link coloring OFF on input line 119.
+(STAT-4110-Chapter 1-Part 5.out) (STAT-4110-Chapter 1-Part 5.out)
 \@outlinefile=\write5
 \openout5 = `"STAT-4110-Chapter 1-Part 5.out"'.
-
-
-Package hyperref Warning: Rerun to get /PageLabels entry.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 119.
@@ -1462,8 +1460,7 @@ Package pgfplots notification 'compat/show suggested version=true': you might b
 enefit from \pgfplotsset{compat=1.18} (current compat level: 1.9).
 
 \c@lstlisting=\count426
-No file "STAT-4110-Chapter 1-Part 5".nav.
-
+(STAT-4110-Chapter 1-Part 5.nav)
 Overfull \vbox (10.92494pt too high) detected at line 124
  []
 
@@ -1540,10 +1537,10 @@ anged.
 (rerunfilecheck)             Checksum: <no file>.
  ) 
 Here is how much of TeX's memory you used:
- 39942 strings out of 403249
- 963569 string characters out of 5460861
- 1745903 words of memory out of 5000000
- 67658 multiletter control sequences out of 15000+600000
+ 39974 strings out of 403249
+ 964097 string characters out of 5460861
+ 1746903 words of memory out of 5000000
+ 67682 multiletter control sequences out of 15000+600000
  631518 words of font info for 93 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,15n,142p,1921b,1554s stack positions out of 10000i,1000n,20000p,200000b,200000s

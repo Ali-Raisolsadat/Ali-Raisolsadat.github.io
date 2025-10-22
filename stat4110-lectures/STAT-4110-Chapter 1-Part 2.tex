@@ -347,37 +347,42 @@ plt.show()
 \textbf{Remark}: Of course, without the constraint of using the inverse transform method, we could use R's or Python's built-in exponential generator.
 \end{frame}
 
+%-----------------------
+% Slide 8: Example (Exponential Distribution) plot
+%-----------------------
+\begin{frame}[fragile]{Envelope Rejection Sampling Example}
+\begin{center}
+\includegraphics[width=\textwidth]{chapter1-part2-plot1.png}
+\end{center}
+\end{frame}
+
+
+%-----------------------
+% Slide 9: Summary
+%-----------------------
 \begin{frame}{Summary}
 \begin{itemize}
-
-\item The inverse transform method is straightforward, efficient and very general.
-
-\item For the generation of continuous random variables, the inverse transform method is the method of choice in most cases, as long as $F^{-1}$ can be found explicitly.
-
-\item Unfortunately, some important distributions do not admit a closed-form solution for $F^{-1}$ (the normal distribution is an obvious example of this) therefore other methods would have to be applied in those cases.
+	\item The inverse transform method is straightforward, efficient and very general.
+	\item For the generation of continuous random variables, the inverse transform method is the method of choice in most cases, as long as $F^{-1}$ can be found explicitly.
+	\item Unfortunately, some important distributions do not admit a closed-form solution for $F^{-1}$ (the normal distribution is an obvious example of this) therefore other methods would have to be applied in those cases.
 
 \end{itemize}
 \end{frame}
 
-
+%-----------------------
+% Slide 10: Homework
+%-----------------------
 \begin{frame}{Homework}
 \begin{enumerate}
-\item Write down a computer program to generate a sample of 1000 random numbers from the probability distribution with density function 
+	\item Write down a computer program to generate a sample of 1000 random numbers from the probability distribution with density function 
 \begin{equation*}
 f(x) = \frac{3}{2} x^{-5/2}, \quad x \in [1, \infty), \quad 0 \text{ otherwise.}
 \end{equation*}
-
-\item Find the explicit inverse of the CDF for the \textbf{Weibull distribution} $$F(x) = 1 - e^{-(x/\lambda)^k}, \ x \ge 0, \quad x \leq 0$$
-
-\item Find the explicit inverse of the CDF for the \textbf{Cauchy distribution} $$F(x) = \frac{1}{\pi} \arctan\left(\frac{x-x_0}{\gamma}\right) + \frac{1}{2}, \quad \gamma>0$$ 
-
-\item Find the explicit inverse of the CDF for the \textbf{Logistic distribution} $$F(x) = \frac{1}{1 + e^{-(x-\mu)/s}}, \quad s > 0$$ and plot both the PDF and CDF. What is the difference between this distribution and the \textbf{Normal distribution}?
+	\item Find the explicit inverse of the CDF for the \textbf{Weibull distribution} $$F(x) = 1 - e^{-(x/\lambda)^k}, \ x \ge 0, \quad x \leq 0$$
+	\item Find the explicit inverse of the CDF for the \textbf{Cauchy distribution} $$F(x) = \frac{1}{\pi} \arctan\left(\frac{x-x_0}{\gamma}\right) + \frac{1}{2}, \quad \gamma>0$$ 
+	\item Find the explicit inverse of the CDF for the \textbf{Logistic distribution} $$F(x) = \frac{1}{1 + e^{-(x-\mu)/s}}, \quad s > 0$$ and plot both the PDF and CDF. What is the difference between this distribution and the \textbf{Normal distribution}?
 \end{enumerate}
-
-
-
 \end{frame}
-
 
 
 \end{document}

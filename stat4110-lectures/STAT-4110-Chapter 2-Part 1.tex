@@ -276,7 +276,7 @@ Possibly the most straightforward way to do this is by using the Cholesky decomp
 \end{frame}
 
 %-------------------
-% Slide 8: Multivariate Normal Distributions
+% Slide 8: Multivariate Normal Distributions (Chelosky Example)
 %-------------------
 \begin{frame}{Multivariate Normal Distributions -- Example}
 \textbf{Example}: Generate a sample of 100 random vectors in $\mathbb{R}^2$ that follow the normal distribution with mean 
@@ -301,7 +301,17 @@ So
 \end{frame}
 
 %-------------------
-% Slide 9: Hierarchical models
+% Slide 9: Multivariate Normal Distributions (Chelosky Example) Plot
+%-------------------
+\begin{frame}{Multivariate Normal Distributions -- Example}
+\begin{center}
+\includegraphics[width=\textwidth]{chapter2-part1-plot1.png}
+\end{center}
+\end{frame}
+
+
+%-------------------
+% Slide 10: Hierarchical models
 %-------------------
 \begin{frame}{Hierarchical models}
 Some statistical models have a hierarchical structure in the sense that not all random variables are defined simultaneously. Instead there exist several levels of randomness and the random variables in some levels depend on the variables defined in earlier levels. Some examples of these hierarchical models that are covered in our textbook are:
@@ -316,7 +326,7 @@ Some statistical models have a hierarchical structure in the sense that not all 
 \end{frame}
 
 %-------------------
-% Slide 10: Bayesian Models
+% Slide 11: Bayesian Models
 %-------------------
 \begin{frame}{Bayesian Models}
 Simulation of data that is distributed according to a Bayesian model is done in steps, by following the structure of the model. 
@@ -341,7 +351,7 @@ X_i \mid \mu, \sigma^2 &\sim N(\mu, \sigma^2), \quad i=1,\dots,n, \\
 \end{frame}
 
 %-------------------
-% Slide 11: Bayesian Model Simulation Algorithm
+% Slide 12: Bayesian Model Simulation Algorithm
 %-------------------
 \begin{frame}{Bayesian Model Simulation Algorithm}
 \begin{algorithm}[H]
@@ -367,7 +377,16 @@ X_i \mid \mu, \sigma^2 &\sim N(\mu, \sigma^2), \quad i=1,\dots,n, \\
 \end{frame}
 
 %-------------------
-% Slide 12: Bayesian Model Simulation Algorithm
+% Slide 13: Bayesian Model Simulation Plot
+%-------------------
+\begin{frame}[fragile]{Bayesian Model Simulation Histogram - Method 1}
+\begin{center}
+\includegraphics[width=\textwidth]{chapter2-part1-plot2.png}
+\end{center}
+\end{frame}
+
+%-------------------
+% Slide 14: Bayesian Model Simulation Algorithm
 %-------------------
 \begin{frame}{Bayesian Model Simulation Algorithm}
 \begin{algorithm}[H]
@@ -393,7 +412,16 @@ different versions of the algorithm can be implemented.
 \end{frame}
 
 %-------------------
-% Slide 13: Mixture Models
+% Slide 15: Bayesian Model Simulation Plot
+%-------------------
+\begin{frame}[fragile]{Bayesian Model Simulation Histogram - Method 2}
+\begin{center}
+\includegraphics[width=\textwidth]{chapter2-part1-plot3.png}
+\end{center}
+\end{frame}
+
+%-------------------
+% Slide 16: Mixture Models
 %-------------------
 \begin{frame}{Mixture Models}
 \textbf{Mixture Models:}
@@ -410,7 +438,7 @@ $$f=\sum_{i=1}^k \omega_i f_i$$
 \end{frame}
 
 %-------------------
-% Slide 14: Generation of Random Numbers from a Mixture Distribution
+% Slide 17: Generation of Random Numbers from a Mixture Distribution
 %-------------------
 \begin{frame}{Generation of Random Numbers from a Mixture Distribution}
 \begin{algorithm}[H]
@@ -434,7 +462,7 @@ $$f=\sum_{i=1}^k \omega_i f_i$$
 \end{frame}
 
 %-------------------
-% Slide 15: Generation of Random Numbers from a Mixture Distribution
+% Slide 18: Generation of Random Numbers from a Mixture Distribution
 %-------------------
 \begin{frame}{Example (Mixture Distribution)}
 Generate a sample of 1000 random numbers from the mixture distribution of:\\
@@ -458,18 +486,16 @@ with weights $\omega_1=0.4$ and $\omega_2=0.6$. \\
 \end{frame}
 
 %-------------------
-% Slide 16: Mixture distribution
+% Slide 19: Mixture Distribution vs. Mixture of Random Variables
 %-------------------
-\begin{frame}{Mixture distribution}
-\textbf{Mixture distribution}
+\begin{frame}[fragile]{Mixture Distribution Example}
 \begin{center}
-\includegraphics[scale=0.5]{Mixture-dist-Chap2.png}
+\includegraphics[width=\textwidth]{chapter2-part1-plot4.png}
 \end{center}
 \end{frame}
 
-
 %-------------------
-% Slide 17: Mixture Distribution vs. Mixture of Random Variables
+% Slide 20: Mixture Distribution vs. Mixture of Random Variables
 %-------------------
 \begin{frame}[fragile]{Mixture Distribution vs. Mixture of Random Variables}
 \textbf{Remark}: The mixture distribution is a weighted sum of distributions. \alert{It is not the distribution of a weighted sum of random variables}
@@ -485,12 +511,11 @@ and weights $\omega_1=0.4$ and $\omega_2=0.6$.
 \end{frame}
 
 %-------------------
-% Slide 18: Mixture Distribution vs. Mixture of Random Variables
+% Slide 21: Mixture Distribution vs. Mixture of Random Variables
 %-------------------
-\begin{frame}[fragile]{Mixture Distribution vs. Mixture of Random Variables}
-\textbf{Weighted Sum}
+\begin{frame}[fragile]{Mixture of Random Variables Example}
 \begin{center}
-\includegraphics[scale=0.4]{weighted-sum.png}
+\includegraphics[width=0.95\textwidth]{chapter2-part1-plot5.png}
 \end{center}
 
 \vspace{-3mm}
@@ -499,7 +524,7 @@ and weights $\omega_1=0.4$ and $\omega_2=0.6$.
 \end{frame}
 
 %-------------------
-% Slide 19: Homework
+% Slide 22: Homework
 %-------------------
 \begin{frame}{Homework}
 \begin{enumerate}
