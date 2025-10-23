@@ -1,0 +1,285 @@
+%========================
+% Document class and theme
+%========================
+\documentclass[8pt]{beamer}
+\usetheme[progressbar=frametitle]{metropolis}
+\setbeamersize{text margin left=10mm, text margin right=10mm}
+\usepackage{appendixnumberbeamer} % appendix slide numbering
+\setbeamertemplate{theorems}[numbered]
+
+%========================
+% Core packages
+%========================
+\usepackage{amsmath, amsfonts, amssymb, amsthm} % math + theorems
+\usepackage{booktabs}        % professional tables
+\usepackage{hyperref}        % hyperlinks
+\usepackage{xcolor}          % colors
+\usepackage{xspace}          % spacing for custom commands
+
+%========================
+% Algorithms
+%========================
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\newtheorem{proposition}{Proposition}
+\usepackage{bbm}
+
+%========================
+% Plots and TikZ
+%========================
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+%========================
+% Listings (code)
+%========================
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    numbers=left,
+    numberstyle=\tiny
+}
+
+% R style
+\lstdefinelanguage{R}{
+  morekeywords={TRUE,FALSE},
+  deletekeywords={data,frame,length,as,character},
+  otherkeywords={0,1,2,3,4,5,6,7,8,9},
+  keywordstyle=\color{blue},
+  commentstyle=\color{DarkGreen},
+  stringstyle=\color{DarkGreen},
+  basicstyle=\ttfamily\small
+}
+
+% Python style
+\lstdefinelanguage{PythonCustom}{
+  language=Python,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{red},
+  basicstyle=\ttfamily\small
+}
+
+%========================
+% Custom commands
+%========================
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%========================
+% Custom footline
+%========================
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.35\paperwidth,ht=2.5ex,dp=1.5ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+%========================
+% Beamer tweaks
+%========================
+\setbeamertemplate{navigation symbols}{} % remove default navigation symbols
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% AQUI SE DEFINEN LAS IMAGENES PARA UTILIZAR DESPUES
+%\pgfdeclareimage[interpolate=true, height=7cm,width=16cm]{halton-points}{halton-points}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]
+%{serie-petroleo-reducido}{serie-petroleo-reducido}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{rectangle-triangle}{rectangle-triangle}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{any-angle}{any-angle}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{Pythagoras}{Pythagoras}
+
+
+\title{Chapter 5 - Beyond Monte Carlo}
+\subtitle{Bootstrap Method for Bias and Standard Deviation Estimation.}
+\author{Prof. Alex Alvarez, Ali Raisolsadat}
+\institute{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
+\date{} % leave empty or add \today
+%\title[Stat 4110]{Stat 4110 Statistical Simulation}
+%\subtitle{}
+%\author[University of Prince Edward Island]{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
+
+%========================
+% Begin document
+%========================
+\begin{document}
+
+%-------------------
+% Title frame
+%-------------------
+\maketitle
+
+%-------------------
+% Slide 1: Framework
+%-------------------
+\begin{frame}{Framework}
+\textbf{Sample Data}: $X=(X_1, X_2, \ldots, X_n)$ independent, identically distributed with $X_i \sim F$, where $F$ is unknown. Usually we observe a realization $x=(x_1,x_2,\ldots, x_n)$ of $X$.
+
+\vspace{3mm}
+
+We are interested in some statistic $\theta=\theta(F)$.
+
+\vspace{3mm}
+ 
+Assume that we have some estimator $\widehat{\theta}_n=\widehat{\theta}_n(X)$  of $\theta$. 
+
+\vspace{3mm}
+ 
+Today we will focus on the study of two problems:
+
+\begin{itemize}
+\item Estimation of the bias of $\widehat{\theta}_n$
+\item Estimation of the standard deviation of $\widehat{\theta}_n$
+\end{itemize}
+\end{frame}
+
+%-------------------
+% Slide 2: Formulation
+%-------------------
+\begin{frame}{Formulation}
+In our previous lecture we defined the empirical cumulative distribution function  as:
+\begin{equation*}
+F_n(t)=\frac{1}{n}\sum_{i=1}^n 1_{(-\infty,t]}(x_i)
+\end{equation*}
+and we saw that the approximation $F_n \approx F$  may be valid even for not so large values of $n$.
+
+\vspace{2mm}
+
+We will generate Bootstrap samples $x^{*(j)}=\left(x^{*(j)}_1, x^{*(j)}_2,... x^{*(j)}_n\right)$ with $j=1,2,...N$  where the terms $x^{*(j)}_{m}$ are i.i.d. random values distributed according to $F_n$.
+
+\vspace{2mm}
+
+An estimator $\widehat{\theta}_n=\widehat{\theta}_n(X)$  of $\theta$
+satisfies the {\bf plug-in principle } if the relation
+\begin{equation*}
+\widehat{\theta}_n(x)=\theta(F_n)
+\end{equation*}
+
+is valid for all $x=(x_1,x_2,...,x_n)$.
+\end{frame}
+
+%-------------------
+% Slide 3: Bias Estimation
+%-------------------
+\begin{frame}{Bias Estimation}
+We know that $bias\left(\widehat{\theta}_n\right)=E(\widehat{\theta}_n)-\theta=E_F(\widehat{\theta}_n)-\theta(F)$
+
+\vspace{3mm}
+
+As we do not know $F$, but we do know $F_n$, we will approximate $bias\left(\widehat{\theta}_n\right)$ with
+\begin{equation*}
+E_{F_n}(\widehat{\theta}_n)-\theta(F_n)
+\end{equation*}
+
+If $\theta_n$ satisfies the plug-in principle, we can replace $\theta(F_n)$ with $\widehat{\theta}_n(x)$. For the estimations of $E_{F_n}(\widehat{\theta}_n)$ we will use the sample mean of the Bootstrap sample estimates $\widehat{\theta}_n(x^{*(j)})$ with $j=1,2,...N$. Then we will have:
+\begin{equation*}
+\widehat{bias}\left(\widehat{\theta}_n\right) = 
+\frac{1}{N} \sum_{j=1}^N \widehat{\theta}_n\left(x^{*(j)}\right) - \widehat{\theta}_n(x)
+\end{equation*}
+\end{frame}
+
+%-------------------
+% Slide 4: Bootstrap Bias Estimation Example
+%-------------------
+\begin{frame}{Bootstrap Bias Estimation Example} 
+The following data are students grades in some course. The  grades are distributed according to some unknown distribution. Use the sample median to estimate the median of the unknown distribution and estimate the bias of your estimator.
+
+\vspace{3mm}
+
+\textbf{Grades}: $x=(84, 63, 92, 89, 80, 47, 68, 66, 56)$
+
+\vspace{3mm}
+
+\textbf{Solution}:  By ordering the data in ascending order (47, 56, 63, 66, 68, 80, 84, 89, 92 ) we can see that the sample median is $\widehat{\theta}_9(x)=68$.
+
+\vspace{3mm}
+
+For the other term in the bias estimation, we will generate $N=1000$ Bootstrap samples as in the following code.
+\end{frame}
+
+%-------------------
+% Slide 5: Example
+%-------------------
+\begin{frame}[fragile]{Bootstrap Bias Estimation Example}
+
+\textbf{R Code}
+\begin{lstlisting}
+x <- c(84, 63, 92, 89, 80, 47, 68, 66, 56)
+N <- 1000
+median_vector <- vector()
+for(i in c(1:N)) {
+ Y <- sample(x, size=9, replace=TRUE) 
+ median_vector[i] = median(Y)
+}
+
+average_medians <- mean(median_vector)
+\end{lstlisting}
+
+By running this code once we get 
+\begin{equation*}
+\widehat{bias}\left(\widehat{\theta}_n\right) =
+\frac{1}{N} \sum_{j=1}^N \widehat{\theta}_n\left(x^{*(j)}\right) - \widehat{\theta}_n(x)=71.34-68=3.34
+\end{equation*}
+\end{frame}
+
+%-------------------
+% Slide 6: Estimation of Standard Deviation
+%-------------------
+\begin{frame}{Estimation of standard deviation}
+The problem of estimating the standard deviation of the estimator $\widehat{\theta}_n$ under the (unknown) distribution $F$ is simplified by considering the standard deviation under the (known) empirical distribution $F_n$:
+\begin{equation*}
+	s.d._F\left(\widehat{\theta}_n\right) \approx s.d._{F_n}\left(\widehat{\theta}_n\right)
+\end{equation*}
+
+Then, we approximate $s.d._{F_n}\left(\widehat{\theta}_n\right)$ by the empirical standard deviation of the Bootstrap estimates $\widehat{\theta}_n\left(x^{*(j)}\right)$ with $j=1,2,...N$
+
+The code corresponding to the estimation of the standard deviation of the median estimator in the previous example is given as follows.
+\end{frame}
+
+%-------------------
+% Slide 7: Estimation of Standard Deviation Example
+%-------------------
+\begin{frame}[fragile]{Bootstrap Bias Estimation Example}
+
+\textbf{R Code}
+
+\begin{lstlisting}
+x <- c(84, 63, 92, 89, 80, 47, 68, 66, 56)
+N <- 1000
+median_vector <- vector()
+for (i in c(1:N)) {
+  Y <- sample(x, size=9, replace=TRUE) 
+  median_vector[i] = median(Y)
+}
+sd_vector <- sd(median_vector)
+\end{lstlisting}
+
+By running this code once we get that  $\widehat{s.d}(\widehat{\theta}_n)= 8.38$ . 
+\end{frame}
+
+%-------------------
+% Slide 8: Estimation of Standard Deviation Example
+%-------------------
+\begin{frame}{Homework:}
+With the data from the previous example, find the Bootstrap estimate of the standard deviation of the {\bf sample mean} estimator.
+\end{frame}
+
+
+
+\end{document} 
+
+
