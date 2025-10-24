@@ -1,0 +1,142 @@
+%\documentclass[handout]{beamer}
+\documentclass{beamer}
+\mode<presentation> {
+    \usetheme{Warsaw}
+    %\usetheme{default}
+}
+
+\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% AQUI SE DEFINEN LAS IMAGENES PARA UTILIZAR DESPUES
+%\pgfdeclareimage[interpolate=true, height=7cm,width=16cm]{halton-points}{halton-points}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]
+%{serie-petroleo-reducido}{serie-petroleo-reducido}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{rectangle-triangle}{rectangle-triangle}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{any-angle}{any-angle}
+%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{Pythagoras}{Pythagoras}
+
+
+\title[Stat 4110]{Stat 4110 Statistical Simulation}
+%\subtitle{}
+\author[University of Prince Edward Island]{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
+%\date[Ryerson University]{Instructor: Alexander Alvarez\\ }
+
+\begin{document}
+
+\frame
+{
+\begin{center}
+\textbf{University of Prince Edward Island\\ Stat 4110}
+\end{center}
+\vspace{5mm}
+\begin{center}
+\textbf{Introduction to Statistical Simulation\\ Buffon's needle problem}\\
+\end{center}
+\vspace{5mm}
+
+}
+
+\frame
+{
+
+{\bf Statistical Simulation}
+\vspace{2mm}
+
+Generally, the term {\bf Statistical Simulation} refers to a broad collection of methods/algorithms that use \alert<1>{random sampling} for the approximate solution of some numerical problems.
+\vspace{2mm}
+
+Of course, we will use the help of computers to achieve our numerical results, but there are older and technology-free examples of  how random sampling can help solve some very interesting mathematical problems.
+
+}
+
+\frame
+{
+
+{\bf Buffon's needle problem}
+\vspace{2mm}
+
+The now famous {\bf Buffon's needle problem} was first posed by 
+Georges-Louis Leclerc, Comte de Buffon in the 18th century:
+\vspace{2mm}
+
+{\it Suppose we have a floor made of parallel strips of wood, each the same width, and we drop a needle onto the floor. What is the probability that the needle will lie across a line between two strips? }
+
+\vspace{2mm}
+
+This is a historically important problem in probability as it is considered the first problem to be solved using what we refer today as geometric probability. For more details on this problem check the link below.
+\vspace{2mm}
+
+{\small \url{https://en.wikipedia.org/wiki/Buffon\%27s_needle_problem}}
+
+}
+
+\frame
+{
+
+{\bf Buffon's needle problem(cont.)}
+\vspace{2mm}
+
+The solution to this problem is well known today. In particular, when the length of the needle (denoted here by $l$) is less than the width of the wood strips (denoted by $t$), the probability of the needle intersecting a line between two strips of wood is 
+
+\[P=\frac{2l}{t\pi}\]
+
+{\bf This result gives us a way to get an approximation of $\pi$:}
+
+If we drop $N$ needles and $n$ of those intersect the lines between two strips, then for large values of $N$ we can approximate $P$ by $n/N$, therefore $\pi$ could be approximated by
+
+\[\pi \approx \frac{2l\cdot N}{t\cdot n}\]
+
+
+}
+
+\frame
+{
+
+{\bf Buffon's needle problem(cont.)}
+\vspace{2mm}
+
+Buffon's needle problem exemplifies the power of random sampling:  repeatedly dropping a needle to the floor can help us solve a relatively difficult problem(approximating $\pi$).
+\vspace{2mm}
+
+At this instance we have to notice a few points:
+\vspace{2mm}
+
+\begin{itemize}
+
+\item This idea is remarkable!!
+
+\item In order to guarantee that we end up with a good approximation of $\pi$ we will generally need to use a large value of $N$. This may result impractical or too costly in practical terms. 
+
+\item The good news is that with the help of a computer we can recreate this experiment in an efficient way
+
+\end{itemize}
+
+The link below simulates Buffon's needle problem
+\vspace{2mm}
+
+\url{https://mste.illinois.edu/activity/buffon/}
+
+}
+
+\frame
+{
+
+{\bf This course}
+\vspace{2mm}
+
+In this course we will study several of these simulation methods 
+and how they can be used to solve some mathematical and statistical problems.
+\vspace{2mm}
+
+We will learn the theory behind these methods, as well as their computational implementation.
+\vspace{2mm}
+
+It is important to notice that for some problems, these simulation methods can be more efficient than the available alternative methods. 
+
+}
+
+\end{document}

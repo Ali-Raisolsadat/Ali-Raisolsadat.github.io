@@ -1,7 +1,7 @@
-This is LuaHBTeX, Version 1.22.0 (MiKTeX 25.4) (format=lualatex 2025.10.4)  24 OCT 2025 11:38
+This is LuaHBTeX, Version 1.22.0 (MiKTeX 25.4) (format=lualatex 2025.10.4)  24 OCT 2025 12:30
  restricted system commands enabled.
-**"STAT-4110-Chapter 1-Part 3.tex"
-("./STAT-4110-Chapter 1-Part 3.tex"
+**"STAT-4110-Chapter 0-Part 1.tex"
+("./STAT-4110-Chapter 0-Part 1.tex"
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-09-02>
 Lua module: luaotfload 2024-12-03 v3.29 Lua based OpenType font support
@@ -1002,20 +1002,57 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \@lastruleclass=\count384
 \@thisrulewidth=\dimen331
 )
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/ccicons/ccicons.sty
-Package: ccicons 2017/10/30 v1.6 LaTeX support for Creative Commons icons
-
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/xkeyval/xkeyval.sty
-Package: xkeyval 2022/06/16 v2.9 package option processing (HA)
-
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/generic/xkeyval/xkeyval.tex
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/generic/xkeyval/xkvutils.tex
-\XKV@toks=\toks51
-\XKV@tempa@toks=\toks52
+(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/tools/xspace.sty
+Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
 )
-\XKV@depth=\count385
-File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
-)))
+(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/algorithms/algorithm.st
+y
+Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
+nment
+ (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count385
+\float@exts=\toks51
+\float@box=\box83
+\@float@everytoks=\toks52
+\@floatcapt=\box84
+)
+(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/base/ifthen.sty
+Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
+)
+\@float@every@algorithm=\toks53
+\c@algorithm=\count386
+)
+(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/algorithmicx/algpseudoc
+ode.sty
+Package: algpseudocode 
+
+(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/algorithmicx/algorithmi
+cx.sty
+Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
+
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+\c@ALG@line=\count387
+\c@ALG@rem=\count388
+\c@ALG@nested=\count389
+\ALG@tlm=\skip79
+\ALG@thistlm=\skip80
+\c@ALG@Lnr=\count390
+\c@ALG@blocknr=\count391
+\c@ALG@storecount=\count392
+\c@ALG@tmpcounter=\count393
+\ALG@tmplength=\skip81
+)
+Document Style - pseudocode environments for use with the `algorithmicx' style
+)
+\c@proposition=\count394
+ (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/bbm/bbm.sty
+Package: bbm 1999/03/15 V 1.2 provides fonts for set symbols - TH
+LaTeX Font Info:    Overwriting math alphabet `\mathbbm' in version `bold'
+(Font)                  U/bbm/m/n --> U/bbm/bx/n on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathbbmss' in version `bold'
+(Font)                  U/bbmss/m/n --> U/bbmss/bx/n on input line 35.
+)
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/pgfplots/pgfplots.sty
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/generic/pgfplots/pgfplots.rev
 ision.tex)
@@ -1027,12 +1064,12 @@ e.tex
 .code.tex
 Package pgfplots info on input line 124: Initializing with LUA version Lua 5.3
 \pgfplots@luabackend@table=\catcodetable14
-\t@pgfplots@toka=\toks53
-\t@pgfplots@tokb=\toks54
-\t@pgfplots@tokc=\toks55
+\t@pgfplots@toka=\toks54
+\t@pgfplots@tokb=\toks55
+\t@pgfplots@tokc=\toks56
 \pgfplots@tmpa=\dimen332
-\c@pgfplots@coordindex=\count386
-\c@pgfplots@scanlineindex=\count387
+\c@pgfplots@coordindex=\count395
+\c@pgfplots@scanlineindex=\count396
 
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/generic/pgfplots/sys/pgfplots
 sysgeneric.code.tex))
@@ -1043,9 +1080,9 @@ ib/pgfplotsoldpgfsupp_loader.code.tex
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/generic/pgf/libraries/pgflibr
 aryfpu.code.tex)
 Package pgfplots: loading complementary utilities for your pgf version...
-\t@pgf@toka=\toks56
-\t@pgf@tokb=\toks57
-\t@pgf@tokc=\toks58
+\t@pgf@toka=\toks57
+\t@pgf@tokb=\toks58
+\t@pgf@tokc=\toks59
 
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/generic/pgfplots/oldpgfcompat
 ib/pgfplotsoldpgfsupp_pgfutil-common-lists.tex)
@@ -1065,14 +1102,14 @@ e/pgfplotsliststructure.code.tex)
 e/pgfplotsliststructureext.code.tex)
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/generic/pgfplots/liststructur
 e/pgfplotsarray.code.tex
-\c@pgfplotsarray@tmp=\count388
+\c@pgfplotsarray@tmp=\count397
 )
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/generic/pgfplots/liststructur
 e/pgfplotsmatrix.code.tex)
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/generic/pgfplots/numtable/pgf
 plotstableshared.code.tex
-\c@pgfplotstable@counta=\count389
-\t@pgfplotstable@a=\toks59
+\c@pgfplotstable@counta=\count398
+\t@pgfplotstable@a=\toks60
 )
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/generic/pgfplots/liststructur
 e/pgfplotsdeque.code.tex)
@@ -1084,7 +1121,7 @@ sbinary.data.code.tex))
 sutil.verb.code.tex)
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/generic/pgfplots/libs/pgflibr
 arypgfplots.surfshading.code.tex
-\c@pgfplotslibrarysurf@no=\count390
+\c@pgfplotslibrarysurf@no=\count399
 
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/generic/pgfplots/sys/pgflibra
 rypgfplots.surfshading.pgfsys-luatex.def)))
@@ -1121,11 +1158,11 @@ decorations.code.tex
 \pgfdecoratedinputsegmentcompleteddistance=\dimen335
 \pgfdecoratedinputsegmentremainingdistance=\dimen336
 \pgf@decorate@distancetomove=\dimen337
-\pgf@decorate@repeatstate=\count391
+\pgf@decorate@repeatstate=\count400
 \pgfdecorationsegmentamplitude=\dimen338
 \pgfdecorationsegmentlength=\dimen339
 )
-\tikz@lib@dec@box=\box83
+\tikz@lib@dec@box=\box85
 )
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/generic/pgf/frontendlayer/tik
 z/libraries/tikzlibrarydecorations.pathmorphing.code.tex
@@ -1137,7 +1174,7 @@ z/libraries/tikzlibrarydecorations.pathreplacing.code.tex
 ions/pgflibrarydecorations.pathreplacing.code.tex))
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/generic/pgfplots/libs/tikzlib
 rarypgfplots.contourlua.code.tex)
-\pgfplots@numplots=\count392
+\pgfplots@numplots=\count401
 \pgfplots@xmin@reg=\dimen340
 \pgfplots@xmax@reg=\dimen341
 \pgfplots@ymin@reg=\dimen342
@@ -1160,196 +1197,77 @@ ar.sty
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/generic/pgf/utilities/pgfcale
 ndar.code.tex
 File: pgfcalendar.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfcalendarcurrentjulian=\count393
-\pgf@cal@easter@Y=\count394
-\pgf@cal@easter@G=\count395
-\pgf@cal@easter@C=\count396
-\pgf@cal@easter@X=\count397
-\pgf@cal@easter@Z=\count398
-\pgf@cal@easter@D=\count399
-\pgf@cal@easter@E=\count400
-\pgf@cal@easter@N=\count401
-\pgf@cal@easter@M=\count402
-\pgf@cal@easter@julianday=\count403
+\pgfcalendarcurrentjulian=\count402
+\pgf@cal@easter@Y=\count403
+\pgf@cal@easter@G=\count404
+\pgf@cal@easter@C=\count405
+\pgf@cal@easter@X=\count406
+\pgf@cal@easter@Z=\count407
+\pgf@cal@easter@D=\count408
+\pgf@cal@easter@E=\count409
+\pgf@cal@easter@N=\count410
+\pgf@cal@easter@M=\count411
+\pgf@cal@easter@julianday=\count412
 )))
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/generic/pgf/frontendlayer/tik
 z/libraries/tikzlibrarypositioning.code.tex
 File: tikzlibrarypositioning.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 )
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/algorithms/algorithm.st
-y
-Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
-nment
- (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/float/float.sty
-Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count404
-\float@exts=\toks60
-\float@box=\box84
-\@float@everytoks=\toks61
-\@floatcapt=\box85
-)
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/base/ifthen.sty
-Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
-)
-\@float@every@algorithm=\toks62
-\c@algorithm=\count405
-)
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/algorithmicx/algpseudoc
-ode.sty
-Package: algpseudocode 
+(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/listings/listings.sty
+\lst@mode=\count413
+\lst@gtempboxa=\box86
+\lst@token=\toks61
+\lst@length=\count414
+\lst@currlwidth=\dimen346
+\lst@column=\count415
+\lst@pos=\count416
+\lst@lostspace=\dimen347
+\lst@width=\dimen348
+\lst@newlines=\count417
+\lst@lineno=\count418
+\lst@maxwidth=\dimen349
 
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/algorithmicx/algorithmi
-cx.sty
-Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
-
-Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
-\c@ALG@line=\count406
-\c@ALG@rem=\count407
-\c@ALG@nested=\count408
-\ALG@tlm=\skip79
-\ALG@thistlm=\skip80
-\c@ALG@Lnr=\count409
-\c@ALG@blocknr=\count410
-\c@ALG@storecount=\count411
-\c@ALG@tmpcounter=\count412
-\ALG@tmplength=\skip81
-)
-Document Style - pseudocode environments for use with the `algorithmicx' style
-)
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/mathtools/mathtools.sty
-Package: mathtools 2024/10/04 v1.31 mathematical typesetting tools
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/mathtools/mhsetup.sty
-Package: mhsetup 2021/03/18 v1.4 programming setup (MH)
-)
-\g_MT_multlinerow_int=\count413
-\l_MT_multwidth_dim=\dimen346
-\origjot=\skip82
-\l_MT_shortvdotswithinadjustabove_dim=\dimen347
-\l_MT_shortvdotswithinadjustbelow_dim=\dimen348
-\l_MT_above_intertext_sep=\dimen349
-\l_MT_below_intertext_sep=\dimen350
-\l_MT_above_shortintertext_sep=\dimen351
-\l_MT_below_shortintertext_sep=\dimen352
-\xmathstrut@box=\box86
-\xmathstrut@dim=\dimen353
-)
-\c@prop=\count414
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/tools/xspace.sty
-Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
-)
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/pgf/compatibility/pgfar
-rows.sty
-Package: pgfarrows 2025-08-29 v3.1.11a (3.1.11a)
-
-
-Package pgfarrows Warning: This package is obsolete. pgf.sty will load arrow ma
-nagement automatically on input line 17.
-
-)
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/pgf/compatibility/pgfno
-des.sty
-Package: pgfnodes 2025-08-29 v3.1.11a (3.1.11a)
-
-
-Package pgfnodes Warning: This package is obsolete. pgf.sty will load node mana
-gement automatically on input line 17.
-
-)
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/pgf/compatibility/pgfau
-tomata.sty
-Package: pgfautomata 2025-08-29 v3.1.11a (3.1.11a)
-
-
-Package pgfautomata Warning: This package is obsolete. on input line 17.
-
-\pgf@stateradius=\dimen354
-\pgf@mooreradius=\dimen355
-\pgf@doublethickness=\dimen356
-\pgf@statebackoff=\dimen357
-)
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/pgf/compatibility/pgfhe
-aps.sty
-Package: pgfheaps 2025-08-29 v3.1.11a (3.1.11a)
-
-
-Package pgfheaps Warning: This package is obsolete. on input line 16.
-
-\pgf@heapx=\dimen358
-\pgf@heapy=\dimen359
-)
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/pgf/compatibility/pgfsh
-ade.sty
-Package: pgfshade 2025-08-29 v3.1.11a (3.1.11a)
-
-
-Package pgfshade Warning: This package is obsolete. pgf.sty will load shade man
-agement automatically on input line 17.
-
-) (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/listings/listings.sty
-\lst@mode=\count415
-\lst@gtempboxa=\box87
-\lst@token=\toks63
-\lst@length=\count416
-\lst@currlwidth=\dimen360
-\lst@column=\count417
-\lst@pos=\count418
-\lst@lostspace=\dimen361
-\lst@width=\dimen362
-\lst@newlines=\count419
-\lst@lineno=\count420
-\lst@maxwidth=\dimen363
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/listings/lstpatch.sty
 File: lstpatch.sty 2024/09/23 1.10c (Carsten Heinz)
 )
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2024/09/23 1.10c (Carsten Heinz)
-\c@lstnumber=\count421
-\lst@skipnumbers=\count422
-\lst@framebox=\box88
+\c@lstnumber=\count419
+\lst@skipnumbers=\count420
+\lst@framebox=\box87
 )
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/listings/listings.cfg
 File: listings.cfg 2024/09/23 1.10c listings configuration
 ))
 Package: listings 2024/09/23 1.10c (Carsten Heinz)
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2024/09/23 1.10c listings language file
-)
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/listings/lstlang2.sty
-File: lstlang2.sty 2024/09/23 1.10c listings language file
-)
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/listings/lstlang3.sty
-File: lstlang3.sty 2024/09/23 1.10c listings language file
-)
-(C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2024/09/23 1.10c listings language file
-)
+
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/beamertheme-metropolis/
 pgfplotsthemetol.sty
 Package: pgfplotsthemetol 2017/01/23 PGFplots colors based on Paul Tol's SRON t
 echnical note
-) ("./STAT-4110-Chapter 1-Part 3.aux")
-\openout1 = STAT-4110-Chapter 1-Part 3.aux
+) ("./STAT-4110-Chapter 0-Part 1.aux")
+\openout1 = STAT-4110-Chapter 0-Part 1.aux
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 105.
+LaTeX Font Info:    ... okay on input line 105.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 105.
+LaTeX Font Info:    ... okay on input line 105.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 105.
+LaTeX Font Info:    ... okay on input line 105.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 105.
+LaTeX Font Info:    ... okay on input line 105.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 105.
+LaTeX Font Info:    ... okay on input line 105.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 105.
+LaTeX Font Info:    ... okay on input line 105.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 105.
+LaTeX Font Info:    ... okay on input line 105.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 105.
+LaTeX Font Info:    ... okay on input line 105.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 105.
+LaTeX Font Info:    ... okay on input line 105.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 105.
+LaTeX Font Info:    ... okay on input line 105.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: luatex
@@ -1389,17 +1307,17 @@ LaTeX Font Info:    ... okay on input line 120.
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/context/base/mkii/supp-pdf.mk
 ii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count423
-\scratchdimen=\dimen364
-\scratchbox=\box89
-\nofMPsegments=\count424
-\nofMParguments=\count425
-\everyMPshowfont=\toks64
-\MPscratchCnt=\count426
-\MPscratchDim=\dimen365
-\MPnumerator=\count427
-\makeMPintoPDFobject=\count428
-\everyMPtoPDFconversion=\toks65
+\scratchcounter=\count421
+\scratchdimen=\dimen350
+\scratchbox=\box88
+\nofMPsegments=\count422
+\nofMParguments=\count423
+\everyMPshowfont=\toks62
+\MPscratchCnt=\count424
+\MPscratchDim=\dimen351
+\MPnumerator=\count425
+\makeMPintoPDFobject=\count426
+\everyMPtoPDFconversion=\toks63
 )
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/epstopdf-pkg/epstopdf-b
 ase.sty
@@ -1411,53 +1329,53 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 fg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-Package hyperref Info: Link coloring OFF on input line 120.
- ("./STAT-4110-Chapter 1-Part 3.out") ("./STAT-4110-Chapter 1-Part 3.out")
+Package hyperref Info: Link coloring OFF on input line 105.
+ ("./STAT-4110-Chapter 0-Part 1.out") ("./STAT-4110-Chapter 0-Part 1.out")
 \@outlinefile=\write5
 
-\openout5 = STAT-4110-Chapter 1-Part 3.out
+\openout5 = STAT-4110-Chapter 0-Part 1.out
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 120.
+(Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 105.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/cmr/bx/n --> OT1/cmss/b/n on input line 120.
+(Font)                  OT1/cmr/bx/n --> OT1/cmss/b/n on input line 105.
 \symnumbers=\mathgroup6
 \sympureletters=\mathgroup7
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/lmr/m/n on input line 120.
-LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 120.
+(Font)                  OT1/cmss/m/n --> TU/lmr/m/n on input line 105.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 105.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> TU/lmss/b/n on input line 120.
+(Font)                  OT1/cmr/bx/n --> TU/lmss/b/n on input line 105.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  OT1/cmr/bx/n --> TU/lmss/b/n on input line 120.
-LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 120.
+(Font)                  OT1/cmr/bx/n --> TU/lmss/b/n on input line 105.
+LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 105.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 120.
+(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 105.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/lmss/m/n on input line 120.
-LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 120.
+(Font)                  OT1/cmss/bx/n --> TU/lmss/m/n on input line 105.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 105.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> TU/lmss/m/it on input line 120.
+(Font)                  OT1/cmr/m/it --> TU/lmss/m/it on input line 105.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/cmr/bx/it --> TU/lmss/m/it on input line 120.
-LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 120.
+(Font)                  OT1/cmr/bx/it --> TU/lmss/m/it on input line 105.
+LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 105.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 120.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 105.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 120.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 105.
 LaTeX Font Info:    Overwriting symbol font `numbers' in version `bold'
-(Font)                  TU/lmss/m/n --> TU/lmss/b/n on input line 120.
+(Font)                  TU/lmss/m/n --> TU/lmss/b/n on input line 105.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
-(Font)                  TU/lmss/m/it --> TU/lmss/b/it on input line 120.
+(Font)                  TU/lmss/m/it --> TU/lmss/b/it on input line 105.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `bold'
-(Font)                  OT1/cmss/b/n --> TU/lmr/b/n on input line 120.
+(Font)                  OT1/cmss/b/n --> TU/lmr/b/n on input line 105.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  TU/lmss/b/n --> TU/lmss/b/n on input line 120.
+(Font)                  TU/lmss/b/n --> TU/lmss/b/n on input line 105.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  TU/lmss/m/n --> TU/lmss/b/n on input line 120.
+(Font)                  TU/lmss/m/n --> TU/lmss/b/n on input line 105.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  TU/lmss/m/it --> TU/lmss/b/it on input line 120.
+(Font)                  TU/lmss/m/it --> TU/lmss/b/it on input line 105.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  TU/lmtt/m/n --> TU/lmtt/b/n on input line 120.
+(Font)                  TU/lmtt/m/n --> TU/lmtt/b/n on input line 105.
 
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/translator/translator-b
 asic-dictionary-English.dict
@@ -1486,9 +1404,9 @@ Dictionary: translator-theorem-dictionary, Language: English
 Package pgfplots notification 'compat/show suggested version=true': you might b
 enefit from \pgfplotsset{compat=1.18} (current compat level: 1.9).
 
-\c@lstlisting=\count429
-("./STAT-4110-Chapter 1-Part 3.nav")
-Overfull \vbox (10.92494pt too high) detected at line 125
+\c@lstlisting=\count427
+("./STAT-4110-Chapter 0-Part 1.nav")
+Overfull \vbox (10.92494pt too high) detected at line 110
  []
 
 
@@ -1496,56 +1414,48 @@ Overfull \vbox (10.92494pt too high) detected at line 125
 [1
 
 {C:/Users/AliVi/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
-LaTeX Font Info:    Trying to load font information for U+msa on input line 138
+
+[2
+
+]
+LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <8> not available
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 144.
+
+
+[3
+
+]
+
+[4
+
+]
+<starwars_meme_1.jpg, id=49, 738.76pt x 738.76pt>
+File: starwars_meme_1.jpg Graphic file (type jpg)
+<use starwars_meme_1.jpg>
+Package luatex.def Info: starwars_meme_1.jpg  used on input line 174.
+(luatex.def)             Requested size: 153.64493pt x 153.64491pt.
+
+
+[5
+
+<./starwars_meme_1.jpg>]
+LaTeX Font Info:    Trying to load font information for U+msa on input line 199
 .
 
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 138
+LaTeX Font Info:    Trying to load font information for U+msb on input line 199
 .
 
 (C:/Users/AliVi/AppData/Local/Programs/MiKTeX/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <8> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 138.
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <6> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 138.
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 199.
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <5> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 138.
-<chapter1-part3-plot1.png, id=24, 1076.1003pt x 643.203pt>
-File: chapter1-part3-plot1.png Graphic file (type png)
-<use chapter1-part3-plot1.png>
-Package luatex.def Info: chapter1-part3-plot1.png  used on input line 138.
-(luatex.def)             Requested size: 307.28987pt x 183.66808pt.
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 199.
 
-
-[2
-
-<./chapter1-part3-plot1.png>]
-<chapter1-part3-plot2.png, id=37, 1076.1003pt x 643.203pt>
-File: chapter1-part3-plot2.png Graphic file (type png)
-<use chapter1-part3-plot2.png>
-Package luatex.def Info: chapter1-part3-plot2.png  used on input line 150.
-(luatex.def)             Requested size: 307.28987pt x 183.66808pt.
-
-Overfull \vbox (3.15001pt too high) detected at line 150
- []
-
-
-
-[3
-
-<./chapter1-part3-plot2.png>]
-
-[4
-
-]
-
-[5
-
-]
 
 [6
 
@@ -1554,132 +1464,45 @@ Overfull \vbox (3.15001pt too high) detected at line 150
 [7
 
 ]
-
-[8
-
-]
-
-[9
-
-]
-
-[10
-
-]
-
-[11
-
-]
-\openout4 = STAT-4110-Chapter 1-Part 3.vrb
- ("./STAT-4110-Chapter 1-Part 3.vrb")
-
-[12
-
-]
-
-[13
-
-]
-
-[14
-
-]
-
-[15
-
-]
-
-[16
-
-]
-
-[17
-
-]
-\openout4 = STAT-4110-Chapter 1-Part 3.vrb
- ("./STAT-4110-Chapter 1-Part 3.vrb"
-<chapter1-part3-plot3.png, id=165, 901.2069pt x 556.479pt>
-File: chapter1-part3-plot3.png Graphic file (type png)
-<use chapter1-part3-plot3.png>
-Package luatex.def Info: chapter1-part3-plot3.png  used on input line 27.
-(luatex.def)             Requested size: 230.46739pt x 142.30359pt.
-)
-
-[18
-
-<./chapter1-part3-plot3.png>]
-\openout4 = STAT-4110-Chapter 1-Part 3.vrb
- ("./STAT-4110-Chapter 1-Part 3.vrb")
-
-[19
-
-]
-\openout4 = STAT-4110-Chapter 1-Part 3.vrb
- ("./STAT-4110-Chapter 1-Part 3.vrb"
-<chapter1-part3-plot4.png, id=185, 1076.1003pt x 643.203pt>
-File: chapter1-part3-plot4.png Graphic file (type png)
-<use chapter1-part3-plot4.png>
-Package luatex.def Info: chapter1-part3-plot4.png  used on input line 3.
-(luatex.def)             Requested size: 307.28987pt x 183.66808pt.
-)
-
-[20
-
-<./chapter1-part3-plot4.png>]
-
-[21
-
-]
-
-[22
-
-]
 \tf@nav=\write6
 
-\openout6 = STAT-4110-Chapter 1-Part 3.nav
+\openout6 = STAT-4110-Chapter 0-Part 1.nav
 \tf@toc=\write7
 
-\openout7 = STAT-4110-Chapter 1-Part 3.toc
+\openout7 = STAT-4110-Chapter 0-Part 1.toc
 \tf@snm=\write8
 
-\openout8 = STAT-4110-Chapter 1-Part 3.snm
- ("./STAT-4110-Chapter 1-Part 3.aux")
+\openout8 = STAT-4110-Chapter 0-Part 1.snm
+ ("./STAT-4110-Chapter 0-Part 1.aux")
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-09-02>
  ***********
-Package rerunfilecheck Info: File `"STAT-4110-Chapter 1-Part 3".out' has not ch
+Package rerunfilecheck Info: File `"STAT-4110-Chapter 0-Part 1".out' has not ch
 anged.
 (rerunfilecheck)             Checksum: <no file>.
 )
 
 Here is how much of LuaTeX's memory you used:
- 41921 strings out of 476291
- 305289,1977958 words of node,token memory allocated
- 7322 words of node memory still in use:
-   63 hlist, 12 vlist, 9 rule, 52 disc, 4 local_par, 12 math, 151 glue, 41 kern,
- 19 penalty, 470 glyph, 160 attribute, 71 glue_spec, 160 attribute_list, 4 write
-, 28 pdf_literal, 30 pdf_colorstack nodes
-   avail lists: 1:4,2:4235,3:301,4:408,5:8822,6:121,7:9933,8:42,9:17805,10:28,11
-:869
- 62842 multiletter control sequences out of 65536+600000
- 48 fonts using 3808967 bytes
- 128i,15n,120p,1918b,1120s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 40549 strings out of 476291
+ 125031,1648299 words of node,token memory allocated
+ 8135 words of node memory still in use:
+   26 hlist, 6 vlist, 2 rule, 66 disc, 4 local_par, 169 glue, 45 kern, 16 penalt
+y, 721 glyph, 33 attribute, 70 glue_spec, 33 attribute_list, 4 write, 4 pdf_colo
+rstack nodes
+   avail lists: 1:2,2:322,3:167,4:146,5:145,6:35,7:2010,8:21,9:229,10:20,11:141
+ 61602 multiletter control sequences out of 65536+600000
+ 46 fonts using 3551127 bytes
+ 128i,15n,120p,1918b,627s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/users/alivi/appdata/local/programs/miktex/fonts/opentype/public/lm/lmmono8-r
 egular.otf><c:/users/alivi/appdata/local/programs/miktex/fonts/opentype/public/l
 m/lmsans8-oblique.otf><c:/users/alivi/appdata/local/programs/miktex/fonts/openty
 pe/public/lm/lmsans8-regular.otf><c:/users/alivi/appdata/local/programs/miktex/f
 onts/opentype/public/lm/lmsans10-regular.otf><c:/users/alivi/appdata/local/progr
-ams/miktex/fonts/opentype/public/lm/lmsans10-bold.otf><C:/Users/AliVi/AppData/Lo
-cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex8.pfb><C:/Users/AliV
-i/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Use
-rs/AliVi/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss8.pfb>
-<C:/Users/AliVi/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cms
-y6.pfb><C:/Users/AliVi/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
-/cm/cmsy8.pfb>
-Output written on STAT-4110-Chapter 1-Part 3.pdf (22 pages, 268245 bytes).
+ams/miktex/fonts/opentype/public/lm/lmsans10-bold.otf>
+Output written on STAT-4110-Chapter 0-Part 1.pdf (7 pages, 120975 bytes).
 
-PDF statistics: 262 PDF objects out of 1000 (max. 8388607)
- 45 named destinations out of 1000 (max. 131072)
+PDF statistics: 108 PDF objects out of 1000 (max. 8388607)
+ 15 named destinations out of 1000 (max. 131072)
  16 words of extra memory for PDF output out of 10000 (max. 100000000)
 

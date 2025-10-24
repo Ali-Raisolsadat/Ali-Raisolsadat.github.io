@@ -128,30 +128,12 @@
 %-----------------------
 \begin{frame}{Inverse Transform Method}
 \textbf{General Quantile Function}: Let $F$ be a cumulative distribution function(c.d.f.). Then the inverse of $F$ is defined as 
-
 \begin{equation*}
 	F^{-1}(u)=\inf \left\{ x \in \mathbb{R} | F(x) \geq u \right\}
 \end{equation*}
 
-\pause
 
 \textbf{Theorem}: Let $F: \mathbb{R} \rightarrow [0,1]$ be a c.d.f. and $F^{-1}$ its inverse. If $U \sim \text{uniform}[0,1]$ and we define $X=F^{-1}(U)$ then $X$ has c.d.f. $F$.
-
-\vspace{2mm}
-\pause
-
-\textbf{Proof (Short Version)}: 
-\begin{equation*}
-	P(X\leq a)=P(F^{-1}(U) \leq a)=P(\inf \left\{ x \in \mathbb{R} | F(x) \geq U \right\} \leq a)
-\end{equation*}
-
-\vspace{2mm}
-
-Since $\inf \left\{ x \in \mathbb{R} | F(x) \geq U \right\} \leq a$ holds if and only if $F(a)\geq U$ then
-
-$P(X\leq a)=P(F(a) \geq U)=F(a)$ therefore X has c.d.f. F.
-
-\vspace{2mm}
 
 This result is very general (applicable to both continuous and discrete distributions).
 \end{frame}
@@ -160,7 +142,7 @@ This result is very general (applicable to both continuous and discrete distribu
 % Slide 2: Inverse Transform Method
 %-----------------------
 \begin{frame}{Inverse Transform Method}
-\textbf{Proof (Long Version)}: 
+\textbf{Proof}: 
 
 Let $U \sim \text{Uniform}(0,1)$ and define the generalized inverse of $F$ as
 \begin{equation*}
@@ -199,18 +181,12 @@ This shows that $X$ has CDF $F$, regardless of whether $F$ is continuous or disc
 \item Generate $U \sim U[0,1]$ 
 \item Define $X=F^{-1}(U)$
 \item Return $X$
-
 \end{enumerate}
-\pause
 
-{\bf Remarks:} 
-
+\textbf{Remarks:} 
 \begin{itemize}
-
-\item This method is more suited to continuous distributions, but it can also be applied to discrete distributions (See example 1.18 from the textbook).
-
-\item An important limitation of the method is that can only be applied to one-dimensional probability distributions.
-
+	\item This method is more suited to continuous distributions, but it can also be applied to discrete distributions (See example 1.18 from the textbook).
+	\item An important limitation of the method is that can only be applied to one-dimensional probability distributions.
 \end{itemize}
 \end{frame}
 

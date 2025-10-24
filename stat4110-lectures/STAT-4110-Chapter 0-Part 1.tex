@@ -1,0 +1,217 @@
+%========================
+% Document class and theme
+%========================
+\documentclass[8pt]{beamer}
+\usetheme[progressbar=frametitle]{metropolis}
+\setbeamersize{text margin left=10mm, text margin right=10mm}
+\usepackage{appendixnumberbeamer} % appendix slide numbering
+\setbeamertemplate{theorems}[numbered]
+
+%========================
+% Core packages
+%========================
+\usepackage{amsmath, amsfonts, amssymb, amsthm} % math + theorems
+\usepackage{booktabs}        % professional tables
+\usepackage{hyperref}        % hyperlinks
+\usepackage{xcolor}          % colors
+\usepackage{xspace}          % spacing for custom commands
+
+%========================
+% Algorithms
+%========================
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\newtheorem{proposition}{Proposition}
+\usepackage{bbm}
+
+%========================
+% Plots and TikZ
+%========================
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+%========================
+% Listings (code)
+%========================
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    numbers=left,
+    numberstyle=\tiny
+}
+
+% R style
+\lstdefinelanguage{R}{
+  morekeywords={TRUE,FALSE},
+  deletekeywords={data,frame,length,as,character},
+  otherkeywords={0,1,2,3,4,5,6,7,8,9},
+  keywordstyle=\color{blue},
+  commentstyle=\color{DarkGreen},
+  stringstyle=\color{DarkGreen},
+  basicstyle=\ttfamily\small
+}
+
+% Python style
+\lstdefinelanguage{PythonCustom}{
+  language=Python,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{red},
+  basicstyle=\ttfamily\small
+}
+
+%========================
+% Custom commands
+%========================
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%========================
+% Custom footline
+%========================
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.35\paperwidth,ht=2.5ex,dp=1.5ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+%========================
+% Beamer tweaks
+%========================
+\setbeamertemplate{navigation symbols}{} % remove default navigation symbols
+
+
+\title{Chapter 0}
+\subtitle{Course Information.}
+\author{Prof. Alex Alvarez, Ali Raisolsadat}
+\institute{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
+\date{}
+
+%========================
+% Begin document
+%========================
+\begin{document}
+
+%-------------------
+% Title frame
+%-------------------
+\maketitle
+
+%-------------------
+% Slide 1: Instructor and Hours
+%-------------------
+\begin{frame}
+\begin{center}
+\textbf{Stat 4110 - Statistical Simulation - Winter 2024}\\
+\end{center}
+
+\vspace{3mm}
+
+\textbf{Instructor:} Ali Raisolsadat \\
+\textbf{Office:} NA \\
+\textbf{E-mail:} sraisolsadat@upei.ca \\
+\textbf{Lectures:} M, W, F. 9:30 - 10:20, Location TBH \\
+
+\textbf{Office hours:} TBH
+\end{frame}
+
+%-------------------
+% Slide 2: Course Material
+%-------------------
+\begin{frame}
+\textbf{Textbook}:
+
+\vspace{2mm}
+
+{\it Introduction to Statistical Computing}  by Jochen Voss
+
+\vspace{3mm}
+
+\textbf{GitHub Site}:
+All information regarding the course will be posted on my GitHub site on a regular basis. This includes the course outline, slides, schedule changes, information about tests, supporting materials, etc. The grades will be posted on Moodle.
+\end{frame}
+
+%-------------------
+% Slide 3: Course Material
+%-------------------
+\begin{frame}
+\textbf{Textbook Chapters to be covered in this course}
+
+\vspace{2mm}
+
+\textbf{Chapter 1}: Random number generation.\\
+\textbf{Chapter 2}: Simulating statistical models.\\
+\textbf{Chapter 3}: Monte Carlo methods.\\
+\textbf{Chapter 4}: Markov Chain Monte Carlo (MCMC) Methods - MCMC, Metropolis Algorithm, Metropolis-Hastings Algorithm\\
+\textbf{Chapter 5}: Beyond Monte Carlo\\
+\end{frame}
+
+%-------------------
+% Slide 4: Programming Languages
+%-------------------
+\begin{frame}
+\textbf{Programming Languages}
+
+\vspace{2mm}
+
+The preferred programming languages for this course are \textbf{R} and \textbf{Python}. I will provide lecture examples and their respective code through the term using both languages. The \textbf{homework} solutions will be given only in \textbf{Python} (please translate to R on your own time ;D - YOU CAN DO IT). You may use other software for this (i.e. MatLab, Java, etc).
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{starwars_meme_1.jpg}
+\end{center}
+\end{frame}
+
+%-------------------
+% Slide 5: Grading Schemes
+%-------------------
+\begin{frame}
+\textbf{Grading Scheme}:\\
+
+\vspace{3mm}
+
+Two Assignments \hspace{.7cm} 15 \% each \\
+One Mid-term Test \hspace{1.2cm} 40\% \hspace{1.2cm} \textbf{OR}\\
+Four Quizzes \hspace{1.2cm} 40\%\\
+Final Project \hspace{1.4cm} 30\%\\
+
+\vspace{3mm}
+\begin{itemize}
+	\item Two assignments (to be completed in about a week) will be given.
+	\item There will be a Mid-term Test on Friday March 22nd. However, if class chooses the quiz option, then after each chapter there will be a quiz. 
+	\item There will be a Final Project (including an oral presentation during the last week of classes).
+\end{itemize}
+
+\vspace{2mm}
+
+\textbf{Crowdmark}: In order to facilitate the workflow regarding some assessments in the course, we will be using an online tool called Crowdmark (\url{https://crowdmark.com}). Instructions on how to use Crowdmark will be provided before we use it for the first time.
+\end{frame}
+
+%-------------------
+% Slide 6: Grading Schemes
+%-------------------
+\begin{frame}
+\textbf{Chat GPT}:\\
+\vspace{1mm}
+
+The use of Chat GPT or other Large Language Models (LLM) in this course is not prohibited as part of the study process. However, I strongly discourage you to use it directly on Assignments to produce the final submitted code. 
+
+If during the process of marking, I suspect that an LLM was used (or if there are some  indications of academic dishonesty) in the resolution of some problem(s), I reserve the right to meet with you, and ask for clarifications and explanations regarding the code or other parts of their submitted solution, in order to find out whether the you actually understand the results and/or algorithms used. 
+
+This could even result in a substantial mark reduction if you do not show an understanding of the subject matter corresponding to the submitted work.
+\end{frame}
+
+
+
+\end{document} 

@@ -406,50 +406,48 @@ This is equivalent to computing the inverse transform $X = F^{-1}(U)$.
 %-------------------
 \begin{frame}{Generate Discrete Random Variable Algorithm}
 \begin{algorithm}[H]
-    \caption{Generate $X$ with probabilities $p_0, \dots, p_n$ using Uniform$(0,1)$ numbers}\label{alg:discrete-inverse}
+    \caption{Naive Inverse Transform Sampling for Discrete RV}\label{alg:discrete-inverse}
     \begin{algorithmic}[1]
-        \small  % <-- makes all algorithmic text smaller
-        \State \textbf{Input:} Probabilities $p_0, \dots, p_n$
+        \small
+        \State \textbf{Input:} Probabilities $p_0, \dots, p_{n-1}$, Outcomes $x_0, \dots, x_{n-1}$
         \State Draw $U \sim \text{Uniform}(0,1)$
         \State Initialize cumulative probability: $C \gets 0$
-        \For{$i = 0$ to $n$} \Comment{Loop over outcomes}
-            \State Update cumulative probability: $C \gets C + p_i$
+        \For{$i = 0$ to $n-1$} \Comment{Loop over outcomes}
+            \State $C \gets C + p_i$
             \If{$U < C$}
-                \State Set $X \gets x_i$ and \textbf{stop}
+                \State \textbf{return} $x_i$
             \EndIf
         \EndFor
-        \State \textbf{Output:} Sampled value $X$
+        \State \textbf{return} $x_{n-1}$ \Comment{Handles rounding edge cases}
     \end{algorithmic}
 \end{algorithm}
 \end{frame}
+
 
 %-------------------
 % SLIDE 12: Example: Step-by-Step Calculation
 %-------------------
 \begin{frame}{Example: Step-by-Step Calculation}
-
 {\bf Refer to the previous example:} Generate a random number from $X$ with
-\[
+\begin{equation*}
 P(X=1)=1/6, \quad P(X=2)=1/3, \quad P(X=3)=1/2
-\]
+\end{equation*}
 
 \vspace{2mm}
-{\bf Assume we draw $U = 0.42$}
+\textbf{Assume we draw $U = 0.42$}
 
 \begin{itemize}
     \item Initialize cumulative probability: $C = 0$
     \item Step 1: $i=1$, $x_1 = 1$, $p_1 = 1/6 \approx 0.1667$  
-    \[
+    \begin{equation*}
     C \gets C + p_1 = 0 + 0.1667 = 0.1667
-    \]  
+    \end{equation*}
     Check: $U < C$? $0.42 < 0.1667$ → \textbf{No}
-    
     \item Step 2: $i=2$, $x_2 = 2$, $p_2 = 1/3 \approx 0.3333$  
-    \[
+    \begin{equation*}
     C \gets C + p_2 = 0.1667 + 0.3333 = 0.5
-    \]  
+    \end{equation*}
     Check: $U < C$? $0.42 < 0.5$ → \textbf{Yes!} → $X = 2$
-    
     \item Step 3: Not needed, algorithm stops.
 \end{itemize}
 
@@ -462,32 +460,29 @@ P(X=1)=1/6, \quad P(X=2)=1/3, \quad P(X=3)=1/2
 %-------------------
 % SLIDE 13:  Generate Discrete Random Variable Algorithm 2
 %-------------------
-\begin{frame}{Generate Discrete Random Variable Efficient Algorithm}
-
+\begin{frame}{Efficient Sampling of a Discrete Random Variable}
 \begin{algorithm}[H]
-    \caption{Generate $X$ with probabilities $p_1, \dots, p_n$ using cumulative sums}\label{alg:discrete-cumsum-sorted}
+    \caption{Generate $X$ with probabilities $p_1, \dots, p_n$ using sorted cumulative sums}
+    \label{alg:discrete-cumsum-sorted}
     \begin{algorithmic}[1]
         \small
-        \State \textbf{Input:} Probabilities $p_1, \dots, p_n$ (with $\sum_{i=1}^n p_i = 1$)
-        \State Sort probabilities in \textbf{descending order} and reorder outcomes accordingly:
-		$$
- 		p_{(1)} \ge p_{(2)} \ge \dots \ge p_{(n)}
-		$$
-        \State Compute cumulative sums array:
+        \State \textbf{Input:} Probabilities $p_1, \dots, p_n$, Outcomes $x_1, \dots, x_n$
+        \State Sort the \emph{pairs} $(p_i, x_i)$ in \textbf{descending} order of $p_i$:
         $$
-            S_j = \sum_{i=1}^{j} p_{(i)}, \quad j = 1, \dots, n
+            (p_{(1)}, x_{(1)}) \ge (p_{(2)}, x_{(2)}) \ge \dots \ge (p_{(n)}, x_{(n)})
         $$
+        \State Initialize cumulative probability: $C \gets 0$
         \State Draw $U \sim \text{Uniform}(0,1)$
-        \For{$j = 1$ \textbf{to} $n$}
-            \If{$U < S_j$}
-                \State Set $X \gets x_{(j)}$ and \textbf{stop}
+        \For{$j = 1$ to $n$}
+            \State $C \gets C + p_{(j)}$
+            \If{$U < C$}
+                \State \textbf{return} $x_{(j)}$
             \EndIf
         \EndFor
-        \State \textbf{Output:} Sampled value $X$
+        \State \textbf{return} $x_{(n)}$ \Comment{Handles rounding edge cases}
     \end{algorithmic}
 \end{algorithm}
 \end{frame}
-
 
 %-------------------
 % SLIDE 14: Generation of random numbers with discrete distributions
