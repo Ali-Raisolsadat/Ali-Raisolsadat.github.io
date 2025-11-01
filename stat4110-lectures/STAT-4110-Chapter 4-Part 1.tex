@@ -1,0 +1,472 @@
+%========================
+% Document class and theme
+%========================
+\documentclass[8pt]{beamer}
+\usetheme[progressbar=frametitle]{metropolis}
+\setbeamersize{text margin left=10mm, text margin right=10mm}
+\usepackage{appendixnumberbeamer} % appendix slide numbering
+\setbeamertemplate{theorems}[numbered]
+
+%========================
+% Core packages
+%========================
+\usepackage{amsmath, amsfonts, amssymb, amsthm} % math + theorems
+\usepackage{booktabs}        % professional tables
+\usepackage{hyperref}        % hyperlinks
+\usepackage{xcolor}          % colors
+\usepackage{xspace}          % spacing for custom commands
+
+%========================
+% Algorithms
+%========================
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\newtheorem{proposition}{Proposition}
+\usepackage{bbm}
+
+%========================
+% Plots and TikZ
+%========================
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+%========================
+% Listings (code)
+%========================
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    numbers=left,
+    numberstyle=\tiny
+}
+
+% R style
+\lstdefinelanguage{R}{
+  morekeywords={TRUE,FALSE},
+  deletekeywords={data,frame,length,as,character},
+  otherkeywords={0,1,2,3,4,5,6,7,8,9},
+  keywordstyle=\color{blue},
+  commentstyle=\color{DarkGreen},
+  stringstyle=\color{DarkGreen},
+  basicstyle=\ttfamily\small
+}
+
+% Python style
+\lstdefinelanguage{PythonCustom}{
+  language=Python,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{red},
+  basicstyle=\ttfamily\small
+}
+
+%========================
+% Custom commands
+%========================
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%========================
+% Custom footline
+%========================
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.35\paperwidth,ht=2.5ex,dp=1.5ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+%========================
+% Beamer tweaks
+%========================
+\setbeamertemplate{navigation symbols}{} % remove default navigation symbols
+
+
+\title{Chapter 4}
+\subtitle{Markov Chain Monte Carlo. \\ Metropolis Algorithm.}
+\author{Ali Raisolsadat}
+\institute{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
+\date{}
+
+%========================
+% Begin document
+%========================
+\begin{document}
+
+%-------------------
+% Title frame
+%-------------------
+\maketitle
+
+
+%--------------------------------------------
+% Slide 1: Homogeneous Markov Chains
+%--------------------------------------------
+\begin{frame}{Reminder: Homogeneous Markov Chains}
+
+\textbf{Definition:}  
+A sequence of random variables $\{X_t\}_{t \ge 0}$ is a \textbf{Markov chain} if
+\[
+P(X_{t+1} = j \mid X_t = i, X_{t-1}, \ldots, X_0) = P(X_{t+1} = j \mid X_t = i).
+\]
+
+\medskip
+The process is called \textbf{homogeneous} (or time-homogeneous) if the transition probabilities do not depend on $t$:
+\[
+P(X_{t+1} = j \mid X_t = i) = P_{ij}, \quad \text{for all } t.
+\]
+
+\medskip
+\textbf{Transition matrix:}
+\[
+\mathbf{P} =
+\begin{pmatrix}
+P_{11} & P_{12} & \cdots \\
+P_{21} & P_{22} & \cdots \\
+\vdots & \vdots & \ddots
+\end{pmatrix}, \quad
+P_{ij} \ge 0, \quad \sum_j P_{ij} = 1.
+\]
+
+\medskip
+\textbf{n-step transition:}  
+$P^{(n)} = \mathbf{P}^n$, with entries $P_{ij}^{(n)} = P(X_{t+n} = j \mid X_t = i)$.
+
+\end{frame}
+
+%--------------------------------------------
+% Slide 2: Stationary Distribution
+%--------------------------------------------
+\begin{frame}{Stationary Distribution}
+
+\textbf{Definition:}  
+A probability vector $\boldsymbol{\pi}$ is a \textbf{stationary distribution} of a Markov chain if
+\[
+\boldsymbol{\pi}^\top \mathbf{P} = \boldsymbol{\pi}^\top,
+\quad \text{and} \quad \sum_i \pi_i = 1, \; \pi_i \ge 0.
+\]
+
+\medskip
+\textbf{Interpretation:}  
+If $X_0 \sim \boldsymbol{\pi}$, then $X_t \sim \boldsymbol{\pi}$ for all $t$.  
+The chain remains in equilibrium under $\boldsymbol{\pi}$.
+
+\medskip
+\textbf{Convergence:}  
+For many Markov chains,
+\[
+\lim_{t \to \infty} P(X_t = j \mid X_0 = i) = \pi_j,
+\]
+independent of the starting state $i$.
+
+\medskip
+This limiting behavior holds under certain conditions
+(irreducibility, aperiodicity, and recurrence).
+
+\end{frame}
+
+%--------------------------------------------
+% Slide 3: Irreducibility, Recurrence, and Ergodicity
+%--------------------------------------------
+\begin{frame}{Irreducibility, Recurrence, and Ergodicity}
+
+\textbf{Irreducibility:}  
+A Markov chain is \textbf{irreducible} if every state can be reached from every other state:
+\[
+\forall i,j, \; \exists n \text{ such that } P_{ij}^{(n)} > 0
+\]
+
+\medskip
+\textbf{Recurrence:}  
+State $i$ is \textbf{recurrent} if, starting from $i$, the probability of returning to $i$ is 1:
+\[
+P(\text{return to } i \mid X_0 = i) = 1
+\]
+If the expected return time is finite, $i$ is \textbf{positive recurrent}.
+
+\medskip
+\textbf{Ergodicity:}  
+An irreducible, aperiodic, and positive recurrent Markov chain is called \textbf{ergodic}.  
+For ergodic chains,
+\[
+\lim_{t \to \infty} P(X_t = j \mid X_0 = i) = \pi_j
+\]
+and time averages converge to expectations under $\pi$:
+\[
+\frac{1}{T}\sum_{t=1}^T f(X_t) \;\xrightarrow{a.s.}\; E_\pi[f(X)]
+\]
+
+\end{frame}
+
+
+\begin{frame}{Markov Chains for Monte Carlo Estimation}
+We have been discussing inference using \textbf{Markov chains}.
+\begin{itemize}
+  \item Concepts such as sampling and stationary distributions are central.
+  \item For \textbf{discrete} Markov chains, dynamic programming algorithms can often be used for exact inference (e.g., Hidden Markov Models).
+\end{itemize}
+
+\medskip
+We can also use Markov chains for inference in more general settings.
+\begin{itemize}
+  \item The most common framework is \textbf{Markov Chain Monte Carlo (MCMC)}.
+  \item MCMC methods are used for \textbf{approximate inference}, particularly in complex Bayesian models (e.g., Bayesian logistic regression).
+\end{itemize}
+
+\medskip
+\textbf{High-level idea of MCMC:}
+\begin{itemize}
+  \item We want to compute expectations with respect to a distribution $p(x)$, but we cannot generate independent samples directly from $p$.
+  \item Construct a \textbf{homogeneous Markov chain} whose \textbf{stationary distribution} is $p(x)$.
+  \item After a suitable burn-in period, use the generated samples $\{X_t\}_{t=1}^T$ in a Monte Carlo approximation.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Degenerate Example: ``Pointless MCMC''}
+
+Consider estimating the expected value of a fair six-sided die.  
+We know analytically that
+\[
+E[X] = \frac{1+2+3+4+5+6}{6} = 3.5
+\]
+
+\medskip
+Now suppose we design a ``pointless'' MCMC algorithm for this trivial problem:
+
+\begin{itemize}
+  \item Start with an initial value $x_0 \in \{1,2,3,4,5,6\}$, e.g. $x_0 = 4$.
+  \item At each iteration $t$:
+  \begin{itemize}
+    \item Roll the die to propose a new value $x' \sim \text{Uniform}\{1,2,3,4,5,6\}$.
+    \item Generate a random number $u \sim \text{Uniform}[0,1]$.
+    \item If $u < 0.5$, \textbf{accept} $x'$, i.e. set $x_t = x'$.
+    \item Otherwise, \textbf{reject} $x'$ and keep the old value, $x_t = x_{t-1}$.
+  \end{itemize}
+\end{itemize}
+
+\medskip
+This produces samples from a Markov chain with transition probabilities:
+\[
+q(x_{t-1} \to x_t)
+= \frac{1}{2}\mathbf{1}(x_t = x_{t-1})
+  + \frac{1}{2} \cdot \frac{1}{6}
+=
+\begin{cases}
+\frac{7}{12}, & \text{if } x_t = x_{t-1}, \\[6pt]
+\frac{1}{12}, & \text{if } x_t \ne x_{t-1}
+\end{cases}
+\]
+\end{frame}
+
+\begin{frame}{Pointless MCMC in Action}
+
+Let's simulate a few steps of the ``pointless'' MCMC algorithm.
+
+\medskip
+\textbf{Setup:} Start with $x_0 = 4$.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{c c c c}
+\toprule
+Step & Proposed Roll & $u$ (Uniform(0,1)) & Recorded Value ($x_t$) \\
+\midrule
+1 & 6 & 0.234 & 6 (accepted) \\
+2 & 3 & 0.612 & 6 (rejected) \\
+3 & 2 & 0.523 & 6 (rejected) \\
+4 & 3 & 0.125 & 3 (accepted) \\
+5 & 2 & 0.433 & 2 (accepted) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Resulting samples:}
+\[
+x_{0:5} = (4,\,6,\,6,\,6,\,3,\,2,\ldots)
+\]
+\end{frame}
+
+\begin{frame}{Degenerate Example: ``Pointless MCMC''}
+\textbf{Observation:}
+\begin{itemize}
+  \item The chain sometimes repeats values due to rejections.
+  \item Samples are \textbf{correlated}, even though the target distribution is uniform.
+\end{itemize}
+
+\medskip
+\textbf{Key insight:}
+\begin{itemize}
+  \item If you run this chain long enough, you will spend roughly $\tfrac{1}{6}$ of the time on each outcome.
+  \item The \textbf{stationary distribution} is uniform:  
+        if we start from a uniform state, either staying there or moving to a uniformly chosen new state keeps the distribution uniform.
+  \item Thus, the stationary distribution of the chain is $p$ (the uniform distribution).
+  \item The property of constructing a chain whose stationary distribution is $p$ is the \textbf{key idea behind all MCMC methods}.
+  \item It is “pointless” here because we already know how to generate i.i.d. samples from $p$.  
+        If you can sample directly, you do \emph{not} need MCMC.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Markov Chain Monte Carlo (MCMC)}
+
+\textbf{Goal:} Estimate expectations with respect to a distribution $p(x)$ when direct sampling is difficult.
+
+\medskip
+\textbf{Key idea:}
+\begin{itemize}
+  \item Construct a \textbf{Markov chain} whose \textbf{stationary distribution} is $\pi(x) = p(x)$.
+  \begin{itemize}
+    \item After sufficient iterations (``burn-in''), samples $x^{(k)}$ approximately follow $p(x)$.
+    \item Notation: $x^{(1)}$ is the first sampled state, $x^{(2)}$ the second, \ldots, $x^{(n)}$ the $n$th.
+  \end{itemize}
+
+  \item Use the dependent Markov chain samples in a Monte Carlo estimator:
+  \[
+    \mathbb{E}_p[g(X)] \approx 
+    \frac{1}{n} \sum_{t=1}^{n} g\big(x^{(t)}\big).
+  \]
+
+  \item A generalization of the Law of Large Numbers, known as the \textbf{Ergodic Theorem}, ensures that as $n \to \infty$:
+  \[
+    \frac{1}{n} \sum_{t=1}^{n} g\big(x^{(t)}\big)
+    \xrightarrow{\text{a.s.}} 
+    \mathbb{E}_p[g(X)].
+  \]
+
+  \begin{itemize}
+    \item Convergence is slower than for i.i.d. samples, since the draws are \textbf{correlated}.
+    \item The variance of the estimator is typically larger than $\mathrm{Var}[g(X)]/n$.
+  \end{itemize}
+
+  \item A widely used method to construct such chains is the \alert{Metropolis–Hastings algorithm}.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Special Case: Metropolis Algorithm}
+
+\textbf{Metropolis algorithm:} sampling from a \alert{continuous target distribution} $p(x)$.  
+We assume $p(x)$ can be evaluated up to a normalizing constant:
+\[
+p(x) = \frac{\tilde{p}(x)}{Z}, \quad Z \text{ unknown}.
+\]
+
+\textbf{Algorithm:}
+\begin{enumerate}
+  \item Initialize $x^{(0)}$.
+  \item Until we get bored:
+    \begin{enumerate}
+      \item Add zero-mean Gaussian noise to generate proposal $\hat{x}^{(t)}$
+      \[
+        \hat{x}^{(t)} = x^{(t-1)} + \epsilon, \quad \epsilon \sim N(0, \sigma^2)
+      \]
+      \item Generate $u \sim \text{Uniform}[0,1]$
+      \item Accept the proposal if
+      \[
+        u \le \frac{\tilde{p}(\hat{x}^{(t)})}{\tilde{p}(x^{(t-1)})} \, \frac{\text{probability of proposed}}{\text{probability of current}}
+      \]
+      and set $x^{(t)} = \hat{x}^{(t)}$.
+      \item Otherwise, reject the proposal and set $x^{(t)} = x^{(t-1)}$
+    \end{enumerate}
+\end{enumerate}
+
+\begin{itemize}
+  \item Proposals that increase the target density are \alert{always accepted}.
+  \item Proposals that decrease the target density \alert{may be accepted or rejected}.
+  \item Under mild conditions (irreducibility, aperiodicity), the chain converges to $p(x)$, but convergence may be slow.
+  \item Works even when the normalizing constant $Z$ is unknown.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Metropolis Algorithm}
+\begin{algorithm}[H]
+\caption{Metropolis Algorithm for Sampling from $p(x)$}
+\begin{algorithmic}[1]
+\Require Initial state $x^{(0)}$, number of iterations $T$, proposal standard deviation $\sigma$
+\Ensure Samples $\{x^{(t)}\}_{t=1}^{T}$ approximately distributed according to $p(x)$
+
+\State Set $x^{(0)}$ as the starting state
+\For{$t = 1$ \textbf{to} $T$}
+    \State Propose $\hat{x}^{(t)} = x^{(t-1)} + \epsilon$, with $\epsilon \sim N(0, \sigma^2)$
+    \State Generate $u \sim \text{Uniform}(0,1)$
+    \If{$u \le \frac{\tilde{p}(\hat{x}^{(t)})}{\tilde{p}(x^{(t-1)})}$}
+        \State Accept the proposal: $x^{(t)} \gets \hat{x}^{(t)}$
+    \Else
+        \State Reject the proposal: $x^{(t)} \gets x^{(t-1)}$
+    \EndIf
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+\end{frame}
+
+\begin{frame}{MCMC Implementation Issues}
+
+\begin{itemize}
+    \item In practice, we often do not \textit{use all} the samples in our Monte Carlo estimates.
+    
+    \item \alert{Burn-in}: discard the early samples while the chain is far from the stationary distribution.
+    
+    \item \alert{Thinning}: keep only every $k$-th sample to reduce autocorrelation between consecutive samples.
+    
+    \item Two common approaches for applying MCMC:
+    \begin{enumerate}
+        \item Run a \alert{large number of independent chains} for a short time and use \alert{final states}:
+        \begin{itemize}
+            \item Highly parallelizable.
+            \item Effectively an extreme form of thinning: only one sample per chain is used.
+            \item Must ensure each chain has reached the stationary distribution (burn-in).
+        \end{itemize}
+        \item Run a \alert{single chain} for a long time and use \alert{states across time}:
+        \begin{itemize}
+            \item Less concern about burn-in if the chain is sufficiently long.
+            \item Thinning may be needed to reduce autocorrelation among samples.
+        \end{itemize}
+    \end{enumerate}
+    
+    \item Diagnosing whether the chain has reached the stationary distribution can be difficult in practice.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Homework: Burn-in and Thinning in MCMC}
+
+\textbf{Problem:}
+
+Consider the Metropolis algorithm for sampling from a target distribution 
+\[
+p(x) \propto \exp(-0.05 x^2) \quad \text{(Normal(0,10))}.
+\]
+
+\begin{enumerate}
+    \item Simulate a \alert{single Markov chain} of length 200, starting from $x_0 = -10$, 
+    using a Gaussian random walk proposal with standard deviation 2.
+    
+    \item Plot the chain over iterations.
+    
+    \item Highlight the \alert{first 30 iterations} as \alert{burn-in} (shaded in gray).
+    
+    \item Apply \alert{thinning} by keeping every 5th sample \textbf{after burn-in} and mark these samples in red on the plot.
+    
+    \item In a few sentences, explain why \alert{burn-in} and \alert{thinning} are used in MCMC.
+    
+    \item \textbf{Optional / Bonus: Multiple Chains}
+    \begin{itemize}
+        \item Run 1000 independent chains, each starting from a random value in [-10,10].
+        \item Apply burn-in and thinning as before.
+        \item Combine all thinned samples from all chains and plot a histogram.
+        \item Comment on how the histogram approximates the target distribution.
+    \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\end{document}
