@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.4) (preloaded format=xelatex 2025.9.4)  2 NOV 2025 10:57
+This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.4) (preloaded format=xelatex 2025.9.4)  2 NOV 2025 12:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1404,12 +1404,12 @@ Overfull \vbox (10.92494pt too high) detected at line 110
 [1
 
 ]
-LaTeX Font Info:    Trying to load font information for U+msa on input line 145
+LaTeX Font Info:    Trying to load font information for U+msa on input line 138
 .
  (C:\Users\AliPe\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 145
+LaTeX Font Info:    Trying to load font information for U+msb on input line 138
 .
 
 (C:\Users\AliPe\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
@@ -1419,20 +1419,20 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 [2
 
 ]
-LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <8> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 168.
-
-LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <6> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 168.
-
-LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <5> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 168.
-
-
 
 [3
 
 ]
+LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <8> not available
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 197.
+
+LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <6> not available
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 197.
+
+LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <5> not available
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 197.
+
+
 
 [4
 
@@ -1488,6 +1488,9 @@ tex-text;"
 [7
 
 ]
+File: chapter4-part1-plot0.png Graphic file (type bmp)
+<chapter4-part1-plot0.png>
+
 
 [8
 
@@ -1496,45 +1499,49 @@ tex-text;"
 [9
 
 ]
-Overfull \vbox (1.54366pt too high) detected at line 391
- []
-
-
 
 [10
 
 ]
+Overfull \vbox (1.54366pt too high) detected at line 402
+ []
+
+
 
 [11
+
+]
+
+[12
 
 ]
 File: chapter4-part1-plot2.png Graphic file (type bmp)
 <chapter4-part1-plot2.png>
 
 
-[12
+[13
 
 ]
 File: chapter4-part1-plot1.png Graphic file (type bmp)
 <chapter4-part1-plot1.png>
 
 
-[13
+[14
 
 ]
 
-[14
+[15
 
 ]
 File: chapter4-part1-plot3.png Graphic file (type bmp)
 <chapter4-part1-plot3.png>
 
 
-[15
+[16
 
 ]
 
-[16
+[17
 
 ]
 \tf@nav=\write6
@@ -1556,12 +1563,12 @@ anged.
 (rerunfilecheck)             Checksum: <no file>.
  ) 
 Here is how much of TeX's memory you used:
- 39582 strings out of 403249
- 960412 string characters out of 5460861
+ 39593 strings out of 403249
+ 960692 string characters out of 5460861
  1503229 words of memory out of 5000000
- 67305 multiletter control sequences out of 15000+600000
+ 67315 multiletter control sequences out of 15000+600000
  635253 words of font info for 115 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,15n,142p,1921b,754s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on STAT-4110-Chapter 4-Part 1.pdf (16 pages).
+Output written on STAT-4110-Chapter 4-Part 1.pdf (17 pages).

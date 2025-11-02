@@ -109,6 +109,33 @@
 %-------------------
 \maketitle
 
+%--------------------------------------------
+% Slide 4: Markov Chains for Monte Carlo Estimation
+%--------------------------------------------
+\begin{frame}{Markov Chains for Monte Carlo Estimation}
+We have been discussing inference using \textbf{Markov chains}.
+\begin{itemize}
+  \item Concepts such as sampling and stationary distributions are central.
+  \item For \textbf{discrete} Markov chains, dynamic programming algorithms can often be used for exact inference (e.g., Hidden Markov Models).
+\end{itemize}
+
+\medskip
+
+We can also use Markov chains for inference in more general settings.
+\begin{itemize}
+  \item The most common framework is \textbf{Markov Chain Monte Carlo (MCMC)}.
+  \item MCMC methods are used for \textbf{approximate inference}, particularly in complex Bayesian models (e.g., Bayesian logistic regression).
+\end{itemize}
+
+\medskip
+
+\textbf{High-level idea of MCMC}:
+\begin{itemize}
+  \item We want to compute expectations with respect to a distribution $p(x)$, but we cannot generate independent samples directly from $p$.
+  \item Construct a \textbf{homogeneous Markov chain} whose \textbf{stationary distribution} is $p(x)$.
+  \item After a suitable burn-in period, use the generated samples $\{X_t\}_{t=1}^T$ in a Monte Carlo approximation.
+\end{itemize}
+\end{frame}
 
 %--------------------------------------------
 % Slide 1: Homogeneous Markov Chains
@@ -143,6 +170,8 @@ P_{ij} \ge 0, \quad \sum_j P_{ij} = 1.
 
 \textbf{n-step transition}: $P^{(n)} = \mathbf{P}^n$, with entries $P_{ij}^{(n)} = P(X_{t+n} = j \mid X_t = i)$.
 \end{frame}
+
+
 
 %--------------------------------------------
 % Slide 2: Stationary Distribution
@@ -196,33 +225,6 @@ and time averages converge to expectations under $\pi$:
 \]
 \end{frame}
 
-%--------------------------------------------
-% Slide 4: Irreducibility, Recurrence, and Ergodicity
-%--------------------------------------------
-\begin{frame}{Markov Chains for Monte Carlo Estimation}
-We have been discussing inference using \textbf{Markov chains}.
-\begin{itemize}
-  \item Concepts such as sampling and stationary distributions are central.
-  \item For \textbf{discrete} Markov chains, dynamic programming algorithms can often be used for exact inference (e.g., Hidden Markov Models).
-\end{itemize}
-
-\medskip
-
-We can also use Markov chains for inference in more general settings.
-\begin{itemize}
-  \item The most common framework is \textbf{Markov Chain Monte Carlo (MCMC)}.
-  \item MCMC methods are used for \textbf{approximate inference}, particularly in complex Bayesian models (e.g., Bayesian logistic regression).
-\end{itemize}
-
-\medskip
-
-\textbf{High-level idea of MCMC}:
-\begin{itemize}
-  \item We want to compute expectations with respect to a distribution $p(x)$, but we cannot generate independent samples directly from $p$.
-  \item Construct a \textbf{homogeneous Markov chain} whose \textbf{stationary distribution} is $p(x)$.
-  \item After a suitable burn-in period, use the generated samples $\{X_t\}_{t=1}^T$ in a Monte Carlo approximation.
-\end{itemize}
-\end{frame}
 
 %--------------------------------------------
 % Slide 5: Degenerate Example: ``Pointless MCMC''
@@ -290,6 +292,15 @@ Step & Proposed Roll & $u$ (Uniform(0,1)) & Recorded Value ($x_t$) \\
 \[
 x_{0:5} = (4,\,6,\,6,\,6,\,3,\,2,\ldots)
 \]
+\end{frame}
+
+%--------------------------------------------
+% Slide 12: Metropolis Algorithm 2D
+%--------------------------------------------
+\begin{frame}{Convergence to the Actual Expectation - Pointless MCMC in Action}
+\begin{center}
+\includegraphics[width=\textwidth]{chapter4-part1-plot0.png}
+\end{center}
 \end{frame}
 
 %--------------------------------------------
