@@ -114,21 +114,21 @@
 % Slide 1: Homogeneous Markov Chains
 %--------------------------------------------
 \begin{frame}{Reminder: Homogeneous Markov Chains}
-
-\textbf{Definition:}  
-A sequence of random variables $\{X_t\}_{t \ge 0}$ is a \textbf{Markov chain} if
+\textbf{Definition}: A sequence of random variables $\{X_t\}_{t \ge 0}$ is a \textbf{Markov chain} if
 \[
 P(X_{t+1} = j \mid X_t = i, X_{t-1}, \ldots, X_0) = P(X_{t+1} = j \mid X_t = i).
 \]
 
 \medskip
+
 The process is called \textbf{homogeneous} (or time-homogeneous) if the transition probabilities do not depend on $t$:
 \[
 P(X_{t+1} = j \mid X_t = i) = P_{ij}, \quad \text{for all } t.
 \]
 
 \medskip
-\textbf{Transition matrix:}
+
+\textbf{Transition matrix}:
 \[
 \mathbf{P} =
 \begin{pmatrix}
@@ -140,65 +140,53 @@ P_{ij} \ge 0, \quad \sum_j P_{ij} = 1.
 \]
 
 \medskip
-\textbf{n-step transition:}  
-$P^{(n)} = \mathbf{P}^n$, with entries $P_{ij}^{(n)} = P(X_{t+n} = j \mid X_t = i)$.
 
+\textbf{n-step transition}: $P^{(n)} = \mathbf{P}^n$, with entries $P_{ij}^{(n)} = P(X_{t+n} = j \mid X_t = i)$.
 \end{frame}
 
 %--------------------------------------------
 % Slide 2: Stationary Distribution
 %--------------------------------------------
 \begin{frame}{Stationary Distribution}
-
-\textbf{Definition:}  
-A probability vector $\boldsymbol{\pi}$ is a \textbf{stationary distribution} of a Markov chain if
+\textbf{Definition}: A probability vector $\boldsymbol{\pi}$ is a \textbf{stationary distribution} of a Markov chain if
 \[
 \boldsymbol{\pi}^\top \mathbf{P} = \boldsymbol{\pi}^\top,
 \quad \text{and} \quad \sum_i \pi_i = 1, \; \pi_i \ge 0.
 \]
 
 \medskip
-\textbf{Interpretation:}  
-If $X_0 \sim \boldsymbol{\pi}$, then $X_t \sim \boldsymbol{\pi}$ for all $t$.  
-The chain remains in equilibrium under $\boldsymbol{\pi}$.
+
+\textbf{Interpretation}:If $X_0 \sim \boldsymbol{\pi}$, then $X_t \sim \boldsymbol{\pi}$ for all $t$. The chain remains in equilibrium under $\boldsymbol{\pi}$.
 
 \medskip
-\textbf{Convergence:}  
-For many Markov chains,
+
+\textbf{Convergence}: For many Markov chains,
 \[
 \lim_{t \to \infty} P(X_t = j \mid X_0 = i) = \pi_j,
 \]
 independent of the starting state $i$.
-
-\medskip
-This limiting behavior holds under certain conditions
-(irreducibility, aperiodicity, and recurrence).
-
 \end{frame}
 
 %--------------------------------------------
 % Slide 3: Irreducibility, Recurrence, and Ergodicity
 %--------------------------------------------
 \begin{frame}{Irreducibility, Recurrence, and Ergodicity}
-
-\textbf{Irreducibility:}  
-A Markov chain is \textbf{irreducible} if every state can be reached from every other state:
+\textbf{Irreducibility}: A Markov chain is \textbf{irreducible} if every state can be reached from every other state:
 \[
 \forall i,j, \; \exists n \text{ such that } P_{ij}^{(n)} > 0
 \]
 
 \medskip
-\textbf{Recurrence:}  
-State $i$ is \textbf{recurrent} if, starting from $i$, the probability of returning to $i$ is 1:
+
+\textbf{Recurrence}: State $i$ is \textbf{recurrent} if, starting from $i$, the probability of returning to $i$ is 1:
 \[
 P(\text{return to } i \mid X_0 = i) = 1
 \]
 If the expected return time is finite, $i$ is \textbf{positive recurrent}.
 
 \medskip
-\textbf{Ergodicity:}  
-An irreducible, aperiodic, and positive recurrent Markov chain is called \textbf{ergodic}.  
-For ergodic chains,
+
+\textbf{Ergodicity}: An irreducible, aperiodic (gcd is 1 for all possible return times to a state), and positive recurrent Markov chain is called \textbf{ergodic}. For ergodic chains,
 \[
 \lim_{t \to \infty} P(X_t = j \mid X_0 = i) = \pi_j
 \]
@@ -206,10 +194,11 @@ and time averages converge to expectations under $\pi$:
 \[
 \frac{1}{T}\sum_{t=1}^T f(X_t) \;\xrightarrow{a.s.}\; E_\pi[f(X)]
 \]
-
 \end{frame}
 
-
+%--------------------------------------------
+% Slide 4: Irreducibility, Recurrence, and Ergodicity
+%--------------------------------------------
 \begin{frame}{Markov Chains for Monte Carlo Estimation}
 We have been discussing inference using \textbf{Markov chains}.
 \begin{itemize}
@@ -218,6 +207,7 @@ We have been discussing inference using \textbf{Markov chains}.
 \end{itemize}
 
 \medskip
+
 We can also use Markov chains for inference in more general settings.
 \begin{itemize}
   \item The most common framework is \textbf{Markov Chain Monte Carlo (MCMC)}.
@@ -225,7 +215,8 @@ We can also use Markov chains for inference in more general settings.
 \end{itemize}
 
 \medskip
-\textbf{High-level idea of MCMC:}
+
+\textbf{High-level idea of MCMC}:
 \begin{itemize}
   \item We want to compute expectations with respect to a distribution $p(x)$, but we cannot generate independent samples directly from $p$.
   \item Construct a \textbf{homogeneous Markov chain} whose \textbf{stationary distribution} is $p(x)$.
@@ -233,17 +224,18 @@ We can also use Markov chains for inference in more general settings.
 \end{itemize}
 \end{frame}
 
+%--------------------------------------------
+% Slide 5: Degenerate Example: ``Pointless MCMC''
+%--------------------------------------------
 \begin{frame}{Degenerate Example: ``Pointless MCMC''}
-
-Consider estimating the expected value of a fair six-sided die.  
-We know analytically that
+Consider estimating the expected value of a fair six-sided die. We know analytically that
 \[
 E[X] = \frac{1+2+3+4+5+6}{6} = 3.5
 \]
 
 \medskip
-Now suppose we design a ``pointless'' MCMC algorithm for this trivial problem:
 
+Now suppose we design a ``pointless'' MCMC algorithm for this trivial problem:
 \begin{itemize}
   \item Start with an initial value $x_0 \in \{1,2,3,4,5,6\}$, e.g. $x_0 = 4$.
   \item At each iteration $t$:
@@ -256,6 +248,7 @@ Now suppose we design a ``pointless'' MCMC algorithm for this trivial problem:
 \end{itemize}
 
 \medskip
+
 This produces samples from a Markov chain with transition probabilities:
 \[
 q(x_{t-1} \to x_t)
@@ -269,13 +262,15 @@ q(x_{t-1} \to x_t)
 \]
 \end{frame}
 
+%--------------------------------------------
+% Slide 6: Pointless MCMC in Action
+%--------------------------------------------
 \begin{frame}{Pointless MCMC in Action}
-
 Let's simulate a few steps of the ``pointless'' MCMC algorithm.
 
 \medskip
-\textbf{Setup:} Start with $x_0 = 4$.
 
+\textbf{Setup}: Start with $x_0 = 4$.
 \begin{table}[h!]
 \centering
 \begin{tabular}{c c c c}
@@ -291,21 +286,25 @@ Step & Proposed Roll & $u$ (Uniform(0,1)) & Recorded Value ($x_t$) \\
 \end{tabular}
 \end{table}
 
-\textbf{Resulting samples:}
+\textbf{Resulting samples}:
 \[
 x_{0:5} = (4,\,6,\,6,\,6,\,3,\,2,\ldots)
 \]
 \end{frame}
 
+%--------------------------------------------
+% Slide 7: Degenerate Example: ``Pointless MCMC''
+%--------------------------------------------
 \begin{frame}{Degenerate Example: ``Pointless MCMC''}
-\textbf{Observation:}
+\textbf{Observation}:
 \begin{itemize}
   \item The chain sometimes repeats values due to rejections.
   \item Samples are \textbf{correlated}, even though the target distribution is uniform.
 \end{itemize}
 
 \medskip
-\textbf{Key insight:}
+
+\textbf{Key insight}:
 \begin{itemize}
   \item If you run this chain long enough, you will spend roughly $\tfrac{1}{6}$ of the time on each outcome.
   \item The \textbf{stationary distribution} is uniform:  
@@ -317,13 +316,15 @@ x_{0:5} = (4,\,6,\,6,\,6,\,3,\,2,\ldots)
 \end{itemize}
 \end{frame}
 
-
+%--------------------------------------------
+% Slide 8: Degenerate Example: ``Pointless MCMC''
+%--------------------------------------------
 \begin{frame}{Markov Chain Monte Carlo (MCMC)}
-
-\textbf{Goal:} Estimate expectations with respect to a distribution $p(x)$ when direct sampling is difficult.
+\textbf{Goal}: Estimate expectations with respect to a distribution $p(x)$ when direct sampling is difficult.
 
 \medskip
-\textbf{Key idea:}
+
+\textbf{Key idea}:
 \begin{itemize}
   \item Construct a \textbf{Markov chain} whose \textbf{stationary distribution} is $\pi(x) = p(x)$.
   \begin{itemize}
@@ -351,18 +352,18 @@ x_{0:5} = (4,\,6,\,6,\,6,\,3,\,2,\ldots)
 
   \item A widely used method to construct such chains is the \alert{Metropolis–Hastings algorithm}.
 \end{itemize}
-
 \end{frame}
 
+%--------------------------------------------
+% Slide 9: Special Case: Metropolis Algorithm
+%--------------------------------------------
 \begin{frame}{Special Case: Metropolis Algorithm}
-
-\textbf{Metropolis algorithm:} sampling from a \alert{continuous target distribution} $p(x)$.  
-We assume $p(x)$ can be evaluated up to a normalizing constant:
+\textbf{Metropolis algorithm}: Sampling from a \alert{continuous target distribution} $p(x)$. We assume $p(x)$ can be evaluated up to a normalizing constant:
 \[
 p(x) = \frac{\tilde{p}(x)}{Z}, \quad Z \text{ unknown}.
 \]
 
-\textbf{Algorithm:}
+\textbf{Algorithm}:
 \begin{enumerate}
   \item Initialize $x^{(0)}$.
   \item Until we get bored:
@@ -389,6 +390,9 @@ p(x) = \frac{\tilde{p}(x)}{Z}, \quad Z \text{ unknown}.
 \end{itemize}
 \end{frame}
 
+%--------------------------------------------
+% Slide 10: Metropolis Algorithm
+%--------------------------------------------
 \begin{frame}{Metropolis Algorithm}
 \begin{algorithm}[H]
 \caption{Metropolis Algorithm for Sampling from $p(x)$}
@@ -410,6 +414,27 @@ p(x) = \frac{\tilde{p}(x)}{Z}, \quad Z \text{ unknown}.
 \end{algorithm}
 \end{frame}
 
+%-------------------
+% Slide 11: Metropolis Algorithm - Convergence from Uniform to Target Distribution
+%-------------------
+\begin{frame}{Metropolis Algorithm - Convergence from Uniform to Target Distribution}
+\begin{center}
+\includegraphics[width=\textwidth]{chapter4-part1-plot2.png}
+\end{center}
+\end{frame}
+
+%--------------------------------------------
+% Slide 12: Metropolis Algorithm 2D
+%--------------------------------------------
+\begin{frame}{Metropolis Algorithm 2D}
+\begin{center}
+\includegraphics[width=\textwidth]{chapter4-part1-plot1.png}
+\end{center}
+\end{frame}
+
+%--------------------------------------------
+% Slide 13: MCMC Implementation Issues
+%--------------------------------------------
 \begin{frame}{MCMC Implementation Issues}
 
 \begin{itemize}
@@ -438,10 +463,20 @@ p(x) = \frac{\tilde{p}(x)}{Z}, \quad Z \text{ unknown}.
 \end{itemize}
 \end{frame}
 
+%--------------------------------------------
+% Slide 14: Visualization of Burn-in and Thinning in MCMC
+%--------------------------------------------
+\begin{frame}{Visualization of Burn-in and Thinning in MCMC}
+\begin{center}
+\includegraphics[width=\textwidth]{chapter4-part1-plot3.png}
+\end{center}
+\end{frame}
+
+%--------------------------------------------
+% Slide 15: Visualization of Burn-in and Thinning in MCMC
+%--------------------------------------------
 \begin{frame}{Homework: Burn-in and Thinning in MCMC}
-
-\textbf{Problem:}
-
+\textbf{Problem}:
 Consider the Metropolis algorithm for sampling from a target distribution 
 \[
 p(x) \propto \exp(-0.05 x^2) \quad \text{(Normal(0,10))}.
