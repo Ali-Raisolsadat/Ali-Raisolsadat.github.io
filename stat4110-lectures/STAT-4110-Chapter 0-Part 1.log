@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.11.10)  20 NOV 2025 15:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.11.10)  20 NOV 2025 21:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1332,16 +1332,16 @@ Overfull \vbox (10.92494pt too high) detected at line 110
 [2
 
 ]
-<cat.jpg, id=31, 1156.32pt x 1515.6625pt>
-File: cat.jpg Graphic file (type jpg)
-<use cat.jpg>
-Package pdftex.def Info: cat.jpg  used on input line 147.
-(pdftex.def)             Requested size: 122.91406pt x 161.1035pt.
+<meme_1.jpg, id=31, 711.4078pt x 458.46281pt>
+File: meme_1.jpg Graphic file (type jpg)
+<use meme_1.jpg>
+Package pdftex.def Info: meme_1.jpg  used on input line 147.
+(pdftex.def)             Requested size: 184.3758pt x 118.81975pt.
 
 
 [3
 
- <./cat.jpg>]
+ <./meme_1.jpg>]
 
 [4
 
@@ -1384,16 +1384,16 @@ thkerncmss.
 [7
 
 ]
-<meme_1.png, id=73, 331.2375pt x 147.55125pt>
-File: meme_1.png Graphic file (type png)
-<use meme_1.png>
-Package pdftex.def Info: meme_1.png  used on input line 237.
-(pdftex.def)             Requested size: 153.64493pt x 68.44174pt.
+<meme_2.jpg, id=73, 404.51125pt x 404.51125pt>
+File: meme_2.jpg Graphic file (type jpg)
+<use meme_2.jpg>
+Package pdftex.def Info: meme_2.jpg  used on input line 237.
+(pdftex.def)             Requested size: 92.1879pt x 92.18384pt.
 
 
 [8
 
- <./meme_1.png>]
+ <./meme_2.jpg>]
 \tf@nav=\write6
 \openout6 = `"STAT-4110-Chapter 0-Part 1.nav"'.
 
@@ -1414,7 +1414,7 @@ anged.
  ) 
 Here is how much of TeX's memory you used:
  37464 strings out of 468133
- 890535 string characters out of 5430711
+ 890556 string characters out of 5430711
  1371368 words of memory out of 5000000
  65365 multiletter control sequences out of 15000+600000
  635011 words of font info for 69 fonts, out of 8000000 for 9000
@@ -1427,9 +1427,9 @@ ic/amsfonts/cm/cmss8.pfb><C:/Users/AliPe/AppData/Local/Programs/MiKTeX/fonts/ty
 pe1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/AliPe/AppData/Local/Programs/MiKT
 eX/fonts/type1/public/amsfonts/cm/cmssi8.pfb><C:/Users/AliPe/AppData/Local/Prog
 rams/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
-Output written on "STAT-4110-Chapter 0-Part 1.pdf" (8 pages, 372478 bytes).
+Output written on "STAT-4110-Chapter 0-Part 1.pdf" (8 pages, 359006 bytes).
 PDF statistics:
- 113 PDF objects out of 1000 (max. 8388607)
+ 111 PDF objects out of 1000 (max. 8388607)
  17 named destinations out of 1000 (max. 500000)
  58 words of extra memory for PDF output out of 10000 (max. 10000000)
 
