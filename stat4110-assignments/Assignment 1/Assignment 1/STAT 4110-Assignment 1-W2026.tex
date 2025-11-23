@@ -1,0 +1,138 @@
+\documentclass[11pt]{article}
+
+% ---------------- Packages ----------------
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\geometry{margin=0.5in}
+
+% ---------------- Title Info ----------------
+\title{\textbf{Assignment 1} \\ STAT 4110 - Winter 2026}
+\author{University of Prince Edward Island \\ School of Mathematical and Computational Sciences}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Instructions}
+\begin{itemize}
+    \item Please show all steps clearly for each question.
+    \item Please submit a single \textbf{PDF report} that includes both your written solutions and all source code and include your \textbf{name and student ID}.
+    \item The preferred programming languages for code are \textbf{R, Python, and MATLAB}. You may use other languages but it may take longer to grade your assignment.
+    \item For coding tasks, you may use programming resources, textbooks, or manuals, but all work must be your own. The use of ChatGPT or other AI tools for generating solutions is \textbf{prohibited}.
+    \item To ensure you have not used AI tools for coding, each line of code must include a comment explaining its purpose in your own words.
+    \item If you write your solutions entirely in LaTeX (except the coding parts), you will earn a \textbf{bonus of 1 point}.
+\end{itemize}
+
+\newpage
+
+% ---------------- Question 1 ----------------
+\section*{Question 1: Multivariate Normal Transformation (2/15 points)}
+
+Let $\mu \in \mathbb{R}^d$ be a fixed vector and let $A \in \mathbb{R}^{d \times d}$ be an invertible matrix. Define the covariance matrix \[\Sigma = A A^T\] Let $Z = (Z_1, Z_2, \dots, Z_d)^T$ be a random vector with independent standard normal components, $Z_i \sim N(0,1)$. Define \[Y = A Z + \mu\] 
+Show that $Y \sim N(\mu, \Sigma)$.
+
+% ---------------- Question 2 ----------------
+\section*{Question 2: Positive Definite Matrices (3/15 points)}
+
+Let $A \in \mathbb{R}^{n \times n}$ be symmetric. Prove the following fundamental properties:
+
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{Invertibility and Determinant Condition:}  
+    Prove that if $A$ is positive definite, then $A$ is invertible and $\det(A) > 0$.
+
+    \item \textbf{Quadratic Form Definition:}  
+    Prove that $A$ is positive definite if and only if 
+    \[
+    x^T A x > 0 \quad \text{for all } x \neq 0
+    \]
+
+    \item \textbf{Principal Submatrix Condition — Partial Proof:}  
+    Consider the equivalences for symmetric positive definite matrices:
+    \begin{enumerate}[label=\roman*.]
+        \item $A$ is positive definite.
+        \item $\det(A) > 0$ and $\det(A^{(r)}) > 0$ for each leading principal submatrix $A^{(r)}$, $r = 1, \dots, n$.
+        \item $A = LU$ with $L$ unit lower triangular and $U$ upper triangular with positive diagonals.
+    \end{enumerate}
+    Prove \textbf{only} ii. that if $A$ is positive definite, then every leading principal submatrix has positive determinant.
+
+    \vspace{1mm}
+    \textbf{Hint:} \emph{Spectral Theorem}: A symmetric matrix can be orthogonally diagonalized, i.e.,
+    \[
+    A = Q D Q^T
+    \]
+    where $Q$ is orthogonal and $D$ is diagonal with the eigenvalues of $A$. Recall that a symmetric matrix is positive definite if and only if all its eigenvalues are positive.
+\end{enumerate}
+
+% ---------------- Question 3 ----------------
+\section*{Question 3: Discrete and Continuous Random Sampling (3/15 points)}
+Consider a random variable $X$ taking values $i = 1, 2, \dots$ according to the probability mass function
+\[
+p(X=i) = \frac{1}{\sqrt[3]{i}} - \frac{1}{\sqrt[3]{i+1}}.
+\]
+
+Write a computer program to generate a random sample of size $n=50$ according to this distribution.
+
+% ---------------- Question 4 ----------------
+\section*{Question 4: Inverse Transform Sampling (3/15 points)}
+Consider a random variable $X$ with density 
+$f(x)=C \cdot 2^{-x}$ on $[1,\infty)$ and 0 otherwise, where $C \in \mathbb{R}$ is a constant.
+
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{Normalizing constant.} Find the value of \(C\) so that \(f\) is a valid probability density on \([1,\infty)\).
+    \item \textbf{Sampling (inverse transform).} Write a computer program that uses the inverse transform method to generate a random sample of size \(n=1000\) from the distribution with density \(f\). 
+    \item \textbf{Visualization.} Provide a histogram of the generated random numbers (normalized to form a density) and briefly comment on whether the histogram matches the theoretical shape of \(f(x)\).
+\end{enumerate}
+
+% ---------------- Question 5 ----------------
+\section*{Question 5: Simulation of Bivariate Normal Distribution (4/15 points)}
+
+Generate 100 random vectors in $\mathbb{R}^2$ from a multivariate normal with mean
+\[
+\mu = \begin{bmatrix} 4 \\ 2 \end{bmatrix}, \quad 
+\Sigma = \begin{bmatrix} 1 & 2 \\ 2 & 9 \end{bmatrix}
+\]
+
+\begin{enumerate}[label=(\alph*)]
+    \item Compute the Cholesky decomposition of $\Sigma$ by hand, verifying $\Sigma = LL^T$.
+    \item Using your Cholesky factor, generate 1000 random samples via $Y = LZ + \mu$, where $Z$ has independent standard normals.
+    \item In your solution include a 2D scatterplot of the sample and the sample mean and covariance.
+\end{enumerate}
+
+\textbf{Restrictions:}
+\begin{itemize}
+    \item You may use univariate standard normal generators.
+    \item You may not use built-in multivariate normal sampling functions.
+\end{itemize}
+
+\textbf{Bonus (+2 points):} Do not use any built-in Cholesky function; implement it yourself.
+
+
+% ---------------- Bonus Question ----------------
+\section*{Bonus Question (2 points): Computational Work for Determinant of a Matrix}
+\textbf{Recursive Definition (Cofactor Expansion):}  
+The determinant of an $n \times n$ matrix $A = [a_{ij}]$ is defined recursively as follows:
+
+\begin{itemize}
+    \item If $A$ is $1 \times 1$, i.e. $A = [a]$, then
+    \[
+    \det(A) = a.
+    \]
+
+    \item For $n > 1$, the determinant may be computed by cofactor expansion along the first row:
+    \[
+    \det(A) = \sum_{j=1}^{n} (-1)^{1+j} \, a_{1j} \, \det(A_{1j}),
+    \]
+    where $A_{1j}$ is the $(n-1) \times (n-1)$ matrix obtained by removing row 1 and column $j$ from $A$.
+\end{itemize}
+
+\noindent This formula defines a recursive algorithm for computing determinants, and you may use it to count the operations performed at each level of recursion. Your objective is to determine the number of floating point operations (flops) required to calculate the determinant of an $n \times n$ matrix using a straightforward recursive implementation of the determinant definition. \textbf{Hint:} You may use the series expansion \[e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \frac{x^4}{4!} + \cdots\] to simplify your result to a much simpler function of $n$.
+
+\noindent \textbf{Note:} You may combine additions and multiplications when counting flops.
+
+\noindent \textbf{Final hint:} The asymptotic expression should simplify to something on the order of $n!(e)$; that is $O(n!)$ efficiency.
+
+
+
+\end{document}
