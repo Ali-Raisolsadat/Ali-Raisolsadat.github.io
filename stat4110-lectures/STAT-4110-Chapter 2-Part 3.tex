@@ -127,76 +127,115 @@
 % Slide 1: Markov Chains on Different State Spaces
 %-------------------
 \begin{frame}{Markov Chains on Different State Spaces}
+
 \textbf{Finite state space:}  
-So far we considered Markov chains with  
-\begin{equation*}
-S = \{1,2,\ldots, M\}
-\end{equation*}
+Up to this point, we have worked with Markov chains whose states belong to a
+finite set
+\[
+S = \{1,2,\ldots, M\}.
+\]
+In this setting, the transition behavior of the chain is fully described by a
+\emph{transition matrix} whose $(i,j)$ entry gives the probability of moving
+from state $i$ to state $j$ in one step.
+
+\vspace{5mm}
 
 \textbf{Beyond finite:}  
-Markov chains can also take values in more general spaces, such as  
-\begin{equation*}
-S = \mathbb{R}^d
-\end{equation*}
+Many Markov chains arising in applications take values in much more general
+spaces. A common example is a chain evolving in a continuous space such as
+\[
+S = \mathbb{R}^d.
+\]
+When the state space is uncountable, a transition matrix is no longer suitable.
+Instead, we describe the transitions using a \emph{transition density}, which
+plays the role of the continuous analogue of a matrix row in the finite case.
 
-In this case, instead of a transition \textbf{matrix}, we will need a 
-transition \textbf{density}.
 \end{frame}
+
 
 %-------------------
 % Slide 2: Transition Density
 %-------------------
 \begin{frame}{Transition Density}
-A \textbf{transition density} is a function 
-\begin{equation*}
-p:\mathbb{R}^d \times \mathbb{R}^d \to \mathbb{R}
-\end{equation*} 
-such that:
+
+For Markov chains on a continuous state space $S = \mathbb{R}^d$, transitions
+are specified by a \textbf{transition density}
+\[
+p : \mathbb{R}^d \times \mathbb{R}^d \to \mathbb{R},
+\]
+where $p(x,y)$ describes the likelihood of moving from state $x$ to a point
+near $y$ in one step.
+
+\vspace{2mm}
+
+The function $p$ must satisfy:
 \begin{enumerate}
-	\item $p(x,y) \geq 0$ for all $x,y \in \mathbb{R}^d$.
-	\item $\displaystyle \int_{\mathbb{R}^d} p(x,y)\,dy = 1 \quad \forall x \in \mathbb{R}^d$.
+    \item \textbf{Non-negativity:}  
+    \[
+    p(x,y) \ge 0 \quad \text{for all } x,y \in \mathbb{R}^d.
+    \]
+
+    \item \textbf{Normalization:}  
+    For each fixed $x$, the function $y \mapsto p(x,y)$ integrates to $1$:
+    \[
+    \int_{\mathbb{R}^d} p(x,y)\, dy = 1.
+    \]
 \end{enumerate}
 
-\vspace{3mm}
-
-The interpretation of this definition is that $x$ plays the role of the 
-current state of the Markov Chain, so for a fixed value of $x$, the function $g(y)=f(x,y)$ is the density function of the random variable $Y$ representing the next state of the Markov Chain.
+Fix a current state $x$. Then the function
+\[
+y \mapsto p(x,y)
+\]
+is a probability density for the next state $X_{n+1}$ conditional on $X_n = x$.
+Thus $p$ is the continuous analogue of a row of the transition matrix in the
+finite-state case.
 \end{frame}
 
 %-------------------
-% Slide 2: Example - Gaussian Markov Chain
+% Slide 3: Example — Gaussian Markov Chain
 %-------------------
 \begin{frame}{Example: Gaussian Markov Chain}
-\textbf{Example 2.29 from the Textbook:}  
-Let $X_0 = 0$ and define
-\begin{equation*}
-X_j = \tfrac{1}{2} X_{j-1} + \varepsilon_j, 
-\quad \varepsilon_j \sim N(0,1) \ \text{i.i.d.}
-\end{equation*}
 
-\vspace{3mm}
+\textbf{Example 2.29 (Textbook):}  
+Consider the process defined by
+\[
+X_0 = 0, \qquad 
+X_j = \tfrac{1}{2}\,X_{j-1} + \varepsilon_j,
+\]
+where the noise terms $\varepsilon_j \sim N(0,1)$ are independent and
+identically distributed.
 
-\textbf{Observation:}  
-The sequence $X_0, X_1, X_2, \ldots$ is a Markov chain with state space $S=\mathbb{R}$.
+\vspace{4mm}
 
-\vspace{3mm}
+\textbf{Markov property:}  
+The sequence $(X_j)_{j \ge 0}$ forms a Markov chain with state space
+$S = \mathbb{R}$, since each update depends only on the previous state and an
+independent noise term.
 
-\textbf{Conditional law:}  
-Given $X_{j-1}=x$, we have
-\begin{equation*}
-X_j = \tfrac{x}{2} + \varepsilon_j 
-\;\;\sim\;\; N\!\left(\tfrac{x}{2},\, 1\right)
-\end{equation*}
+\vspace{4mm}
 
-\vspace{3mm}
+\textbf{Conditional distribution:}  
+For any fixed $x \in \mathbb{R}$,
+\[
+X_j \,\big|\, (X_{j-1}=x)
+\;\sim\;
+N\!\left(\tfrac{x}{2},\,1\right).
+\]
+
+\vspace{4mm}
 
 \textbf{Transition density:}
-\begin{equation*}
-p(x,y) = \frac{1}{\sqrt{2\pi}} 
-\exp\!\Bigg(-\tfrac{1}{2}\,(y - x/2)^2 \Bigg),
-\quad x,y \in \mathbb{R}
-\end{equation*}
+\[
+p(x,y)
+= \frac{1}{\sqrt{2\pi}}
+  \exp\!\left(
+      -\frac{1}{2}\,(y - \frac{x}{2})^2
+  \right),
+\qquad x,y \in \mathbb{R}.
+\]
+
 \end{frame}
+
 
 %-------------------
 % Slide 4: Generation of Markov Chain Paths (Continuous State Space)
