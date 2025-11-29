@@ -353,7 +353,7 @@ p(x) = \frac{\tilde{p}(x)}{Z} \quad
 %--------------------------------------------
 \begin{frame}{Metropolis–Hastings Example}
 \textbf{Problem:}  
-Consider the Metropolis--Hastings algorithm for sampling from the target distribution
+Consider the following sampling from the target distribution
 \[
 p(x) \propto \exp\!\left(-\frac{(x-2)^2}{2}\right) \quad \text{(Normal(2,1))}
 \]
@@ -379,9 +379,26 @@ Simulate a \alert{single Markov chain} of length 250, starting from $x_0 = 0$.
 
 \end{frame}
 
+%--------------------------------------------
+% Slide 8: Visualization of Burn-in and Thinning in MCMC
+%--------------------------------------------
+\begin{frame}{Burn-in and Thinning in MH Example}
+\begin{center}
+\includegraphics[width=\textwidth]{chapter4-part2-plot1.png}
+\end{center}
+\end{frame}
 
 %--------------------------------------------
-% Slide 8: Metropolis–Hastings Algorithm Remarks
+% Slide 9: Multiple Chains Distribution -- MH Example
+%--------------------------------------------
+\begin{frame}{Multiple Chains Distribution of MH Example}
+\begin{center}
+\includegraphics[width=\textwidth]{chapter4-part2-plot2.png}
+\end{center}
+\end{frame}
+
+%--------------------------------------------
+% Slide 10: Metropolis–Hastings Algorithm Remarks
 %--------------------------------------------
 \begin{frame}{Final Remarks on Metropolis--Hastings}
 
