@@ -23,11 +23,12 @@ This project is designed to familiarize students with real-world applications of
 Choose \textbf{one} of the following three project directions:
 
 \begin{enumerate}
-	\item Use your modelling skills to model and implement \textbf{one of the following three} real world problems:
+	\item Use your modelling skills to model and implement \textbf{one of the following four} real world problems:
 	\begin{itemize}
 		\item Emergency Room Patient Arrivals -- Poisson and Markov Chain Simulation
     		\item Numerical Option Pricing: Crank--Nicolson PDE vs. Monte Carlo Simulation
     		\item Bayesian Neural Networks using Markov Chain Monte Carlo
+    		\item Your very own choice of modelling problem 
 	\end{itemize}
     \item Replicating the full design and implementation of \textbf{one} published paper related to our course material
     \item Literature review of \textbf{5--15 papers} on a topic related to the course
@@ -40,16 +41,12 @@ Projects will be completed in teams of three members. Each team will be responsi
 For any of the project choices, the deliverables are as follows:
 
 \begin{enumerate}
-    \item \textbf{Introductory Summary} (2 pages max, 5/30 points):  
-    Includes a brief description of the chosen project, references and papers that the group will use, and the roles of each student in the group.
-    
-    \item \textbf{Presentation} (15 minutes + 5 minutes Q\&A, 10/30 points):  
-    A concise presentation of the methodology, results, and insights from the project.
-    
-    \item \textbf{Summary Report} (5 pages max, 15/30 points): A detailed report summarizing the approach, implementation, results, and discussion. Include any supporting figures, tables, or appendices as needed. You are also responsible to attach a ZIP file containing all code used in the project. If you are using Git (GitHub or GitLab), please add me as the owner, so I can review your code. 
+    \item \textbf{Introductory Summary} (2 pages max, 10/30 points):  
+    Includes a brief description of the chosen project, references and papers that the group will use, and the roles of each student in the group.    
+    \item \textbf{Summary Report} (5 pages max, 20/30 points): A detailed report summarizing the approach, implementation, results, and discussion. Include any supporting figures, tables, or appendices as needed. You are also responsible to attach a ZIP file containing all code used in the project. If you are using Git (GitHub or GitLab), please add me as the owner, so I can review your code. 
 \end{enumerate}
 
-\textbf{Disclaimer}: The use of LLMs, including GPT, is permitted for coding assistance only. Any use of such tools must be explicitly acknowledged in the report.
+\textbf{Disclaimer}: The use of LLMs, including GPT, is permitted ONLY for coding assistance. Any use of such tools must be explicitly acknowledged in the report.
 
 
 \newpage
@@ -58,7 +55,7 @@ For any of the project choices, the deliverables are as follows:
 \section*{Project Choice 1: Modelling Option}
 
 \subsection*{Purpose}
-The purpose of this project choice is to give you hands-on experience in developing and analysing statistical/mathematical models for real-world problems. By working on a modelling-based project, you will learn how to formalize assumptions, implement computational methods, and interpret model outcomes. This choice emphasizes on using the material learnt throughout the course and understanding the behaviour of complex systems under uncertainty 
+The purpose of this project choice is to give you hands-on experience in developing and analysing statistical/mathematical models for real-world problems. By working on a modelling-based project you will learn how to formalize assumptions, implement computational methods and interpret model outcomes. This choice emphasizes on using the material learnt throughout the course and understanding the behaviour of complex systems under uncertainty.
 
 \subsection*{Learning Objectives}
 \begin{itemize}
@@ -69,12 +66,13 @@ The purpose of this project choice is to give you hands-on experience in develop
 \end{itemize}
 
 \subsection*{Scope}
-You are expected to choose \textbf{one of the three} modelling-based problems:
-\begin{enumerate}
-		\item Bayesian Neural Networks using Markov Chain Monte Carlo
-    	\item Numerical Option Pricing: Crank--Nicolson PDE vs. Monte Carlo Simulation
-    	\item Simulation of Realistic Website Queueing and Load Management Systems
-\end{enumerate}
+You are expected to choose \textbf{one of the four} modelling-based problems:
+	\begin{enumerate}
+		\item Emergency Room Patient Arrivals -- Poisson and Markov Chain Simulation
+    		\item Numerical Option Pricing: Crank--Nicolson PDE vs. Monte Carlo Simulation
+    		\item Bayesian Neural Networks using Markov Chain Monte Carlo
+    		\item Your very own choice of modelling problem 
+	\end{enumerate}
 As a team, you are responsible for selecting appropriate datasets, defining the project scope, and documenting their methodology and results.
 
 \newpage
@@ -186,9 +184,9 @@ dS_t = \mu S_t\,dt + \sigma S_t\,dW_t
 \]
 where
 \begin{itemize}
-  \item \(\mu\) is the instantaneous expected return (drift),
-  \item \(\sigma>0\) is the volatility (instantaneous standard deviation),
-  \item \(W_t\) is a standard Brownian motion.
+  \item \(\mu\) is the instantaneous expected return (drift)
+  \item \(\sigma>0\) is the volatility (instantaneous standard deviation)
+  \item \(W_t\) is a standard Brownian motion
 \end{itemize}
 
 The model is used because (i) it is analytically tractable in many cases, (ii) under risk-neutral valuation it leads to a linear parabolic PDE for derivative prices, and (iii) it captures multiplicative stochastic growth and log-normal marginal distributions for \(S_t\). The Black--Scholes framework underpins much of modern quantitative finance and provides a baseline for comparing numerical methods (PDE solvers, Monte Carlo, lattice models, etc.).
