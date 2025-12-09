@@ -128,7 +128,7 @@
 % Slide 1: Monte Carlo Estimation Error Rate
 %-------------------
 \begin{frame}{Monte Carlo Estimation Error Rate (fixed $n$)}
-\textbf{Goal:} compute $\theta=E(g(X)), \;\;X \sim f(x)$, assume $Var(g(X))<\infty$
+\textbf{Goal:} We introduce the problem $\theta=E(g(X)) \quad \text{where} \quad \;X \sim f(x)$. Assume that $Var(g(X))<\infty$ (variance exists and it is finite).
 
 \vspace{3mm}
 
@@ -161,8 +161,6 @@ and
 \begin{equation*}
     RMSE(\hat{\theta}_n) = \sqrt{MSE(\hat{\theta}_n)}=\frac{1}{\sqrt{n}} \sigma(g(X))
 \end{equation*}
-
-\textbf{Note}: You will be asked to prove MSE ($MSE(\hat{\theta}_n) = Var(\hat{\theta}_n)+(\text{bias}(\hat{\theta}_n))^2$) on the assignment. 
 \end{frame}
 
 %-------------------
