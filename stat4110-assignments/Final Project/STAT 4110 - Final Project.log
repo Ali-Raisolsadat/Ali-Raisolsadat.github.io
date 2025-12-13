@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.22.0 (MiKTeX 25.4) (format=lualatex 2025.10.4)  12 DEC 2025 12:24
+This is LuaHBTeX, Version 1.22.0 (MiKTeX 25.4) (format=lualatex 2025.10.4)  13 DEC 2025 11:04
  restricted system commands enabled.
 **"STAT 4110 - Final Project.tex"
 ("./STAT 4110 - Final Project.tex"
@@ -493,6 +493,14 @@ Overfull \hbox (3.25974pt too wide) in paragraph at lines 31--32
 [3]
 
 [4]
+Overfull \hbox (33.43753pt too wide) in paragraph at lines 148--150
+\TU/lmr/m/n/10.95 brute-force dis-tance checks is $\OMS/cmsy/m/n/10.95 O\OT1/cm
+r/m/n/10.95 (\OML/cmm/m/it/10.95 N[]\OT1/cmr/m/n/10.95 )$\TU/lmr/m/n/10.95 , whi
+ch be-comes costly for large $\OML/cmm/m/it/10.95 N$\TU/lmr/m/n/10.95 . Python
+’s \TU/lmtt/m/n/10.95 scipy.spatial.cKDTree
+ []
+
+
 
 [5]
 
@@ -527,36 +535,38 @@ nged.
 )
 
 Here is how much of LuaTeX's memory you used:
- 11524 strings out of 476291
+ 11527 strings out of 476291
  100000,662416 words of node,token memory allocated
- 763 words of node memory still in use:
-   6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 3 sub_mlist, 1 glyph, 66 attribute,
- 58 glue_spec, 66 attribute_list, 1 write nodes
-   avail lists: 2:808,3:216,4:13,5:447,6:58,7:7049,8:67,9:1062,10:10,11:555
- 33478 multiletter control sequences out of 65536+600000
- 52 fonts using 3715287 bytes
- 72i,13n,75p,860b,585s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 787 words of node memory still in use:
+   6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 3 sub_mlist, 1 glyph, 72 attribute,
+ 58 glue_spec, 72 attribute_list, 1 write nodes
+   avail lists: 2:806,3:216,4:14,5:445,6:58,7:7049,8:63,9:1062,10:9,11:553
+ 33479 multiletter control sequences out of 65536+600000
+ 53 fonts using 3841375 bytes
+ 72i,13n,75p,600b,486s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/users/alivi/appdata/local/programs/miktex/fonts/opentype/public/lm/lmroman10
 -italic.otf><c:/users/alivi/appdata/local/programs/miktex/fonts/opentype/public/
-lm/lmroman8-regular.otf><c:/users/alivi/appdata/local/programs/miktex/fonts/open
-type/public/lm/lmroman10-bold.otf><c:/users/alivi/appdata/local/programs/miktex/
-fonts/opentype/public/lm/lmroman10-regular.otf><c:/users/alivi/appdata/local/pro
-grams/miktex/fonts/opentype/public/lm/lmroman12-regular.otf><c:/users/alivi/appd
-ata/local/programs/miktex/fonts/opentype/public/lm/lmroman12-bold.otf><C:/Users/
-AliVi/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C
-:/Users/AliVi/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex1
-0.pfb><C:/Users/AliVi/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
-cm/cmmi10.pfb><C:/Users/AliVi/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
-msfonts/cm/cmmi6.pfb><C:/Users/AliVi/AppData/Local/Programs/MiKTeX/fonts/type1/p
-ublic/amsfonts/cm/cmmi8.pfb><C:/Users/AliVi/AppData/Local/Programs/MiKTeX/fonts/
-type1/public/amsfonts/cm/cmr10.pfb><C:/Users/AliVi/AppData/Local/Programs/MiKTeX
-/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/AliVi/AppData/Local/Programs/
-MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/AliVi/AppData/Local/P
-rograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/AliVi/AppData/
-Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on STAT 4110 - Final Project.pdf (16 pages, 195437 bytes).
+lm/lmmono10-regular.otf><c:/users/alivi/appdata/local/programs/miktex/fonts/open
+type/public/lm/lmroman8-regular.otf><c:/users/alivi/appdata/local/programs/mikte
+x/fonts/opentype/public/lm/lmroman10-bold.otf><c:/users/alivi/appdata/local/prog
+rams/miktex/fonts/opentype/public/lm/lmroman10-regular.otf><c:/users/alivi/appda
+ta/local/programs/miktex/fonts/opentype/public/lm/lmroman12-regular.otf><c:/user
+s/alivi/appdata/local/programs/miktex/fonts/opentype/public/lm/lmroman12-bold.ot
+f><C:/Users/AliVi/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
+mbx10.pfb><C:/Users/AliVi/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
+nts/cm/cmex10.pfb><C:/Users/AliVi/AppData/Local/Programs/MiKTeX/fonts/type1/publ
+ic/amsfonts/cm/cmmi10.pfb><C:/Users/AliVi/AppData/Local/Programs/MiKTeX/fonts/ty
+pe1/public/amsfonts/cm/cmmi6.pfb><C:/Users/AliVi/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/AliVi/AppData/Local/Programs/M
+iKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/AliVi/AppData/Local/Pro
+grams/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/AliVi/AppData/Loc
+al/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/AliVi/App
+Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/Al
+iVi/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb
+>
+Output written on STAT 4110 - Final Project.pdf (16 pages, 203442 bytes).
 
-PDF statistics: 233 PDF objects out of 1000 (max. 8388607)
- 92 named destinations out of 1000 (max. 131072)
+PDF statistics: 242 PDF objects out of 1000 (max. 8388607)
+ 94 named destinations out of 1000 (max. 131072)
  1 words of extra memory for PDF output out of 10000 (max. 100000000)
 

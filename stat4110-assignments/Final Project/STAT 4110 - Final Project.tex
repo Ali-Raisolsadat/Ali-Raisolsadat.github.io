@@ -80,135 +80,140 @@ As a team, you are responsible for selecting appropriate datasets, defining the 
 
 \newpage
 
-\section*{Option 1: Forest Fire Simulation -- Poisson and Markov Chain Simulation}
-Forest fires are a significant environmental hazard that can have devastating ecological and economic impacts. Fires can be initiated naturally, such as through lightning, or by human activity. The spread of a fire through a forest depends on multiple factors including tree density, forest topology, weather conditions, and seasonal variations. The dynamics of forest fires are complex but by understanding these dynamics, starting with simple models and then making them more complex and complex, allows fire management teams to better predict high-risk regions, estimate time-to-burn, and plan effective response strategies.
+\section*{Option 1: Forest Fire Simulation}
 
-Spatial heterogeneity in forests is a key factor influencing fire behaviour. Trees are often not distributed uniformly; regions near water sources or fertile soil may have higher tree density, creating areas more susceptible to fire spread. Simulation models that incorporate stochastic spatial distributions and probabilistic fire spread can help quantify the risk in these heterogeneous environments. 
+Forest fires are a significant environmental hazard that can have devastating ecological and economic impacts. Fires can ignite naturally, such as through lightning strikes, or by human activity. The propagation of a fire through a forest depends on multiple factors including tree density, spatial arrangement of trees, terrain, and climatic conditions. Understanding these dynamics through simplified mathematical models allows forest managers to identify high-risk areas, estimate the time-to-burn, and develop effective mitigation strategies.
 
-In this scenario, you are hired by Natural Resources Canada to provide insights and a model that provides actionable insights for forest fire risk management. You will simulate forest fires in a 2D square forest of size $100 \times 100$ kilometres squared. You will need to implement Monte Carlo simulations to estimate expected outcomes, such as the number of trees burnt and the time required to burn the forest under different seasonal conditions. Note that Trees are distributed using an inhomogeneous Poisson point process (IPP), creating higher density near the forest center. Furthermore fires can ignite at a tree and spread to neighbouring trees probabilistically. Fire spread is modelled as a Markov chain, with tree states transitioning from unburnt to burnt based on neighbourhood interactions.
+Spatial heterogeneity in forests plays a crucial role in fire behaviour. Trees are rarely uniformly distributed; regions with fertile soil or favourable growth conditions often have higher tree densities, forming natural clusters that are more susceptible to rapid fire spread. Stochastic models that incorporate both the spatial distribution of trees and probabilistic fire spread can provide quantitative insights into these dynamics.
 
-Your model implementation needs to be accompanied by a report that will show both the tree density and fire risk across months, providing actionable insights for forest management.
+In this project, you are asked to construct a statistical model for probabilistic forest fire spread in a 2D square forest of size $100 \times 100$ km$^2$. The goal is to quantify fire propagation probabilities, expected number of burnt trees, and the time-to-burn under varying conditions.
 
 \subsubsection*{Objectives}
-
-In this problem you will:
-
+This problem emphasizes both mathematical modelling and probabilistic reasoning. Students are expected to:
 \begin{enumerate}[label=\arabic*.]
-    \item Model a spatially heterogeneous forest using an \textbf{inhomogeneous Poisson point process}.
-    \item Simulate fire spread using a \textbf{Markov chain} approach.
-    \item Implement \textbf{Monte Carlo simulations} to estimate:
+    \item Model a spatially heterogeneous forest using inhomogeneous Poisson point process (IPP).
+    \item Represent fire spread using a discrete-time Markov chain over trees as states.
+    \item Perform Monte Carlo simulations to estimate expected fire outcomes, such as:
     \begin{itemize}
-        \item Expected number of burnt trees per month
-        \item Expected time-to-burn for the entire forest
+        \item Probability that a tree burns given another tree ignites
+        \item Expected number of burnt trees
+        \item Expected time-to-burn for the forest
     \end{itemize}
-    \item Visualize the forest, fire spread, and fire risk heatmaps.
-    \item Analyze seasonal variation in fire risk and time-to-burn.
+    \item Visualize both tree density and dominant fire pathways.
+    \item Analyse spatial patterns of fire risk and identify areas with consistently high risk.
 \end{enumerate}
 
-\subsubsection*{Forest Model}
-The forest is modeled as a 2D square with coordinates $[0,100]\times[0,100]$. Tree locations are generated using an inhomogeneous Poisson point process with intensity function:
-
+\subsubsection*{Step 1: Forest Model -- Inhomogeneous Poisson Point Process}
+Let the forest domain be a square:
 \[
-\lambda(x, y) = \Lambda_{\text{max}} \exp\Bigg(-\frac{(x - 50)^2 + (y - 50)^2}{2\sigma^2}\Bigg)
+D = [0, 100] \times [0, 100]
 \]
+Define a radially symmetric Gaussian intensity function:
+\[
+\lambda(x, y) = \lambda_{\max} \exp\Bigg(- \frac{(x - c)^2 + (y - c)^2}{2 \sigma^2}\Bigg)
+\]
+where $c = 50$ is the center of the forest and $\sigma$ controls the concentration of trees near the center.
 
-where $\Lambda_{\text{max}}$ is the maximum expected tree density (trees per unit area) and $\sigma$ controls how concentrated trees are near the forest center.
+\textbf{Tree Sampling Algorithm:}
+\begin{enumerate}
+    \item Generate a Poisson number of candidate trees: 
+    \[
+    N_{\text{prop}} \sim \text{Poisson}(\lambda_{\max} \cdot |D|)
+    \]
+    \item Assign candidate coordinates uniformly in $D$.
+    \item Accept each candidate with probability
+    \[
+    p_{\text{accept}} = \frac{\lambda(x_i, y_i)}{\lambda_{\max}}
+    \]
+    \item Continue until exactly $N_{\text{trees}}$ are accepted.
+\end{enumerate}
+This ensures that tree locations reflect the desired spatial heterogeneity.
 
-\subsubsection*{Fire Spread Dynamics}
+\subsubsection*{Step 2: Fire Spread -- Markov Chain Dynamics}
+Define the state of each tree $i$ at timestep $t$ as
+\[
+S_i(t) \in \{0,1\}, \quad 0 = \text{unburnt},\ 1 = \text{burning}
+\]
+Let $\mathcal{N}_i = \{ j : \text{distance}(i,j) \le r_{\text{fire}} \}$ denote the neighbors of tree $i$ within a specified fire radius.
 
-Each tree can be in one of two states:
-
+\textbf{Transition probability:} If tree $i$ is burning at time $t$, each neighbor $j \in \mathcal{N}_i$ ignites at time $t+1$ with probability
+\[
+\Pr(S_j(t+1) = 1 \mid S_j(t) = 0, S_i(t) = 1) = p_{\text{fire}}
+\]
 \begin{itemize}
-    \item Unburnt ($0$)
-    \item Burnt ($1$)
+	\item Trees remain burning once ignited.
+	\item Fire propagates in discrete timesteps until no new trees ignite or a maximum number of timesteps is reached.
 \end{itemize}
 
-Fire spreads probabilistically to neighboring trees within a radius $r_{\text{fire}}$. For a tree with $k$ burning neighbors, the probability of ignition in one timestep is:
-
-\[
-P(\text{ignite}) = 1 - (1 - p_{\text{fire}})^k
-\]
-
-where $p_{\text{fire}}$ is the monthly fire spread probability. Each timestep represents one minute. The fire spreads until no new trees are ignited or a maximum number of timesteps is reached.
-
-\subsubsection*{Seasonal Variation}
-
-Fire risk depends on the month, with lower probabilities in winter and higher probabilities in summer. Use the following monthly probabilities:
-
-\[
-p_{\text{fire}} = [0.10, 0.12, 0.15, 0.20, 0.25, 0.35, 0.40, 0.38, 0.30, 0.20, 0.15, 0.12]
-\]
-
-representing January through December.
-
-\subsubsection*{Monte Carlo Simulation}
-
-To account for stochastic variation in tree positions and fire spread:
-
+\textbf{Efficient Neighbor Search:} In practical implementation, computing $\mathcal{N}_i$ for every tree by brute-force distance checks is $\mathcal{O}(N^2)$, which becomes costly for large $N$. Python's \texttt{scipy.spatial.cKDTree} allows efficient spatial queries:
 \begin{itemize}
-    \item Run $N_{\text{MC}}$ independent simulations per month.
-    \item Record the number of burnt trees and total timesteps for each trial.
-    \item Compute the expected number of burnt trees and expected time-to-burn for each month.
+    \item \texttt{cKDTree(tree\_pts)} constructs a spatial index of all tree coordinates in $O(N \log N)$ time.
+    \item \texttt{query\_ball\_tree(tree, r)} returns a list of neighbors for each tree within radius $r_{\text{fire}}$, effectively computing $\mathcal{N}_i$ for all $i$.
+    \item Mathematically, this corresponds to finding all $j$ such that
+    \[
+    || \mathbf{x}_i - \mathbf{x}_j ||_2 \le r_{\text{fire}}.
+    \]
 \end{itemize}
 
-\subsubsection*{Tasks and Suggested Parameters}
-
-\begin{enumerate}[label=\arabic*.]
-    \item \textbf{Forest Initialization}
-    \begin{itemize}
-        \item Generate tree locations using IPP.
-        \item Visualize tree locations and create a heatmap of tree density.
-    \end{itemize}
-    \item \textbf{Single Fire Simulation}
-    \begin{itemize}
-        \item Ignite a random tree (or the tree closest to the forest center).
-        \item Simulate fire spread using Markov chain dynamics.
-        \item Record the number of burnt trees and timesteps.
-        \item Visualize fire spread on the forest map.
-    \end{itemize}
-    \item \textbf{Monte Carlo Analysis}
-    \begin{itemize}
-        \item Run multiple trials per month.
-        \item Estimate expected burnt trees and average burn time.
-        \item Plot histograms for number of burnt trees.
-    \end{itemize}
-    \item \textbf{Seasonal Fire Risk Visualization}
-    \begin{itemize}
-        \item Create risk heatmaps by combining tree density and monthly $p_{\text{fire}}$.
-        \item Compare risk patterns between winter and summer months.
-    \end{itemize}
-    \item \textbf{Analysis and Discussion}
-    \begin{itemize}
-        \item Identify months with the highest fire risk.
-        \item Determine which areas are consistently at higher risk.
-        \item Discuss implications for forest management and fire response.
-    \end{itemize}
+\subsubsection*{Step 3: Monte Carlo Estimation of Fire Transition Probabilities}
+To quantify fire dynamics probabilistically:
+\begin{enumerate}
+    \item Run $N_{\text{MC}}$ independent fire simulations.
+    \item Record all directed transitions $(i \to j)$, representing tree $i$ igniting tree $j$.
+    \item Compute the empirical Markov transition matrix
+    \[
+    \hat{P}_{ij} = \frac{\text{count of transitions } i \to j}{N_{\text{MC}}}
+    \]
+    \item The matrix $\hat{P}$ encodes the probability that tree $j$ burns given tree $i$ burns.
 \end{enumerate}
 
+\subsubsection*{Step 4: Visualization and Analysis}
+\begin{itemize}
+    \item Represent each tree as a node in 2D coordinates.
+    \item Draw directed edges $(i \to j)$ with thickness proportional to $\hat{P}_{ij}$ for dominant transitions.
+    \item Colour-code nodes according to the cumulative influence or total probability of being burnt.
+    \item Use this visualization to identify spatial fire risk patterns and likely fire propagation pathways.
+\end{itemize}
+
+For large forests, visualizing all pairwise transitions with arrows can be cluttered. Instead, an aggregated heatmap can be used:
+
+\begin{itemize}
+    \item Define a 2D grid over the forest domain (mesh of cells).
+    \item Compute \textbf{outgoing fire influence} for each tree as
+    \[
+    f_i = \sum_j \hat{P}_{ij},
+    \]
+    representing the expected number of neighbors ignited by tree $i$.
+    \item Aggregate these influences into each grid cell by averaging the $f_i$ of trees falling within that cell.
+\end{itemize}
+
+\subsubsection*{Step 5: Analysis of Results}
+Students should analyze:
+\begin{itemize}
+    \item Which trees consistently act as ignition points.
+    \item Areas of high fire connectivity and risk.
+    \item How spatial heterogeneity affects the spread of fire.
+    \item Potential interventions to mitigate fire risk (e.g., thinning high-density clusters).
+\end{itemize}
+
+\subsubsection*{Suggested Parameters}
 \begin{table}[h!]
 \centering
 \begin{tabular}{l l l}
 \hline
 Parameter & Value & Notes \\
 \hline
-Forest size & 100 units & 2D square forest \\
-Maximum tree intensity ($\Lambda_{\text{max}}$) & 0.05 & High density near center \\
-Fire radius ($r_{\text{fire}}$) & 5 units & Neighbor search radius \\
-Max timesteps & 120 & Each timestep = 1 minute (2 hours)\\
-Monte Carlo trials ($N_{\text{MC}}$) & 500–1000 & Per month \\
+Forest size & 100 km & 2D square domain \\
+Maximum tree intensity ($\lambda_{\max}$) & 0.05 & High density near center \\
+Fire radius ($r_{\text{fire}}$) & 20 km & Neighbor search radius \\
+Maximum timesteps & 120 & Time resolution per step \\
+Monte Carlo trials ($N_{\text{MC}}$) & 500–2000 & Per fire scenario \\
 Random seed & 42 & For reproducibility \\
 \hline
 \end{tabular}
-\caption{Suggested parameters for the forest fire simulation.}
 \end{table}
 
-\subsubsection*{Optional Tasks}
-\begin{itemize}
-    \item Introduce multiple ignition points.
-    \item Simulate heterogeneous terrain (e.g., dry vs wet areas).
-    \item Compute probability that more than 50\% of the forest burns per month.
-    \item Explore the effect of varying tree density on fire risk.
-\end{itemize}
+
 
 \newpage
 
