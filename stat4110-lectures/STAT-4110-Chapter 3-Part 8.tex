@@ -205,24 +205,27 @@ for all $\lambda \in [0.1,1] $?
 %-------------------
 \begin{frame}
 \begin{algorithm}[H]
-\caption{Monte Carlo Estimation of Confidence Coefficients for Poisson Mean}
+\caption{Monte Carlo Estimation of Coverage Probability for Poisson Mean}
 \label{alg:poisson-confidence}
 \begin{algorithmic}[1]
-  \State \textbf{Input:} Number of samples $n$, number of simulations $N$, Poisson rate grid $\{\lambda_i\}_{i=1}^K$
+  \State \textbf{Input:} Sample size $n$, number of simulations $N$, grid $\{\lambda_i\}_{i=1}^K$
   \For{$i = 1$ to $K$}
     \State Initialize counter $k \gets 0$
     \For{$j = 1$ to $N$}
-      \State Generate $X_{j1}, \ldots, X_{jn} \sim \text{Poisson}(\lambda_i)$
-      \State Compute sample mean $\bar{X}_j = \frac{1}{n} \sum_{t=1}^{n} X_{jt}$
-      \State Compute standard deviation $s_j = \text{sd}(X_j)$
-      \State Compute margin of error $d_j = s_j \cdot t_{0.975,\, n-1} / \sqrt{n}$
-      \If{$\bar{X}_j - d_j \leq \lambda_i \leq \bar{X}_j + d_j$}
-        \State Increment counter: $k \gets k + 1$
+      \State Generate $X_{ij1}, \ldots, X_{ijn} \sim \text{Poisson}(\lambda_i)$
+      \State Compute sample mean $\bar{X}_{ij} = \frac{1}{n} \sum_{t=1}^{n} X_{ijt}$
+      \State Compute sample standard deviation
+      \[
+      s_{ij} = \sqrt{\frac{1}{n-1}\sum_{t=1}^{n} (X_{ijt}-\bar{X}_{ij})^2}
+      \]
+      \State Compute margin of error $d_{ij} = t_{0.975,\,n-1}\, s_{ij}/\sqrt{n}$
+      \If{$\bar{X}_{ij} - d_{ij} \leq \lambda_i \leq \bar{X}_{ij} + d_{ij}$}
+        \State $k \gets k + 1$
       \EndIf
     \EndFor
-    \State Estimate coverage probability: $P_i = k / N$
+    \State $P_i = k/N$
   \EndFor
-  \State \textbf{Output:} Coverage probabilities $\{P_i\}_{i=1}^K$ as a function of $\lambda_i$
+  \State \textbf{Output:} $\{P_i\}_{i=1}^K$
 \end{algorithmic}
 \end{algorithm}
 \end{frame}
@@ -267,9 +270,15 @@ P_i = \frac{1}{N}\sum_{j=1}^{N} I_{ij}
 \boldsymbol{\Lambda} = [\lambda_i]_{i=1}^{K} \in \mathbb{R}^{K \times 1}
 \]
 \[
-\mathbf{I} = (\bar{\mathbf{X}} - \mathbf{D} \leq \boldsymbol{\Lambda} \leq \bar{\mathbf{X}} + \mathbf{D}), \quad
-\mathbf{P} = \frac{1}{N} \sum_{j=1}^{N} \mathbf{I}_{ij}
+I_{ij} =
+\mathbb{1}\!\left\{
+\bar{X}_{ij} - d_{ij} \le \lambda_i \le \bar{X}_{ij} + d_{ij}
+\right\}
 \]
+\[
+P_i = \frac{1}{N}\sum_{j=1}^N I_{ij}
+\]
+
 \end{frame}
 
 %-------------------
