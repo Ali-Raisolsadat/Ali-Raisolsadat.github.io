@@ -228,47 +228,6 @@ u <
 \end{frame}
 
 %--------------------------------------------
-% Slide 4: Metropolis–Hastings Example
-%--------------------------------------------
-\begin{frame}{Metropolis–Hastings Example: Rolling a Die with Coins}
-
-\alert{Metropolis–Hastings} adjusts the raw random-walk proposal to ensure the correct stationary distribution:
-\begin{itemize}
-    \item At the endpoints ($1$ or $6$), MH forces you to \alert{stay put half of the time}.
-    \item This accounts for the fact that $1$ and $6$ each have only one neighbour; which means they are not visited as often by the random walk.
-\end{itemize}
-
-This could be viewed as random surfer in a \alert{different graph}:
-
-\begin{tikzpicture}[node distance=2cm,>=stealth,thick]
-\tikzstyle{state}=[circle,draw,minimum size=0.8cm]
-% Nodes
-\node[state] (1) {1};
-\node[state] (2) [right of=1] {2};
-\node[state] (3) [right of=2] {3};
-\node[state] (4) [right of=3] {4};
-\node[state] (5) [right of=4] {5};
-\node[state] (6) [right of=5] {6};
-% Middle transitions: each with 1/2 probability
-\draw[->] (2) -- node[above] {$\tfrac{1}{2}$} (1);
-\draw[->] (2) -- node[above] {$\tfrac{1}{2}$} (3);
-\draw[->] (3) -- node[above] {$\tfrac{1}{2}$} (2);
-\draw[->] (3) -- node[above] {$\tfrac{1}{2}$} (4);
-\draw[->] (4) -- node[above] {$\tfrac{1}{2}$} (3);
-\draw[->] (4) -- node[above] {$\tfrac{1}{2}$} (5);
-\draw[->] (5) -- node[above] {$\tfrac{1}{2}$} (4);
-\draw[->] (5) -- node[above] {$\tfrac{1}{2}$} (6);
-% Endpoints: stay with prob 1/2, move inward with prob 1/2
-\draw[->] (1) edge[loop above] node {$\tfrac{1}{2}$} (1);
-\draw[->] (1) -- node[above] {$\tfrac{1}{2}$} (2);
-\draw[->] (6) edge[loop above] node {$\tfrac{1}{2}$} (6);
-\draw[->] (6) -- node[above] {$\tfrac{1}{2}$} (5);
-\end{tikzpicture}
-
-In general, MH provides the modification that \alert{makes the random walk have the correct stationary probabilities}, regardless of the (reasonable) proposal distribution $q$ you start with.
-\end{frame}
-
-%--------------------------------------------
 % Slide 5: Metropolis–Hastings Algorithm
 %--------------------------------------------
 \begin{frame}{Metropolis--Hastings Algorithm}
@@ -309,6 +268,8 @@ p(x) = \frac{\tilde{p}(x)}{Z} \quad
   \item Works even when the normalizing constant $Z$ is unknown.
 \end{itemize}
 \end{frame}
+
+
 
 %--------------------------------------------
 % Slide 6: Metropolis–Hastings Algorithm

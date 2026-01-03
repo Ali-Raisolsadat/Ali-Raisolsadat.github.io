@@ -180,20 +180,19 @@ P_{ij} \ge 0, \quad \sum_j P_{ij} = 1.
 \textbf{Definition}: A probability vector $\boldsymbol{\pi}$ is a \textbf{stationary distribution} of a Markov chain if
 \[
 \boldsymbol{\pi}^\top \mathbf{P} = \boldsymbol{\pi}^\top,
-\quad \text{and} \quad \sum_i \pi_i = 1, \; \pi_i \ge 0.
+\quad  \sum_i \pi_i = 1, \; \pi_i \ge 0.
 \]
 
 \medskip
 
-\textbf{Interpretation}:If $X_0 \sim \boldsymbol{\pi}$, then $X_t \sim \boldsymbol{\pi}$ for all $t$. The chain remains in equilibrium under $\boldsymbol{\pi}$.
+\textbf{Interpretation}:If $X_0 \sim \boldsymbol{\pi}$ then $X_t \sim \boldsymbol{\pi}$ for all $t$. The chain remains in equilibrium under $\boldsymbol{\pi}$.
 
 \medskip
 
-\textbf{Convergence}: For many Markov chains,
+\textbf{Convergence}: For many Markov chains
 \[
-\lim_{t \to \infty} P(X_t = j \mid X_0 = i) = \pi_j,
+\lim_{t \to \infty} P(X_t = j \mid X_0 = i) = \pi_j
 \]
-independent of the starting state $i$.
 \end{frame}
 
 %--------------------------------------------
