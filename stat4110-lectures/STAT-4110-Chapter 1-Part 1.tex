@@ -218,6 +218,34 @@ In {\bf Python} (\textbf{SciPy} and \textbf{Numpy}), these distributions are typ
 \end{frame}
 
 %-------------------
+% SLIDE 4.5: From Built-in Distributions to Custom Sampling
+%-------------------
+\begin{frame}{From Built-in Distributions to Custom Sampling}
+In practice, most standard probability distributions are already implemented in statistical software such as \textbf{R} and \textbf{Python}. These tools allow us to generate random variables with a single command.
+
+\vspace{3mm}
+
+It is important to remember that these functions are ultimately based on more fundamental ideas:
+\begin{itemize}
+  \item Generating random numbers from the \emph{Uniform}(0,1) distribution
+  \item Transforming those numbers to follow a desired distribution
+\end{itemize}
+
+\vspace{3mm}
+
+Understanding these basic mechanisms allows us to:
+\begin{itemize}
+  \item Generate random variables from distributions that are \emph{not} built into software
+  \item Modify or customize probability models
+  \item Better understand how simulation algorithms work internally
+\end{itemize}
+
+\vspace{3mm}
+
+We now illustrate this idea by constructing a discrete random variable \emph{from scratch} using a uniform random number.
+\end{frame}
+
+%-------------------
 % SLIDE 5: Generation of Random Numbers with Discrete Distributions
 %-------------------
 \begin{frame}{Generation of Random Numbers with Discrete Distributions}
@@ -500,6 +528,10 @@ The expected number of comparisons is
 \begin{equation*}
 	\mathbb{E}[\text{comparisons}] = \sum_{i=1}^{n} i \cdot p_{(i)}.
 \end{equation*}
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{meme_3.jpg}
+\end{center}
 \end{frame}
 
 %-------------------
