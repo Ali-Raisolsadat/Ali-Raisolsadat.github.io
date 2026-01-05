@@ -265,37 +265,6 @@ $\displaystyle{\Lambda(D)=\int_0^{10} \lambda(x) dx=\int_0^{10} 1 \cdot dx=10}$
 \end{frame}
 
 %-------------------
-% Slide : Poisson Processes Example Code
-%-------------------
-%\begin{frame}[fragile]{Poisson Process Example -- Code}
-%\begin{columns}
-%\column{0.48\textwidth}
-%\textbf{R Code}
-%\begin{lstlisting}[language=R]
-%N <- rpois(1, 10)
-%X <- runif(N, min=0, max=10)
-%Y <- replicate(N, 0)
-%plot(X, Y)
-%\end{lstlisting}
-%
-%\column{0.48\textwidth}
-%\textbf{Python Code}
-%\begin{lstlisting}[language=Python]
-%N = np.random.poisson(10)
-%X = np.random.uniform(0, 10, N)
-%Y = np.zeros(N)
-%plt.scatter(X, Y)
-%plt.show()
-%\end{lstlisting}
-%\end{columns}
-
-%\vspace{0.5em}
-
-%\textbf{Remark:} A code like this one may give an error if the generated value 
-%of $N$ is 0. In that case, no events occur in the given set $D$.
-%\end{frame}
-
-%-------------------
 % Slide 8: Poisson Process -- Thinning Method Example
 %-------------------
 \begin{frame}{Poisson Process -- Thinning Method Example}
@@ -354,62 +323,6 @@ $\tilde{\lambda}=7.05 \geq \lambda(x)$ and apply the thinning method.
 $\displaystyle{\tilde{\Lambda}(D)=\int_0^{15} \tilde{\lambda}(x) dx=7.05 \cdot 15=105.75}$
 \end{frame}
 
-%-------------------
-% Slide : Poisson Process -- Thinning Method Example
-%-------------------
-%\begin{frame}[fragile]{Poisson Process -- Thinning Method Example}
-%\begin{columns}
-%\begin{column}{0.48\textwidth}
-%\textbf{R Code}
-%\begin{lstlisting}[language=R]
-%lam_tilde <- 7.05
-%a <- 0; b <- 15
-%Lambda_tilde <- lam_tilde * (b - a)
-%
-%N <- rpois(1, Lambda_tilde)
-%X <- runif(N, min=0, max=b)
-%Z <- replicate(N, 0)
-%plot(X, Z)
-
-%R <- X/50 + 3*X^2/100
-%U <- runif(N)
-%Y <- vector()
-%k <- 1
-%for (i in c(1:N)) {
- % if (R[i] > lam_tilde * U[i]) {
-  %  Y[k] = X[i]
-   % k <- k + 1
- % }
-%}
-%Z1 <- replicate(k-1, 0)
-%plot(Y, Z1)
-%\end{lstlisting}
-%\end{column}
-
-%\begin{column}{0.48\textwidth}
-%\textbf{Python Code}
-%\begin{lstlisting}[language=Python]
-%lam_tilde = 7.05
-%a, b = 0, 15
-%Lambda_tilde = lam_tilde * (b - a)
-
-%N = np.random.poisson(Lambda_tilde)
-%X = np.random.uniform(a, b, N)
-%Z = np.zeros(N)
-%plt.scatter(X, Z)
-%plt.show()
-
-%R = X/50 + 3*X**2/100
-%U = np.random.uniform(0, 1, N)
-%Y = X[R > lam_tilde * U]
-%Z1 = np.zeros(len(Y))
-
-%plt.scatter(Y, Z1, color="red")
-%$plt.show()
-%\end{lstlisting}
-%\end{column}
-%\end{columns}
-%\end{frame}
 
 %-------------------
 % Slide 11: Bivariate Poisson Process Example
@@ -455,43 +368,6 @@ The generation of random vectors with density $f$ can be done by {\bf independen
 \end{itemize}
 \end{frame}
 
-%-------------------
-% Slide : Bivariate Poisson Process Example -- Code
-%-------------------
-%\begin{frame}[fragile]{Bivariate Poisson Process Example}
-%\begin{columns}[t]
-%\column{0.48\textwidth}
-%\textbf{R Code}
-%\begin{lstlisting}[language=R]
-%N <- rpois(1, 200)
-%U1 <- runif(N, min=0, max=1)
-%X1 <- sqrt(4 * U1)
-%X2 <- runif(N, min=0, max=1)
-%plot(X1, X2)
-%\end{lstlisting}
-
-%\column{0.48\textwidth}
-%\textbf{Python Code}
-%\begin{lstlisting}[language=Python]
-%N = np.random.poisson(200)
-%U1 = np.random.uniform(0, 1, N)
-%X1 = np.sqrt(4 * U1)
-%X2 = np.random.uniform(0, 1, N)
-
-%plt.scatter(X1, X2)
-%plt.show()
-%\end{lstlisting}
-%\end{columns}
-%\end{frame}
-
-%-------------------
-% Slide : Bivariate Poisson Process Example
-%-------------------
-%\begin{frame}[fragile]{Bivariate Poisson Process Example}
-%\begin{center}
-%\includegraphics[scale=0.6]{Poisson-process-plane.png}
-%\end{center}
-%\end{frame}
 
 %-------------------
 % Slide 13: Homework
