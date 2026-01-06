@@ -204,8 +204,6 @@ x^3/4  & \text { if } x \in [0,2]\\
 \right.
 \end{equation*}
 
-\pause
-
 \textbf{Solution}: First we find the cumulative distribution function $F$.
 \begin{equation*}
 F(x)=\int_{-\infty}^x f(s)ds=
@@ -261,8 +259,6 @@ print(X)
 \textbf{Example (Exponential Distribution)}: Generate a sample of $n=100$ random numbers from the exponential distribution with parameter $\lambda=2$ using the inverse transform method. 
 
 \vspace{2mm}
-
-\pause
 
 In general the density for the exponential distribution with parameter $\lambda$ is given by
 \begin{equation*}
@@ -341,8 +337,12 @@ plt.show()
 	\item The inverse transform method is straightforward, efficient and very general.
 	\item For the generation of continuous random variables, the inverse transform method is the method of choice in most cases, as long as $F^{-1}$ can be found explicitly.
 	\item Unfortunately, some important distributions do not admit a closed-form solution for $F^{-1}$ (the normal distribution is an obvious example of this) therefore other methods would have to be applied in those cases.
-
 \end{itemize}
+
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{meme_5.jpg}
+\end{center}
 \end{frame}
 
 %-----------------------

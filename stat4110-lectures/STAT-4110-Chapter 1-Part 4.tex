@@ -267,6 +267,7 @@ plt.show()
 	\item The proposals will be accepted with probability $P(A)$ so the efficiency of the method may not be good if $A$ is an event with very low probability.
 	\item In cases where $P(A)$ is small, this method might not be advisable. Example 1.28 from the textbook covers one of such examples and provides an alternative solution.
 \end{itemize}
+
 \end{frame}
 
 
@@ -287,6 +288,11 @@ A standard use of the rejection sampling algorithm is related to the generation 
 \vspace{2mm}
 
 For simplicity we will focus on the case $d=2$ (which can be visualized easily) but these ideas also apply in higher dimensions.
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{meme_9.png}
+\end{center}
+
 \end{frame}
 
 %-------------------
@@ -356,7 +362,6 @@ consists on selecting $A$ with a rectangular shape, as we already know how to ge
 \textbf{Example}: Generate a sample of uniformly distributed random vectors on the semicircle defined by $x^2+y^2\leq 1$ and $y\geq 0$.
 
 \vspace{2mm}
-\pause
 
 \textbf{Solution}: We will use the algorithm described earlier with $B$ being the described semicircle and $A$ being the rectangle $[-1,1]\times [0,1]$ which includes $B$.
 

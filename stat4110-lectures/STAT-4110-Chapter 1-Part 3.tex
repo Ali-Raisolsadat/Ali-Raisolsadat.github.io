@@ -235,6 +235,10 @@ To generate one random number from the target distribution:
 % Slide 7: Rejection Sampling Proof
 %-------------------
 \begin{frame}{Rejection Sampling Proof}
+\begin{center}
+\includegraphics[width=0.4\textwidth]{meme_6.jpg}
+\end{center}
+
 \textbf{Proof}.
 We have
 \begin{align*}
@@ -243,11 +247,9 @@ P(X = x) &= \sum_{n=1}^{\infty} P(\text{reject $n-1$ times, draw $Y = x$ and acc
 \end{align*}
 Then
 \begin{align*}
-& P(\text{draw $Y = x$ and accept it})\\
-&= P(\text{draw $Y = x$})P(\text{accept $Y|Y=x$})\\
+& P(\text{draw $Y = x$ and accept it}) = P(\text{draw $Y = x$})P(\text{accept $Y|Y=x$})\\
 &= g(x)P\biggl(U \leq p(y)| Y = x \biggl) \\
-&= g(x)P\biggl(U \leq Z\frac{f(y)}{g(y)} \biggl| Y = x \biggl)\\
-&= Zf(x)
+&= g(x)P\biggl(U \leq Z\frac{f(y)}{g(y)} \biggl| Y = x \biggl) = Zf(x)
 \end{align*}
 \end{frame}
 
@@ -422,7 +424,6 @@ Starting with the (non necessarily normalized) target density $f$ and the propos
 \begin{frame}{Envelope Rejection Sampling Example}
 \textbf{Example}: Use the Envelope Rejection Sampling algorithm to generate a sample of 100 random numbers coming from the (non normalized) density $\displaystyle{f(x)=\frac{1}{1+x^4}}$ on $(-\infty, \infty)$. Assume that the proposal distribution is the Cauchy distribution with density $\displaystyle{g(x)=\frac{1}{\pi(1+x^2)}}$.
 
-\pause
 \vspace{2mm}
 
 {\bf Solution:} We can check that in this case the function $\displaystyle{\frac{f(x)}{g(x)}}$ attains its maximum at $\displaystyle{x^*=\pm\sqrt{\sqrt{2}-1}}$. Therefore $\displaystyle{c^*= \pi \frac{\sqrt{2}}{4-2\sqrt{2}}
@@ -539,6 +540,11 @@ plt.show()
 	\item In the code for the previous example, we used the inverse transform method to generate the proposals according to the Cauchy distribution
 	\item In this case, we know in advance the sample size for the target distribution. Therefore, we do not know how many ``proposals'' will have to be generated to achieve that. Because of this we use a ``while'' cycle instead of using a ``for'' cycle.
 \end{itemize}
+
+
+\begin{center}
+\includegraphics[width=0.3\textwidth]{meme_8.jpg}
+\end{center}
 \end{frame}
 
 %-------------------
