@@ -186,6 +186,11 @@ They provide a \alert{simple yet powerful model of dependence}: the future depen
 \end{block}
 \end{frame}
 
+\begin{frame}{Dependence Structure}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{meme_12.jpg}
+\end{center}
+\end{frame}
 %-------------------
 % Slide 3: Dependence Structure
 %-------------------
@@ -194,7 +199,9 @@ They provide a \alert{simple yet powerful model of dependence}: the future depen
 \vspace{1mm}
 A Markov chain has \textbf{no memory}. That is to say that the \textbf{most recent state} only matters for predicting the next one.
 \end{block}
-
+\begin{center}
+\includegraphics[width=0.5\textwidth]{meme_13.png}
+\end{center}
 \vspace{2mm}
 
 \begin{definition}[Discrete-Time Markov Chain]
@@ -257,6 +264,9 @@ for all \(n\ge0\) and integers \(i_0,\dots,i_n,j\),
 % Sldie 5: Example-based proof of Markov property
 % --------------------------
 \begin{frame}{Random Walk $\Rightarrow$ Markov Property (example-based proof)}
+\begin{center}
+\includegraphics[width=0.4\textwidth]{meme_6.jpg}
+\end{center}
 \textbf{Proof}.
 Start from the left-hand conditional probability and use the construction \(X_{n+1}=X_n+Y_{n+1}\):
 \begin{equation*}
@@ -290,6 +300,7 @@ Thus,
 = \mathbb{P}(Y_{n+1}=j-i_n)
 \end{equation*}
 Since $Y_{n+1}$ is independent of the past, the history $(X_0,\dots,X_{n-1})$ does not matter. Hence the Markov property holds all \(n\ge0\) and integers \(i_0,\dots,i_n,j\). 
+
 \end{frame}
 
 % --------------------------
@@ -318,6 +329,7 @@ P(X_{n} > 10) = \sum_{k = \lfloor n/2 \rfloor + 1}^{n} \binom{n}{k}\biggl(\frac{
 \begin{block}{Takeaway}
 The process is Markov because the \emph{future fortune depends only on the present fortune and the next bet}, not the entire betting history.
 \end{block}
+
 \end{frame}
 
 % --------------------------
