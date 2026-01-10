@@ -158,26 +158,27 @@ Since 1980 the terms Bootstrap/Bootstrapping have been mentioned in more than 20
 \end{frame}
 
 %-------------------
-% Slide 3: Bootstrap Method
+% Slide 3: Bootstrap Method (Vector Notation)
 %-------------------
-\begin{frame}{Bootstrap Method Framework}
-\textbf{Sample data}: $X=(X_1, X_2, \ldots, X_n)$ independent, identically distributed with $X_i \sim F$, where $F$ is unknown. Usually we observe a realization $x=(x_1,x_2,\ldots, x_n)$ of $X$.
+\begin{frame}{Bootstrap Method Framework (Vector Notation)}
+\textbf{Sample data}:  
+Let
+\[
+	\mathbf{X}_n = (X_1, X_2, \ldots, X_n)^\top \in \mathbb{R}^n \qquad X_i \stackrel{\text{i.i.d.}}{\sim} F
+\]
+where the distribution $F$ is unknown.  We observe a realization
+\[
+	\mathbf{x}_n = (x_1, x_2, \ldots, x_n)^\top
+\]
 
-\vspace{3mm}
+\textbf{General Problem}: Estimation of some statistic $\theta=\theta(F)$ which is a functional of the unknown distribution $F$.
 
-\textbf{General Problem}: Estimation of some statistic $\theta=\theta(F)$.
+\textbf{Examples}:
+\[
+\theta(F) = \int y \, dF(y) \quad \text{(mean)} \qquad  \theta(F) = F^{-1}(1/2) \quad \text{(median)}
+\]
 
-\vspace{3mm}
- 
-For example, it could be the expected value $\displaystyle{\theta=\int y d F(y)}$ or the median $\theta=F^{-1}(1/2)$.
-
-\vspace{3mm}
- 
-Lets say that we have some estimator $\widehat{\theta}_n=\widehat{\theta}_n(X)$  of $\theta$. 
-
-\vspace{3mm}
- 
-\textbf{Specific Problems:} Is $\widehat{\theta}_n$ unbiased?, what is the standard deviation of $\widehat{\theta}_n$?, what is the distribution of $\widehat{\theta}_n$?
+\textbf{Estimator}:  Let $\widehat{\theta}_n = T(\mathbf{X}_n)$ where $T : \mathbb{R}^n \to \mathbb{R}$ is a statistic computed from the data vector. Is this estimator unbiased? What is the standard deviation? What is its distribution?
 
 \vspace{3mm}
   
@@ -187,29 +188,46 @@ All these problems are difficult to solve if we do not have a statistical model 
 %-------------------
 % Slide 4: Bootstrap Method
 %-------------------
-\begin{frame}[fragile]{Bootstrap Method Rationale}
-\textbf{Main Idea}: Generate new random samples by sampling (with replacement) from the sample data $x=(x_1, x_2, \ldots, x_n)$. 
-
-\vspace{2mm}
+\begin{frame}[fragile]{Bootstrap Method Rationale (Vector Notation)}
+\textbf{Main Idea}: Generate new random samples by sampling (with replacement) from the sample data.
 
 As we will be sampling from the sample data, the Bootstrap method is part of a larger set of \textbf{resampling methods}.
 
+\textbf{Bootstrap sample}:  
+For $b = 1,\dots,B$,
+\[
+\mathbf{X}_n^{*(b)} = (X_1^{*(b)}, \dots, X_n^{*(b)})^\top
+\]
+
 \vspace{2mm}
 
-\textbf{Example}: Create $N=3$ Bootstrap samples from the sample data $x=(5.2, 3.1, 3.4, 4.7, 2.2)$
+\textbf{Example}:  
+Observed data
+\[
+\mathbf{x}_n = (5.2,\, 3.1,\, 3.4,\, 4.7,\, 2.2)^\top
+\]
+
+Three bootstrap samples:
+\[
+\mathbf{x}_1^* = (3.1, 4.7, 2.2, 4.7, 5.2)^\top
+\]
+\[
+\mathbf{x}_2^* = (2.2, 3.1, 5.2, 2.2, 2.2)^\top
+\]
+\[
+\mathbf{x}_3^* = (2.2, 4.7, 3.4, 2.2, 3.4)^\top
+\]
 
 \vspace{2mm}
 
-\textbf{R Code}(for the generation of a single Bootstrap sample)
+\textbf{R code (single bootstrap sample)}:
 \begin{lstlisting}
-SampleData<-c(5.2, 3.1, 3.4, 4.7, 2.2)
+SampleData <- c(5.2, 3.1, 3.4, 4.7, 2.2)
 sample(SampleData, size=5, replace=TRUE)
 \end{lstlisting}
 
-Bootstrap Sample 1: $x_1^*=(3.1, 4.7, 2.2, 4.7, 5.2)$\\
-Bootstrap Sample 2: $x_2^*=(2.2, 3.1, 5.2, 2.2, 2.2)$\\
-Bootstrap Sample 3: $x_3^*=(2.2, 4.7, 3.4, 2.2, 3.4)$\\
 \end{frame}
+
 
 %-------------------
 % Slide 5: Bootstrap Method
