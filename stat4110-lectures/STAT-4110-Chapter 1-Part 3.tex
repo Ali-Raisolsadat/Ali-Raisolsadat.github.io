@@ -240,7 +240,7 @@ To generate one random number from the target distribution:
 \end{center}
 
 \textbf{Proof}.
-We have
+Show that the random variable $X$ returned by the algorithm has density $f$.
 \begin{align*}
 P(X = x) &= \sum_{n=1}^{\infty} P(\text{reject $n-1$ times, draw $Y = x$ and accept it})\\
 &= \sum_{n-=1}^{\infty}P(\text{reject $Y$})^{n-1}P(\text{draw $Y = x$ and accept it})
@@ -273,19 +273,6 @@ P(X = x)
 &= Zf(x)\frac{1}{1-(1-Z)} = f(x)
 \end{align*}
 \end{frame}
-
-%-------------------
-% Slide 9: Rejection Sampling
-%-------------------
-\begin{frame}{Rejection Sampling}
-\textbf{Remarks}
-\begin{itemize}
-	\item The number of proposals used to generate one accepted value is random.
-	\item Actually, the number of proposals used to generate one accepted value has geometric probability distribution with mean $1/Z$
-	\item $Z$ also represents the probability that one proposal is accepted, so the higher the value of $Z$ the most efficient is the algorithm.
-\end{itemize}
-\end{frame}
-
 
 %-------------------
 % Slide 10: Rejection Sampling Example
