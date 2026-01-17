@@ -1,0 +1,952 @@
+---
+title: "Homework Problems - Chapter 1"
+author: "Ali Raisolsadat"
+date: "2026-01-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Chapter 1 - Part 1
+
+### Problem 1
+
+We want to test **Algorithm 1** and **Algorithm 2** on slide 6 example where the distribution is given by
+$$P(X = 1) = \frac{1}{6} \quad P(X=2)=\frac{1}{3} \quad P(X=3) = \frac{1}{2}$$
+
+1. **Algorithm 1 (Inverse CDF Method)**
+
+  - Generate $U \sim U(0,1)$
+  - Traverse probabilities in order $(1,2,3)$
+  - Accumulate probabilities until the sum exceeds $U$
+  -Out put the corresponding value of $X$
+  
+2. **Algorithm 2 (Sorted Inverse CDF Method)**
+
+  - Reorder probabilities in descending order $\frac{1}{2},\frac{1}{3}, \frac{1}{6}$ corresponding to outcomes $(3,2,1)$
+  - Compute cumulative sums in that order
+  - Generate $U \sim U(0,1)$ and find the first cumulative sum greater than $U$.
+  - Return the corresponding outcome
+  
+3. **Testing** 
+
+  - Run both algorithms many times (e.g. $N=1000$)
+  - Compute empirical frequencies of ${1,2,3}$
+  - Compute with theoretical distribution $\frac{1}{6},\frac{1}{3}, \frac{1}{2}$
+  
+  
+```{r, out.width = "100%"}
+alg1_sample <- function(p, X){
+  U <-  runif(1, 0, 1)
+  c <-  0
+  for (i in c(1:length(p))) {
+    c <- c + p[i]
+    if (U < c) {
+      return(X[i])
+    }
+  }
+}
+
+alg2_sample <- function(p, X) {
+  idx <- order(p, decreasing = TRUE)
+  p_sorted <- p[idx]
+  dist <- X[idx]
+  
+  U <-  runif(1, 0, 1)
+  c <-  0
+  for (i in c(1:length(p))) {
+    c <- c + p_sorted[i]
+    if (U < c) {
+      return(dist[i])
+    }
+  }
+}
+
+plot_discrete_hist <- function(samples, outcomes, p, title) {
+  hist(samples,
+  breaks = c(0.5, 1.5, 2.5, 3.5), col = "grey",
+  border = "black", freq = FALSE,
+  main = title, xlab = "X")
+}
+
+N <- 1000
+p <- c(1/6, 1/3, 1/2)
+X <- c(1, 2, 3)
+samples1 <- replicate(N, alg1_sample(p, X))
+samples2 <- replicate(N, alg2_sample(p, X))
+freq1 <- table(samples1) / N
+freq2 <- table(samples2) / N
+
+plot_discrete_hist(samples1, X, p, "Algorithm 1 (Naive)")
+plot_discrete_hist(samples2, X, p, "Algorithm 2 (Sorted)")
+
+cat(
+  "Algorithm 1 empirical:\n",
+  freq1, "\n\n",
+  "Algorithm 2 empirical:\n",
+  freq2, "\n\n",
+  "Theoretical probs:\n",
+  p, "\n"
+)
+
+```
+
+### Problem 2
+To generate samples from the discrete random variable taking values $X = \{1,3,5\}$ with probabilities $p = \{1/9, 3/9, 5/9\}$, you can use 
+the **sampling functions** from Algorithm 1 (naive cumulative method) and Algorithm 2 (sorted cumulative method).  
+
+Steps:
+
+1. Define the outcomes `X` and probabilities `p`.
+2. Use either `alg1_sample(p, X)` or `alg2_sample(p, X)` in a loop to 
+   generate a sample of size $n$.
+3. Compute empirical frequencies to compare against theoretical probabilities.
+4. Plot a histogram of the generated samples and overlay the theoretical distribution.
+
+```{r, out.width = "100%"}
+plot_discrete_hist <- function(samples, outcomes, p, title) {
+  hist(samples,
+  breaks = c(0, 2, 4, 6), col = "grey",
+  border = "black", freq = FALSE,
+  main = title, xlab = "X")
+}
+
+N <- 1000
+p <- c(1/9, 3/9, 5/9)
+X <- c(1, 3, 5)
+samples1 <- replicate(N, alg1_sample(p, X))
+samples2 <- replicate(N, alg2_sample(p, X))
+freq1 <- table(samples1) / N
+freq2 <- table(samples2) / N
+
+plot_discrete_hist(samples1, X, p, "Algorithm 1 (Naive)")
+
+plot_discrete_hist(samples2, X, p, "Algorithm 2 (Sorted)")
+
+cat(
+  "Algorithm 1 empirical:\n",
+  freq1, "\n\n",
+  "Algorithm 2 empirical:\n",
+  freq2, "\n\n",
+  "Theoretical probs:\n",
+  p, "\n"
+)
+
+```
+
+### Chapter 1 - Part 1 - Problem 3
+
+We are asked to generate samples from a discrete random variable taking values 
+$1, 3, 5, \dots, 99$ with probabilities proportional to the outcomes.  
+
+Steps:
+
+1. Define the outcome space $X = \{1, 3, 5, \dots, 99\}$.  
+2. Define the probability mass function:
+   $$
+   p(i) = \frac{i}{50^2}, \quad i \in X
+   $$
+   so that probabilities sum to 1.  
+3. Use **Algorithm 1** or **Algorithm 2** (from earlier) to sample values.  
+4. Generate a large sample (e.g. $n=1000$).  
+5. Plot a histogram of the sampled values to visualize the distribution.
+
+```{r}
+N = 1000
+X = seq(1, 100, by=2)
+p = X / (50**2)
+samples = replicate(N, alg1_sample(p, X))
+q25 <- quantile(samples, 0.25)
+q75 <- quantile(samples, 0.75)
+bin_wdith <- 2 * (q75 - q25) / (N^(1/3))
+bins = as.numeric(ceiling((max(samples) - min(samples)) / bin_wdith))
+
+hist(samples, breaks=seq(0,max(samples),l=bins+1),
+     col = "grey", border = "black", freq = TRUE,
+     main = "Histogram of Discrete Distribution (n = 1000)", xlab = "X")
+
+```
+
+### Problem 4
+
+For the Slide 5 example the probabilities are  
+$$p_1=\tfrac{1}{6},\; p_2=\tfrac{1}{3},\; p_3=\tfrac{1}{2}$$
+
+---
+
+- **Algorithm 1 (given order \(1,2,3\))**
+The stopping index \(I\) has $\mathbb{P}(I=i)=p_i$ Thus the expected number of comparisons (iterations) is
+$$
+  \mathbb{E}[I]
+  =\sum_{i=1}^3 i\,p_i
+  =1\cdot\frac{1}{6}+2\cdot\frac{1}{3}+3\cdot\frac{1}{2}
+  $$
+
+$$
+  \mathbb{E}[I] = \frac{1}{6}+\frac{2}{3}+\frac{3}{2}
+  =\frac{14}{6}=\frac{7}{3}\approx 2.3333
+$$
+
+---
+
+- **Algorithm 2 (probabilities sorted descending: $p_{(1)}=\tfrac{1}{2},p_{(2)}=\tfrac{1}{3},p_{(3)}=\tfrac{1}{6}$, order $3,2,1$)**
+
+  With the sorted order the expected number of comparisons is
+
+  $$
+  \mathbb{E}[I_{\text{sorted}}]
+  =1\cdot\frac{1}{2}+2\cdot\frac{1}{3}+3\cdot\frac{1}{6}
+  $$
+
+  $$
+  \mathbb{E}[I_{\text{sorted}}] = \frac{1}{2}+\frac{2}{3}+\frac{1}{2}
+  =\frac{5}{3}\approx 1.6667
+  $$
+
+---
+
+**Final Results:**  
+
+- Algorithm 1: $\mathbb{E}[I]=\tfrac{7}{3}\approx 2.3333$  
+- Algorithm 2: $\mathbb{E}[I]=\tfrac{5}{3}\approx 1.6667$
+
+
+### Problem 5
+
+Write an algorithm to generate samples from a Poisson distribution:
+$$
+	p_i = P\{X = i\} = \frac{e^{-\lambda}\lambda^i}{i!} \quad i = 0,1,2,\dots
+$$
+using the recursive identity:  
+$$
+	p_{i+1} = \frac{\lambda}{i+1} p_i, \quad i \ge 0
+$$
+
+#### Naive Approach
+Algorithm steps:  
+
+1. Generate a random number $U \sim \text{Uniform}(0,1)$.  
+2. Initialize $i = 0$, $p = e^{-\lambda}$, $F = p$.
+3. If $U < F$, set $X = i$ and stop.  
+4. Update:  
+$$
+p \gets \frac{\lambda p}{i+1}, \quad F \gets F + p, \quad i \gets i+1
+$$
+5. Repeat Step 3 until $U < F$.  
+
+
+#### Efficient Approach
+
+**Input:** λ > 0  
+
+1. Set $I \gets \lfloor \lambda \rfloor$.  
+2. Compute $F(I) = \sum_{k=0}^I p_k$ recursively, where  
+   $$
+   p_0 = e^{-\lambda}, \quad 
+   p_k = \frac{\lambda}{k} p_{k-1}, \; k = 1,2,\dots,I
+   $$
+3. Generate $U \sim \text{Uniform}(0,1)$.  
+
+---
+
+**Case 1: $U \leq F(I)$ (Backward search)**  
+- Initialize $i \gets I$, $F \gets F(I)$.  
+- While $U < F$:  
+  $$
+  i \gets i - 1, \quad 
+  p_i = p_{i+1} \cdot \frac{i+1}{\lambda}, \quad
+  F \gets F - p_i
+  $$
+- Set $X = i + 1$.  
+
+---
+
+**Case 2: $U > F(I)$ (Forward search)**  
+- Initialize $i \gets I + 1$, $F \gets F(I)$.  
+- While $U > F$:  
+  $$
+  p_i = \frac{\lambda}{i} \, p_{i-1}, \quad 
+  F \gets F + p_i, \quad
+  i \gets i + 1
+  $$
+- Set $X = i - 1$.  
+
+---
+
+**Output:** $X \sim \text{Poisson}(\lambda)$.
+
+
+```{r, out.width = "100%"}
+generate_poisson_rv <- function(lam) {
+  # Draw U ~ Uniform(0,1)
+  U <- runif(1)
+  
+  i <- 0
+  p <- exp(-lam)   # P(X = 0)
+  F <- p           # CDF
+  comparisons <- 1 # first comparison
+  
+  # Incrementally build CDF
+  while (U >= F) {
+    i <- i + 1
+    p <- (lam * p) / i
+    F <- F + p
+    comparisons <- comparisons + 1
+  }
+  
+  list(X = i, comparisons = comparisons)
+}
+
+
+generate_poisson_efficient <- function(lam) {
+  # Integer part of lambda
+  I <- floor(lam)
+  
+  # Precompute probabilities up to floor(lambda)
+  p <- numeric(I + 1)
+  p[1] <- exp(-lam)   # P(X = 0)
+  
+  for (k in 2:(I + 1)) {
+    p[k] <- lam * p[k - 1] / (k - 1)
+  }
+  
+  F_I <- sum(p)       # CDF at X = I
+  
+  # Draw U ~ Uniform(0,1)
+  U <- runif(1)
+  comparisons <- 1
+  
+  # Case 1: search backward
+  if (U <= F_I) {
+    i <- I
+    F <- F_I
+    
+    while (U < F) {
+      i <- i - 1
+      if (i < 0) break
+      p_i <- p[i + 2] * (i + 1) / lam
+      F <- F - p_i
+      comparisons <- comparisons + 1
+    }
+    X <- i + 1
+    
+  # Case 2: search forward
+  } else {
+    i <- I + 1
+    F <- F_I
+    p_prev <- p[length(p)]
+    
+    while (U > F) {
+      p_i <- lam * p_prev / i
+      F <- F + p_i
+      p_prev <- p_i
+      i <- i + 1
+      comparisons <- comparisons + 1
+    }
+    X <- i - 1
+  }
+  
+  list(X = X, comparisons = comparisons)
+}
+
+generate_poisson_samples <- function(lambda, n_samples = 1000, type = "Standard") {
+  samples <- numeric(n_samples)
+  comparisons <- numeric(n_samples)
+  
+  for (i in seq_len(n_samples)) {
+    if (type == "Standard") {
+      res <- generate_poisson_rv(lambda)
+    } else {
+      res <- generate_poisson_efficient(lambda)
+    }
+    
+    samples[i] <- res$X
+    comparisons[i] <- res$comparisons
+  }
+  
+  list(samples = samples, comparisons = comparisons)
+}
+
+
+
+plot_discrete_samples <- function(samples, outcomes = NULL, title_prefix = "") {
+  # determine outcomes if not provided
+  if (is.null(outcomes)) {
+    outcomes <- sort(unique(samples))
+  }
+  
+  # compute PMF
+  pmf <- sapply(outcomes, function(x) mean(samples == x))
+  
+  # remove outcome 0
+  mask <- outcomes != 0
+  outcomes_f <- outcomes[mask]
+  pmf_f <- pmf[mask]
+  
+  # compute CDF
+  cdf_f <- cumsum(pmf_f)
+  
+  # side-by-side plots
+  par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+  
+  # PMF (bar plot)
+  barplot(pmf_f,names.arg = outcomes_f,
+    col = "skyblue",border = "black",
+    main = paste(title_prefix, "PMF"),
+    xlab = "Outcome", ylab = "Probability")
+  grid(nx = NA, ny = NULL, lty = 2)
+  
+  # CDF (step plot)
+  plot(outcomes_f,cdf_f,type = "s",
+    main = paste(title_prefix, "CDF"),
+    xlab = "Outcome", ylab = "Cumulative Probability",
+    ylim = c(0, 1))
+  grid(nx = NA, ny = NULL, lty = 2)
+  par(mfrow = c(1, 1))
+}
+
+
+# parameters
+lambda_values <- c(1, 2, 5, 10, 20, 50, 100, 200, 500)
+n_samples <- 10000
+
+# Loop over different lambda values
+for (lam in lambda_values) {
+  cat("\nGenerating Poisson samples with lambda =", lam, "\n")
+
+  # Standard approach
+  res_std <- generate_poisson_samples(lam, n_samples, type = "Standard")
+  avg_comp_std <- mean(res_std$comparisons)
+  cat(sprintf("Average comparisons (Standard): %.2f\n", avg_comp_std))
+  plot_discrete_samples(res_std$samples, title_prefix = paste0("Standard (λ = ", lam, ")"))
+
+  # Efficient approach
+  res_eff <- generate_poisson_samples(lam, n_samples, type = "Efficient")
+  avg_comp_eff <- mean(res_eff$comparisons)
+
+  cat(sprintf("Average comparisons (Efficient): %.2f\n", avg_comp_eff))
+  plot_discrete_samples(res_eff$samples, title_prefix = paste0("Efficient (λ = ", lam, ")"))
+}
+
+
+```
+
+
+## Chapter 1 - Part 2
+
+### Problem 1
+We are given the density function
+$$
+f(x) = \frac{3}{2} x^{-5/2} \quad x \in [1, \infty)
+$$
+
+The CDF is
+$$
+F(x) = \int_1^x \frac{3}{2} t^{-5/2}\,dt \quad x \geq 1
+$$
+
+Compute
+$$
+F(x) = \frac{3}{2}\left[-\frac{2}{3} t^{-3/2}\right]_1^x
+= \left(1 - x^{-3/2}\right) \quad x \geq 1
+$$
+
+So,
+$$
+F(x) =
+\begin{cases}
+0, & x < 1 \\
+1 - x^{-3/2} & x \geq 1
+\end{cases}
+$$
+
+Let $U \sim \text{Uniform}(0,1)$. We solve for $x$ in terms of $U$:
+$$
+U = F(x) = 1 - x^{-3/2}
+$$
+
+Rearrange:
+$$
+x^{-3/2} = 1 - U
+$$
+$$
+x = (1-U)^{-2/3}
+$$
+
+
+To generate $X \sim f(x)$:
+
+1. Generate $U \sim \text{Uniform}(0,1)$  
+2. Set  
+   $$
+   X = (1-U)^{-2/3}
+   $$
+
+This gives samples from the target distribution.
+
+```{r, out.width="100%"}
+n <- 1000
+U <- runif(n=n, min=0, max=1)
+X <- (1-U)^(-2/3)
+
+hist(X, col = "grey", border = "black", freq = FALSE, main = "Sampling - Inverse CDF Method", xlab = "X")
+```
+
+### Problem 2
+
+Let \(F\) be the Weibull CDF with parameters $\lambda>0$ and $k>0$:
+
+$$
+F(x)=
+\begin{cases}
+1-\exp\!\big(-(x/\lambda)^k\big) & x\ge 0\\[4pt]
+0 & x<0
+\end{cases}
+$$
+
+For $u\in(0,1)$ we solve $u=F(x)$ for $x$. For $u>0$:
+$$
+u = 1 - \exp\!\big(-(x/\lambda)^k\big)
+$$
+$$
+\exp\!\big(-(x/\lambda)^k\big)=1-u
+$$
+$$
+-(x/\lambda)^k = \ln(1-u)
+$$
+$$
+(x/\lambda)^k = -\ln(1-u)
+$$
+
+Thus the inverse is
+$$
+x = \lambda\big(-\ln(1-u)\big)^{1/k}
+$$
+
+Therefore, the quantile (inverse CDF) is
+$$
+F^{-1}(u)=\lambda\big(-\ln(1-u)\big)^{1/k} \qquad 0<u<1
+$$
+
+### Problem 3
+
+We are asked to find the explicit inverse of the CDF of the Cauchy distribution:
+
+$$
+F(x) = \frac{1}{\pi}\arctan\!\left(\frac{x-x_0}{\gamma}\right) + \frac{1}{2} \quad \gamma>0
+$$
+
+Let $u = F(x)$, where $u \in (0,1)$. Then,
+$$
+u = \frac{1}{\pi}\arctan\!\left(\frac{x-x_0}{\gamma}\right) + \frac{1}{2}
+$$
+
+Set
+$$
+Y = \frac{x-x_0}{\gamma}
+$$
+Then the CDF becomes
+$$
+u = \frac{1}{\pi}\arctan(Y) + \frac{1}{2}
+$$
+$$
+\arctan(Y) = \pi\!\left(u - \tfrac{1}{2}\right)
+$$
+$$
+Y = \tan\!\big(\pi(u - \tfrac{1}{2})\big)
+$$
+
+Since $Y = \dfrac{x-x_0}{\gamma}$, we have
+$$
+\frac{x-x_0}{\gamma} = \tan\!\big(\pi(u - \tfrac{1}{2})\big)
+$$
+
+Solving for $x$
+$$
+x = x_0 + \gamma \,\tan\!\big(\pi(u - \tfrac{1}{2})\big)
+$$
+
+The inverse CDF of the Cauchy distribution is therefore
+$$
+F^{-1}(u) = x_0 + \gamma \tan\!\big(\pi(u - \tfrac{1}{2})\big)\qquad 0<u<1
+$$
+
+### Problem 4
+
+The logistic distribution with location parameter $\mu\in\mathbb{R}$ and scale $s>0$ has CDF
+$$
+F(x)=\frac{1}{1+e^{-(x-\mu)/s}} \qquad x\in\mathbb{R}
+$$
+
+To obtain the inverse CDF (quantile function) solve $u=F(x)$ for $x$ with $0<u<1$:
+$$
+u = \frac{1}{1+e^{-(x-\mu)/s}}
+$$
+Rearrange:
+$$
+1/u = 1+e^{-(x-\mu)/s} \quad\Longrightarrow\quad \frac{1-u}{u} = e^{-(x-\mu)/s}
+$$
+Take logarithms and solve for $x$:
+$$
+-(x-\mu)/s = \ln\!\left(\frac{1-u}{u}\right)
+\quad\Longrightarrow\quad
+x = \mu + s\;\ln\!\left(\frac{u}{1-u}\right)
+$$
+
+Thus the quantile function is
+$$
+F^{-1}(u)=\mu + s\ln\!\left(\frac{u}{1-u}\right) \qquad 0<u<1
+$$
+
+The density (PDF) of the logistic is
+$$
+f(x)=\frac{e^{-(x-\mu)/s}}{s\left(1+e^{-(x-\mu)/s}\right)^2}
+=\frac{1}{s}\,\frac{e^{(x-\mu)/s}}{\left(1+e^{(x-\mu)/s}\right)^2}
+$$
+
+**Sampling (inverse-CDF):** generate $U\sim\mathrm{Uniform}(0,1)$ and set
+$$
+X=F^{-1}(U)=\mu + s\ln\!\left(\frac{U}{1-U}\right)
+$$
+
+**Difference vs. the Normal distribution (qualitative and a few facts):**
+
+- Both are **symmetric** about their location parameter ($\mu$ is the mean/median for logistic).
+- The logistic has **closed-form quantile** (simple logit transform); the Normal does not.
+- The logistic has **heavier tails** than the Normal (so extreme values are more likely under logistic).
+- Variance of logistic: For random variable $X \sim \text{Logistic}(\mu,s)$ then $\mathrm{Var}(X) = \dfrac{\pi^2}{3}s^2$.  
+- For comparison, if one wishes to compare a logistic with scale $s$ to a Normal with the same variance, set the Normal standard deviation $\sigma = s\pi/\sqrt{3}$.
+
+
+```{r, out.width="100%"}
+# parameters
+mu <- 0.0        # location
+s <- 1.0         # scale (logistic)
+sigma_eq <- pi / sqrt(3) * s   # variance-matching normal sigma
+
+# range for plotting
+x <- seq(-8, 8, length.out = 1000)
+
+# logistic distribution
+log_pdf <- dlogis(x, location = mu, scale = s)
+log_cdf <- plogis(x, location = mu, scale = s)
+
+# normal distribution (matched variance)
+norm_pdf <- dnorm(x, mean = mu, sd = sigma_eq)
+norm_cdf <- pnorm(x, mean = mu, sd = sigma_eq)
+
+# plot PDFs
+plot(x, log_pdf, type = "l",lwd = 2,col = "blue",
+  main = "Logistic vs Normal PDF", ylab = "Density",xlab = "x")
+lines(x, norm_pdf,lwd = 2,col = "red",lty = 2)
+legend("topright",
+  legend = c("Logistic PDF", "Normal PDF"),
+  col = c("blue", "red"),lty = c(1, 2),lwd = 2)
+grid()
+
+# plot CDFs
+plot(x, log_cdf,type = "l",lwd = 2,col = "blue",
+  main = "Logistic vs Normal CDF",
+  ylab = "Probability",xlab = "x",ylim = c(0, 1))
+lines(x, norm_cdf,lwd = 2,col = "red",lty = 2)
+legend("topleft",
+  legend = c("Logistic CDF", "Normal CDF"),
+  col = c("blue", "red"),lty = c(1, 2),lwd = 2)
+grid()
+
+```
+
+## Chapter 1 - Part 3
+### Problem 1
+
+We want to sample from the density
+
+$$
+f(x) = 
+\begin{cases}
+\dfrac{3x^2 + 7x^6}{2} & x \in [0,1] \\[2mm]
+0 & \text{otherwise}
+\end{cases}
+$$
+
+using the **envelope (rejection) sampling method** with proposal distribution 
+$$
+g(x) = 1 \quad x \in [0,1]
+$$
+i.e. the Uniform$[0,1]$.
+
+We need a constant $c > 0$ such that
+$$
+f(x) \leq c g(x) \quad \text{for all } x \in [0,1]
+$$
+Since $g(x)=1$, this means
+$$
+c = \max_{x \in [0,1]} f(x)
+$$
+
+Now,
+$$
+f(x) = \frac{3x^2 + 7x^6}{2}
+$$
+
+- At $x=0$: $f(0)=0$.  
+- At $x=1$: $f(1) = \frac{3+7}{2} = 5$.  
+- Derivative check:
+$$
+f'(x) = \frac{6x + 42x^5}{2} = 3x + 21x^5 > 0 \quad \text{for } x>0.
+$$
+
+So $f(x)$ is increasing on $[0,1]$, hence maximum at $x=1$.  
+Therefore,
+$$
+c = 5.
+$$
+
+The overall acceptance probability is
+$$
+\alpha = \frac{1}{c} \int_0^1 f(x)\, dx
+$$
+
+Compute:
+$$
+\int_0^1 f(x)\,dx 
+= \frac{1}{2} \int_0^1 (3x^2 + 7x^6)\,dx
+= \frac{1}{2}\left[ x^3 + x^7 \right]_0^1
+= \frac{1}{2}(1+1)
+= 1
+$$
+
+Thus,
+$$
+\alpha = \frac{1}{5}
+$$
+
+So **only 20% of proposals are accepted**.  
+On average, to obtain \(1000\) accepted samples, we need
+$$
+1000 / 0.2 = 5000 \text{ proposals}
+$$
+
+
+#### Suggest better proposal
+Since $f(x)$ is proportional to a polynomial in $x$, a better choice is a **Beta distribution** with higher mass near $x=1$.  
+
+For example, $g(x) = \text{Beta}(3,1)$ or $g(x)=\text{Beta}(7,1)$, because these resemble $x^2$ or $x^6$. This would reduce rejections significantly.
+
+
+```{r, out.width="100%"}
+f <- function(x) {
+  return(0.5 * (3*x^2 + 7*x^6) * (0 <= x) * (x <= 1))
+}
+
+M <- 5
+n <- 1000
+samples <- c()
+proposals <- 0
+while(length(samples) < n) {
+  X <- runif(n=1,min=0,max=1)
+  U <- runif(n=1,min=0,max=1)
+  proposals = proposals+1
+  if(U < f(X)/M){
+    samples <- c(samples,X)
+  }
+}
+
+samples <- as.numeric(samples)
+
+cat("Generated samples:", length(samples), "\n")
+cat("Total proposals:", proposals, "\n")
+cat("Average proposals per accepted sample:", proposals / length(samples), "\n")
+
+# histogram of accepted samples
+hist(samples,breaks = 30,freq = FALSE,
+     col = "grey",border = "black",xlab = "x",
+     ylab = "Density",main = "Rejection Sampling with Uniform(0,1) Proposal")
+xgrid <- seq(0, 1, length.out = 200)
+lines(xgrid,f(xgrid),col = "red",lwd = 2)
+legend("topright",
+       legend = c("Samples", "Target density f(x)"),
+       fill = c("grey", NA),
+       border = c("black", NA),lty = c(NA, 1),
+       col = c("black", "red"),lwd = c(NA, 2))
+```
+
+## Chapter 1 - Part 4
+### Problem 1
+
+To sample uniformly from a rectangle $[a,b] \times [c,d]$, independently generate  $X \sim U[a,b]$ and $Y \sim U[c,d]$. Each point $(X,Y)$ will then be uniformly distributed over the rectangle.
+
+```{r, out.width="100%"}
+n <-  1000
+X <- runif(n=n,min=0,max=2)
+Y <- runif(n=n,min=1,max=4)
+
+# plot the rectangle with points and draw boundary
+plot(X, Y,pch = 21,bg = "grey",col = "black",cex = 0.8,
+     xlab = "X ~ U[0,2]",ylab = "Y ~ U[1,4]",
+  main = "Uniform Sampling from Rectangle",
+  asp = 1)
+
+# rectangle boundary
+lines(c(0, 2, 2, 0, 0),c(1, 1, 4, 4, 1),col = "red",lwd = 2)
+
+legend(
+  "topright",
+  legend = c("Samples", "Rectangle boundary"),
+  pch = c(21, NA),
+  pt.bg = c("grey", NA),
+  col = c("black", "red"),
+  lty = c(NA, 1),
+  lwd = c(NA, 2)
+)
+
+```
+
+### Problem 2
+```{r, out.width="100%"}
+alg1_semicircle <- function(n) {
+  X1 <- numeric(n)
+  X2 <- numeric(n)
+  count <- 0
+  
+  while (count < n) {
+    u1 <- runif(1, -1, 1)  # candidate x
+    u2 <- runif(1,  0, 1)  # candidate y
+    
+    if (u1^2 + u2^2 < 1) {
+      count <- count + 1
+      X1[count] <- u1
+      X2[count] <- u2
+    }
+  }
+  
+  list(X1 = X1, X2 = X2)
+}
+
+alg2_semicircle <- function(n) {
+  repeat {
+    u1 <- runif(2 * n, -1, 1)
+    u2 <- runif(2 * n,  0, 1)
+    
+    inside <- (u1^2 + u2^2 < 1)
+    
+    if (sum(inside) >= n) {
+      return(list(
+        X1 = u1[inside][1:n],
+        X2 = u2[inside][1:n]
+      ))
+    }
+  }
+}
+
+
+num_sims <- c(50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1500, 2000, 3000, 4000, 5000)
+
+times_alg1 <- numeric(length(num_sims))
+times_alg2 <- numeric(length(num_sims))
+
+for (i in seq_along(num_sims)) {
+  n <- num_sims[i]
+  
+  # Algorithm 1 timing
+  t1 <- system.time(alg1_semicircle(n))
+  times_alg1[i] <- t1["elapsed"]
+  
+  # Algorithm 2 timing
+  t2 <- system.time(alg2_semicircle(n))
+  times_alg2[i] <- t2["elapsed"]
+}
+
+# plot
+plot(num_sims, times_alg1,type = "b",pch = 16,
+     xlab = "Number of simulations (n)",
+     ylab = "Runtime (seconds)",
+     main = "Runtime Comparison: Algorithm 1 vs Algorithm 2")
+lines(num_sims, times_alg2,type="b",pch=17,lty=2)
+grid(lty = 2)
+```
+
+### Problem 3
+
+We want to generate samples from a conditional distribution:  
+
+$X \sim \text{Binomial}(n=10, p=0.6) |  X \geq 5$ 
+
+The steps are: 
+
+   - Generate samples from $X \sim \text{Binomial}(10, 0.6)$.  
+   - Keep only those samples where $X \geq 5$.  
+   - Continue until we have the required number of samples.
+
+The rejection method is simple, but the direct approach is more efficient since it avoids discarding samples.  
+
+```{r, out.width="100%"}
+rejection_binomial <- function(n, p, N, condition) {
+  samples <- integer(0)
+  
+  while (length(samples) < N) {
+    x <- rbinom(1, n, p)     # proposal from Binomial(n, p)
+    if (x >= condition) {   # accept if condition satisfied
+      samples <- c(samples, x)
+    }
+  }
+  
+  samples
+}
+
+# parameters
+n <- 10
+p <- 0.6
+c <- 5
+N <- 1000
+
+# generate conditional samples
+samples <- rejection_binomial(n, p, N, c)
+
+hist(samples,breaks = seq(4.5, n + 1.5, by = 1),freq = FALSE,col = "grey",border = "black",
+     xlab = "X",ylab = "Relative Frequency",
+     main = expression(
+    "Rejection Sampling: " ~ X ~ sim ~ Bin(10, 0.6) ~ "|" ~ X >= 5))
+
+```
+
+### Problem 4
+
+We want to generate 500 uniformly distributed random points in the region  
+
+$$R = \{ (x,y): -\tfrac{\pi}{2} \leq x \leq \tfrac{\pi}{2}, \ 0 \leq y \leq \cos(x) \}.$$
+
+**Approach (Rejection Sampling):**
+
+1. Define the bounding rectangle:  
+   $x \in [-\pi/2, \pi/2], \quad y \in [0, 1]$
+   since $\cos(x) \leq 1$.
+2. Generate candidate points $(X,Y)$ uniformly inside this rectangle.  
+3. Accept $(X,Y)$ if $Y \leq \cos(X)$.  
+4. Repeat until we have 500 accepted points.
+
+```{r, out.width="100%"}
+# parameters
+N <- 500   # number of accepted samples
+samples <- matrix(NA, nrow = N, ncol = 2)
+
+count <- 0
+while (count < N) {
+  # step 1: propose candidate points in bounding rectangle
+  x <- runif(1, -pi/2, pi/2)
+  y <- runif(1, 0, 1)
+  
+  # step 2: accept if inside region y <= cos(x)
+  if (y <= cos(x)) {
+    count <- count + 1
+    samples[count, ] <- c(x, y)
+  }
+}
+
+plot(samples[, 1], samples[, 2],pch = 21,bg = "grey",col = "black",cex = 0.7,
+     xlab = "x",ylab = "y",
+     main = expression("Uniform Sampling under " ~ y == cos(x)))
+
+```
