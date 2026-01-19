@@ -304,7 +304,7 @@ This means that any value $0<Z\leq 1/2$ is a valid choice for the algorithm, wit
 % Slide 11: Rejection Sampling Example
 %-------------------
 \begin{frame}[fragile]
-\alert{Code}
+\alert{Code -- $Z = \frac{1}{2}$}
 
 \vspace{2mm}
 
@@ -313,18 +313,18 @@ This means that any value $0<Z\leq 1/2$ is a valid choice for the algorithm, wit
 {\bf R Code:}
 \begin{lstlisting}
 counter <- 1
-U <- vector();
+Y <- vector();
 A <- vector();
 for (i in c(1:2000)){ 
-  U[i] <- runif(1)
-  D <- runif(1)
-  if (D < U[i]){
-    A[counter] = U[i];
+  Y[i] <- runif(1)
+  U <- runif(1)
+  if (U < Y[i]){
+    A[counter] = Y[i];
     counter <- counter+1;
   }
 }
 accepted <- counter-1
-hist(U)
+hist(Y)
 hist(A)
 \end{lstlisting}
 
@@ -335,18 +335,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 counter = 0
-U = []
+Y = []
 A = []
 
 for i in range(2000):
-    u = np.random.uniform()
-    d = np.random.uniform()
-    U.append(u)
-    if d < u:
-        A.append(u)
+    y = np.random.uniform()
+    U = np.random.uniform()
+    Y.append(y)
+    if U < y:
+        A.append(y)
         counter += 1
 
-plt.hist(U, bins=20)
+plt.hist(Y, bins=20)
 plt.show()
 
 \end{lstlisting}
