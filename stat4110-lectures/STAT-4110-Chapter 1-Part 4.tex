@@ -391,6 +391,27 @@ Essentially we will start generating uniformly distributed random numbers in the
 \end{algorithm}
 \end{frame}
 
+\begin{frame}[fragile]{Algorithm: Rejection Sampling Inside Unit Semicircle}
+\begin{algorithm}[H]
+    \caption{Generate points $(X_1, X_2)$ uniformly inside the semicircle}
+    \begin{algorithmic}[1]
+        \State \textbf{Input:} Integer $n$
+        \State Initialize empty vectors $X_1$ and $X_2$
+        \State Initialize counter: $\text{counter} \gets 1$
+        \While{$\text{counter} \leq n$}
+            \State Generate $U_1 \sim \text{Uniform}(-1,1)$
+            \State Generate $U_2 \sim \text{Uniform}(0,1)$
+            \If{$U_1^2 + U_2^2 < 1$}
+                \State $X_1[\text{counter}] \gets U_1$
+                \State $X_2[\text{counter}] \gets U_2$
+                \State $\text{counter} \gets \text{counter} + 1$
+            \EndIf
+        \EndWhile
+        \State \textbf{Output:} $X_1, X_2$ (accepted points inside the semicircle)
+    \end{algorithmic}
+\end{algorithm}
+\end{frame}
+
 %-------------------
 % Slide 13: Algorithm: Vectorized Rejection Sampling Inside Unit Semicircle
 %-------------------
@@ -443,7 +464,7 @@ The code gave us 780 generated uniformly distributed random points on the semici
 \begin{frame}{Homework}
 \begin{enumerate}
 	\item Write code for the uniform sampling from a rectangle algorithm, with $X \sim U[0,2]$ and $Y \sim U[1,4]$.
-	\item Implement code for Algorithms 1 and 2 using the rectangle $[-1,1] \times [0,1]$. If computationally feasible, run both algorithms for $num\_sims = [50, 100, 500, 1000, 2000]$ and plot the difference in their running times.
+	\item Implement Algorithms 2 and 3 using the rectangle $[-1,1] \times [0,1]$. If computationally feasible, run both algorithms for $num\_sims = [50, 100, 500, 1000, 2000]$ and plot the difference in their running times.
 		\begin{itemize}
 	          \item \textbf{Hint:} Use built-in timers to measure running time:
 	          \begin{itemize}
@@ -451,8 +472,8 @@ The code gave us 780 generated uniformly distributed random points on the semici
 	              \item In R: \texttt{system.time(\{ ... \})}
 	          \end{itemize}
 	      \end{itemize}
-	\item Write a computer program to generate a random sample of size 1000 from the conditional distribution of $X \sim Binomial(n,p)$  (with $n=10$ and probability of success $p=0.6$) conditioned on $X\geq 5$. 
-	\item Write a computer program to generate (and plot) a sample of 500 uniformly distributed random points on the set of plane given by $y\geq 0$, $-\pi/2 \leq  x \leq \pi/2$, and $y \leq \cos x$.
+	\item Write code to generate a random sample of size 1000 from the conditional distribution of $X \sim Binomial(n,p)$  (with $n=10$ and probability of success $p=0.6$) conditioned on $X\geq 5$. 
+	\item Write code to generate (and plot) a sample of 500 uniformly distributed random points on the set of plane given by $y\geq 0$, $-\pi/2 \leq  x \leq \pi/2$, and $y \leq \cos x$.
 \end{enumerate}
 \end{frame}
 
