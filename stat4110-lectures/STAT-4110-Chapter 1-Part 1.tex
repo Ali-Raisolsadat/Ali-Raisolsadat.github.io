@@ -57,51 +57,100 @@
   \end{beamercolorbox}}%
   \vskip0pt%
 }
+%========================
+% Document class and theme
+%========================
+\documentclass[8pt]{beamer}
+\usetheme[progressbar=frametitle]{metropolis}
+\setbeamersize{text margin left=10mm, text margin right=10mm}
+\usepackage{appendixnumberbeamer} % appendix slide numbering
+\setbeamertemplate{theorems}[numbered]
 
 %========================
-% Remove default navigation symbols
+% Core packages
 %========================
-\setbeamertemplate{navigation symbols}{}
+\usepackage{amsmath, amsfonts, amssymb, amsthm} % math + theorems
+\usepackage{booktabs}        % professional tables
+\usepackage{hyperref}        % hyperlinks
+\usepackage{xcolor}          % colors
+\usepackage{xspace}          % spacing for custom commands
 
-\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
-\usepackage{hyperref}
+%========================
+% Algorithms
+%========================
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\newtheorem{proposition}{Proposition}
+\usepackage{bbm}
+
+
+%========================
+% Plots and TikZ
+%========================
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+% ==========================================
+% Professional Code Listing Setup
+% ==========================================
 \usepackage{listings}
-\usepackage{color}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 
-\lstset{language=R,
-    basicstyle=\small\ttfamily,
-    stringstyle=\color{DarkGreen},
-    otherkeywords={0,1,2,3,4,5,6,7,8,9},
-    morekeywords={TRUE,FALSE},
-    deletekeywords={data,frame,length,as,character},
-    keywordstyle=\color{blue},
-    commentstyle=\color{DarkGreen},
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
 }
 
-\usepackage{xcolor}
+\lstset{style=mystyle}
 
-\lstset{
-    language=Python,
-    basicstyle=\ttfamily\small,
-    keywordstyle=\color{blue},
-    commentstyle=\color{gray},
-    stringstyle=\color{red},
-    breaklines=true,
-    numbers=left,
-    numberstyle=\tiny
+
+%========================
+% Custom commands
+%========================
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%========================
+% Custom footline
+%========================
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.35\paperwidth,ht=2.5ex,dp=1.5ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
 }
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% AQUI SE DEFINEN LAS IMAGENES PARA UTILIZAR DESPUES
-%\pgfdeclareimage[interpolate=true, height=7cm,width=16cm]{halton-points}{halton-points}
-%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]
-%{serie-petroleo-reducido}{serie-petroleo-reducido}
-%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{rectangle-triangle}{rectangle-triangle}
-%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{any-angle}{any-angle}
-%\pgfdeclareimage[interpolate=true, height=3cm, width =4cm]{Pythagoras}{Pythagoras}
+%========================
+% Beamer tweaks
+%========================
+\setbeamertemplate{navigation symbols}{} % remove default navigation symbols
 
 
 \title{Chapter 1 - Random Number Generation}

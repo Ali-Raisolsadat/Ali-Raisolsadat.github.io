@@ -1,0 +1,254 @@
+---
+title: "Homework Problems - Chapter 1"
+author: "Ali Raisolsadat"
+date: "2026-01-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Chapter 2 - Part 1 - Problem 1
+
+To simulate from the hierarchical Bayesian model:
+
+1. Draw `p` from a **Uniform(0.4, 0.8)** distribution.
+2. Given each `p[i]`, sample `n[i]` from a **Geometric(p[i]/2)** distribution.
+   - Remember: in NumPy, `np.random.geometric(p)` gives the number of trials until the first success (starting from 1).
+3. Given each pair `(p[i], n[i])`, sample `X[i]` from a **Binomial(n[i] + 1, p[i])** distribution.
+4. Repeat steps 1–3 **1000 times**.
+5. Optionally, visualize `X` (e.g., with a histogram) to inspect the distribution.
+
+```{r, out.width = "100%"}
+N <- 1000
+p <- runif(N, min = 0.4, max = 0.8)
+n <- rgeom(N, prob = p / 2) + 1
+X <- sapply(1:N, function(i) {
+  rbinom(1, size = n[i] + 1, prob = p[i])
+})
+
+
+hist(X,col = "grey", border = "black",
+  main = "Samples from X ~ Binomial(n + 1, p)",
+  xlab = "X values", ylab = "Frequency")
+grid(nx = NA, ny = NULL, lty = "dashed", col = "gray")
+```
+
+### Chapter 2 - Part 2 - Problem 2
+
+To generate samples from a **mixture of two exponential distributions** using a *uniform selector*:
+
+1. Define the two component distributions:
+   - Distribution 1: Exponential with rate parameter $\lambda_1 = 1$
+   - Distribution 2: Exponential with rate parameter $\lambda_2 = \frac{1}{10}$
+2. The mixture weights are:
+   - $\omega_1 = 0.3$ → probability of sampling from Distribution 1  
+   - $\omega_2 = 0.7$ → probability of sampling from Distribution 2
+3. Generate a random number $U_i \sim \text{Uniform}(0, 1)$ for each sample.
+   - If $U_i < \omega_1$, sample from **Distribution 1**
+   - Otherwise, sample from **Distribution 2**
+4. Repeat this process for all 1000 samples to form the final mixture sample $X$.
+
+```{r, out.width = "100%"}
+n <- 1000
+lambda1 <- 1
+lambda2 <- 1/10
+w1 <- 0.3
+w2 <- 0.7
+
+X <- rep(0, n)
+U <- runif(n=n,min=0,max=1)
+
+for (i in 1:n) {
+  if (U[i] < w1) {
+    X[i] <- rexp(n=1, rate=lambda1)
+  } else {
+    X[i] <- rexp(n=1, rate=lambda2)
+  }
+}
+
+# hist
+hist(X, breaks = 40, col = "grey", border = "black",
+  main = "Mixture of Exponential Distributions",
+  xlab = "X values", ylab = "Frequency")
+grid(nx = NA, ny = NULL, lty = "dashed", col = "gray", lwd = 1)
+
+```
+
+### Chapter 2 - Part 2 - Problem 1
+
+To simulate the next state in a Markov Chain using a uniform random variable:
+
+1. Suppose the current state is $i$, with transition probabilities 
+   $$
+   P(i \to 1) = p_1, \quad P(i \to 2) = p_2, \quad \dots, \quad P(i \to m) = p_m,
+   $$
+   where $\sum_{j=1}^m p_j = 1$.
+
+2. Generate $U \sim \text{Uniform}(0,1)$.
+
+3. Construct the cumulative probabilities:
+   $$
+   \text{cum_probs} = \big(p_1, \; p_1 + p_2, \; \dots, \; p_1 + p_2 + \cdots + p_m \big).
+   $$
+
+4. Determine the next state by checking which interval $U$ falls into:
+   - If $0 \leq U < p_1$, choose state 1.  
+   - If $p_1 \leq U < p_1 + p_2$, choose state 2.  
+   - Continue similarly until all states are covered.
+
+This works because the transition probabilities partition the unit interval $[0,1]$ into disjoint segments, and $U$ selects one segment according to the correct probabilities.
+
+```{r, out.width="100%"}
+# number of steps
+n <- 40
+
+# transition matrix
+P <- matrix(
+  c(0.2, 0.5, 0.3,
+    0.1, 0.3, 0.6,
+    0.5, 0.1, 0.4),
+  nrow = 3,
+  byrow = TRUE
+)
+
+# initialize chain
+X <- integer(n + 1)
+X[1] <- 2   # start at state 2
+
+# Simulate Markov chain
+for (i in 1:n) {
+  u <- runif(1)
+  p <- P[X[i], ]   # transition probabilities
+
+  if (u < p[1]) {
+    X[i + 1] <- 1
+  } else if (u < p[1] + p[2]) {
+    X[i + 1] <- 2
+  } else {
+    X[i + 1] <- 3
+  }
+}
+
+# plot step function
+plot(0:n, X, 
+     type = "s", lwd = 2,col = "steelblue",
+     xlab = "Time step", ylab = "State",
+     main = "Markov Chain Path (3 States, n = 40)",
+     xaxt = "n", yaxt = "n", ylim = c(0.5, 3.5))
+points(0:n, X, pch = 16, cex = 1)
+axis(1, at = seq(0, n, by = 5))
+axis(2, at = c(1, 2, 3),labels = c("State 1", "State 2", "State 3"))
+grid(nx = NA, ny = NULL, lty = "dashed", col = "gray")
+```
+
+### Chapter 2 - Part 3 - Problem 1
+
+We generate a Markov chain path of length $40$ using the Gaussian transition density (Algorithm 1)
+
+```{r, out.width="100%"}
+steps <- 40
+phi <- 0.5
+sigma <- 1
+
+x <- rep(0, steps)
+
+for (t in 2:steps) {
+  x[t] <- phi * x[t - 1] + rnorm(1, 0, sigma)
+}
+
+plot(0:(steps - 1), x,
+     type = "l",lwd = 2, col = "steelblue",
+     xlab = "Time step", ylab = expression(Value~of~X[t]),
+     main = "Gaussian Transition Density (AR(1) Path)",
+     xaxt = "n")
+points(0:(steps - 1), x, pch = 16)
+axis(1, at = seq(0, steps - 1, by = 5))
+grid(nx = NA, ny = NULL, lty = "dashed", col = "gray")
+```
+
+### Chapter 2 - Part 3 - Problem 2
+
+The following is the logorithm for simulating a Markov chain with the **Uniform transition density**
+$$ p(x,y) = \tfrac{1}{2}\,1_{[x-1,\,x+1]}(y), \quad x,y \in \mathbb{R}$$
+
+\begin{array}{l}
+\textbf{Algorithm: Simulating a Markov Chain with Uniform Transition Density} \\[6pt]
+1.\ \text{Set } X_0 = 0 \text{ (or draw from an initial distribution)} \\[4pt]
+2.\ \text{For } i = 1, 2, \ldots, n: \\[2pt]
+\quad X_i \sim \text{Uniform}(X_{i-1} - 1,\; X_{i-1} + 1) \\[4pt]
+3.\ \text{Return } (X_0, X_1, \ldots, X_n)
+\end{array}
+
+```{r, out.width="%100"}
+T <- 40
+x <- numeric(T)
+
+for (t in 2:T) {
+  x[t] <- runif(1, min = x[t - 1] - 1, max = x[t - 1] + 1)
+}
+
+plot(0:(T - 1), x, 
+     type = "l",lwd = 2, col = "steelblue",
+     xlab = "Time step", ylab = expression(Value~of~X[t]),
+     main = "Uniform Transition Density Path", 
+     xaxt = "n")
+points(0:(T - 1), x, pch = 16, cex = 1)
+axis(1, at = seq(0, T - 1, by = 5))
+grid(nx = NA, ny = NULL, lty = "dashed", col = "gray")
+
+```
+
+### Chapter 2 - Part 4 - Problem 1
+
+To simulate a Poisson process with **non-homogeneous intensity** $\lambda(x_1,x_2)$ over a rectangle:
+
+1. Compute the **maximum intensity** $\lambda_{\max}$ over the rectangle.
+2. Generate a **homogeneous Poisson process** with intensity $\lambda_{\max}$ over the rectangle.
+3. For each point $(x_1, x_2)$, accept it with probability
+   $$ \frac{\lambda(x_1,x_2)}{\lambda_{\max}} $$
+   (this is the **thinning step**).
+4. The accepted points form a realization of the non-homogeneous Poisson process.
+
+
+```{r, out.width="100%"}
+# non-homogeneous intensity function
+lambda_func <- function(x1, x2) {
+  30 * (x1^2 + x2^2)
+}
+
+# rectangle boundaries
+x1_min <- 0; x1_max <- 3
+x2_min <- 0; x2_max <- 4
+
+# maximum intensity for thinning
+lambda_max <- lambda_func(x1_max, x2_max)
+
+# step 1: number of candidate points (homogeneous Poisson)
+area <- (x1_max - x1_min) * (x2_max - x2_min)
+N <- rpois(1, lambda_max * area)
+
+# step 2: candidate points uniformly on the rectangle
+X1 <- runif(N, x1_min, x1_max)
+X2 <- runif(N, x2_min, x2_max)
+
+# step 3: thinning
+U <- runif(N)
+accepted <- U < lambda_func(X1, X2) / lambda_max
+X1_thin <- X1[accepted]
+X2_thin <- X2[accepted]
+
+# step 4: plot
+plot(X1_thin, X2_thin, pch = 21,
+     bg = rgb(0.2, 0.5, 0.8, 0.6), col = "black", cex = 1.2,
+     xlab = expression(X[1]), ylab = expression(X[2]),
+     main = "Scatter Plot of X1 vs X2 (Poisson Process)",
+     xlim = c(x1_min, x1_max), ylim = c(x2_min, x2_max),
+     xaxt = "n", yaxt = "n")
+axis(1,at = seq(0, x1_max, by = 0.5))
+axis(2, at = seq(0, x2_max, by = 1))
+grid(lty = "dashed", col = "lightgrey", lwd = 0.5)
+
+```
+
