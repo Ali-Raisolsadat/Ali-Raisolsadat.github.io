@@ -139,14 +139,14 @@ Specifically, the bias and the variance of an estimator give a good measure of i
 	MSE (\hat{\theta}) = bias^2(\hat{\theta}) + Var(\hat{\theta})
 \end{equation*}
 
-There are several cased in which we can find the bias and variance explicitly, for example
+There are several cases in which we can find the bias and variance explicitly, for example
 
 \begin{itemize}
 	\item If the random variables $X_i$ are i.i.d. and $\theta=E(X_i)$, the empirical mean estimator is unbiased.
 	\item If n is large,sometimes we can use some probability tools such as the Central Limit Theorem.
 \end{itemize}
 
-In other cases, finding the bias and the variance of an estimator explicitly is not possible. Is in situations like these, that Monte Carlo methods may be useful.
+In other cases, finding the bias and the variance of an estimator explicitly is not possible. It is in situations like these that Monte Carlo methods may be useful.
 \end{frame}
 
 %-------------------
@@ -209,17 +209,18 @@ The naive estimator  $\hat{\theta}(X)$ always underestimates the value of $\thet
 \caption{Monte Carlo Bias Estimation for $\hat{\theta} = \max(U_1, \ldots, U_m)$}
 \begin{algorithmic}[1]
   \State \textbf{Input:} Number of replications $n = 1000$, number of samples $m = 10$, number of parameter values $J = 100$
-  \State Initialize empty arrays: \texttt{bias[1:J]}, \texttt{theta[1:J]}
+  \State Initialize arrays: \texttt{bias[1:J]}, \texttt{theta[1:J]}
   \For{$j = 1$ to $J$}
     \State Set $\theta_j = 3 + 2 \times \dfrac{j}{J}$
+    \State Store $\texttt{theta}[j] = \theta_j$
     \State Initialize empty list \texttt{samples}
     \For{$i = 1$ to $n$}
       \State Generate $U_{i1}, \ldots, U_{im} \sim \text{Uniform}(0,\, \theta_j)$
       \State Compute $\hat{\theta}_i = \max(U_{i1}, \ldots, U_{im})$
       \State Append $\hat{\theta}_i$ to \texttt{samples}
     \EndFor
-    \State Compute $\texttt{mean\_max}_j = \dfrac{1}{n} \sum_{i=1}^n \texttt{samples}_i$
-    \State Compute $\texttt{bias}_j = \texttt{mean\_max}_j - \theta_j$
+    \State Compute $\texttt{mean\_max}_j = \dfrac{1}{n} \sum_{i=1}^n \texttt{samples}[i]$
+    \State Compute $\texttt{bias}[j] = \texttt{mean\_max}_j - \theta_j$
   \EndFor
   \State \textbf{Output:} Arrays \texttt{bias[1:J]} and \texttt{theta[1:J]}
 \end{algorithmic}
@@ -231,18 +232,18 @@ The naive estimator  $\hat{\theta}(X)$ always underestimates the value of $\thet
 %-------------------
 \begin{frame}[fragile]
 \begin{algorithm}[H]
-\caption{Semi-Vectorized Monte Carlo Bias Estimation for $\hat{\theta} = \max(U_1, \ldots, U_m)$}
+\caption{Vectorized Monte Carlo Bias Estimation for $\hat{\theta} = \max(U_1, \ldots, U_m)$}
 \begin{algorithmic}[1]
   \State \textbf{Input:} Number of replications $n = 1000$, number of samples $m = 10$, number of parameter values $J = 100$
-  \State Initialize arrays: \texttt{bias[1:J]}, \texttt{theta[1:J]}
+  \State Initialize arrays: $\texttt{bias}[1:J]$, $\texttt{theta}[1:J]$
   \For{$j = 1$ to $J$}
-    \State Set $\theta_j = 3 + 2 \times \dfrac{j}{J}$
-    \State Generate matrix $U \sim \text{Uniform}(0,\, \theta_j)$ of size $(n, m)$
-    \State Compute vector $\hat{\boldsymbol{\theta}} = \max(U, \text{axis}=1)$
-    \State Compute $\texttt{mean\_max}_j = \dfrac{1}{n} \sum_{i=1}^{n} \hat{\theta}_i$
-    \State Compute $\texttt{bias}_j = \texttt{mean\_max}_j - \theta_j$
+    \State Set $\theta_j = 3 + 2\dfrac{j}{J}$
+    \State Store $\texttt{theta}[j] = \theta_j$
+    \State Generate matrix $U \sim \text{Uniform}(0,\theta_j)$ of size $(n,m)$
+    \State Compute vector $\hat{\boldsymbol{\theta}} = (\max_{k} U_{1k},\ldots,\max_{k} U_{nk})$
+    \State Compute $\texttt{bias}[j] = \dfrac{1}{n}\sum_{i=1}^{n} \hat{\theta}_i - \theta_j$
   \EndFor
-  \State \textbf{Output:} Arrays \texttt{bias[1:J]} and \texttt{theta[1:J]}
+  \State \textbf{Output:} Arrays $\texttt{bias}[1:J]$ and $\texttt{theta}[1:J]$
 \end{algorithmic}
 \end{algorithm}
 \end{frame}
