@@ -1,0 +1,613 @@
+---
+title: "Chapter 3 Homework Solutions"
+author: "Ali Raisolsadat"
+date: "2026-03-13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### Chapter 3 - Lecture 1
+### Question 1: Monte Carlo estimation of an expectation
+
+We want to compute $$ \mathbb{E}\left[ |Z|^{2/3} (|Z| + 1) \right] $$ where $Z \sim \mathcal{N}(0,1)$.
+
+This expectation does not have a simple closed form, so we approximate it using Monte Carlo simulation.
+
+If $Z_1, \dots, Z_N$ are i.i.d. standard normal samples the Monte Carlo estimator is $$ \hat{\mu}_N = \frac{1}{N} \sum_{i=1}^N |Z_i|^{2/3} (|Z_i| + 1)$$
+By the Law of Large Numbers, $\hat{\mu}_N \to \mathbb{E}[|Z|^{2/3}(|Z|+1)]$
+as $N \to \infty$.
+
+```{r}
+set.seed(123)
+N <- 1000000
+Z <- rnorm(N)
+g <- abs(Z)^(2/3) * (abs(Z) + 1)
+estimate <- mean(g)
+print(estimate)
+```
+
+### Question 2: Monte Carlo integration over a rectangle
+
+We want to compute $$\int_0^1 \int_0^2 (x + 2y) \ln(3x + 2y + 1) dx dy$$
+
+Make the change of variables $$ x = u, \quad y = 2v$$ so that $(u,v) \in [0,1]^2$.
+
+The Jacobian determinant is $|J| = 2$ (recall second year calculus) and the integral becomes $$\int_0^1 \int_0^1 2(u + 4v) \ln(3u + 4v + 1) du dv$$
+This can be written as an expectation $$\mathbb{E}\left[ 2(U + 4V)\ln(3U + 4V + 1) \right]$$ where $U, V \sim \text{Uniform}(0,1)$.
+
+```{r}
+N <- 1000000
+U <- runif(N)
+V <- runif(N)
+f <- 2 * (U + 4*V) * log(3*U + 4*V + 1)
+estimate <- mean(f)
+print(estimate)
+```
+
+### Chapter 3 - Lecture 2
+
+Let $U \sim \text{Uniform}(0,1)$. Then
+
+$$\mathbb{E}(U^3) = \int_0^1 u^3 \, du = \frac{1}{4}$$
+
+$$\mathrm{Var}(U^3) = \mathbb{E}(U^6) - \left(\mathbb{E}(U^3)\right)^2$$
+
+Since $$\mathbb{E}(U^6) = \int_0^1 u^6 \, du = \frac{1}{7}$$ we get $$\mathrm{Var}(U^3) = \frac{1}{7} - \left(\frac{1}{4}\right)^2 = \frac{9}{112}$$
+
+#### Required number of simulations
+
+Let $$\hat{\theta}_n = \frac{1}{n} \sum_{i=1}^n U_i^3$$ be the Monte Carlo estimator of $\theta$.
+
+By the Central Limit Theorem 
+$$
+\mathbb{P}\left( |\hat{\theta}_n - \theta| \le z_{1-\alpha/2} \sqrt{\frac{\mathrm{Var}(U^3)}{n}} \right)
+\approx 1 - \alpha
+$$
+
+We want an absolute error less than $\varepsilon = 0.005$ with confidence level $1 - \alpha = 0.99$ so
+$$
+z_{0.995} \sqrt{\frac{\mathrm{Var}(U^3)}{n}} \le \varepsilon
+$$
+
+Solving for \( n \) 
+$$n \ge \frac{z_{0.995}^2 \, \mathrm{Var}(U^3)}{\varepsilon^2}$$
+
+```{r}
+# given theoretical quantities
+var_u3 <- 9 / 112
+epsilon <- 0.005
+alpha <- 0.01
+
+# container for messages
+out <- c()
+
+# quantile from the standard normal distribution for 99% confidence
+z <- qnorm(1 - alpha / 2)
+
+# required number of Monte Carlo simulations
+n_required <- ceiling(z^2 * var_u3 / epsilon^2)
+out <- c(out, "Required number of simulations (n):")
+out <- c(out, as.character(as.integer(n_required)))
+out <- c(out, strrep("-", 50))
+
+# generate samples
+n <- as.integer(n_required)
+U <- runif(n)
+
+# estimator
+theta_hat <- mean(U^3)
+theta_exact <- 1 / 4
+abs_error <- abs(theta_hat - theta_exact)
+out <- c(out, sprintf("Monte Carlo estimate of theta:%.6f", theta_hat))
+out <- c(out, sprintf("Exact value of theta:%.6f", theta_exact))
+out <- c(out, sprintf("Absolute error: %.6f", abs_error))
+out <- c(out, strrep("-", 50))
+
+# standard error
+std_error <- sqrt(var_u3 / n)
+
+# confidence interval
+ci <- c(theta_hat - z * std_error, theta_hat + z * std_error)
+out <- c(out, "99% Confidence interval for theta:")
+out <- c(out, sprintf("(%.6f, %.6f)", ci[1], ci[2]))
+
+# print everything at once
+cat(paste(out, collapse = "\n")) 
+```
+
+### Chapter 3 - Lecture 3
+
+### Monte Carlo Estimation using Antithetic Variates
+
+We want to estimate $\theta = \mathbb{E}(e^{1+Z})$ where $Z \sim \mathcal{N}(0,1)$.
+
+Since the moment-generating function of a standard normal random variable is
+$$
+\mathbb{E}(e^{tZ}) = e^{t^2/2}
+$$
+we have
+$$
+\theta = e \mathbb{E}(e^{Z}) = e \cdot e^{1/2} = e^{3/2}
+$$
+```{r}
+# exact value of the expectation
+theta_exact <- exp(1.5)
+
+cat(sprintf("Exact value of theta: %.6f\n", theta_exact))
+```
+
+Let $Z_1, \dots, Z_n$ be i.i.d. standard normal random variables.
+The Monte Carlo estimator is
+$$
+\hat{\theta}_{MC} = \frac{1}{n} \sum_{i=1}^n e^{1 + Z_i}
+$$
+
+By the Central Limit Theorem, a 95% confidence interval is
+$$
+\hat{\theta}_{MC} \pm 1.96 \frac{s}{\sqrt{n}}
+$$
+where $s^2$ is the sample variance.
+
+```{r}
+n <- 200000
+Z <- rnorm(n)
+g <- exp(1 + Z)
+theta_mc <- mean(g)
+std_error_mc <- sd(g) / sqrt(n)
+ci_mc <- c(theta_mc - 1.96 * std_error_mc,
+           theta_mc + 1.96 * std_error_mc)
+
+# print everything at once
+out <- c(sprintf("Monte Carlo estimate of theta: %.6f", theta_mc))
+out <- c(out, sprintf("Monte Carlo variance of theta: %.6f", var(g)))
+out <- c(out, sprintf("Exact value of theta: %.6f", theta_exact))
+out <- c(out, "99% Confidence interval for theta:")
+out <- c(out, sprintf("[%.6f, %.6f]\n", ci_mc[1], ci_mc[2]))
+cat(paste(out, collapse = "\n")) 
+```
+
+For each $Z_i \sim \mathcal{N}(0,1)$, define the antithetic variable $Z_i' = -Z_i$
+The antithetic estimator is
+$$
+\hat{\theta}_{AV} = \frac{1}{n} \sum_{i=1}^n \frac{1}{2}\left(e^{1+Z_i} + e^{1-Z_i}\right)
+$$
+$e^{1+Z}$ is monotone in $Z$, the pair $(Z, -Z)$ is negatively correlated leading to variance reduction.
+
+```{r}
+n <- 200000
+Z <- rnorm(n)
+g_av <- 0.5 * (exp(1 + Z) + exp(1 - Z))
+theta_av <- mean(g_av)
+std_error_av <- sd(g_av) / sqrt(n)
+ci_av <- c(theta_av - 1.96 * std_error_av,
+           theta_av + 1.96 * std_error_av)
+
+# print everything at once
+out <- c(sprintf("Monte Carlo estimate of theta: %.6f", theta_av))
+out <- c(out, sprintf("Monte Carlo variance of theta: %.6f", var(g_av)))
+out <- c(out, sprintf("Exact value of theta: %.6f", theta_exact))
+out <- c(out, "99% Confidence interval for theta:")
+out <- c(out, sprintf("[%.6f, %.6f]\n", ci_av[1], ci_av[2]))
+cat(paste(out, collapse = "\n")) 
+```
+
+### Chapter 3 - Lecture 4
+Let $X_1, \dots, X_n \sim \mathcal{N}(0,1)$. The basic Monte Carlo estimator is
+$$
+\hat{p}_{MC} = \frac{1}{n} \sum_{i=1}^n \mathbf{1}_A(X_i)
+$$
+
+This estimator is unbiased but inefficient for rare events since most samples fall outside the interval $[3,4]$.
+```{r}
+n <- 1000000
+X <- rnorm(n)
+
+# exact value of the probability
+p_exact <- pnorm(4) - pnorm(3)
+cat(sprintf("Exact value: %.6f\n", p_exact))
+
+indicators <- as.numeric(X >= 3 & X <= 4)
+p_hat_mc <- mean(indicators)
+std_error_mc <- sqrt(p_hat_mc * (1 - p_hat_mc) / n)
+ci_mc <- c(p_hat_mc - 1.96 * std_error_mc,
+           p_hat_mc + 1.96 * std_error_mc)
+
+# print everything at once
+out <- c(sprintf("Monte Carlo estimate of p: %.6f", p_hat_mc))
+out <- c(out, "99% Confidence interval for p:")
+out <- c(out, sprintf("[%.6f, %.6f]\n", ci_mc[1], ci_mc[2]))
+cat(paste(out, collapse = "\n")) 
+```
+
+We generate samples from the proposal density $h(x) = \mathcal{N}(3.5, 1)$
+
+Using importance sampling
+$$P(X \in A) = \mathbb{E}_h\left[\mathbf{1}_A(Y)\,\frac{f(Y)}{h(Y)} \right]$$
+where $f$ is the $\mathcal{N}(0,1)$ density and $Y \sim h$.
+
+This shifts probability mass into the rare-event region $[3,4]$ reducing variance.
+
+```{r}
+Y <- rnorm(n, mean = 3.5, sd = 1.0)
+
+# target density f and proposal density h
+f <- dnorm(Y, mean = 0, sd = 1)
+h <- dnorm(Y, mean = 3.5, sd = 1)
+
+weights <- f / h
+
+is_estimates <- weights * as.numeric(Y >= 3 & Y <= 4)
+
+p_hat_is <- mean(is_estimates)
+
+std_error_is <- sd(is_estimates) / sqrt(n)
+
+ci_is <- c(p_hat_is - 1.96 * std_error_is,
+           p_hat_is + 1.96 * std_error_is)
+
+# print everything at once
+out <- c(sprintf("Exact value: %.6f", p_exact))
+out <- c(out, sprintf("Importance sampling estimate of p: %.6f", p_hat_is))
+out <- c(out, "99% Confidence interval for p:")
+out <- c(out, sprintf("[%.6f, %.6f]\n", ci_is[1], ci_is[2]))
+cat(paste(out, collapse = "\n")) 
+```
+
+### Chapter 3 - Lecture 5
+
+Let $U \sim \text{Uniform}(0,1)$ and $g(x) = e^x$.
+We want to estimate $\theta = \mathbb{E}(g(U))$.
+
+The exact value is
+$$\theta = \mathbb{E}(e^U) = \int_0^1 e^x \, dx = e - 1$$
+
+Let $U_1, \dots, U_n \sim \text{Uniform}(0,1)$.
+The basic Monte Carlo estimator is
+$$\hat{\theta}_{MC} = \frac{1}{n} \sum_{i=1}^n e^{U_i}$$
+
+```{r}
+n <- 200000
+U <- runif(n)
+
+# exact value
+theta_exact <- exp(1) - 1
+cat(sprintf("Exact value of theta: %.6f\n", theta_exact))
+
+# Monte Carlo estimation
+g <- exp(U)
+theta_mc <- mean(g)
+std_error_mc <- sd(g) / sqrt(n)
+ci_mc <- c(theta_mc - 1.96 * std_error_mc,
+           theta_mc + 1.96 * std_error_mc)
+
+# print everything at once
+out <- c(sprintf("Monte Carlo estimate of theta: %.6f", theta_mc))
+out <- c(out, sprintf("Monte Carlo variance of theta: %.6f", var(g)))
+out <- c(out, "99% Confidence interval for theta:")
+out <- c(out, sprintf("[%.6f, %.6f]\n", ci_mc[1], ci_mc[2]))
+cat(paste(out, collapse = "\n")) 
+```
+
+Let the control variate be
+$$h(U) = U \quad \mathbb{E}(h(U)) = \frac{1}{2}$$
+
+The control variates estimator is
+$$\hat{\theta}_{CV} = \frac{1}{n} \sum_{i=1}^n \left[g(U_i) - c\big(h(U_i) - \mathbb{E}(h(U))\big)\right]$$
+
+The optimal coefficient is
+$$c_0 = \frac{\mathrm{Cov}(g(U), h(U))}{\mathrm{Var}(h(U))}$$
+
+Compute
+$$\mathrm{Cov}(e^U, U) = \mathbb{E}(Ue^U) - \mathbb{E}(e^U)\mathbb{E}(U)$$
+$$\mathbb{E}(Ue^U) = \int_0^1 u e^u \, du = 1$$
+
+So
+$$\mathrm{Cov}(e^U, U) = 1 - \frac{e-1}{2} = \frac{3 - e}{2} \quad \mathrm{Var}(U) = \frac{1}{12}$$
+
+and
+$$c_0 = 6(3 - e)$$
+
+```{r}
+c0 = 6 * (3 - exp(1))
+sprintf("Efficient coefficient: %.6f", c0)
+
+h <- U
+Eh <- 0.5
+Y <- g - c0 * (h - Eh)
+theta_cv <- mean(Y)
+std_error_cv <- sd(g - Y) / sqrt(n)
+ci_cv <- c(theta_cv - 1.96 * std_error_cv,
+           theta_cv + 1.96 * std_error_cv)
+
+# print everything at once
+out <- c(sprintf("Control variate estimate of theta: %.6f", theta_cv))
+out <- c(out, sprintf("Control variate variance of theta: %.6f", var(Y)))
+out <- c(out, "99% Confidence interval for theta:")
+out <- c(out, sprintf("[%.6f, %.6f]\n", ci_cv[1], ci_cv[2]))
+cat(paste(out, collapse = "\n")) 
+
+```
+
+We compare the empirical variances of the Monte Carlo estimators.
+```{r}
+var_mc <- var(g)
+var_cv <- var(g - c0 * (h - Eh))
+empirical_factor <- var_cv / var_mc
+cat(sprintf("Empirical ratio of the variances: %.6f\n", empirical_factor))
+```
+
+The theoretical variance reduction factor is $$1 - \rho^2(g(U), h(U))$$ where $\rho$ is the correlation coefficient.
+```{r}
+rho <- cor(g, h)
+theoretical_factor <- 1 - rho^2
+cat(sprintf("Empirical ratio of the variances: %.6f\n", empirical_factor))
+cat(sprintf("Theoretical ratio of the variances: %.6f\n", theoretical_factor))
+```
+
+### Chapter 3 - Lecture 6
+Let $X_1,\dots,X_9$ be i.i.d. samples from an exponential distribution with mean $\mu \in [3,5]$ (rate $\lambda = 1/\mu$).
+
+We only observe the minimum, median and maximum. We use the estimator
+$$
+\hat{\theta}(X) = \frac{2\min(X) + \text{median}(X) + \max(X)}{4}
+$$
+
+Our goals are:
+1. Estimate the bias of $\hat{\theta}$ for $\mu \in [3,5]$ using Monte Carlo simulation.
+2. Propose a bias-corrected estimator $$\hat{\theta}_1(X) = \hat{\theta}(X) + C$$ with smaller bias over this interval.
+
+```{r, out.width="100%"}
+N <- 1000
+sample_size <- 9
+mu_values <- seq(3, 5, length.out = sample_size)
+biases <- numeric(length(mu_values))
+
+for (i in seq_along(mu_values)) {
+  mu <- mu_values[i]
+  estimates <- numeric(N)
+  
+  for (j in 1:N) {
+    X <- rexp(sample_size, rate = 1 / mu)  # exponential with mean mu
+    X_sorted <- sort(X)
+    estimator <- (2 * X_sorted[1] + X_sorted[5] + X_sorted[sample_size]) / 4
+    estimates[j] <- estimator
+  }
+  
+  biases[i] <- mean(estimates) - mu
+}
+
+print(biases)
+
+# scatter plot of bias vs mu
+plot(mu_values, biases,xlab = expression(mu),ylab = "Estimated Bias",main = "Monte Carlo Bias of the Estimator vs mu",pch = 19)
+
+avg_bias = mean(biases)
+sprintf("Average of Biases: %.6f", avg_bias)
+```
+
+Based on the simulation, we define the corrected estimator
+$$\hat{\theta}_1(X) = \hat{\theta}(X) - \bar{b}$$
+where \( \bar{b} \) is the average Monte Carlo bias over $[3,5]$.
+
+This choice minimizes the bias **on average** over the interval.
+```{r, out.width="100%"}
+corrected_biases <- numeric(length(mu_values))
+
+for (i in seq_along(mu_values)) {
+  mu <- mu_values[i]
+  estimates <- numeric(N)
+  
+  for (j in 1:N) {
+    X <- rexp(sample_size, rate = 1 / mu)  # exponential with mean mu
+    X_sorted <- sort(X)
+    
+    estimator <- (2 * X_sorted[1] + X_sorted[5] + X_sorted[sample_size]) / 4
+    estimator_corrected <- estimator - avg_bias  # avg_bias must be defined previously
+    estimates[j] <- estimator_corrected
+  }
+  
+  corrected_biases[i] <- mean(estimates) - mu
+}
+
+print(corrected_biases)
+
+# scatter plot of corrected bias vs mu
+plot(mu_values, corrected_biases,
+     xlab = expression(mu), ylab = "Estimated Bias",
+     main = "Corrected Monte Carlo Bias of the Estimator vs mu",pch = 19)
+```
+
+### Chapter 3 - Lecture 6
+```{r, out.width="100%"}
+N <- 5000  # Monte Carlo repetitions
+n <- 10    # sample size
+mu_values <- seq(-5, 5, length.out = 100)
+
+se_mu1 <- numeric(length(mu_values))
+se_mu2 <- numeric(length(mu_values))
+
+for (i in seq_along(mu_values)) {
+  mu <- mu_values[i]
+  est1 <- numeric(N)
+  est2 <- numeric(N)
+  
+  for (j in 1:N) {
+    X <- rnorm(n, mean = mu, sd = 1)
+    X_sorted <- sort(X)
+    mu1 <- 0.5 * (X_sorted[1] + X_sorted[n])
+    mu2 <- X_sorted[n %/% 2]  # median for n=10
+    est1[j] <- mu1
+    est2[j] <- mu2
+  }
+  
+  se_mu1[i] <- sd(est1)
+  se_mu2[i] <- sd(est2)
+}
+
+# plotting
+par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+# estimator 1
+plot(mu_values, se_mu1, pch = 19, 
+     xlab = expression(mu), ylab = "Standard Error", 
+     main = expression("Estimator 1: " * (min + max)/2))
+
+# estimator 2
+plot(mu_values, se_mu2, pch = 19, 
+     xlab = expression(mu), ylab = "Standard Error",
+     main = "Estimator 2: Median")
+```
+
+### Chapter 3 - Lecture 7
+
+#### Loop version
+
+```{r, out.width="100%"}
+n <- 8               # sample size
+N <- 10000           # Monte Carlo replications
+alpha <- 0.05
+mu_grid <- seq(5, 10, length.out = 20)
+t_crit <- qt(1 - alpha/2, df = n - 1)
+coverage_loop <- numeric(length(mu_grid))
+
+for (i in seq_along(mu_grid)) {
+  mu <- mu_grid[i]
+  count <- 0
+  
+  for (j in 1:N) {
+    # generate sample
+    X <- rexp(n, rate = 1 / mu)  # mean = mu
+    
+    # sample statistics
+    Xbar <- mean(X)
+    s <- sd(X)
+    
+    # confidence interval
+    d <- t_crit * s / sqrt(n)
+    U <- Xbar - d
+    V <- Xbar + d
+    
+    # coverage check
+    if (U <= mu && mu <= V) {
+      count <- count + 1
+    }
+  }
+  
+  coverage_loop[i] <- count / N
+}
+
+# plot
+plot(mu_grid, coverage_loop, pch = 19,
+     xlab = expression("True mean " * mu), ylab = "Coverage probability",
+     main = "Monte Carlo Coverage of 95% CI for Exponential Mean (n = 8)")
+grid()
+```
+
+
+#### Vectorized version
+```{r, out.width="100%"}
+coverage_matrix <- numeric(length(mu_grid))
+
+for (i in seq_along(mu_grid)) {
+  mu <- mu_grid[i]
+  
+  # generate all samples at once
+  X <- matrix(rexp(N * n, rate = 1 / mu), nrow = N, ncol = n)
+  
+  # sample statistics (along rows)
+  Xbar <- rowMeans(X)
+  s <- apply(X, 1, sd)
+  
+  # confidence intervals
+  d <- t_crit * s / sqrt(n)
+  U <- Xbar - d
+  V <- Xbar + d
+  
+  # Coverage indicator
+  coverage <- mean(U <= mu & mu <= V)
+  coverage_matrix[i] <- coverage
+}
+
+plot(mu_grid, coverage_matrix, pch = 19,
+     xlab = expression("True mean " * mu), ylab = "Coverage probability",
+     main = "Monte Carlo Coverage of 95% CI for Exponential Mean (n = 8)")
+grid()
+```
+
+#### Runtime Comparison
+```{r, out.width="100%"}
+library(matrixStats) # we need this package to use power of Fortran
+
+coverage_fast <- function(mu_grid, n, N, alpha = 0.05) {
+  t_crit <- qt(1 - alpha/2, df = n - 1)
+  coverage <- numeric(length(mu_grid))
+  
+  for (i in seq_along(mu_grid)) {
+    mu <- mu_grid[i]
+    # generate all samples at once
+    X <- matrix(rexp(N * n, rate = 1 / mu), nrow = N, ncol = n)
+    # fast row statistics
+    Xbar <- rowMeans(X)
+    s <- rowSds(X)
+    d <- t_crit * s / sqrt(n)
+    coverage[i] <- mean((Xbar - d <= mu) & (mu <= Xbar + d))
+  }
+  return(coverage)
+}
+
+coverage_loop <- function(mu_grid, n, N, alpha = 0.05) {
+  t_crit <- qt(1 - alpha/2, df = n - 1)
+  coverage <- numeric(length(mu_grid))
+
+  for (i in seq_along(mu_grid)) {
+    mu <- mu_grid[i]
+    k <- 0
+    
+    for (j in 1:N) {
+      X <- rexp(n, rate = 1 / mu)
+      Xbar <- mean(X)
+      s <- sd(X)
+      d <- t_crit * s / sqrt(n)
+      
+      if (Xbar - d <= mu && mu <= Xbar + d) {
+        k <- k + 1
+      }
+    }
+    coverage[i] <- k / N
+  }
+  coverage
+}
+
+set.seed(123)
+n <- 100
+mu_grid <- seq(5, 10, length.out = 6)
+N_values <- c(1000,2000,5000,10000,15000,20000)
+times_loop <- numeric(length(N_values))
+times_fast <- numeric(length(N_values))
+
+# time the calculations
+for (i in seq_along(N_values)) {
+  N <- N_values[i]
+  start <- Sys.time()
+  coverage_loop(mu_grid, n, N)
+  times_loop[i] <- as.numeric(Sys.time() - start)
+
+  start <- Sys.time()
+  coverage_fast(mu_grid, n, N)
+  times_fast[i] <- as.numeric(Sys.time() - start)
+}
+
+# plot
+plot(N_values, times_loop, type="b", pch=19,
+     xlab="Monte Carlo Replications (N)",
+     ylab="Runtime (seconds)",
+     main="Runtime Comparison")
+lines(N_values, times_fast, type="b", pch=15)
+legend("topleft",
+       legend=c("Loop","Vectorized (matrixStats)"),
+       pch=c(19,15),
+       lty=1)
+grid()
+```
