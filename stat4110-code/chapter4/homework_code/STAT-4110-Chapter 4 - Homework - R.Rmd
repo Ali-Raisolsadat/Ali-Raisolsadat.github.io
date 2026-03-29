@@ -1,0 +1,226 @@
+---
+title: "Chapter 4 Homework Solutions"
+author: "Ali Raisolsadat"
+date: "2026-03-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### Chapter 4 - Lecture 1
+
+
+```{r, out.width="100%"}
+target_density <- function(x) {
+  # target density for the Metropolis algorithm
+  return(exp(-0.5 * x^2))
+}
+
+metropolis_step <- function(p, x, proposal_std) {
+  # propose a new state using Gaussian random walk
+  x_hat <- x + rnorm(1, mean = 0, sd = proposal_std)
+
+  # compute acceptance probability
+  alpha <- min(1, p(x_hat) / p(x))
+
+  # accept or reject the proposal
+  u <- runif(1, 0, 1)
+
+  if (u < alpha) {
+    x <- x_hat  # accept
+  }
+
+  return(x)
+}
+
+# initialize a single chain
+set.seed(0)
+n_steps <- 200
+proposal_std <- 2
+x <- numeric(n_steps)
+x[1] <- -10
+
+# simulate a single chain
+for (t in 2:n_steps) {
+  x[t] <- metropolis_step(target_density, x[t-1], proposal_std)
+}
+
+# plot
+# increase margins for large figure
+par(mar = c(5,5,4,2))
+plot(x,type = "l", lwd = 1, xlab = "Iteration", ylab = "x", main = "Burn-in and Thinning")
+usr <- par("usr")
+rect(xleft = 0, ybottom = usr[3], xright = 30, ytop = usr[4], col = rgb(0.5, 0.5, 0.5, 0.3), border = NA)
+points(seq(31, n_steps, by = 5), x[seq(31, n_steps, by = 5)], col = "red", pch = 16)
+legend("bottomright", legend = c("Chain", "Burn-in", "Thinned samples"), 
+       col = c("black", rgb(0.5,0.5,0.5,0.3), "red"), 
+       lty = c(1, NA, NA), pch = c(NA, 15, 16), pt.cex = 2, bty = "n"
+)
+```
+
+```{r, out.width="100%"}
+# simulation parameters
+n_chains <- 1000       # number of independent chains
+burn_in <- 30
+thin <- 5
+chains <- runif(n_chains, -10, 10)
+
+# run chains and collect thinned samples
+thinned_samples <- c()
+
+for (t in 1:n_steps) {
+  for (i in 1:n_chains) {
+    chains[i] <- metropolis_step(target_density, chains[i], proposal_std)
+  }
+  
+  # after burn-in, collect thinned samples
+  if (t > burn_in && (t - burn_in) %% thin == 0) {
+    thinned_samples <- c(thinned_samples, chains)
+  }
+}
+
+# plot histogram of thinned samples
+hist(thinned_samples, breaks = 50, probability = TRUE, col = "steelblue", border = "gray",
+     main = paste("Histogram of Thinned Samples from", n_chains, "Independent Chains"),
+     xlab = "x", ylab = "Density"
+)
+grid()
+```
+
+### Comment on the Histogram
+
+After running many independent chains, applying burn-in and thinning, the combined thinned samples form a histogram that approximates the target distribution.
+
+The histogram shows the probability density of the target, with higher frequencies where the distribution has higher probability (near the mean, lower spread in the tails).
+
+As the number of chains and samples increases, the histogram converges to the true Normal(0,10) density.
+
+This demonstrates the key property of MCMC: even though individual samples are dependent and start from different points, after burn-in and with sufficient sampling, the collected samples are effectively drawn from the stationary distribution.
+
+### Chapter 4 Homework - Lecture 2
+```{r, out.width="100%"}
+
+# target distribution
+target <- function(x) {
+  return(exp(-x^2 / 8))
+}
+
+# asymmetric proposal mechanism for Metropolis Hastings
+proposal_fn <- function(x, step_size = 1.0) {
+  if (runif(1) < 0.7) {
+    return(rnorm(1, mean = x + step_size, sd = 1))
+  } else {
+    return(rnorm(1, mean = x - step_size, sd = 1))
+  }
+}
+
+# evaluate proposal density q(x_new | x_old)
+proposal_density_fn <- function(x_new, x_old, step_size = 1.0) {
+  return(
+    0.7 * dnorm(x_new, mean = x_old + step_size, sd = 0.5) +
+    0.3 * dnorm(x_new, mean = x_old - step_size, sd = 0.5)
+  )
+}
+
+# Metropolis Hastings algorithm
+metropolis_hastings <- function(target, T = 5000, x0 = 0.0, 
+                                proposal_fn = NULL, proposal_density_fn = NULL, step_size = 0.8) {
+  # initialize chain storage
+  x <- numeric(T + 1)
+  x[1] <- x0
+
+  for (t in 2:(T + 1)) {
+    # propose a new candidate
+    x_prop <- proposal_fn(x[t - 1], step_size)
+
+    # compute acceptance ratio
+    numerator <- target(x_prop)
+    denominator <- target(x[t - 1])
+
+    # if asymmetric proposal include ratio
+    if (!is.null(proposal_density_fn)) {
+      numerator <- numerator *
+        proposal_density_fn(x[t - 1], x_prop, step_size)
+
+      denominator <- denominator *
+        proposal_density_fn(x_prop, x[t - 1], step_size)
+    }
+
+    alpha <- min(1, numerator / denominator)
+
+    # acceptance condition
+    if (runif(1) < alpha) {
+      x[t] <- x_prop
+    } else {
+      x[t] <- x[t - 1]
+    }
+  }
+
+  return(x)
+}
+
+
+# MCMC settings
+T <- 2000
+burn_in <- 40
+thinning <- 5
+
+
+# run a single Metropolis–Hastings chain
+x_single <- metropolis_hastings(target = target,T = T,x0 = 0,
+                                proposal_fn = proposal_fn, 
+                                proposal_density_fn = proposal_density_fn, 
+                                step_size = 1.0
+)
+
+
+# burn-in and thinning
+post_burnin <- x_single[(burn_in + 1):length(x_single)]
+thin_idx <- seq(1, length(post_burnin), by = thinning)
+thinned_samples <- post_burnin[thin_idx]
+thinned_iters <- thin_idx + burn_in
+
+
+# plot
+plot(x_single,type = "l",lwd = 1, main = "Metropolis–Hastings Chain", xlab = "Iteration", ylab = "State value")
+
+# burn-in shading
+usr <- par("usr")
+rect(xleft = 0, ybottom = usr[3], xright = burn_in, ytop = usr[4], col = rgb(0.5, 0.5, 0.5, 0.3), border = NA)
+points(thinned_iters, thinned_samples, col = "red", pch = 16, cex = 0.5)
+legend("topright", legend = c("Markov chain", "Burn-in", "Thinned samples"),
+       col = c("black", rgb(0.5,0.5,0.5,0.3), "red"),
+       lty = c(1, NA, NA), pch = c(NA, 15, 16), pt.cex = 1, bty = "n"
+)
+grid()
+```
+
+```{r, out.width="100%"}
+# multiple independent MCMC chains
+num_chains <- 500              # number of chains to simulate
+start_range <- c(-4, 8)        # range for random initialization (overdispersed)
+all_samples <- numeric(0)
+
+for (i in 1:num_chains) {
+  x0 <- runif(1, start_range[1], start_range[2])
+  chain <- metropolis_hastings(target, T, x0, proposal_fn,proposal_density_fn, 1.0)
+  post_burnin <- chain[(burn_in + 1):length(chain)]
+  all_samples <- c(all_samples, post_burnin[seq(1, length(post_burnin), by = thinning)])
+}
+
+# plot histogram
+hist(all_samples, breaks = 50, probability = TRUE, col = "skyblue", border = "black",
+  main = "Histogram of Combined Thinned Samples from 500 Chains", 
+  xlab = "x", ylab = "Density"
+)
+
+# overlay true density N(0,4)
+x_vals <- seq(-8, 8, length.out = 500)
+lines(x_vals, dnorm(x_vals, mean = 0, sd = 2), col = "red", lwd = 2, lty = 2)
+legend("topright", legend = c("MCMC Samples", "Target N(0,4)"),
+       fill = c("skyblue", NA), border = c("black", NA), lty = c(NA, 2), col = c(NA, "red"), bty = "n"
+)
+
+grid()
+```
