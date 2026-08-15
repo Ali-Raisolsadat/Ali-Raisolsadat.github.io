@@ -1,0 +1,1461 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{array}
+
+\title[Chapter 10: Independence \& Conditional Probabilities]{\textbf{Chapter 10: Independence and Conditional Probabilities}}
+\subtitle{The Practice of Statistics in the Life Sciences \\ by Brigitte Baldi and David S. Moore}
+\author{Instructor: Ali Raisolsadat}
+\date{Part II: Probability and Distributions}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+\graphicspath{{./}{figures/}}
+
+% Compile-safe image helper. The real figure appears automatically when present.
+\newcommand{\lectureimage}[2][0.93\linewidth]{%
+  \IfFileExists{#2}{%
+    \includegraphics[width=#1]{#2}%
+  }{%
+    \fbox{\parbox[c][0.30\textheight][c]{0.90\linewidth}{%
+      \centering\small
+      Figure file: \texttt{\detokenize{#2}}\\[
+0.15cm]
+      Generate this figure by knitting the revised Chapter 10 RMarkdown notes.
+    }}%
+  }%
+}
+
+\begin{document}
+
+% =============================================================
+% PART I: MULTIPLE EVENTS AND NOTATION
+% =============================================================
+\section{Relationships Among Events}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Introduction: The Real World Is Interconnected}
+  In Chapter 9, we often studied one random phenomenon at a time. In practice, biological and scientific events are usually connected.
+  \vspace{0.2cm}
+  \begin{itemize}
+    \item Does a particular gene alter the probability of developing a disease?
+    \item If a diagnostic test is positive, what is the probability the disease is actually present?
+    \item Does knowing one event occurred change the probability of another?
+  \end{itemize}
+  \vspace{0.2cm}
+  \begin{block}{Chapter Goal}
+    Extend our probability toolkit from single events to \textbf{intersections, dependence, conditioning, sequential events, and reverse probabilities}.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Chapter Roadmap: Four Questions to Keep Separate}
+  \begin{enumerate}
+    \item \textbf{Can two events happen together?}\\
+          Intersections, disjoint events, and Venn diagrams.
+    \item \textbf{Does knowing one event occurred change the probability of another?}\\
+          Independence and dependence.
+    \item \textbf{What is the probability after new information is given?}\\
+          Conditional probability.
+    \item \textbf{How do we reverse a conditional probability?}\\
+          Tree diagrams, the Law of Total Probability, and Bayes's Theorem.
+  \end{enumerate}
+  \begin{alertblock}{Key Habit}
+    Start from the \textbf{question and wording}, not from a memorized formula.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Probability Language and Notation}
+  \begin{table}
+    \centering
+    \small
+    \begin{tabularx}{\textwidth}{l c X}
+      \toprule
+      \textbf{Language} & \textbf{Notation} & \textbf{Meaning} \\
+      \midrule
+      $A$ \textbf{and} $B$ & $A\cap B$ & Both events occur. \\
+      $A$ \textbf{or} $B$ & $A\cup B$ & At least one occurs; ``or'' is inclusive. \\
+      \textbf{not} $A$ & $A^c$ & Event $A$ does not occur. \\
+      $B$ \textbf{given} $A$ & $P(B\mid A)$ & Probability of $B$ after restricting attention to cases where $A$ occurred. \\
+      \bottomrule
+    \end{tabularx}
+  \end{table}
+  \vspace{0.2cm}
+  \begin{block}{Before Calculating}
+    Translate the question into \textbf{and}, \textbf{or}, \textbf{not}, or \textbf{given}.
+  \end{block}
+\end{frame}
+
+\begin{frame}{How We Will Work Through Examples}
+  For each worked example, we will follow the same order:
+  \begin{enumerate}
+    \item \textbf{Write the question first.} What probability are we being asked to find?
+    \item \textbf{List the given information.} What probabilities, counts, or conditions are known?
+    \item \textbf{Choose the rule and explain why it applies.}
+    \item \textbf{Calculate and interpret the answer in context.}
+  \end{enumerate}
+  \vspace{0.2cm}
+  \begin{block}{First-Year Strategy}
+    Write the probability statement in words before substituting numbers. The formula should be the \textbf{last step of the reasoning}, not the first.
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Visualizing Multiple Events: Disjoint Events}
+  \begin{columns}[c]
+    \begin{column}{0.54\textwidth}
+      \centering
+      \lectureimage{fig_ch10_venn_disjoint.png}
+    \end{column}
+    \begin{column}{0.43\textwidth}
+      \begin{block}{Disjoint Events}
+        Two events are \textbf{disjoint} if they cannot occur together.
+        \[
+          P(A\cap B)=0
+  \]
+      \end{block}
+      The circles do not overlap, so there is no outcome belonging to both events.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Visualizing Multiple Events: Overlapping Events}
+  \begin{columns}[c]
+    \begin{column}{0.54\textwidth}
+      \centering
+      \lectureimage{fig_ch10_venn_overlap.png}
+    \end{column}
+    \begin{column}{0.43\textwidth}
+      Most interesting scientific events are \textbf{not disjoint}.
+      \begin{itemize}
+        \item A patient can have high blood pressure and high cholesterol.
+        \item The overlap represents $A\cap B$.
+        \item A nonempty overlap can have positive probability.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Example 10.1: Two Births --- Question and Given Information}
+  \begin{block}{Question}
+    Under the simplified model, what is the probability that the next two births are both girls?
+  \end{block}
+  For this example, assume:
+  \begin{itemize}
+    \item each birth has probability $0.5$ of being a girl;
+    \item the two birth outcomes are modelled as independent.
+  \end{itemize}
+  Define
+  \[
+    A=\{\text{first baby is a girl}\},\qquad
+    B=\{\text{second baby is a girl}\}
+  \]
+  \begin{block}{Translate the Question}
+    ``Both births are girls'' means the intersection $A\cap B$.
+  \end{block}
+  \small Real birth-sex probabilities are not exactly $0.5$; the value $0.5$ is an approximation used for this probability example.
+\end{frame}
+
+\begin{frame}{Example 10.1: See the Four Possible Outcomes}
+  \begin{table}
+    \centering
+    \small
+    \begin{tabular}{lcc}
+      \toprule
+      & \textbf{Second is $B$} & \textbf{Second is $B^c$} \\
+      \midrule
+      \textbf{First is $A$} & $A\cap B$ & $A\cap B^c$ \\
+      \textbf{First is $A^c$} & $A^c\cap B$ & $A^c\cap B^c$ \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+  Under the simplified independent model, the second birth still has probability $0.5$ of being a girl after we know the first birth was a girl.
+  \vspace{0.15cm}
+  \begin{block}{Why Multiply?}
+    To reach the ``girl, then girl'' cell, the first event must occur \textbf{and then} the second event must occur. Because the events are independent, we multiply their probabilities.
+  \end{block}
+  \[
+    P(A\cap B)=P(A)P(B)=(0.5)(0.5)=\mathbf{0.25}
+  \]
+  So the model assigns a \textbf{25\% probability} to two girls in two births.
+\end{frame}
+
+% =============================================================
+% PART II: INDEPENDENCE
+% =============================================================
+\section{Independence}
+
+\begin{frame}{The Gambler's Fallacy and Independence}
+  \begin{alertblock}{Why Intuition Can Be Misleading}
+    After a long run of one outcome, people may believe the opposite outcome is now ``due.''
+  \end{alertblock}
+  In an independent-trials model, the past does not force future outcomes to balance.
+  \vspace{0.15cm}
+  \begin{block}{Independence}
+    Two events are independent if knowing that one occurs does \textbf{not change the probability} of the other.
+  \end{block}
+  \vspace{0.15cm}
+  For the birth model above, learning the outcomes of earlier births does not change the model's probability for the next birth.
+\end{frame}
+
+\begin{frame}{Quick Check: Independent or Dependent?}
+  \begin{itemize}
+    \item \textbf{Two coin tosses:} independent in the usual model.
+    \item \textbf{Two cards drawn without replacement:} dependent because the deck composition changes.
+    \item \textbf{Taking the same cognitive test twice:} generally dependent because the same person's ability affects both scores, and practice may matter.
+    \item \textbf{Repeated random measurement errors:} may be modelled as independent if there is no persistent drift and one error does not affect the next.
+  \end{itemize}
+  \begin{alertblock}{Define the Events Carefully}
+    Independence applies to the \textbf{events or random quantities you define}. Similar measurements are not automatically dependent, and separate measurements are not automatically independent.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Multiplication Rule for Independent Events}
+  \begin{block}{Two Events}
+    If $A$ and $B$ are independent,
+    \[
+      P(A\cap B)=P(A)P(B)
+  \]
+  \end{block}
+  \begin{block}{Three Events}
+    If $A$, $B$, and $C$ are \textbf{mutually independent},
+    \[
+      P(A\cap B\cap C)=P(A)P(B)P(C)
+  \]
+  \end{block}
+  \begin{alertblock}{Important Caveat}
+    Pairwise independence alone is \textbf{not sufficient} to guarantee the three-event product rule.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Do Not Assume Independence by Default}
+  The product rule $P(A\cap B)=P(A)P(B)$ is a shortcut with a condition attached.
+  \vspace{0.2cm}
+  Use it when:
+  \begin{itemize}
+    \item independence is explicitly stated;
+    \item independence is justified by the data-generating process; or
+    \item independence has been established mathematically.
+  \end{itemize}
+  \vspace{0.15cm}
+  Later we will use two precise checks:
+  \[
+    P(A\cap B)=P(A)P(B)
+  \]
+  or, when $P(A)>0$,
+  \[
+    P(B\mid A)=P(B)
+  \]
+\end{frame}
+
+\begin{frame}{Example 10.2: Rapid HIV Testing --- Question and Given Information}
+  \begin{block}{Question}
+    A clinic tests 200 HIV-negative people. What is the probability that \textbf{at least one} of the 200 tests produces a false positive?
+  \end{block}
+  Suppose the false-positive probability for one HIV-negative person is $0.004$.
+  \vspace{0.15cm}
+  For this calculation, assume the test outcomes for different people are independent.
+  \vspace{0.15cm}
+  Directly adding the probabilities of exactly 1, exactly 2, exactly 3, $\ldots$ false positives would be cumbersome.
+  \vspace{0.15cm}
+  \begin{alertblock}{Look for the Complement}
+    The opposite of ``at least one false positive'' is much simpler: \textbf{no false positives at all}.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Example 10.2: Rapid HIV Testing --- Calculate Step by Step}
+  For one HIV-negative person,
+  \[
+    P(\text{correct negative})=1-0.004=0.996
+  \]
+  Because the 200 test outcomes are assumed independent,
+  \[
+    P(\text{all 200 correct negatives})=(0.996)^{200}=0.4486
+  \]
+  Now use the complement rule:
+  \[
+    P(\text{at least one false positive})
+    =1-0.4486
+    =\mathbf{0.5514}
+  \]
+  \begin{block}{Interpretation}
+    Even though a false positive is rare for any one HIV-negative person, repeating the test across many people creates many opportunities for at least one error. Under this model, the chance is about \textbf{55.1\%}.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Accumulation of False Positives}
+  \begin{columns}[c]
+    \begin{column}{0.58\textwidth}
+      \centering
+      \lectureimage{fig_ch10_hiv_falsepos.png}
+    \end{column}
+    \begin{column}{0.39\textwidth}
+      \begin{itemize}
+        \item For one HIV-negative person, the true-negative rate is $99.6\%$.
+        \item Across 200 independent tests, the chance of at least one false positive is about $55.1\%$.
+      \end{itemize}
+      \begin{alertblock}{Interpretation}
+        This is \textbf{not} a statement that the test has 99.6\% overall accuracy. It uses the false-positive rate specifically among people without HIV.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Disjoint vs. Independent}
+  \begin{columns}[T]
+    \begin{column}{0.47\textwidth}
+      \begin{block}{Disjoint}
+        Cannot occur together:
+        \[
+          P(A\cap B)=0
+  \]
+        If both have positive probability, observing $A$ tells us that $B$ did not occur.
+      \end{block}
+    \end{column}
+    \begin{column}{0.49\textwidth}
+      \begin{block}{Independent}
+        Knowing one event occurred does not change the probability of the other:
+        \[
+          P(A\cap B)=P(A)P(B)
+  \]
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{0.2cm}
+  \begin{alertblock}{Precise Statement}
+    Two \textbf{positive-probability} disjoint events cannot be independent. A zero-probability event is the mathematical exception to the blanket statement ``disjoint events are never independent.''
+  \end{alertblock}
+\end{frame}
+
+% =============================================================
+% PART III: CONDITIONAL PROBABILITY
+% =============================================================
+\section{Conditional Probability}
+
+\begin{frame}{Conditional Probability: Restrict the Sample Space}
+  Conditional probability answers a question after we are given new information.
+  \begin{block}{Formula}
+    When $P(A)>0$,
+    \[
+      P(B\mid A)=\frac{P(A\cap B)}{P(A)}
+  \]
+  \end{block}
+  \begin{itemize}
+    \item $A$ is the \textbf{condition}: the information after the bar.
+    \item $B$ is the event whose probability we want.
+    \item Conditioning on $A$ makes $A$ our \textbf{new denominator or restricted sample space}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Example 10.3: Forest Data --- Question and Given Information}
+  \small
+  \begin{block}{Question}
+    A randomly selected tree is known to be a \textbf{sapling}. What is the probability that it is a western hemlock?
+  \end{block}
+  Ecologists classify trees by species and life stage. The entries below are proportions of the \textbf{entire forest}.
+  \begin{table}
+    \centering
+    \small
+    \begin{tabular}{lcccc}
+      \toprule
+      & \textbf{Dead} & \textbf{Live} & \textbf{Sapling} & \textbf{Total} \\
+      \midrule
+      Western red cedar & 0.02 & 0.10 & 0.08 & \textbf{0.20} \\
+      Douglas fir & 0.16 & 0.16 & 0.00 & \textbf{0.32} \\
+      Western hemlock & 0.23 & 0.21 & 0.04 & \textbf{0.48} \\
+      \midrule
+      \textbf{Total} & \textbf{0.41} & \textbf{0.47} & \textbf{0.12} & \textbf{1.00} \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+\end{frame}
+
+\begin{frame}{Example 10.3: Forest Data --- What Does the Condition Change?}
+  Before using the new information, a randomly selected tree has
+  \[
+    P(WH)=0.48
+  \]
+  This 0.48 uses the \textbf{entire forest} as the denominator
+  \vspace{0.2cm}
+  \begin{block}{What Changes?}
+    The word ``sapling'' is the condition. Once we know the selected tree is a sapling, the whole forest is no longer the relevant denominator
+  \end{block}
+  \vspace{0.15cm}
+  We now restrict attention to the sapling column, which contains 12\% of the forest. The question becomes a \textbf{within-sapling proportion}
+\end{frame}
+
+\begin{frame}{Example 10.3: Forest Data --- Restrict to Saplings}
+  The condition ``sapling'' restricts our attention to the sapling column.
+  \begin{itemize}
+    \item Saplings make up $0.12$ of the entire forest.
+    \item Western-hemlock saplings make up $0.04$ of the entire forest.
+  \end{itemize}
+  Therefore, among the saplings,
+  \[
+    P(WH\mid \text{sapling})
+    =\frac{P(WH\cap\text{sapling})}{P(\text{sapling})}
+    =\frac{0.04}{0.12}
+    =\mathbf{0.3333}
+  \]
+  \begin{block}{Interpretation}
+    About \textbf{33.3\% of saplings} are western hemlocks. This is different from saying that 48\% of all trees are western hemlocks.
+  \end{block}
+  \begin{alertblock}{Denominator Check}
+    In $P(B\mid A)$, the condition $A$ tells you which group becomes the new denominator.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Visualizing Conditional Probability}
+  \begin{columns}[c]
+    \begin{column}{0.60\textwidth}
+      \centering
+      \lectureimage{fig_ch10_forest_conditional.png}
+    \end{column}
+    \begin{column}{0.37\textwidth}
+      Conditioning changes the group we are looking at.
+      \begin{itemize}
+        \item Entire forest: western hemlock = $48\%$.
+        \item Sapling column only: western hemlock = $33\%$.
+      \end{itemize}
+      \begin{block}{Key Idea}
+        Conditional probability is a \textbf{within-group proportion}.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Example 10.4: Reversing the Condition --- Question First}
+  \small
+  \begin{block}{Question}
+    Among \textbf{western hemlock trees}, what proportion are saplings?
+  \end{block}
+  Previously we asked the reverse conditional probability:
+  \[
+    P(WH\mid\text{sapling})=0.3333
+  \]
+  which means: \emph{among saplings, what proportion are western hemlocks?}
+  \vspace{0.15cm}
+  The condition is now $WH$, so the western-hemlock row becomes the denominator:
+  \[
+    P(\text{sapling}\mid WH)
+    =\frac{0.04}{0.48}
+    =\mathbf{0.0833}
+  \]
+  \begin{alertblock}{Why the Answers Differ}
+    The numerator is the same intersection, $0.04$, but the denominators are different groups: $0.12$ versus $0.48$.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Example 10.4: Three Related but Different Probabilities}
+  \begin{align*}
+    P(WH\mid\text{sapling}) &= 0.3333,\\
+    P(\text{sapling}\mid WH) &= 0.0833,\\
+    P(WH\cap\text{sapling}) &= 0.04.
+  \end{align*}
+  \begin{itemize}
+    \item $P(WH\mid\text{sapling})$: among \textbf{saplings}, the percentage that are WH.
+    \item $P(\text{sapling}\mid WH)$: among \textbf{WH trees}, the percentage that are saplings.
+    \item $P(WH\cap\text{sapling})$: among the \textbf{entire forest}, the percentage that are both.
+  \end{itemize}
+  \begin{block}{First-Year Habit}
+    Read the vertical bar as ``given''. Say the probability statement aloud before doing the calculation.
+  \end{block}
+\end{frame}
+
+% =============================================================
+% PART IV: GENERAL PROBABILITY RULES
+% =============================================================
+\section{General Probability Rules}
+
+\begin{frame}{From Special Rules to General Rules}
+  The familiar shortcuts have conditions:
+  \begin{itemize}
+    \item $P(A\cup B)=P(A)+P(B)$ only when $A$ and $B$ are disjoint.
+    \item $P(A\cap B)=P(A)P(B)$ only when $A$ and $B$ are independent.
+  \end{itemize}
+  \vspace{0.2cm}
+  \begin{block}{General Rules}
+    We now remove those restrictions so the formulas work for \textbf{any two events}.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The General Addition Rule}
+  If $A$ and $B$ overlap, adding $P(A)$ and $P(B)$ counts the intersection twice.
+  \begin{block}{For Any Two Events}
+    \[
+      P(A\cup B)=P(A)+P(B)-P(A\cap B)
+  \]
+  \end{block}
+  \vspace{0.2cm}
+  If $A$ and $B$ are disjoint, then $P(A\cap B)=0$, and the formula reduces to
+  \[
+    P(A\cup B)=P(A)+P(B)
+  \]
+\end{frame}
+
+\begin{frame}{Example 10.5: Dalmatians --- Question and Given Information}
+  \begin{block}{Question}
+    What is the probability that a randomly selected Dalmatian is hearing-impaired \textbf{or} blue-eyed?
+  \end{block}
+  Let
+  \begin{itemize}
+    \item $I$ = the dog has hearing impairment;
+    \item $B$ = the dog has blue eyes.
+  \end{itemize}
+  Suppose
+  \[
+    P(I)=0.28,\qquad P(B)=0.11,\qquad P(I\cap B)=0.05
+  \]
+  The word ``or'' means the union $I\cup B$.
+  \vspace{0.1cm}
+  If we simply add $0.28+0.11$, dogs in the overlap are counted once as impaired and a second time as blue-eyed.
+\end{frame}
+
+\begin{frame}{Example 10.5: Dalmatians --- Correct the Double Count}
+  Use the General Addition Rule:
+  \[
+    P(I\cup B)=P(I)+P(B)-P(I\cap B)
+  \]
+  Substitute the data:
+  \[
+    P(I\cup B)=0.28+0.11-0.05=\mathbf{0.34}
+  \]
+  So 34\% are in at least one of the two categories.
+  \vspace{0.15cm}
+  To find the probability of \textbf{neither}, use the complement:
+  \[
+    P(\text{neither})=1-0.34=\mathbf{0.66}
+  \]
+  \begin{block}{Interpretation}
+    The subtraction does not remove the overlap from the final answer. It removes the \textbf{extra copy} created by adding the two marginal probabilities.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Visualizing the General Addition Rule}
+  \begin{columns}[c]
+    \begin{column}{0.64\textwidth}
+      \centering
+      \lectureimage{fig_ch10_dalmatian_venn.png}
+    \end{column}
+    \begin{column}{0.33\textwidth}
+      The second diagram partitions the sample space into disjoint pieces:
+      \[
+        0.23+0.05+0.06+0.66=1
+  \]
+      \begin{alertblock}{Important}
+        The raw marginal probabilities $P(I)$ and $P(B)$ are \textbf{not supposed to add to 1}; they overlap.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The General Multiplication Rule}
+  Rearranging the conditional probability formula gives a rule valid whether or not events are independent.
+  \begin{block}{For Any Two Events}
+    \[
+      P(A\cap B)=P(A)P(B\mid A)
+  \]
+    Equivalently,
+    \[
+      P(A\cap B)=P(B)P(A\mid B)
+  \]
+  \end{block}
+  \begin{alertblock}{Independent Events Are a Special Case}
+    If $A$ and $B$ are independent, then $P(B\mid A)=P(B)$, so the general rule becomes $P(A\cap B)=P(A)P(B)$.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Example 10.6: Soda Consumption and Weight --- Question and Given Information}
+  \begin{block}{Question}
+    What proportion of \textbf{all adults} are both non-soda drinkers and self-described as overweight?
+  \end{block}
+  In a survey, suppose
+  \[
+    P(\text{no soda})=0.52
+  \]
+  and
+  \[
+    P(\text{overweight}\mid\text{no soda})=0.39
+  \]
+  The 39\% is not 39\% of the whole population. It is 39\% \textbf{within the 52\% subgroup} who report no soda.
+  \vspace{0.15cm}
+  Therefore, we need the probability of travelling through both stages: first ``no soda'', then ``overweight within that group''.
+\end{frame}
+
+\begin{frame}{Example 10.6: Soda Consumption and Weight --- Multiply the Stages}
+  Apply the General Multiplication Rule:
+  \[
+    P(A\cap B)=P(A)P(B\mid A)
+  \]
+  Here,
+  \[
+    P(\text{no soda}\cap\text{overweight})
+    =(0.52)(0.39)
+    =\mathbf{0.2028}
+  \]
+  \begin{block}{Interpretation}
+    Approximately \textbf{20.3\% of all surveyed adults} are in both groups under these survey proportions.
+  \end{block}
+  \begin{alertblock}{Association Is Not Causation}
+    This calculation describes a joint proportion. It does not show that avoiding soda causes weight status or that weight status causes soda consumption.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{How to Mathematically Test Independence}
+  \begin{block}{Product Definition}
+    Events $A$ and $B$ are independent exactly when
+    \[
+      P(A\cap B)=P(A)P(B)
+  \]
+  \end{block}
+  When $P(A)>0$, an equivalent test is
+  \[
+    P(B\mid A)=P(B)
+  \]
+  Similarly, when $P(B)>0$,
+  \[
+    P(A\mid B)=P(A)
+  \]
+  \begin{block}{Interpretation}
+    Independence means that conditioning does \textbf{not change} the probability.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Example 10.9: Dalmatians --- Question and Independence Prediction}
+  \begin{block}{Question}
+    Are hearing impairment and blue eyes independent in the Dalmatian data?
+  \end{block}
+  From the earlier Dalmatian data,
+  \[
+    P(I)=0.28,\qquad P(B)=0.11
+  \]
+  \begin{block}{Independence Test}
+    If hearing impairment and blue eyes were independent, the expected joint probability would be
+    \[
+      P(I)P(B)=(0.28)(0.11)=\mathbf{0.0308}
+  \]
+  \end{block}
+  This $0.0308$ is the overlap we would expect \textbf{if knowing one trait gave us no information about the other}.
+\end{frame}
+
+\begin{frame}{Example 10.9: Dalmatians --- Compare Prediction with Reality}
+  The observed joint probability is
+  \[
+    P(I\cap B)=0.05
+  \]
+  Independence would require
+  \[
+    P(I\cap B)=P(I)P(B)=0.0308
+  \]
+  But
+  \[
+    0.05\neq0.0308
+  \]
+  Therefore the two events are \textbf{not independent} in this dataset.
+  \begin{block}{Interpretation}
+    Blue-eyed and hearing-impaired dogs occur together more often than the independence model would predict. This is evidence of association between the traits; determining the biological mechanism requires additional scientific evidence.
+  \end{block}
+\end{frame}
+
+\begin{frame}{The Danger of Assuming Independence}
+  \begin{alertblock}{A Historical Miscalculation}
+    An expert witness once multiplied a stated SIDS rate by itself:
+    \[
+      \frac{1}{8500}\times\frac{1}{8500}
+      =\frac{1}{72{,}250{,}000}
+  \]
+  \end{alertblock}
+  \textbf{First statistical problem:}
+  \begin{itemize}
+    \item The multiplication assumes that two deaths in the same family are independent.
+    \item Shared genetic and environmental factors can make outcomes within one family dependent.
+  \end{itemize}
+  \begin{block}{Lesson}
+    A special multiplication rule cannot be used until its independence assumption is justified.
+  \end{block}
+\end{frame}
+
+\begin{frame}{A Second Error: Reversing Conditional Probabilities}
+  A small value of
+  \[
+    P(\text{evidence}\mid\text{natural causes})
+  \]
+  is \textbf{not} the same as a small value of
+  \[
+    P(\text{natural causes}\mid\text{evidence})
+  \]
+  \vspace{0.2cm}
+  Confusing these is a form of the \textbf{prosecutor's fallacy}.
+  \begin{alertblock}{Central Lesson}
+    A small probability for observed evidence under one model is not automatically the probability that the model itself is false.
+  \end{alertblock}
+  Bayes's Theorem will show mathematically why reversing the condition requires additional information.
+\end{frame}
+
+% =============================================================
+% PART V: APPLICATIONS OF CONDITIONAL PROBABILITY
+% =============================================================
+\section{Applications of Conditional Probability}
+
+\begin{frame}{Conditional Probability Across Disciplines}
+  The same calculation appears in many fields:
+  \begin{itemize}
+    \item \textbf{Chemistry:} probability an alloy passes a stress test given that it contains titanium.
+    \item \textbf{Insurance:} probability a claim came from a younger driver, and claim rates within age groups.
+    \item \textbf{Psychology:} probability of one clinical condition given a reported symptom.
+  \end{itemize}
+  \vspace{0.2cm}
+  \begin{block}{Common Structure}
+    Conditioning means we restrict attention to a specified subgroup and compute a proportion \textbf{within that group}.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Chemistry Example: Question and Given Information}
+  \begin{block}{Question}
+    If an alloy is known to contain titanium, what is the probability that it passes the stress test?
+  \end{block}
+  A materials laboratory tests 500 alloys.
+  \begin{table}
+    \centering
+    \small
+    \begin{tabular}{lccc}
+      \toprule
+      & \textbf{Pass} & \textbf{Fail} & \textbf{Total} \\
+      \midrule
+      Contains titanium & 120 & 30 & 150 \\
+      No titanium & 70 & 280 & 350 \\
+      \midrule
+      \textbf{Total} & 190 & 310 & 500 \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+  Because the condition is ``contains titanium'', we use only the \textbf{150 titanium alloys} as the denominator.
+\end{frame}
+
+\begin{frame}{Chemistry Example: Calculate and Interpret}
+  Among the 150 titanium alloys, 120 pass:
+  \[
+    P(\text{Pass}\mid Ti)=\frac{120}{150}=\mathbf{0.80}
+  \]
+  For comparison, the overall pass rate is
+  \[
+    P(\text{Pass})=\frac{190}{500}=\mathbf{0.38}
+  \]
+  \begin{block}{Interpretation}
+    The pass rate within the titanium group is 80\%, compared with 38\% overall. This is strong evidence of an association between titanium status and stress-test performance in these data.
+  \end{block}
+  \begin{alertblock}{Causal Caution}
+    A conditional probability by itself does not prove that titanium caused the higher pass rate. Study design and possible confounding variables still matter.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Insurance Example: Questions and Given Information}
+  \begin{block}{Questions}
+    1. Among customers who filed a claim, what proportion are under 25?\\
+    2. Among under-25 customers, what proportion filed a claim?
+  \end{block}
+  Suppose
+  \[
+    P(U)=0.20,\qquad P(U\cap C)=0.08,\qquad P(C)=0.16,
+  \]
+  where $U$ means ``under 25'' and $C$ means ``filed a claim''.
+  \vspace{0.15cm}
+  These statements mean:
+  \begin{itemize}
+    \item 20\% of customers are under 25;
+    \item 8\% of all customers are both under 25 and claimants;
+    \item 16\% of all customers filed a claim.
+  \end{itemize}
+  \begin{alertblock}{Different Conditions, Different Denominators}
+    The first question conditions on claim status; the second conditions on age group.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Insurance Example: Among Claimants, Who Is Under 25?}
+  The condition is ``filed a claim'', so claimants form the new denominator:
+  \[
+    P(U\mid C)=\frac{P(U\cap C)}{P(C)}
+    =\frac{0.08}{0.16}
+    =\mathbf{0.50}
+  \]
+  \begin{block}{Interpretation}
+    Although under-25 customers are 20\% of all customers, they make up 50\% of the claimants in this hypothetical portfolio.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Insurance Example: Within Each Age Group, What Is the Claim Rate?}
+  Among under-25 customers,
+  \[
+    P(C\mid U)=\frac{0.08}{0.20}=\mathbf{0.40}
+  \]
+  For customers age 25 or older,
+  \[
+    P(C\mid U^c)=\frac{0.16-0.08}{1-0.20}
+    =\frac{0.08}{0.80}
+    =\mathbf{0.10}
+  \]
+  \begin{block}{Interpretation}
+    In this hypothetical dataset, the observed claim rate is 40\% for under-25 customers and 10\% for customers 25 or older.
+  \end{block}
+  \small Actual insurance pricing uses many variables, actuarial models, and regulatory requirements; age alone does not determine a premium.
+\end{frame}
+
+\begin{frame}{Psychology Example: Question and Given Information}
+  \begin{block}{Question}
+    Among people who report chronic insomnia, what proportion also satisfy the study's depression criterion?
+  \end{block}
+  Suppose a survey reports
+  \[
+    P(\text{Insomnia})=0.25
+  \]
+  and
+  \[
+    P(\text{Depression}\cap\text{Insomnia})=0.15
+  \]
+  Because ``insomnia'' is the given information, the insomnia group becomes the denominator.
+\end{frame}
+
+\begin{frame}{Psychology Example: Calculate and Interpret Carefully}
+  \[
+    P(\text{Depression}\mid\text{Insomnia})
+    =\frac{P(\text{Depression}\cap\text{Insomnia})}{P(\text{Insomnia})}
+    =\frac{0.15}{0.25}
+    =\mathbf{0.60}
+  \]
+  \begin{block}{Interpretation}
+    In this hypothetical survey population, 60\% of people in the insomnia group also meet the stated depression criterion.
+  \end{block}
+  \begin{alertblock}{What This Does Not Mean}
+    It is not an individual diagnosis, and it does not show that insomnia causes depression or that depression causes insomnia.
+  \end{alertblock}
+\end{frame}
+
+% =============================================================
+% PART VI: TREE DIAGRAMS
+% =============================================================
+\section{Tree Diagrams}
+
+\begin{frame}{Tree Diagrams: Three Rules}
+  Tree diagrams are useful when probabilities occur in \textbf{sequential stages}.
+  \vspace{0.2cm}
+  \begin{enumerate}
+    \item \textbf{Branches leaving the same node sum to 1.}
+    \item \textbf{Multiply along a path} to obtain the joint probability of all events on that path.
+    \item \textbf{Add separate disjoint paths} when several paths lead to the event of interest.
+  \end{enumerate}
+  \begin{block}{Why Trees Work}
+    They combine conditional probability, the General Multiplication Rule, and the Addition Rule in one picture.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Example 10.10: Skin Cancer --- Question and Given Information}
+  \begin{block}{Question}
+    What is the overall probability that a randomly selected patient in this study is a woman?
+  \end{block}
+  We select a patient from a study population of people with skin cancer.
+  \vspace{0.15cm}
+  \textbf{Stage 1: location of the cancer}
+  \[
+    P(H)=0.15,\qquad P(T)=0.41,\qquad P(L)=0.44
+  \]
+  These probabilities sum to 1 because every patient belongs to one of these location categories.
+  \vspace{0.15cm}
+  \textbf{Stage 2: sex given the location}
+  \[
+    P(M\mid H)=0.44,\quad
+    P(M\mid T)=0.63,\quad
+    P(M\mid L)=0.20
+  \]
+  The complementary woman probabilities are $0.56$, $0.37$, and $0.80$.
+\end{frame}
+
+\begin{frame}{Example 10.10: Skin Cancer --- Plan the Solution}
+  There are \textbf{three different ways} to end at ``woman'':
+  \begin{enumerate}
+    \item head and woman;
+    \item trunk and woman;
+    \item limbs and woman.
+  \end{enumerate}
+  \vspace{0.15cm}
+  These paths are disjoint because one patient cannot be in two location categories at once.
+  \begin{alertblock}{Tree-Diagram Plan}
+    Multiply along each complete path to get a joint probability, then add the three disjoint woman paths.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Tree Diagram: Skin Cancer --- Multiply Along a Path}
+  \begin{columns}[c]
+    \begin{column}{0.62\textwidth}
+      \centering
+      \lectureimage{fig_ch10_tree_cancer.png}
+    \end{column}
+    \begin{column}{0.35\textwidth}
+      Consider the path ``limbs, then woman''.
+      \[
+        P(L\cap W)=P(L)P(W\mid L)
+  \]
+      \[
+        =(0.44)(0.80)=\mathbf{0.352}
+  \]
+      \begin{block}{Meaning}
+        About 35.2\% of all patients are both women and in the limbs location category.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Tree Diagram: Skin Cancer --- Add the Woman Paths}
+  The three woman paths have probabilities
+  \[
+    P(H\cap W)=0.15(0.56)=0.084,
+  \]
+  \[
+    P(T\cap W)=0.41(0.37)=0.1517,
+  \]
+  \[
+    P(L\cap W)=0.44(0.80)=0.352
+  \]
+  Because these paths are disjoint,
+  \[
+    P(W)=0.084+0.1517+0.352=\mathbf{0.5877}
+  \]
+  \begin{block}{Interpretation}
+    Under the study proportions, approximately \textbf{58.8\%} of the skin-cancer patients are women.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Example 10.11: Reverse Conditional Probability --- Question First}
+  \begin{block}{Question}
+    Among \textbf{women}, what proportion have their cancer in the limbs category?
+  \end{block}
+  We were given
+  \[
+    P(W\mid L)=0.80,
+  \]
+  meaning 80\% of patients in the limbs category are women.
+  \vspace{0.15cm}
+  This reverses the direction of the conditional probability. The quantity we want is
+  \[
+    P(L\mid W),
+  \]
+  so the group of women---not the group of limbs cases---must be the denominator.
+\end{frame}
+
+\begin{frame}{Example 10.11: Reverse Conditional Probability --- Calculate}
+  From the tree,
+  \[
+    P(L\cap W)=0.352,
+    \qquad
+    P(W)=0.5877
+  \]
+  Therefore,
+  \[
+    P(L\mid W)=\frac{P(L\cap W)}{P(W)}
+    =\frac{0.352}{0.5877}
+    =\mathbf{0.599}
+  \]
+  \begin{block}{Interpretation}
+    Approximately 59.9\% of women in the study have cancer in the limbs category.
+  \end{block}
+  \begin{alertblock}{Compare the Directions}
+    $P(W\mid L)=0.80$ and $P(L\mid W)=0.599$ are different because they condition on different groups.
+  \end{alertblock}
+\end{frame}
+
+% =============================================================
+% PART VII: BAYES'S THEOREM
+% =============================================================
+\section{Bayes's Theorem}
+
+\begin{frame}{Why Bayes's Theorem Is Needed}
+  Often we know a probability in one direction but need the reverse.
+  \[
+    P(\text{Positive}\mid\text{Disease})
+    \quad\text{versus}\quad
+    P(\text{Disease}\mid\text{Positive})
+  \]
+  These are not the same.
+  \vspace{0.2cm}
+  \begin{block}{Diagnostic-Test Language}
+    \begin{itemize}
+      \item \textbf{Sensitivity}: $P(\text{Test}^+\mid\text{Disease})$.
+      \item \textbf{Specificity}: $P(\text{Test}^-\mid\text{No Disease})$.
+      \item \textbf{Positive Predictive Value}: $P(\text{Disease}\mid\text{Test}^+)$.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Mammography Example: Question and Given Information}
+  \begin{block}{Question}
+    A woman in her 60s receives a positive mammogram. Under this model, what is the probability that she actually has breast cancer, $P(C\mid +)$?
+  \end{block}
+  Suppose the model uses
+  \[
+    P(C)=0.0365,
+  \]
+  where $C$ means breast cancer.
+  \vspace{0.1cm}
+  The test characteristics are
+  \[
+    P(+\mid C)=0.85 \qquad \text{(sensitivity)},
+  \]
+  \[
+    P(-\mid C^c)=0.95 \qquad \text{(specificity)}
+  \]
+  Therefore,
+  \[
+    P(+\mid C^c)=1-0.95=0.05
+  \]
+\end{frame}
+
+\begin{frame}{Mammography Example: Why Sensitivity Is Not the Answer}
+  Sensitivity tells us
+  \[
+    P(+\mid C)=0.85
+  \]
+  But the patient has already observed a \textbf{positive test}, so the desired probability is
+  \[
+    P(C\mid +)
+  \]
+  \begin{alertblock}{The Direction Has Reversed}
+    ``Positive given cancer'' and ``cancer given positive'' are not interchangeable.
+  \end{alertblock}
+  To answer the patient's question, we must compare two sources of positive tests:
+  \begin{enumerate}
+    \item true positives from the cancer group;
+    \item false positives from the much larger no-cancer group.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Tree Diagram: Mammography Screening}
+  \centering
+  \lectureimage[0.80\linewidth]{fig_ch10_tree_mammogram.png}
+\end{frame}
+
+\begin{frame}{Mammography: Find the Two Positive-Test Paths}
+  \textbf{True-positive path:} cancer, then positive test
+  \[
+    P(C\cap +)=P(C)P(+\mid C)
+    =(0.0365)(0.85)=0.031025
+  \]
+  \textbf{False-positive path:} no cancer, then positive test
+  \[
+    P(C^c\cap +)=P(C^c)P(+\mid C^c)
+    =(0.9635)(0.05)=0.048175
+  \]
+  \begin{block}{Important Observation}
+    The false-positive rate is only 5\%, but it is applied to a very large no-cancer group. Consequently, the false-positive path is actually larger than the true-positive path.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Mammography: Positive Predictive Value}
+  All positive tests come from one of the two positive-test paths:
+  \[
+    P(+)=0.031025+0.048175=0.0792
+  \]
+  Of these positive tests, the cancer-and-positive branch contributes $0.031025$.
+  Therefore,
+  \[
+    P(C\mid +)
+    =\frac{0.031025}{0.0792}
+    =\mathbf{0.3917}
+  \]
+  \begin{block}{Interpretation}
+    Under this model, about \textbf{39.2\% of positive screening results} occur in women who have cancer. A positive screening test is therefore not the same as a confirmed diagnosis.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Mammography with 1000 Women: Build the Groups}
+  Natural frequencies can make the same Bayes calculation easier to understand
+  \vspace{0.15cm}
+  Imagine 1000 women with the same model proportions. Because 3.65\% of 1000 is not an integer, these are \textbf{expected counts} under the model
+  \begin{itemize}
+    \item Expected cancer cases: $1000(0.0365)=36.5$
+    \item Expected no-cancer cases: $1000-36.5=963.5$
+  \end{itemize}
+  Apply the test characteristics:
+  \begin{itemize}
+    \item Expected true positives: $36.5(0.85)=31.025$
+    \item Expected false positives: $963.5(0.05)=48.175$
+  \end{itemize}
+  \begin{alertblock}{Why This Helps}
+    We can compare the expected numbers of true-positive and false-positive results directly instead of thinking only in decimals
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Mammography with 1000 Women: Among the Positives}
+  The expected number of positive results is
+  \[
+    31.025+48.175=79.2
+  \]
+  Of these, 31.025 expected positive results come from the cancer group
+  \[
+    P(C\mid +)=\frac{31.025}{79.2}=\mathbf{0.3917}
+  \]
+  \begin{block}{Base-Rate Effect}
+    The condition is relatively uncommon. Because the no-cancer group is much larger, even a 5\% false-positive rate produces more false positives than true positives
+  \end{block}
+  This expected-frequency calculation is the same logic as Bayes's Theorem; only the representation has changed
+\end{frame}
+
+\begin{frame}{The Law of Total Probability}
+  Suppose $A_1,\ldots,A_k$ form a partition of the sample space: they are disjoint and exhaustive.
+  \begin{block}{Total Probability}
+    \[
+      P(B)=\sum_{j=1}^{k}P(B\mid A_j)P(A_j)
+  \]
+  \end{block}
+  For mammography,
+  \[
+    P(+)=P(+\mid C)P(C)+P(+\mid C^c)P(C^c)
+  \]
+  This denominator represents \textbf{all possible paths that lead to a positive test}.
+\end{frame}
+
+\begin{frame}{The Formal Bayes's Theorem}
+  If $A_1,\ldots,A_k$ form a partition and $P(B)>0$, then
+  \begin{block}{Bayes's Theorem}
+    \[
+      P(A_i\mid B)
+      =\frac{P(B\mid A_i)P(A_i)}
+      {\sum_{j=1}^{k}P(B\mid A_j)P(A_j)}
+  \]
+  \end{block}
+  \begin{itemize}
+    \item Numerator: the particular path $A_i$ followed by $B$.
+    \item Denominator: all disjoint paths that lead to $B$.
+  \end{itemize}
+  \begin{block}{Practical Advice}
+    A tree diagram often reveals the same calculation more transparently than memorizing the formula.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Example 10.14: Mammography --- Question Before the Formula}
+  \begin{block}{Question}
+    Given a positive mammogram, what is the probability of breast cancer, $P(C\mid +)$?
+  \end{block}
+  For two underlying groups, cancer and no cancer,
+  \[
+    P(C\mid +)
+    =\frac{P(+\mid C)P(C)}
+    {P(+\mid C)P(C)+P(+\mid C^c)P(C^c)}
+  \]
+  \begin{itemize}
+    \item The \textbf{numerator} is the probability of the cancer-and-positive path.
+    \item The \textbf{denominator} is the probability of \textbf{all ways to obtain a positive test}.
+  \end{itemize}
+  \begin{block}{Same Logic as the Tree}
+    Bayes's formula is not a new kind of reasoning. It packages the tree-diagram calculation into one equation.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Example 10.14: Mammography --- Substitute the Values}
+  Substitute the model probabilities:
+  \[
+    P(C\mid +)
+    =\frac{(0.85)(0.0365)}
+    {(0.85)(0.0365)+(0.05)(0.9635)}
+  \]
+  The numerator is
+  \[
+    (0.85)(0.0365)=0.031025,
+  \]
+  while the denominator is
+  \[
+    0.031025+0.048175=0.0792
+  \]
+  Therefore,
+  \[
+    P(C\mid +)=\mathbf{0.3917}
+  \]
+  \begin{alertblock}{Keep the Question in View}
+    We are asking: among all positive tests, what fraction came from the cancer branch?
+  \end{alertblock}
+\end{frame}
+
+% =============================================================
+% PART VIII: MORE BAYES APPLICATIONS
+% =============================================================
+\section{Bayes Applications}
+
+\begin{frame}{The Base-Rate Effect}
+  Bayes's Theorem combines two kinds of information:
+  \begin{itemize}
+    \item the \textbf{base rate or prior probability}; and
+    \item how strongly the observed evidence is associated with each underlying state.
+  \end{itemize}
+  \vspace{0.2cm}
+  When the condition is rare, even a fairly good test can have a low positive predictive value because the much larger negative population can produce many false positives.
+  \begin{block}{Next Examples}
+    Lyme disease, environmental lead screening, fraud detection, and polygraph classification all use the same mathematical structure.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Bayes Example: Lyme Disease --- Question and Given Information}
+  \begin{block}{Question}
+    A person receives a positive Lyme-disease test. Under this model, what is the probability that the person actually has Lyme disease?
+  \end{block}
+  Consider a hypothetical region where
+  \[
+    P(L)=0.02,
+  \]
+  so 2\% of the population has Lyme disease.
+  The test has
+  \[
+    P(+\mid L)=0.90
+  \]
+  and
+  \[
+    P(+\mid L^c)=0.20
+  \]
+  The low 2\% base rate is important because 98\% of the population belongs to the no-Lyme group.
+\end{frame}
+
+\begin{frame}{Bayes Example: Lyme Disease --- Compare Positive Paths}
+  True-positive path:
+  \[
+    P(L\cap +)=0.02(0.90)=0.018
+  \]
+  False-positive path:
+  \[
+    P(L^c\cap +)=0.98(0.20)=0.196
+  \]
+  Therefore,
+  \[
+    P(L\mid +)=\frac{0.018}{0.018+0.196}=\mathbf{0.084}
+  \]
+  \begin{block}{Interpretation}
+    Under these hypothetical assumptions, only about 8.4\% of positive results come from people with Lyme disease. The rare base rate and high false-positive rate dominate the calculation.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Bayes Example: Lead Screening --- Question and Given Information}
+  \begin{block}{Question}
+    A water sample turns red in the screening test. Under this model, what is the probability that the sample actually contains dangerous lead levels?
+  \end{block}
+  Suppose 5\% of water samples contain dangerous lead levels:
+  \[
+    P(L)=0.05
+  \]
+  A screening reagent turns red with probability
+  \[
+    P(R\mid L)=0.95
+  \]
+  when lead is present, and
+  \[
+    P(R\mid L^c)=0.10
+  \]
+  when the water is safe.
+\end{frame}
+
+\begin{frame}{Bayes Example: Lead Screening --- Calculate and Interpret}
+  True-red path:
+  \[
+    P(L\cap R)=0.05(0.95)=0.0475
+  \]
+  False-red path:
+  \[
+    P(L^c\cap R)=0.95(0.10)=0.0950
+  \]
+  Hence
+  \[
+    P(L\mid R)=\frac{0.0475}{0.0475+0.0950}=\mathbf{0.333}
+  \]
+  \begin{block}{Interpretation}
+    Under this model, one third of red screening results correspond to contaminated samples. A red result is useful evidence, but confirmatory testing is still warranted.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Bayes Example: Fraud Detection --- Question and Given Information}
+  \begin{block}{Question}
+    A claim is flagged by the automated system. Under this model, what is the probability that the claim is actually fraudulent?
+  \end{block}
+  Suppose only 1\% of submitted claims are actually fraudulent:
+  \[
+    P(F)=0.01
+  \]
+  An automated system flags
+  \[
+    P(\text{Flag}\mid F)=0.85
+  \]
+  of fraudulent claims and also flags
+  \[
+    P(\text{Flag}\mid F^c)=0.05
+  \]
+  of legitimate claims.
+\end{frame}
+
+\begin{frame}{Bayes Example: Fraud Detection --- Calculate and Interpret}
+  Fraud-and-flag path:
+  \[
+    P(F\cap\text{Flag})=0.01(0.85)=0.0085
+  \]
+  Legitimate-but-flagged path:
+  \[
+    P(F^c\cap\text{Flag})=0.99(0.05)=0.0495
+  \]
+  Thus
+  \[
+    P(F\mid\text{Flag})
+    =\frac{0.0085}{0.0085+0.0495}
+    =\mathbf{0.147}
+  \]
+  \begin{alertblock}{Decision-Making Lesson}
+    A flag is evidence that should trigger review, not proof of fraud. In this hypothetical model, about 85\% of flagged claims are false positives.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Bayes Example: Polygraph Classification --- Question and Given Information}
+  \begin{block}{Question}
+    A person receives a positive deception indication. Under this model, what is the probability that the person is actually lying?
+  \end{block}
+  Suppose 10\% of a particular suspect pool is lying about the matter being tested:
+  \[
+    P(L)=0.10
+  \]
+  The classification procedure gives a positive indication with probability
+  \[
+    P(+\mid L)=0.80
+  \]
+  for a liar and
+  \[
+    P(+\mid L^c)=0.15
+  \]
+  for a truth-teller.
+\end{frame}
+
+\begin{frame}{Bayes Example: Polygraph Classification --- Calculate and Interpret}
+  Lying-and-positive path:
+  \[
+    P(L\cap +)=0.10(0.80)=0.08
+  \]
+  Truthful-but-positive path:
+  \[
+    P(L^c\cap +)=0.90(0.15)=0.135
+  \]
+  Therefore,
+  \[
+    P(L\mid +)=\frac{0.08}{0.08+0.135}=\mathbf{0.372}
+  \]
+  \begin{block}{Statistical Point}
+    Under these hypothetical rates, a positive classification corresponds to a 37.2\% probability of the underlying state. An imperfect classification is not conclusive evidence by itself.
+  \end{block}
+\end{frame}
+
+% =============================================================
+% PART IX: DEPENDENCE WITHOUT REPLACEMENT
+% =============================================================
+\section{Dependence Without Replacement}
+
+\begin{frame}{Independent Trials Are Not the Same as the Markov Property}
+  For idealized American roulette,
+  \[
+    P(\text{red})=\frac{18}{38}
+  \]
+  on every spin, regardless of previous colours. This is \textbf{independence}.
+  \vspace{0.2cm}
+  \begin{alertblock}{Terminology}
+    Independence should not be confused with the \textbf{Markov property}. A Markov process may depend on its current state; independent trials do not depend on previous outcomes at all.
+  \end{alertblock}
+  Changing the size of a wager after earlier outcomes does not alter the underlying probability of the next independent spin.
+\end{frame}
+
+\begin{frame}{Card Removal Example: Question and Given Information}
+  \begin{block}{Question}
+    After ten known non-10-valued cards are removed from a standard deck, what is the probability that the next card has value 10?
+  \end{block}
+  In a standard 52-card deck, 16 cards have value 10 (10, J, Q, K), so initially
+  \[
+    P(10)=\frac{16}{52}=\mathbf{0.307}
+  \]
+  Suppose ten known non-10-valued cards are removed.
+  \vspace{0.15cm}
+  \begin{itemize}
+    \item The deck now contains only 42 cards.
+    \item All 16 ten-valued cards are still present.
+  \end{itemize}
+  \begin{block}{Why This Is Dependence}
+    The first ten observed cards changed the composition of the remaining deck, so the probability of the next card depends on what was previously removed.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Card Removal Example: Calculate the Updated Probability}
+  After the ten non-10-valued cards have been removed,
+  \[
+    P(10\mid\text{10 non-10 cards removed})
+    =\frac{16}{42}
+    =\mathbf{0.381}
+  \]
+  The probability increased from 30.7\% to 38.1\% because the denominator decreased while all 16 favourable ten-valued cards remained.
+  \begin{block}{Learning Purpose}
+    Sampling without replacement creates dependence. Conditional probability updates the chance of future draws as the composition of the remaining population changes.
+  \end{block}
+  \small This change in one card probability alone does not establish the expected advantage of a complete blackjack strategy.
+\end{frame}
+
+% =============================================================
+% PART X: SYNTHESIS
+% =============================================================
+\section{Chapter Synthesis}
+
+\begin{frame}{Chapter 10 Synthesis: Which Probability Tool?}
+  \begin{table}
+    \centering
+    \scriptsize
+    \begin{tabularx}{\textwidth}{X X X}
+      \toprule
+      \textbf{Question} & \textbf{Key Idea} & \textbf{Useful Rule} \\
+      \midrule
+      Can $A$ and $B$ occur together? & Disjointness & Check $P(A\cap B)=0$ \\
+      Chance of $A$ or $B$? & Union & $P(A\cup B)=P(A)+P(B)-P(A\cap B)$ \\
+      Does knowing $A$ change $B$? & Independence & Compare $P(B\mid A)$ with $P(B)$ \\
+      Chance of $B$ given $A$? & Conditioning & $P(B\mid A)=P(A\cap B)/P(A)$ \\
+      Chance of both? & General multiplication & $P(A\cap B)=P(A)P(B\mid A)$ \\
+      Several stages? & Tree diagram & Multiply paths; add disjoint paths \\
+      Reverse a conditional? & Bayes & Use priors and all paths to the evidence \\
+      \bottomrule
+    \end{tabularx}
+  \end{table}
+\end{frame}
+
+\begin{frame}{A Reliable Problem-Solving Workflow}
+  \small
+  \begin{enumerate}
+    \item \textbf{Define the events clearly.}
+    \item \textbf{Translate the wording}: and, or, not, or given.
+    \item \textbf{Write down known probabilities} before calculating.
+    \item \textbf{Check whether independence is stated or justified.}
+    \item For $P(B\mid A)$, identify the \textbf{condition $A$ first}.
+    \item For a tree, verify that outgoing branches from each node \textbf{sum to 1}.
+    \item \textbf{Keep extra digits} during intermediate steps; round at the end.
+    \item \textbf{Interpret the answer in context}; association is not automatically causation or an individual diagnosis.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Final Conceptual Connection}
+  \begin{block}{Independence}
+    Conditioning does \textbf{not} change the probability:
+    \[
+      P(B\mid A)=P(B)
+  \]
+  \end{block}
+  \begin{block}{Conditional Probability}
+    New information changes the sample space and may change the probability.
+  \end{block}
+  \begin{block}{Bayes's Theorem}
+    Reverses a conditional probability by combining the prior probability with \textbf{all paths that could have produced the observed evidence}.
+  \end{block}
+  \centering
+  \textbf{These ideas form the conceptual backbone of Chapter 10.}
+\end{frame}
+
+\end{document}
