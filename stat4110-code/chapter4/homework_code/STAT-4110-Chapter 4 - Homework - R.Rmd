@@ -224,3 +224,114 @@ legend("topright", legend = c("MCMC Samples", "Target N(0,4)"),
 
 grid()
 ```
+
+
+### Hybrid Estimator Example - Online Retailer Sales
+
+An online retailer collects daily sales data (in thousands of dollars) for a certain product:
+$$
+x = (x_1, x_2, \dots, x_n)
+$$
+
+The retailer wants to estimate the mean sales but is concerned about extreme high sales skewing the average. To improve accuracy, a **hybrid bootstrap estimator** is proposed:
+
+- The **lower 90\% of sales** (non-extreme) are resampled nonparametrically.  
+- The **top 10\% of sales** (extreme values) are resampled parametrically using a Normal distribution fitted to the top 10\% of the data.
+
+Your task is to estimate the **bias** and **standard deviation** of the hybrid mean using $N$ bootstrap samples.
+
+---
+
+### Pseudocode: Hybrid Bootstrap Estimator for Mean Sales
+
+**Input:** Data $x = (x_1, \dots, x_n)$, number of bootstrap samples $N$  
+**Output:** Bias and standard deviation estimates of hybrid mean
+
+1. Sort $x$ and define threshold $u$ as the $90\%$ empirical quantile  
+2. Split the data:  
+   - `lower_data` = values $\leq u$  
+   - `top_data` = values $> u$  
+3. Fit a Normal distribution to `top_data` to get mean $\mu_\text{top}$ and standard deviation $\sigma_\text{top}$  
+4. Compute the hybrid mean on the original data:  
+$$
+\hat{\theta}_n(x) = \text{mean}(\text{lower_data} \cup \text{top_data})
+$$
+5. Initialize array $\theta^*$ to store bootstrap estimates  
+6. **For** $b = 1$ to $N$:  
+
+    a. Draw bootstrap sample from `lower_data` (nonparametric)  
+    b. Simulate bootstrap sample from Normal($\mu_\text{top}, \sigma_\text{top}$) for `top_data`  
+    c. Combine lower and top bootstrap samples to form $x_b^*$ 
+
+    d. Compute hybrid mean $\hat{\theta}_b^*$ from $x_b^*$ 
+7. Compute bias estimate:  
+$$
+\text{Bias}(\hat{\theta}_n) = \frac{1}{N}\sum_{b=1}^N \hat{\theta}_b^* - \hat{\theta}_n
+$$
+8. Compute standard deviation:  
+$$
+\text{s.d.}(\hat{\theta}_n) = \sqrt{\frac{1}{N-1} \sum_{b=1}^N \left(\hat{\theta}_b^* - \overline{\hat{\theta}^*}\right)^2}
+$$
+9. **Return** bias and standard deviation estimates
+
+```{r, out.width="100%"}
+hybrid_bootstrap <- function(x, alpha0, N) {
+  x <- as.numeric(x)
+  
+  # step 1: threshold for hybrid estimator
+  u <- quantile(x, alpha0)
+  lower_data <- x[x <= u]  # lower 90% nonparametric
+  top_data <- x[x > u]     # upper 10% parametric
+  
+  # step 2: parameters for parametric top 10%
+  mu_top <- mean(top_data)
+  sigma_top <- sd(top_data)
+  
+  # step 3: hybrid mean on original data
+  theta_hat <- mean(c(lower_data, top_data))
+  
+  # step 4: Bootstrap loop
+  theta_star <- numeric(N)
+  
+  for (b in 1:N) {
+    
+    # resample lower 90% nonparametrically
+    lower_sample <- sample(lower_data,  size = length(lower_data), replace = TRUE)
+    
+    # simulate top 10% parametrically
+    top_sample <- rnorm(length(top_data), mean = mu_top, sd = sigma_top)
+    
+    # combine lower and top
+    x_star <- c(lower_sample, top_sample)
+    
+    # hybrid mean for bootstrap sample
+    theta_star[b] <- mean(x_star)
+  }
+  
+  # step 5: bias and standard deviation
+  bias_estimate <- mean(theta_star) - theta_hat
+  sd_estimate <- sd(theta_star)
+  
+  return(list(bias = bias_estimate, sd = sd_estimate, theta_hat = theta_hat, theta_star = theta_star))
+}
+
+# example data
+N <- 1000
+alpha <- 0.9
+x <- c(12, 15, 14, 13, 12, 16, 120, 14, 13, 12, 15, 18, 200, 14, 13, 16, 14, 15, 12, 13)
+result <- hybrid_bootstrap(x, alpha0 = alpha, N = N)
+cat("Bootstrap Bias Estimate:", result$bias, "\n")
+cat("Bootstrap Standard Deviation:", result$sd, "\n")
+cat("Original Mean:", result$theta_hat)
+
+# histogram of bootstrap estimates
+hist(result$theta_star, breaks = 30, col = "skyblue", border = "black",
+     main = "Bootstrap Estimates of Mean", xlab = "Mean")
+abline(v = result$theta_hat, col = "red", lty = 2, lwd = 2)
+legend("topright", legend = "mean from data", col = "red", lty = 2, lwd = 2)
+
+# bias
+running_mean <- cumsum(result$theta_star) / seq_along(result$theta_star)
+plot(running_mean - result$theta_hat, type = "l", 
+     main = "Bias of Mean Estimator", xlab = "Bootstrap Iteration", ylab = "Bias")
+```
