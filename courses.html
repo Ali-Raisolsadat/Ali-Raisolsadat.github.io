@@ -4,53 +4,429 @@
   <title>Ali Raisolsadat - Courses</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <link href='https://fonts.googleapis.com/css?family=Oswald:700' rel='stylesheet' type='text/css'>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+
   <style>
-    body { font-family: Arial, sans-serif; }
-    .sidebar { background-color: #f8f8f8; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
-    .course { background-color: #ffffff; border: 1px solid #ddd; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
-    .course h2 { color: #2c3e50; }
-    .course h4 { color: #34495e; margin-top: 15px; }
-    .course ul { margin-top: 10px; }
-    .course ul li { margin-bottom: 5px; }
-    .sidebar a { display: block; margin-bottom: 5px; color: #337ab7; }
+
+    :root {
+      --text: #25313c;
+      --muted: #66727d;
+      --heading: #1f2d3a;
+      --accent: #315f7d;
+      --border: #d9e0e5;
+      --background: #f7f8fa;
+      --surface: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font-family: "Inter", Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover,
+    a:focus {
+      text-decoration: underline;
+    }
+
+    .site-header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-container {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 20px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: #4d5964;
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .nav-links a.active {
+      color: var(--heading);
+    }
+
+    .page {
+      width: min(1100px, calc(100% - 32px));
+      margin: 42px auto 60px;
+      display: grid;
+      grid-template-columns: minmax(0, 2.25fr) minmax(250px, 0.75fr);
+      gap: 34px;
+      align-items: start;
+    }
+
+    .main-content {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 38px 42px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 24px;
+    }
+
+    .sidebar-card {
+      padding: 22px;
+      margin-bottom: 20px;
+      background: #f8f8f8;
+      border: 0;
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 170px;
+      gap: 30px;
+      align-items: start;
+      padding-bottom: 30px;
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .intro h1 {
+      margin: 0 0 5px;
+      color: var(--heading);
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 2rem;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+
+    .intro-role {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .intro p:last-child {
+      margin-bottom: 0;
+    }
+
+    .profile-photo {
+      width: 100%;
+      max-width: 170px;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+
+    section {
+      margin-bottom: 36px;
+    }
+
+    section:last-child {
+      margin-bottom: 0;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      color: var(--heading);
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 1.45rem;
+      font-weight: 600;
+    }
+
+    h3 {
+      margin: 0 0 4px;
+      color: var(--heading);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 0 0 15px;
+    }
+
+    .entry {
+      margin-bottom: 25px;
+    }
+
+    .entry:last-child {
+      margin-bottom: 0;
+    }
+
+    .entry-meta {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    ul {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 7px;
+    }
+
+    .education-item {
+      margin-bottom: 18px;
+    }
+
+    .education-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .publication {
+      padding-left: 16px;
+      border-left: 3px solid #b7c9d6;
+    }
+
+    .skills-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px 24px;
+      margin-top: 0;
+      padding-left: 20px;
+    }
+
+    .sidebar-name {
+      margin: 0 0 18px;
+      color: var(--heading);
+      font-family: "Inter", Arial, sans-serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .sidebar-subtitle {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .sidebar-heading {
+      margin: 0 0 11px;
+      color: var(--heading);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .sidebar-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .sidebar-list li {
+      margin-bottom: 10px;
+    }
+
+    .sidebar-email-label {
+      display: block;
+      margin-bottom: 1px;
+      color: var(--heading);
+      font-weight: 600;
+    }
+
+    .sidebar-location {
+      margin: 13px 0 0;
+      line-height: 1.55;
+    }
+
+    .sidebar-links a {
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .sidebar-card hr {
+      margin: 20px 0;
+      border: 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 0 0 32px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    @media (max-width: 850px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .nav-container {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 0;
+      }
+
+      .nav-links {
+        gap: 14px;
+      }
+
+      .main-content {
+        padding: 26px 22px;
+      }
+
+      .intro {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-photo {
+        max-width: 150px;
+      }
+
+      .skills-list {
+        grid-template-columns: 1fr;
+      }
+    }
+  
+
+    .course {
+      margin-bottom: 38px;
+    }
+
+    .course:last-child {
+      margin-bottom: 0;
+    }
+
+    .course h3 {
+      margin-bottom: 18px;
+      font-size: 1.08rem;
+      line-height: 1.45;
+    }
+
+    .course h4 {
+      margin: 24px 0 12px;
+      color: var(--heading);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    details {
+      margin-bottom: 10px;
+      border: 1px solid var(--border);
+      background: #fafbfc;
+    }
+
+    details:hover {
+      background: #f7f9fa;
+    }
+
+    summary {
+      position: relative;
+      cursor: pointer;
+      padding: 11px 36px 11px 13px;
+      font-weight: 600;
+      list-style: none;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary h5 {
+      display: inline;
+      margin: 0;
+      color: var(--heading);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    summary::after {
+      content: "▸";
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 0.88rem;
+      transition: transform 0.15s ease;
+    }
+
+    details[open] summary::after {
+      transform: translateY(-50%) rotate(90deg);
+    }
+
+    details > ul {
+      margin: 0;
+      padding: 2px 16px 13px 34px;
+    }
+
+    details > ul li {
+      margin-bottom: 5px;
+    }
+
+    .course > ul {
+      margin-top: 8px;
+      padding-left: 20px;
+    }
+
+    .course a {
+      color: var(--accent);
+    }
+
   </style>
 </head>
+
 <body>
 
-<!-- Navigation -->
-<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-    <div class="collapse navbar-collapse" id="navbar-collapse">
-      <ul class="nav navbar-nav">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="projects.html">Projects</a></li>
-        <li class="active"><a href="courses.html">Courses</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
+  <header class="site-header">
+    <nav class="nav-container" aria-label="Primary navigation">
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a class="active" href="courses.html">Courses</a>
+      </div>
+    </nav>
+  </header>
 
-<div class="container" style="margin-top:30px;">
-  <div class="row">
+  <div class="page">
 
-        <!-- Main Content -->
-    <div class="col-md-8">
+    <main class="main-content">
 
-      <!-- STAT 4110 -->
-      <div class="course">
-        <h3>STAT 4110: Statistical Simulations (Winter Semester 2026) - Cass Science Hall 101</h3>
+      <section class="course">
+<h3>STAT 4110: Statistical Simulations (Winter Semester 2026) - Cass Science Hall 101</h3>
 
         <h4>Lectures</h4>
 
@@ -58,16 +434,16 @@
         <details>
           <summary><h5>Chapter 1: Random Number Generation</h5></summary>
           <ul>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 1-Part 1.pdf">Chapter 1 - Part 1</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 1-Part 2.pdf">Chapter 1 - Part 2</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 1-Part 3.pdf">Chapter 1 - Part 3</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 1-Part 4.pdf">Chapter 1 - Part 4</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 1-Part 5.pdf">Chapter 1 - Part 5</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 1-Part 6.pdf">Chapter 1 - Part 6</a></li>
-            <li><a href="stat4110-code/chapter1/slide_code/lecture1_lecture_code_python.ipynb">Chapter 1 - Jupyter</a></li>
-            <li><a href="stat4110-code/chapter1/slide_code/lecture1_lecture_code_R.html">Chapter 1 - RMarkdown</a></li>
-            <li><a href="stat4110-code/chapter1/homework_code/STAT-4110-Chapter 1 - Homework - Jupyter.ipynb">Chapter 1 - Homework Solutions - Jupyter</a></li>
-            <li><a href="stat4110-code/chapter1/homework_code/STAT-4110-Chapter 1 - Homework - R.html">Chapter 1 - Homework Solutions - R</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/STAT-4110-Chapter 1-Part 1.pdf">Chapter 1 - Part 1</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 1-Part 2.pdf">Chapter 1 - Part 2</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 1-Part 3.pdf">Chapter 1 - Part 3</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 1-Part 4.pdf">Chapter 1 - Part 4</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 1-Part 5.pdf">Chapter 1 - Part 5</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 1-Part 6.pdf">Chapter 1 - Part 6</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-code/chapter1/slide_code/lecture1_lecture_code_python.ipynb">Chapter 1 - Jupyter</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-code/chapter1/slide_code/lecture1_lecture_code_R.html">Chapter 1 - RMarkdown</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-code/chapter1/homework_code/STAT-4110-Chapter 1 - Homework - Jupyter.ipynb">Chapter 1 - Homework Solutions - Jupyter</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-code/chapter1/homework_code/STAT-4110-Chapter 1 - Homework - R.html">Chapter 1 - Homework Solutions - R</a></li>
           </ul>
         </details>
 
@@ -75,15 +451,15 @@
         <details>
           <summary><h5>Chapter 2: Simulating Statistical Models</h5></summary>
           <ul>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 2-Part 1.pdf">Chapter 2 - Part 1</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 2-Part 2.pdf">Chapter 2 - Part 2</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 2-Part 3.pdf">Chapter 2 - Part 3</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 2-Part 4.pdf">Chapter 2 - Part 4</a></li>
-            <li><a href="stat4110-code/chapter2/slide_code/lecture2_lecture_code_python.ipynb">Chapter 2 - Jupyter</a></li>
-            <li><a href="stat4110-code/chapter2/slide_code/lecture2_lecture_code_R.html">Chapter 2 - RMarkdown</a></li>
-            <li><a href="stat4110-code/chapter2/homework_code/STAT-4110-Chapter 2 - Homework - Jupyter.ipynb">Chapter 2 - Homework Solutions - Jupyter</a></li>
-            <li><a href="stat4110-code/chapter2/homework_code/STAT-4110-Chapter-2---Homework---R.html">Chapter 2 - Homework Solutions - R</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 2-Part 3-Homework-AR1-Proof.pdf">Chapter 2 Homework Problem 3 - AR(1) Process and Stationary Distribution</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 2-Part 1.pdf">Chapter 2 - Part 1</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 2-Part 2.pdf">Chapter 2 - Part 2</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 2-Part 3.pdf">Chapter 2 - Part 3</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 2-Part 4.pdf">Chapter 2 - Part 4</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-code/chapter2/slide_code/lecture2_lecture_code_python.ipynb">Chapter 2 - Jupyter</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-code/chapter2/slide_code/lecture2_lecture_code_R.html">Chapter 2 - RMarkdown</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-code/chapter2/homework_code/STAT-4110-Chapter 2 - Homework - Jupyter.ipynb">Chapter 2 - Homework Solutions - Jupyter</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-code/chapter2/homework_code/STAT-4110-Chapter-2---Homework---R.html">Chapter 2 - Homework Solutions - R</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 2-Part 3-Homework-AR1-Proof.pdf">Chapter 2 Homework Problem 3 - AR(1) Process and Stationary Distribution</a></li>
           </ul>
         </details>
 
@@ -91,17 +467,17 @@
         <details>
           <summary><h5>Chapter 3: Monte Carlo Methods</h5></summary>
           <ul>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 3-Part 1.pdf">Chapter 3 - Part 1</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 3-Part 2.pdf">Chapter 3 - Part 2</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 3-Part 3.pdf">Chapter 3 - Part 3</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 3-Part 4.pdf">Chapter 3 - Part 4</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 3-Part 5.pdf">Chapter 3 - Part 5</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 3-Part 6.pdf">Chapter 3 - Part 6</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 3-Part 7.pdf">Chapter 3 - Part 7</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 3-Part 8.pdf">Chapter 3 - Part 8</a></li>
-            <li><a href="stat4110-code/chapter3/slide_code/lecture3_lecture_code_python.ipynb">Chapter 3 - Jupyter</a></li>
-            <li><a href="stat4110-code/chapter3/slide_code/lecture3_lecture_code_R.html">Chapter 3 - RMarkdown</a></li>
-            <li><a href="stat4110-code/chapter3/homework_code/STAT-4110-Chapter 3 - Homework - Jupyter.ipynb">Chapter 3 - Homework Solutions</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 3-Part 1.pdf">Chapter 3 - Part 1</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 3-Part 2.pdf">Chapter 3 - Part 2</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 3-Part 3.pdf">Chapter 3 - Part 3</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 3-Part 4.pdf">Chapter 3 - Part 4</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 3-Part 5.pdf">Chapter 3 - Part 5</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 3-Part 6.pdf">Chapter 3 - Part 6</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 3-Part 7.pdf">Chapter 3 - Part 7</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 3-Part 8.pdf">Chapter 3 - Part 8</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-code/chapter3/slide_code/lecture3_lecture_code_python.ipynb">Chapter 3 - Jupyter</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-code/chapter3/slide_code/lecture3_lecture_code_R.html">Chapter 3 - RMarkdown</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-code/chapter3/homework_code/STAT-4110-Chapter 3 - Homework - Jupyter.ipynb">Chapter 3 - Homework Solutions</a></li>
           </ul>
         </details>
 
@@ -109,10 +485,10 @@
         <details>
           <summary><h5>Chapter 4: Markov Chain Monte Carlo (MCMC) Methods</h5></summary>
           <ul>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 4-Part 1.pdf">Chapter 4 - Part 1</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 4-Part 2.pdf">Chapter 4 - Part 2</a></li>
-            <li><a href="stat4110-code/chapter4/slide_code/lecture4_lecture_code_python.ipynb">Chapter 4 - Jupyter</a></li>
-            <li><a href="stat4110-code/chapter4/homework_code/STAT-4110-Chapter 4 - Homework - Jupyter.ipynb">Chapter 4 - Homework Solutions</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 4-Part 1.pdf">Chapter 4 - Part 1</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 4-Part 2.pdf">Chapter 4 - Part 2</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-code/chapter4/slide_code/lecture4_lecture_code_python.ipynb">Chapter 4 - Jupyter</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-code/chapter4/homework_code/STAT-4110-Chapter 4 - Homework - Jupyter.ipynb">Chapter 4 - Homework Solutions</a></li>
           </ul>
         </details>
 
@@ -120,115 +496,77 @@
         <details>
           <summary><h5>Chapter 5: Beyond Monte Carlo</h5></summary>
           <ul>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 5-Part 1.pdf">Chapter 5 - Part 1</a></li>
-            <li><a href="stat4110-lectures/STAT-4110-Chapter 5-Part 2.pdf">Chapter 5 - Part 2</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 5-Part 1.pdf">Chapter 5 - Part 1</a></li>
+            <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 5-Part 2.pdf">Chapter 5 - Part 2</a></li>
           </ul>
         </details>
 
-        <h4>Assignments</h4>
-        <ul>
-          <li><a href="stat4110-assignments/Stat 4110-Assignment 1-W2024">Assignment 1</a></li>
-        </ul>
-        
-        <h4>Course Project</h4>
-        <ul>
-          <li><a href="stat4110-assignments/Final Project/STAT 4110 - Final Project.pdf">Final Project Description</a></li>
-        </ul>
         <h4>Extra Course Material</h4>
         <ul>
-          <li><a href="stat4110-lectures/STAT-4110-Chapter 0-Part 1.pdf">Course Information</a></li>
-          <li><a href="stat4110-lectures/STAT-4110-Chapter 0-Part 2.pdf">Buffon's Needle Problem</a></li>
+          <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 0-Part 1.pdf">Course Information</a></li>
+          <li><a href="course material/stat4110/stat4110-lectures/stat4110-lectures/STAT-4110-Chapter 0-Part 2.pdf">Buffon's Needle Problem</a></li>
         </ul>
-      </div>
+      </section>
 
-      <!-- STAT 4110 -->
-     <!-- <div class="course">
-        <h3>STAT 1910: Introduction to Statistics (Winter Semester 2026)</h3>
+      <section class="course">
+<h3>STAT 1210: Introduction to Statistics for Life Sciences (Fall Semester 2026)</h3>
 
-      </div>-->
+        <!-- Part 1-->
+        <details>
+          <summary><h5>Part 1: Exploring Data</h5></summary>
+          <ul>
+            <li><a href="course material/stat1210/stat1210-lectures/chapter 1/chapter-1-beamer.pdf">Chapter 1 - Lecture</a></li>
+            <li><a href="course material/stat1210/stat1210-lectures/chapter 1/chapter-1-markdown.html">Chapter 1 - Notes</a></li>
+            <li><a href="course material/stat1210/stat1210-lectures/chapter 2/chapter-2-beamer.pdf">Chapter 2 - Lecture</a></li>
+            <li><a href="course material/stat1210/stat1210-lectures/chapter 2/chapter-2-markdown.html">Chapter 2 - Notes</a></li>
+            <li><a href="course material/stat1210/stat1210-lectures/chapter 3/chapter-3-beamer.pdf">Chapter 3 - Lecture</a></li>
+            <li><a href="course material/stat1210/stat1210-lectures/chapter 3/chapter-3-markdown.html">Chapter 3 - Notes</a></li>
+          </ul>
+        </details>
 
-    </div>
+        <!-- Part 2-->
+        <details>
+          <summary><h5>Part 2: Probability and Distributions</h5></summary>
+          <ul>
+            <li><a href="course material/stat1210/stat1210-lectures/chapter 9/chapter-9-beamer.pdf">Chapter 9 - Lecture</a></li>
+            <li><a href="course material/stat1210/stat1210-lectures/chapter 9/chapter-9-markdown.html">Chapter 9 - Notes</a></li>
+          </ul>
+        </details>
+      </section>
 
-    <style>
-    details {
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 8px 12px;
-      background-color: #f9f9f9;
-      transition: background-color 0.3s;
-    }
+    </main>
 
-    details:hover {
-      background-color: #f3f3f3;
-    }
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <p class="sidebar-name">Ali Raisolsadat</p>
 
-    summary {
-      cursor: pointer;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+        <p>
+          <span class="sidebar-email-label">Email:</span>
+          <a href="mailto:arraisolsadat@uwaterloo.ca"><strong>arraisolsadat@uwaterloo.ca</strong></a>
+        </p>
 
-    summary h5 {
-      display: inline;
-      margin: 0;
-    }
-
-    ul {
-      margin-top: 8px;
-      list-style-type: none;
-      padding-left: 10px;
-    }
-
-    li a {
-      text-decoration: none;
-      color: #007BFF;
-      display: block;
-      padding: 4px 0;
-      transition: color 0.2s;
-    }
-
-    li a:hover {
-      color: #0056b3;
-      text-decoration: underline;
-    }
-
-    /* Optional: add a small triangle indicator */
-    summary::after {
-      content: "▸";
-      font-size: 0.9em;
-      transition: transform 0.2s;
-    }
-    details[open] summary::after {
-      transform: rotate(90deg);
-    }
-    </style>
-
-
-    <!-- Sidebar -->
-    <div class="col-md-4">
-      <div class="sidebar">
-        <div style="font-family: 'Oswald', sans-serif; font-size: 28px;"><b>Ali Raisolsadat</b></div><br>
-        <p><b>Email:</b> <a href="mailto:arraisolsadat@uwaterloo.ca">arraisolsadat@uwaterloo.ca</a></p>
-        <p><b>Affiliation:</b><br>
+        <p class="sidebar-location">
           Centre of Computational Mathematics<br>
           University of Waterloo<br>
           200 University Ave W, Waterloo, Ontario, Canada
         </p>
+
         <hr>
-        <h4>Links</h4>
-        <dd><a href="https://www.linkedin.com/in/ali-raisolsadat/">LinkedIn Profile</a></dd>
-        <dd><a href="https://github.com/Ali-Raisolsadat">GitHub Repository</a></dd>
-        <dd><a href="https://ali-raisolsadat.shinyapps.io/east-coast-climate-dash/">East Coast Climate Dashboard</a></dd>
-        <dd><a href="https://ali-raisolsadat.shinyapps.io/sample-movie-dash/">Movie Data Analysis Dashboard</a></dd>
-        <a href="Resume-Ali-Raisolsadat-2025-11-07-short.pdf">Brief Resume</a>
+
+        <div class="sidebar-links">
+          <a href="https://www.linkedin.com/in/ali-raisolsadat/">LinkedIn Profile</a>
+          <a href="https://github.com/Ali-Raisolsadat">GitHub Repository</a>
+          <a href="https://ali-raisolsadat.shinyapps.io/east-coast-climate-dash/">East Coast Climate Dashboard</a>
+          <a href="https://ali-raisolsadat.shinyapps.io/sample-movie-dash/">Movie Data Analysis Dashboard</a>
+        </div>
       </div>
-    </div>
+    </aside>
 
   </div>
-</div>
+
+  <footer class="footer">
+    © 2026 Ali Raisolsadat
+  </footer>
 
 </body>
 </html>

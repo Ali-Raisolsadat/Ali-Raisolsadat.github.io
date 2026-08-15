@@ -1,63 +1,4 @@
 %========================
-% Theme
-%========================
-\documentclass[8pt]{beamer}
-\setbeamersize{text margin left=10mm,text margin right=10mm} 
-\usetheme[progressbar=frametitle]{metropolis}
-\usepackage{appendixnumberbeamer} % handles appendix slide numbering
-
-%========================
-% Packages: Icons and Tables
-%========================
-\usepackage{booktabs}        % professional tables
-\usepackage[scale=1]{ccicons} % Creative Commons icons
-
-%========================
-% Packages: Plots and TikZ
-%========================
-\usepackage{pgfplots}
-\usepgfplotslibrary{dateplot}
-
-\usepackage{tikz}
-\usetikzlibrary{positioning}
-
-%========================
-% Packages: Algorithms
-%========================
-\usepackage{algorithm}
-\usepackage{algpseudocode}
-
-%========================
-% Packages: Math
-%========================
-\usepackage{amsmath,amsfonts,amsthm,amssymb}
-\newtheorem{prop}{Proposition}
-
-%========================
-% Custom commands
-%========================
-\usepackage{xspace}
-\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
-
-%========================
-% Custom footline
-%========================
-\setbeamertemplate{footline}
-{%
-  \leavevmode%
-  \hbox{%
-  \begin{beamercolorbox}[wd=.35\paperwidth,ht=2.5ex,dp=1.5ex,center]{author in head/foot}%
-    \usebeamerfont{author in head/foot}\insertshortauthor
-  \end{beamercolorbox}%
-  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,center]{title in head/foot}%
-    \usebeamerfont{title in head/foot}\insertshorttitle
-  \end{beamercolorbox}%
-  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,right]{date in head/foot}%
-    \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber
-  \end{beamercolorbox}}%
-  \vskip0pt%
-}
-%========================
 % Document class and theme
 %========================
 \documentclass[8pt]{beamer}
@@ -392,7 +333,7 @@ and so $X$ has the desired distribution.
 \begin{frame}[fragile]{Generation of Random Numbers with Discrete Distributions}
 \textbf{Example:} If $P\{X = j\} = 1/n,\ j = 0,\dots,n-1$, then
 \begin{equation*}
-X = j \quad \text{if} \quad \frac{j-1}{n} \leq U < \frac{j}{n}
+X = j \quad \text{if} \quad \frac{j}{n} \leq U < \frac{j+1}{n}
 \end{equation*}
 If U is uniformly distributed in $[0,1]$ we can see that by defining $X=\lfloor nU \rfloor$, the random variable $X$ follows the target distribution. 
 $$
@@ -579,7 +520,7 @@ The expected number of comparisons is
 \end{equation*}
 
 \begin{center}
-\includegraphics[width=0.5\textwidth]{meme_3.jpg}
+% \includegraphics[width=0.5\textwidth]{meme_3.jpg}
 \end{center}
 \end{frame}
 
