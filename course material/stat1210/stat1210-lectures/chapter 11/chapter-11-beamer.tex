@@ -1,0 +1,927 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{array}
+
+\title[Chapter 11: The Normal Distributions]{\textbf{Chapter 11: The Normal Distributions}}
+\subtitle{The Practice of Statistics in the Life Sciences \\ by Brigitte Baldi and David S. Moore}
+\author{Instructor: Ali Raisolsadat}
+\date{Part II: Probability and Distributions}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+\graphicspath{{./}{figures/}}
+
+\newcommand{\lectureimage}[2][0.90\linewidth]{%
+  \IfFileExists{#2}{%
+    \includegraphics[width=#1]{#2}%
+  }{%
+    \fbox{\parbox[c][0.34\textheight][c]{0.88\linewidth}{%
+      \centering\small
+      Figure file: \texttt{\detokenize{#2}}\\[0.15cm]
+      Generate this figure by knitting the revised Chapter 11 RMarkdown notes.
+    }}%
+  }%
+}
+
+\begin{document}
+
+\section{Introduction}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Why Study Normal Distributions}
+Normal distributions are among the most important continuous probability models in introductory statistics.
+
+\vspace{0.2cm}
+Many measurements in the life sciences are reasonably described by a symmetric distribution with most observations near the centre and fewer observations farther away. Examples include some heights, some laboratory measurements and some measurement errors.
+
+\vspace{0.2cm}
+\begin{block}{Chapter Goal}
+This chapter connects four ideas: the shape of a Normal curve, the area under the curve, z-scores and probability calculations.
+\end{block}
+\end{frame}
+
+\begin{frame}{Chapter Roadmap}
+The chapter develops one coherent story.
+\begin{enumerate}
+  \item The geometry of a Normal curve
+  \item The 68--95--99.7 rule for quick probability estimates
+  \item Standardization and z-scores
+  \item Exact probabilities and percentiles using R or the Standard Normal table
+\end{enumerate}
+\vspace{0.15cm}
+\begin{alertblock}{Important Reminder}
+A Normal distribution is a model. A histogram or density plot should be checked before a Normal model is treated as reasonable for observed data.
+\end{alertblock}
+\end{frame}
+
+\section{The Anatomy of a Normal Curve}
+
+\begin{frame}{What Is a Normal Curve}
+A Normal curve is a density curve that is
+\begin{itemize}
+  \item symmetric
+  \item single-peaked
+  \item bell-shaped
+\end{itemize}
+
+Every Normal distribution is determined by two population parameters.
+\begin{itemize}
+  \item The mean $\mu$ determines the location of the centre
+  \item The standard deviation $\sigma$ determines the spread
+\end{itemize}
+
+The total area under the curve is 1, so area can be interpreted as probability.
+\end{frame}
+
+\begin{frame}{Anatomy of a Normal Curve}
+  \centering
+  \lectureimage[0.92\linewidth]{fig_ch11_normal_anatomy.png}
+\end{frame}
+
+\begin{frame}{Key Geometric Features}
+Several geometric features are worth remembering.
+\begin{itemize}
+  \item Symmetry around $\mu$ means the mean and median are equal
+  \item The two tails approach the horizontal axis without touching it
+  \item Equal distances to the left and right of the mean enclose equal areas
+  \item The points $\mu-\sigma$ and $\mu+\sigma$ are the inflection points
+\end{itemize}
+
+Once $\mu$ and $\sigma$ are known, the shape of the Normal curve is completely determined.
+\end{frame}
+
+\begin{frame}{Location and Spread}
+The mean moves the curve left or right without changing its bell shape.
+
+\vspace{0.15cm}
+The standard deviation changes the width of the curve.
+\begin{itemize}
+  \item A larger standard deviation produces a wider and flatter curve
+  \item A smaller standard deviation produces a narrower and taller curve
+\end{itemize}
+
+The taller appearance does not mean more probability. Every density curve still has total area 1.
+\end{frame}
+
+\begin{frame}{Location and Spread Visualized}
+  \centering
+  \lectureimage[0.92\linewidth]{fig_ch11_two_normals.png}
+\end{frame}
+
+\begin{frame}{Why Is the Narrower Curve Taller}
+A density curve must always have total area 1.
+
+\vspace{0.2cm}
+When the distribution is spread across a wider range of values, the height must decrease to keep the total area fixed.
+
+\vspace{0.2cm}
+When the distribution is concentrated over a narrower range of values, the peak must rise.
+
+\begin{block}{Key Idea}
+Width and height work together so that the total area under the curve stays equal to 1.
+\end{block}
+\end{frame}
+
+\begin{frame}{Inflection Points and the Standard Deviation}
+The standard deviation also has a geometric interpretation.
+
+\vspace{0.15cm}
+An \textbf{inflection point} is a point where the direction of curvature changes. In every Normal curve, the inflection points occur exactly one standard deviation from the mean.
+
+\[
+\mu-\sigma
+\]
+
+\[
+\mu+\sigma
+\]
+
+This property is special to the Normal family and should not be applied automatically to other distributions.
+\end{frame}
+
+\begin{frame}{Inflection Points on the Curve}
+  \centering
+  \lectureimage[0.88\linewidth]{fig_ch11_inflection.png}
+\end{frame}
+
+\begin{frame}{Why Normal Distributions Matter}
+Normal models are useful for several connected reasons.
+\begin{itemize}
+  \item Many continuous measurements are approximately Normal within an appropriate population
+  \item Repeated measurement error often produces approximately Normal patterns
+  \item Later in the course, many sampling distributions become approximately Normal
+  \item Standardization allows observations from different settings to be compared on a common scale
+\end{itemize}
+
+\begin{alertblock}{Model Checking}
+Many life-science variables are not approximately Normal. Skewed data should not be forced into a Normal interpretation.
+\end{alertblock}
+\end{frame}
+
+\section{The 68--95--99.7 Rule}
+
+\begin{frame}{The 68--95--99.7 Rule}
+Every Normal distribution has the same approximate area pattern when distances are measured in standard-deviation units.
+
+\[
+P(\mu-\sigma<X<\mu+\sigma)\approx 0.68
+\]
+
+\[
+P(\mu-2\sigma<X<\mu+2\sigma)\approx 0.95
+\]
+
+\[
+P(\mu-3\sigma<X<\mu+3\sigma)\approx 0.997
+\]
+
+These are approximations, not exact probabilities.
+\end{frame}
+
+\begin{frame}{The 68--95--99.7 Rule Visualized}
+  \centering
+  \lectureimage[0.92\linewidth]{fig_ch11_empirical_rule.png}
+\end{frame}
+
+\begin{frame}{Using Symmetry to Find Tail Areas}
+The rule gives several other useful areas.
+\begin{itemize}
+  \item The middle 68\% leaves 32\% outside, so each tail beyond $\pm1\sigma$ contains about 16\%
+  \item The middle 95\% leaves 5\% outside, so each tail beyond $\pm2\sigma$ contains about 2.5\%
+  \item The middle 99.7\% leaves 0.3\% outside, so each tail beyond $\pm3\sigma$ contains about 0.15\%
+\end{itemize}
+
+This rule is most useful when a boundary is exactly one, two or three standard deviations from the mean.
+\end{frame}
+
+\begin{frame}{Example 11.1: Heights of Young Women}
+\begin{block}{Question}
+A model for the heights of young women aged 18 to 24 is approximately Normal with mean 64.5 inches and standard deviation 2.5 inches. What interval contains approximately the middle 95\% of heights and what proportion lies above the upper end of that interval?
+\end{block}
+
+\begin{block}{Explanation}
+The middle 95\% of a Normal distribution lies within two standard deviations of the mean. The remaining 5\% is split equally between the two tails because the curve is symmetric.
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 11.1: Solution}
+The lower boundary is
+\[
+64.5-2(2.5)=59.5\text{ inches}
+\]
+
+The upper boundary is
+\[
+64.5+2(2.5)=69.5\text{ inches}
+\]
+
+Approximately 95\% of heights lie between 59.5 inches and 69.5 inches.
+
+The upper tail contains half of the remaining 5\%, so the proportion above 69.5 inches is
+\[
+\frac{0.05}{2}=0.025
+\]
+
+Under the model, about 2.5\% of young women are taller than 69.5 inches.
+\end{frame}
+
+\begin{frame}{Example 11.2: Adding Areas Together}
+\begin{block}{Question}
+The same height model has mean 64.5 inches and standard deviation 2.5 inches. What is the approximate probability that a randomly selected young woman is taller than 62 inches?
+\end{block}
+
+\begin{block}{Explanation}
+A height of 62 inches is one standard deviation below the mean because $64.5-2.5=62$. The desired region is the area to the right of $\mu-\sigma$, which can be found by combining the middle 68\% and the upper 16\%.
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 11.2: Visual Guide}
+  \centering
+  \lectureimage[0.90\linewidth]{fig_ch11_heights_62.png}
+\end{frame}
+
+\begin{frame}{Example 11.2: Solution}
+The area from $\mu-\sigma$ to $\mu+\sigma$ is about 68\%.
+
+The area above $\mu+\sigma$ is about 16\%.
+
+Adding these two regions gives
+\[
+0.68+0.16=0.84
+\]
+
+The approximate probability that a randomly selected young woman is taller than 62 inches is 0.84.
+
+\vspace{0.15cm}
+\begin{block}{Interpretation}
+This is an empirical-rule estimate. The exact Normal probability is slightly different, but 0.84 is a very good approximation.
+\end{block}
+\end{frame}
+
+\begin{frame}{Notation for a Normal Distribution}
+Statisticians often write a Normal model in compact notation.
+\[
+N(\mu,\sigma)
+\]
+
+In these notes, the second parameter is the \textbf{standard deviation}.
+
+For the young-women height model, we write
+\[
+N(64.5,2.5)
+\]
+
+This notation is convenient because it shows the centre and spread at a glance.
+\end{frame}
+
+\begin{frame}{A Normal Distribution Is an Approximation}
+Real data are never mathematically perfect.
+
+\vspace{0.2cm}
+A Normal model is still useful when it gives a good approximation to the shape of the distribution. The decision to use a Normal model should come from the data and the context rather than from habit.
+
+\vspace{0.2cm}
+Approximate models are common in statistics. Their value comes from being useful, interpretable and reasonably accurate for the purpose at hand.
+\end{frame}
+
+\section{The Standard Normal Distribution}
+
+\begin{frame}{Standardizing and Z-Scores}
+A \textbf{z-score} measures how far an observation lies from the mean in standard-deviation units.
+
+\[
+z=\frac{x-\mu}{\sigma}
+\]
+
+A positive z-score means the observation is above the mean.
+
+A negative z-score means the observation is below the mean.
+
+A z-score of 0 means the observation is exactly at the mean.
+\end{frame}
+
+\begin{frame}{Example 11.3: Standardizing Women's Heights}
+\begin{block}{Question}
+Young women's heights are modelled as approximately Normal with mean 64.5 inches and standard deviation 2.5 inches. What are the z-scores for 70 inches and 60 inches?
+\end{block}
+
+\begin{block}{Explanation}
+The standardizing formula is used for each height. The resulting z-score tells us how many standard deviations that height lies above or below the mean.
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 11.3: Solution}
+For 70 inches,
+\[
+z=\frac{70-64.5}{2.5}=2.2
+\]
+
+For 60 inches,
+\[
+z=\frac{60-64.5}{2.5}=-1.8
+\]
+
+A height of 70 inches is 2.2 standard deviations above the mean. A height of 60 inches is 1.8 standard deviations below the mean.
+\end{frame}
+
+\begin{frame}{Standardizing Women's Heights Visualized}
+  \centering
+  \lectureimage[0.92\linewidth]{fig_ch11_zscores.png}
+\end{frame}
+
+\begin{frame}{Why Standardize}
+Standardizing places observations from different settings on a common scale.
+
+\vspace{0.15cm}
+A raw value such as 28 points on one test cannot be directly compared with 1250 points on another test. Their z-scores can be compared because both are measured in standard-deviation units from their own means.
+
+\vspace{0.15cm}
+Standardization changes centre and scale. It does not magically make non-Normal data become Normal.
+\end{frame}
+
+\begin{frame}{The Standard Normal Distribution}
+When a Normal random variable is standardized, the result follows the \textbf{standard Normal distribution}.
+
+\[
+Z\sim N(0,1)
+\]
+
+This distribution has mean 0 and standard deviation 1.
+
+Once values are converted to z-scores, every Normal-distribution problem can be related to the same common curve.
+\end{frame}
+
+\begin{frame}{Applications of Z-Scores and the 68--95--99.7 Rule}
+The ideas in this section are not only theoretical.
+
+\vspace{0.15cm}
+Z-scores and the empirical rule are used to
+\begin{itemize}
+  \item assess whether a measurement is unusually low or unusually high
+  \item compare observations from different scales
+  \item set review thresholds and safety limits
+  \item interpret standard scores such as T-scores
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Application: Assessing Patient Health}
+\begin{block}{Question}
+Healthy adult male hemoglobin levels are modelled as Normal with mean 15.0 g/dL and standard deviation 1.0 g/dL. A patient has hemoglobin 13.0 g/dL. What is the z-score and what proportion of healthy men have a lower level?
+\end{block}
+
+\begin{block}{Solution}
+\[
+z=\frac{13.0-15.0}{1.0}=-2.0
+\]
+A z-score of $-2.0$ is two standard deviations below the mean. By the 68--95--99.7 rule, about 95\% lies within $\pm2\sigma$, leaving about 5\% outside. The lower tail therefore contains about 2.5\%.
+\end{block}
+\end{frame}
+
+\begin{frame}{Application: Quality Control of Solutions}
+\begin{block}{Question}
+A saline solution has mean concentration 0.900 M and standard deviation 0.005 M. A technician measures 0.912 M. Is this unusual?
+\end{block}
+
+\begin{block}{Solution}
+\[
+z=\frac{0.912-0.900}{0.005}=2.4
+\]
+A z-score of 2.4 is well above 2 standard deviations from the mean, so this concentration is unusual under the model and should be checked.
+\end{block}
+\end{frame}
+
+\begin{frame}{Application: Comparing Different Scales}
+\begin{block}{Question}
+A student scores 1250 on the SAT where the mean is 1050 and the standard deviation is 100. The same student scores 28 on the ACT where the mean is 21 and the standard deviation is 5. Which score is more impressive relative to its own distribution?
+\end{block}
+
+\begin{block}{Solution}
+\[
+z_{SAT}=\frac{1250-1050}{100}=2.0
+\]
+\[
+z_{ACT}=\frac{28-21}{5}=1.4
+\]
+The SAT score has the larger z-score, so it is stronger relative to its reference distribution.
+\end{block}
+\end{frame}
+
+\begin{frame}{Application: Setting a Review Threshold for Claims}
+\begin{block}{Question}
+Minor auto claims are modelled as Normal with mean 1500 dollars and standard deviation 200 dollars. What claim amount marks roughly the most expensive 2.5\%?
+\end{block}
+
+\begin{block}{Explanation and Solution}
+The upper 2.5\% begins at about $z=2$ under the 68--95--99.7 rule.
+\[
+2=\frac{x-1500}{200}
+\]
+\[
+x=1900
+\]
+Claims above about 1900 dollars fall in the upper 2.5\% region of this approximate model.
+\end{block}
+\end{frame}
+
+\begin{frame}{Application: Laser Manufacturing Tolerances}
+\begin{block}{Question}
+Laser wavelengths are modelled as Normal with mean 650 nm and standard deviation 2 nm. A sensor works safely for wavelengths from 644 nm to 656 nm. What percentage of lasers fall in this safe range?
+\end{block}
+
+\begin{block}{Solution}
+The endpoints correspond to
+\[
+z=\frac{644-650}{2}=-3
+\]
+\[
+z=\frac{656-650}{2}=3
+\]
+The interval from $-3\sigma$ to $+3\sigma$ contains about 99.7\% of the distribution, so about 99.7\% of lasers fall in the safe range.
+\end{block}
+\end{frame}
+
+\begin{frame}{Application: Bone Mineral Density and T-Scores}
+T-scores are standardized comparisons used in bone-density assessment.
+
+\vspace{0.15cm}
+Clinical interpretation often uses the following cutoffs.
+\begin{itemize}
+  \item Normal: T-score at least $-1.0$
+  \item Osteopenia: T-score between $-2.5$ and $-1.0$
+  \item Osteoporosis: T-score at most $-2.5$
+\end{itemize}
+
+These cutoffs are reference thresholds. They do not imply that every patient population has a perfect standard Normal distribution.
+\end{frame}
+
+\begin{frame}{Bone Mineral Density Categories}
+  \centering
+  \lectureimage[0.86\linewidth]{fig_ch11_dexa.png}
+\end{frame}
+
+\begin{frame}{Application: Setting a Warranty Threshold}
+\begin{block}{Question}
+Refrigerator lifespans are modelled as Normal with mean 5.0 years and standard deviation 1.2 years. What warranty length leaves about 16\% of refrigerators failing during the warranty period?
+\end{block}
+
+\begin{block}{Explanation}
+A left-tail area of 16\% is approximately one standard deviation below the mean under the 68--95--99.7 rule.
+\end{block}
+\end{frame}
+
+\begin{frame}{Warranty Threshold Visualized}
+  \centering
+  \lectureimage[0.88\linewidth]{fig_ch11_warranty.png}
+\end{frame}
+
+\begin{frame}{Application: Warranty Threshold Solution}
+The warranty boundary is
+\[
+5.0-1.2=3.8\text{ years}
+\]
+
+A warranty of about 3.8 years leaves roughly 16\% of refrigerators failing before that boundary under the model.
+\end{frame}
+
+\section{Finding Normal Probabilities}
+
+\begin{frame}{Areas Under a Normal Curve as Probabilities}
+For a continuous probability model, area under the density curve represents probability.
+
+\vspace{0.15cm}
+If $X$ follows a Normal distribution, then the probability that $X$ is below a value $x$ is the area to the left of $x$ under the curve.
+
+\vspace{0.15cm}
+R calculates these probabilities with the function \texttt{pnorm()}.
+\[
+\texttt{pnorm(q, mean, sd)}
+\]
+\end{frame}
+
+\begin{frame}{Cumulative Probabilities}
+Software computes cumulative probabilities.
+
+\vspace{0.15cm}
+The cumulative probability for a value $x$ is the area at or below $x$.
+
+\[
+P(X\le x)
+\]
+
+For continuous distributions, there is no difference between $P(X<x)$ and $P(X\le x)$ because a single point has area 0.
+\end{frame}
+
+\begin{frame}{Example 11.4: Osteoporosis as a Left-Tail Probability}
+\begin{block}{Question}
+Suppose women's T-scores in their 70s are approximated by a Normal model with mean $-2$ and standard deviation 1. What is the probability that a randomly selected woman has a T-score below $-2.5$?
+\end{block}
+
+\begin{block}{Explanation}
+This is a left-tail probability. The boundary value is known, so \texttt{pnorm()} is appropriate.
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 11.4: Plot of the Left-Tail Probability}
+  \centering
+  \lectureimage[0.88\linewidth]{fig_ch11_osteoporosis.png}
+\end{frame}
+
+\begin{frame}{Example 11.4: Solution}
+The probability statement is
+\[
+P(X<-2.5)
+\]
+
+The result is approximately
+\[
+0.3085
+\]
+
+Under this illustrative model, about 30.85\% of the distribution lies below the osteoporosis threshold.
+
+\vspace{0.15cm}
+The complement gives the proportion above the threshold
+\[
+1-0.3085=0.6915
+\]
+
+About 69.15\% of the distribution lies above the threshold.
+\end{frame}
+
+\begin{frame}[fragile]{Example 11.4: R Code}
+The same left-tail probability is calculated in R with \texttt{pnorm()}.
+
+\begin{verbatim}
+# Left-tail probability
+p_osteoporosis <- pnorm(
+  q = -2.5,
+  mean = -2,
+  sd = 1
+)
+
+print(p_osteoporosis)
+\end{verbatim}
+
+The argument \texttt{q} is the boundary value. The \texttt{mean} and \texttt{sd} arguments define the Normal model.
+\end{frame}
+
+\begin{frame}{Osteopenia as an Interval Probability}
+\begin{block}{Question}
+Under the same T-score model, what proportion of women have osteopenia, defined as a T-score between $-2.5$ and $-1$?
+\end{block}
+
+\begin{block}{Explanation}
+This is the area between two values. Since \texttt{pnorm()} gives cumulative left-tail probabilities, the lower cumulative area must be subtracted from the upper cumulative area.
+\end{block}
+\end{frame}
+
+\begin{frame}{Osteopenia Interval Visualized}
+  \centering
+  \lectureimage[0.88\linewidth]{fig_ch11_osteopenia.png}
+\end{frame}
+
+\begin{frame}{Osteopenia Interval Solution}
+The required probability is
+\[
+P(-2.5<X<-1)=P(X<-1)-P(X<-2.5)
+\]
+
+Using the model,
+\[
+0.8413-0.3085=0.5328
+\]
+
+Under this illustrative model, about 53.28\% fall in the osteopenia interval.
+\end{frame}
+
+\begin{frame}[fragile]{Osteopenia Interval: R Code}
+The same interval probability can be calculated directly in R.
+
+\begin{verbatim}
+# Area between -2.5 and -1
+p_osteopenia <- pnorm(
+  q = -1,
+  mean = -2,
+  sd = 1
+) - pnorm(
+  q = -2.5,
+  mean = -2,
+  sd = 1
+)
+
+print(p_osteopenia)
+\end{verbatim}
+
+The subtraction follows the same reasoning as the probability calculation: upper cumulative area minus lower cumulative area.
+\end{frame}
+
+\section{Finding Percentiles with R}
+
+\begin{frame}{From Values to Probabilities and Back Again}
+Two software functions play different roles.
+\begin{itemize}
+  \item \texttt{pnorm(q, mean, sd)} takes a value and returns a probability
+  \item \texttt{qnorm(p, mean, sd)} takes a probability and returns a boundary value
+\end{itemize}
+
+A probability-to-value problem is a percentile problem.
+\end{frame}
+
+\begin{frame}{Example 11.6: The Third Quartile of Hatching Weights}
+\begin{block}{Question}
+Commercial chicken hatching weights are modelled as Normal with mean 45 g and standard deviation 4 g. What is the third quartile of the distribution?
+\end{block}
+
+\begin{block}{Explanation}
+The third quartile is the 75th percentile, so the desired value has 75\% of the distribution below it. This is a \texttt{qnorm()} question.
+\end{block}
+\end{frame}
+
+\begin{frame}{Hatching-Weight Quartile Visualized}
+  \centering
+  \lectureimage[0.88\linewidth]{fig_ch11_hatching_q3.png}
+\end{frame}
+
+\begin{frame}[fragile]{Example 11.6: Solution and R Code}
+The R code is
+\begin{verbatim}
+# The 75th percentile of the
+# hatching-weight model
+q3_weight <- qnorm(
+  p = 0.75,
+  mean = 45,
+  sd = 4
+)
+
+print(q3_weight)
+\end{verbatim}
+
+The result is approximately
+\[
+47.7\text{ g}
+\]
+
+Under the model, about 75\% of hatching weights are below 47.7 g and about 25\% are above it.
+\end{frame}
+
+\begin{frame}{Example 11.7: The Longest 10\% of Pregnancy Lengths}
+\begin{block}{Question}
+Pregnancy lengths are modelled as Normal with mean 266 days and standard deviation 16 days. What pregnancy length marks the beginning of the longest 10\%?
+\end{block}
+
+\begin{block}{Explanation}
+The longest 10\% means the upper 10\%. Since \texttt{qnorm()} uses cumulative area to the left, the required boundary is the 90th percentile.
+\end{block}
+\end{frame}
+
+\begin{frame}{Top 10\% of Pregnancy Lengths Visualized}
+  \centering
+  \lectureimage[0.88\linewidth]{fig_ch11_pregnancy_top10.png}
+\end{frame}
+
+\begin{frame}[fragile]{Example 11.7: Solution and R Code}
+The R code is
+\begin{verbatim}
+# The 90th percentile leaves
+# 10% above the boundary
+pregnancy_90 <- qnorm(
+  p = 0.90,
+  mean = 266,
+  sd = 16
+)
+
+print(pregnancy_90)
+\end{verbatim}
+
+The result is approximately
+\[
+286.5\text{ days}
+\]
+
+If pregnancy length is reported to the nearest whole day, values of about 287 days or longer fall in the upper 10\% region.
+\end{frame}
+
+\section{Using the Standard Normal Table}
+
+\begin{frame}{The Standard Normal Table}
+The Standard Normal table reports cumulative probabilities for
+\[
+Z\sim N(0,1)
+\]
+
+Each table entry gives the area to the left of a specified z-score.
+
+This is the same type of probability returned by \texttt{pnorm()} after a value has been standardized.
+\end{frame}
+
+\begin{frame}{Reading the Z-Table}
+\begin{block}{Question}
+What proportion of the standard Normal distribution lies below $z=1.47$?
+\end{block}
+
+\begin{block}{Explanation}
+Use row 1.4 and column 0.07. Their intersection gives the cumulative left-tail probability.
+\end{block}
+
+\begin{block}{Solution}
+The table entry is 0.9292, so
+\[
+P(Z<1.47)=0.9292
+\]
+About 92.92\% of the distribution lies below 1.47.
+\end{block}
+\end{frame}
+
+\begin{frame}{A Three-Step Process for Table Questions}
+A consistent structure helps organize Normal-probability questions.
+\begin{enumerate}
+  \item State the question in the original units and sketch the desired region
+  \item Standardize the boundary values to z-scores
+  \item Use cumulative left-tail probabilities from the table, then subtract or use the complement rule if needed
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Example 11.9: Heights of Young Women with the Z-Table}
+\begin{block}{Question}
+Young women's heights are modelled as Normal with mean 64.5 inches and standard deviation 2.5 inches. What is the probability that a randomly selected woman measures between 60 and 68 inches?
+\end{block}
+
+\begin{block}{Explanation}
+Both boundaries must be standardized. The interval probability is then found by subtracting the cumulative area left of the lower z-score from the cumulative area left of the upper z-score.
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 11.9: Solution}
+The standardized boundaries are
+\[
+z_1=\frac{60-64.5}{2.5}=-1.8
+\]
+\[
+z_2=\frac{68-64.5}{2.5}=1.4
+\]
+
+From the table,
+\[
+P(Z<1.4)=0.9192
+\]
+\[
+P(Z<-1.8)=0.0359
+\]
+
+Subtracting gives
+\[
+0.9192-0.0359=0.8833
+\]
+\end{frame}
+
+\begin{frame}{Interval Probability Visualized}
+  \centering
+  \lectureimage[0.88\linewidth]{fig_ch11_table_interval.png}
+\end{frame}
+
+\begin{frame}[fragile]{Example 11.9: Interpretation and R Check}
+Under the Normal model, about 88.33\% of young women measure between 60 and 68 inches.
+
+\vspace{0.1cm}
+The same probability can be checked in R.
+
+\scriptsize
+\begin{verbatim}
+# Probability between 60 and 68 inches
+p_height_interval <- pnorm(
+  68, mean = 64.5, sd = 2.5
+) - pnorm(
+  60, mean = 64.5, sd = 2.5
+)
+
+print(p_height_interval)
+\end{verbatim}
+\normalsize
+
+The table and software methods agree apart from minor rounding in the printed table.
+\end{frame}
+
+\begin{frame}{Finding Percentiles with the Z-Table}
+A percentile problem can also be solved with the Standard Normal table.
+
+\vspace{0.15cm}
+The desired cumulative area is located in the body of the table, which identifies the corresponding z-score. The z-score is then converted back to the original units using the unstandardizing formula.
+
+\[
+x=\mu+z\sigma
+\]
+\end{frame}
+
+\begin{frame}{Example 11.10: The Longest Pregnancies Using the Z-Table}
+\begin{block}{Question}
+Pregnancy lengths are modelled as Normal with mean 266 days and standard deviation 16 days. What boundary marks the longest 10\% of pregnancies?
+\end{block}
+
+\begin{block}{Explanation}
+The upper 10\% begins at the 90th percentile, so the cumulative area to the left is 0.9000. The closest table value is 0.8997, which corresponds to about $z=1.28$.
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 11.10: Solution}
+Using the unstandardizing formula,
+\[
+x=266+(1.28)(16)
+\]
+
+This gives
+\[
+x=286.48\text{ days}
+\]
+
+The table method therefore places the boundary at about 286.5 days, which corresponds to about 287 days or longer when whole-day reporting is used.
+\end{frame}
+
+\begin{frame}{Upper 10\% of Pregnancy Lengths Visualized}
+  \centering
+  \lectureimage[0.88\linewidth]{fig_ch11_percentile.png}
+\end{frame}
+
+\section{Summary}
+
+\begin{frame}{R Functions Used in Chapter 11}
+\begin{table}
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{l X}
+    \toprule
+    \textbf{R Function} & \textbf{Purpose in This Chapter} \\
+    \midrule
+    \texttt{pnorm()} &
+    Finds a cumulative Normal probability. It answers a value-to-probability question such as ``What proportion lies below this value?'' \\
+    \texttt{qnorm()} &
+    Finds a Normal percentile or boundary. It answers a probability-to-value question such as ``What value has 90\% below it?'' \\
+    \texttt{print()} &
+    Displays a value stored in an R object so the numerical result can be inspected. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{block}{The Main Distinction}
+\texttt{pnorm()} goes from a \textbf{value to an area}. \texttt{qnorm()} goes from an \textbf{area to a value}.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{R Code Patterns to Remember}
+A left-tail probability has the form
+\begin{verbatim}
+pnorm(q = boundary, mean = mu, sd = sigma)
+\end{verbatim}
+
+An interval probability has the form
+\begin{verbatim}
+pnorm(upper, mean = mu, sd = sigma) -
+  pnorm(lower, mean = mu, sd = sigma)
+\end{verbatim}
+
+A percentile or boundary has the form
+\begin{verbatim}
+qnorm(p = cumulative_area,
+      mean = mu,
+      sd = sigma)
+\end{verbatim}
+
+The probability reasoning should be established before the R function is selected.
+\end{frame}
+
+\begin{frame}{Chapter Summary: Core Ideas}
+A Normal distribution is a symmetric density model described by a mean and a standard deviation.
+
+\vspace{0.15cm}
+The 68--95--99.7 rule provides quick approximate probabilities.
+
+\vspace{0.15cm}
+A z-score describes position in standard-deviation units and standardizing a Normal variable produces the standard Normal distribution.
+
+\vspace{0.15cm}
+Exact probabilities are found with \texttt{pnorm()} or a Standard Normal table. Percentiles are found with \texttt{qnorm()} or by working backward from a z-score.
+\end{frame}
+
+\begin{frame}{A Consistent Problem-Solving Process}
+Normal-distribution problems are easier when they are approached in a consistent order.
+\begin{enumerate}
+  \item Identify the mean and standard deviation
+  \item Decide whether the question asks for an area or a boundary value
+  \item Draw a sketch of the relevant region
+  \item Use the 68--95--99.7 rule for a quick approximation when appropriate
+  \item Use \texttt{pnorm()}, \texttt{qnorm()} or the Z-table for an exact or more precise answer
+  \item Interpret the result in the original units and context
+\end{enumerate}
+\end{frame}
+
+\end{document}
