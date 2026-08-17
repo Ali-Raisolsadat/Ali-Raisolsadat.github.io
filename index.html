@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Ali Raisolsadat — Computational mathematics, statistics, research, teaching, and technical project management.">
-  <title>Ali Raisolsadat - Home</title>
+  <meta name="description" content="Ali Raisolsadat ; Computational mathematics, statistics, research, teaching and technical project management.">
+  <title>Ali Raisolsadat ; Home</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --text: #25313c;
       --muted: #66727d;
       --heading: #1f2d3a;
-      --accent: #315f7d;
-      --border: #d9e0e5;
-      --background: #f7f8fa;
+      --accent: #d13636;
+      --border: #e8e5e1;
+      --background: #fcfbf9; 
       --surface: #ffffff;
     }
 
@@ -34,23 +34,26 @@
       background: var(--background);
       color: var(--text);
       font-family: "Inter", Arial, sans-serif;
-      font-size: 15px;
+      font-size: 15px; 
       line-height: 1.7;
     }
 
     a {
       color: var(--accent);
       text-decoration: none;
+      transition: color 0.2s ease;
     }
 
     a:hover,
     a:focus {
       text-decoration: underline;
+      color: #a12424;
     }
 
     .site-header {
-      background: #ffffff;
+      background: var(--surface);
       border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
     }
 
     .nav-container {
@@ -65,71 +68,70 @@
 
     .nav-links {
       display: flex;
-      gap: 22px;
+      gap: 24px;
       flex-wrap: wrap;
     }
 
     .nav-links a {
-      color: #4d5964;
-      font-size: 0.92rem;
+      color: #596a7a;
+      font-size: 0.95rem;
       font-weight: 500;
     }
 
     .nav-links a.active {
-      color: var(--heading);
+      color: var(--accent);
+      font-weight: 600;
     }
 
     .page {
       width: min(1100px, calc(100% - 32px));
-      margin: 42px auto 60px;
+      margin: 48px auto 60px;
       display: grid;
       grid-template-columns: minmax(0, 2.25fr) minmax(250px, 0.75fr);
-      gap: 34px;
+      gap: 36px;
       align-items: start;
     }
 
     .main-content {
       background: var(--surface);
       border: 1px solid var(--border);
-      padding: 38px 42px;
+      border-radius: 10px;
+      padding: 42px 48px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.03);
     }
 
     .sidebar {
       position: sticky;
-      top: 24px;
+      top: 32px;
     }
 
     .sidebar-card {
-      padding: 22px;
+      padding: 28px;
       margin-bottom: 20px;
-      background: #f8f8f8;
-      border: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.03);
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      color: var(--heading);
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 1.45rem; 
+      font-weight: 600;
     }
 
     .intro {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 170px;
-      gap: 30px;
+      grid-template-columns: minmax(0, 1fr) 280px; /* Increased image space to 280px */
+      gap: 36px;
       align-items: start;
       padding-bottom: 30px;
-      margin-bottom: 30px;
+      margin-bottom: 36px;
       border-bottom: 1px solid var(--border);
-    }
-
-    .intro h1 {
-      margin: 0 0 5px;
-      color: var(--heading);
-      font-family: "Source Serif 4", Georgia, serif;
-      font-size: 2rem;
-      font-weight: 600;
-      line-height: 1.25;
-    }
-
-    .intro-role {
-      margin: 0 0 18px;
-      color: var(--muted);
-      font-size: 1rem;
-      font-weight: 500;
     }
 
     .intro p:last-child {
@@ -138,10 +140,11 @@
 
     .profile-photo {
       width: 100%;
-      max-width: 170px;
+      max-width: 280px; /* Increased image size */
       aspect-ratio: 4 / 5;
       object-fit: cover;
-      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
     }
 
     section {
@@ -152,20 +155,10 @@
       margin-bottom: 0;
     }
 
-    h2 {
-      margin: 0 0 18px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-      color: var(--heading);
-      font-family: "Source Serif 4", Georgia, serif;
-      font-size: 1.45rem;
-      font-weight: 600;
-    }
-
     h3 {
       margin: 0 0 4px;
       color: var(--heading);
-      font-size: 1rem;
+      font-size: 1rem; 
       font-weight: 600;
     }
 
@@ -185,66 +178,29 @@
       margin: 0 0 10px;
       color: var(--muted);
       font-size: 0.89rem;
+      font-weight: 500;
     }
 
     .education-item {
-      margin-bottom: 18px;
+      margin-bottom: 10px; 
     }
 
     .education-item:last-child {
       margin-bottom: 0;
     }
 
-    .publication {
-      padding-left: 16px;
-      border-left: 3px solid #b7c9d6;
-    }
-
-    .skills-list {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 6px 24px;
-      margin-top: 0;
-      padding-left: 20px;
-    }
-
     .sidebar-name {
       margin: 0 0 18px;
       color: var(--heading);
-      font-family: "Inter", Arial, sans-serif;
-      font-size: 1.75rem;
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 1.75rem; 
       font-weight: 600;
       line-height: 1.2;
     }
 
-    .sidebar-subtitle {
-      margin: 0 0 18px;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .sidebar-heading {
-      margin: 0 0 11px;
-      color: var(--heading);
-      font-size: 0.82rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .sidebar-list {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .sidebar-list li {
-      margin-bottom: 10px;
-    }
-
     .sidebar-email-label {
       display: block;
-      margin-bottom: 1px;
+      margin-bottom: 2px;
       color: var(--heading);
       font-weight: 600;
     }
@@ -256,7 +212,8 @@
 
     .sidebar-links a {
       display: block;
-      margin-bottom: 7px;
+      margin-bottom: 10px;
+      font-weight: 500;
     }
 
     .sidebar-card hr {
@@ -291,10 +248,6 @@
         padding: 14px 0;
       }
 
-      .nav-links {
-        gap: 14px;
-      }
-
       .main-content {
         padding: 26px 22px;
       }
@@ -304,11 +257,7 @@
       }
 
       .profile-photo {
-        max-width: 150px;
-      }
-
-      .skills-list {
-        grid-template-columns: 1fr;
+        max-width: 240px; /* Made responsive size bigger too */
       }
     }
   </style>
@@ -330,48 +279,51 @@
 
     <main class="main-content">
 
-      <div class="intro">
-        <div>
-          <p>
-            Hi, I'm Ali. I'm a project manager with background in financial mathematics and data analysis with a deep passion for solving complex problems through data visualization and statistical methods. Over the course of my career, I've had the opportunity to wear several different hats—ranging from climate research and statistical programming to academic teaching and technical project management.
-          </p>
-
-          <p>
-            I hold a Master of Mathematics in Computational Mathematics from the University of Waterloo, as well as undergraduate degrees in Actuarial Science and Financial Mathematics from the University of Prince Edward Island. Whether I'm managing the launch of a web application platform or diving deep into data analysis, I love bringing clarity, structure, and reliable solutions to challenging technical environments.
-          </p>
-        </div>
-
-        <img class="profile-photo" src="ali-motorbike.JPG" alt="Portrait of Ali Raisolsadat">
-      </div>
-
       <section>
-        <h2>Professional Experience</h2>
+        <h2>About Me</h2>
+        <div class="intro">
+          <div>
+            <p>
+              Hi, I am Ali. I am a project manager with background in financial mathematics and data analysis with a deep passion for solving complex problems through data visualization and statistical methods. Over the course of my career, I have had the opportunity to wear several different hats; ranging from climate research and statistical programming to academic teaching and technical project management.
+            </p>
 
-        <div class="entry">
-          <h3>Project Manager, Viewbid Auctions</h3>
-          <p class="entry-meta">September 2025 – Present · Remote</p>
-          <p>
-            As a Project Manager for the Viewbid online auction platform, I coordinate project milestones, take on product ownership responsibilities, and collaborate closely with developers and stakeholders. My core focus is on maintaining high platform reliability and data integrity. To achieve this, I handle comprehensive quality assurance, performing both functional testing and automated end-to-end testing using Playwright. I actively work to identify and resolve design, logic, and usability issues before they can impact our users in production.
-          </p>
+            <p>
+              I hold a Master of Mathematics in Computational Mathematics from the University of Waterloo, as well as undergraduate degrees in Actuarial Science and Financial Mathematics from the University of Prince Edward Island. Whether I am managing the launch of a web application platform or diving deep into data analysis, I love bringing clarity, structure and reliable solutions to challenging technical environments.
+            </p>
+
+            <p>
+              In my free time, I enjoy going on motorcycle adventures, watching movies, playing the guitar and playing board games with friends.
+            </p>
+          </div>
+
+          <img class="profile-photo" src="ali-motorbike.JPG" alt="Portrait of Ali Raisolsadat">
         </div>
       </section>
 
       <section>
-        <h2>Academic and Research Experience</h2>
+        <h2>Recent Experiences</h2>
+
+        <div class="entry">
+          <h3>Project Manager, Viewbid Auctions</h3>
+          <p class="entry-meta">September 2025 to Present · Remote</p>
+          <p>
+            As a Project Manager for the Viewbid online auction platform, I coordinate project milestones, take on product ownership responsibilities and collaborate closely with developers and stakeholders. My core focus is on maintaining high platform reliability and data integrity. To achieve this, I handle comprehensive quality assurance, performing both functional testing and automated end to end testing using Playwright. I actively work to identify and resolve design, logic and usability issues before they can impact our users in production.
+          </p>
+        </div>
 
         <div class="entry">
           <h3>Sessional Instructor, University of Prince Edward Island</h3>
-          <p class="entry-meta">January 2026 – April 2026</p>
+          <p class="entry-meta">January 2026 to April 2026</p>
           <p>
-            During the winter 2026 semester, I had the rewarding opportunity to teach STAT 4110, an advanced course covering random number generation, Monte Carlo methods, Markov chains, and Markov Chain Monte Carlo (MCMC) methods. Because my students came from diverse mathematical and programming backgrounds, I specifically tailored my teaching approach to break down complex computational and statistical concepts into clear, accessible, and engaging lessons.
+            During the winter 2026 semester, I had the rewarding opportunity to teach STAT 4110, an advanced course covering random number generation, Monte Carlo methods, Markov chains and Markov Chain Monte Carlo (MCMC) methods. Because my students came from diverse mathematical and programming backgrounds, I specifically tailored my teaching approach to break down complex computational and statistical concepts into clear, accessible and engaging lessons.
           </p>
         </div>
 
         <div class="entry">
           <h3>Research Assistant, Canadian Centre for Climate Change and Adaptation</h3>
-          <p class="entry-meta">Summers 2021, 2022, and 2024</p>
+          <p class="entry-meta">Summers 2021, 2022 and 2024</p>
           <p>
-            During the summers of 2021, 2022, and 2024, I worked as a Research Assistant focusing on international cooperation among G7 countries. By analyzing United Nations Sustainable Development Goal data, I applied a variety of quantitative techniques such as LASSO, Ridge regression, and principal component analysis to draw meaningful insights. It was highly rewarding to present our findings at the 25th International Congress on Insurance: Mathematics and Economics, and to have our resulting research published in <em>Nature Communications</em>.
+            During the summers of 2021, 2022 and 2024, I worked as a Research Assistant focusing on international cooperation among G7 countries. By analyzing United Nations Sustainable Development Goal data, I applied a variety of quantitative techniques such as LASSO, Ridge regression and principal component analysis to draw meaningful insights. It was highly rewarding to present our findings at the 25th International Congress on Insurance: Mathematics and Economics, and to have our resulting research published in <em>Nature Communications</em>.
           </p>
         </div>
       </section>
@@ -381,20 +333,19 @@
 
         <div class="education-item">
           <h3>Master of Mathematics in Computational Mathematics</h3>
-          <p class="entry-meta">University of Waterloo · 4.0 GPA · 2022–2023</p>
+          <p class="entry-meta">University of Waterloo · 4.0 GPA · 2022 to 2023</p>
         </div>
 
         <div class="education-item">
           <h3>Bachelor of Science in Actuarial Science</h3>
-          <p class="entry-meta">University of Prince Edward Island · 4.0 GPA · 2020–2022</p>
+          <p class="entry-meta">University of Prince Edward Island · 4.0 GPA · 2020 to 2022</p>
         </div>
 
         <div class="education-item">
           <h3>Bachelor of Science in Financial Mathematics</h3>
-          <p class="entry-meta">University of Prince Edward Island · 2014–2019</p>
+          <p class="entry-meta">University of Prince Edward Island · 2014 to 2019</p>
         </div>
       </section>
-
 
       <section id="resume">
         <h2>Resume</h2>
