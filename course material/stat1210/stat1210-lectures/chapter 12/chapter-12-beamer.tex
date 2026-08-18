@@ -1,0 +1,1067 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+
+\title[Chapter 12: Binomial and Poisson Distributions]{\textbf{Chapter 12: Binomial and Poisson Distributions}}
+\subtitle{The Practice of Statistics in the Life Sciences \\ by Brigitte Baldi and David S. Moore}
+\author{Instructor: Ali Raisolsadat}
+\date{Part II: Probability and Distributions}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+\graphicspath{{./}{figures/}}
+
+\newcommand{\lectureimage}[2][0.90\linewidth]{%
+  \IfFileExists{#2}{%
+    \includegraphics[width=#1]{#2}%
+  }{%
+    \fbox{\parbox[c][0.36\textheight][c]{0.88\linewidth}{%
+      \centering\small
+      Figure file: \texttt{\detokenize{#2}}\\[0.15cm]
+      Generate this figure by knitting the revised Chapter 12 RMarkdown notes.
+    }}%
+  }%
+}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Why This Chapter Matters}
+The previous chapter focused on continuous measurements. This chapter turns to \textbf{counts}.
+
+\vspace{0.2cm}
+Examples of counts include the number of type O blood donations in a short sequence of donors, the number of contaminated containers in a sample, the number of tagged fish in a catch and the number of disease cases in a month.
+
+\vspace{0.2cm}
+Two important count models will be developed.
+\begin{itemize}
+  \item The \textbf{binomial distribution} for successes among a fixed number of trials
+  \item The \textbf{Poisson distribution} for event counts in a fixed interval of time, space or exposure
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Chapter Roadmap}
+The material in this chapter follows a natural progression.
+\begin{enumerate}
+  \item The binomial setting and the four conditions
+  \item Binomial probabilities and the binomial formula
+  \item Mean, variance and standard deviation for a binomial count
+  \item Practice examples in several contexts
+  \item The transition from fixed trials to event counts in an interval
+  \item The Poisson setting and Poisson probabilities
+  \item Choosing between binomial and Poisson models
+\end{enumerate}
+\end{frame}
+
+\section{The Binomial Setting}
+
+\begin{frame}{Introduction: Counting Successes}
+A count records how many times a specified outcome occurs.
+
+\vspace{0.2cm}
+An elementary school could record how many of 800 students have perfect vision. A clinical study could record how many of 250 patients meet a five-year outcome. A horticulture experiment could record how many of 10 trees survive the winter.
+
+\vspace{0.2cm}
+The first task in a count problem is not a calculation. The first task is to decide whether the data-generating process matches a known probability model.
+\end{frame}
+
+\begin{frame}{The Binomial Setting}
+A binomial setting has four conditions.
+\begin{block}{The Four Conditions}
+\begin{enumerate}
+  \item A fixed number of trials denoted by $n$
+  \item Independent trials
+  \item Two outcome categories labelled success and failure
+  \item The same success probability on every trial denoted by $p$
+\end{enumerate}
+\end{block}
+
+The word \textbf{success} is only a label. It can refer to a desirable outcome or an undesirable one such as a contamination event.
+\end{frame}
+
+\begin{frame}{A Memory Aid for the Binomial Setting}
+The acronym \textbf{BINS} is a useful memory aid.
+\begin{itemize}
+  \item \textbf{B}inary outcomes
+  \item \textbf{I}ndependent trials
+  \item fixed \textbf{N}umber of trials
+  \item \textbf{S}ame probability of success
+\end{itemize}
+
+When these conditions are satisfied, the count $X$ of successes has a binomial distribution.
+
+\[
+X \sim \operatorname{Bin}(n,p)
+\]
+
+The possible values are the whole numbers from 0 through $n$.
+\end{frame}
+
+\begin{frame}{A Binomial Distribution}
+  \centering
+  \lectureimage[0.90\linewidth]{fig_ch12_binomial_intro.png}
+\end{frame}
+
+\begin{frame}{Checking the Binomial Conditions}
+Not every whole-number count is binomial.
+
+\vspace{0.2cm}
+Before using a formula or an R function, the four conditions should be checked carefully. The next three examples show the difference between an exact binomial model, a non-binomial setting and a binomial approximation.
+\end{frame}
+
+\begin{frame}{Example 12.1: Blood Donations}
+\begin{block}{Question}
+Blood type O has probability 0.45 in the population used for this example. The next five donations come from unrelated individuals. Does the number of type O donations have a binomial distribution?
+\end{block}
+
+\pause
+
+\begin{block}{Solution}
+The number of donations is fixed at five. Each donation is classified as type O or not type O. The success probability is modelled as 0.45 on every trial. The donors are unrelated, so the outcomes are modelled as independent.
+
+All four binomial conditions are satisfied. If $X$ is the number of type O donations, then
+\[
+X \sim \operatorname{Bin}(5,0.45)
+\]
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 12.2: Selecting Volunteer Subjects}
+\begin{block}{Question}
+A researcher has 40 volunteers consisting of 20 men and 20 women. Ten volunteers are selected without replacement. Does the number of men selected have a binomial distribution?
+\end{block}
+
+\pause
+
+\begin{block}{Solution}
+The sample size is fixed at 10 and each selection can be classified as man or woman. The difficulty is sampling without replacement. After one volunteer is selected, the composition of the pool changes.
+
+The trials are not independent and the success probability is not constant. The exact count is therefore not binomial.
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 12.3: A Large-Population Approximation}
+\begin{block}{Question}
+A pharmaceutical company inspects 10 plastic containers selected without replacement from a shipment of 10{,}000 containers. Suppose 10\% of the shipment is contaminated. Can the number of contaminated containers be approximated by a binomial distribution?
+\end{block}
+
+\pause
+
+\begin{block}{Solution}
+Sampling without replacement is not exactly independent. In this example, however, the sample represents only 0.1\% of the population. Removing one container has a negligible effect on the contamination probability for the next draw.
+
+The 10\% condition is easily satisfied, so a binomial approximation is very accurate.
+\[
+X \approx \operatorname{Bin}(10,0.10)
+\]
+\end{block}
+\end{frame}
+
+\section{Binomial Probabilities}
+
+\begin{frame}{From a Count to a Probability}
+A binomial probability answers a question about the number of successes among a fixed number of trials.
+
+\vspace{0.2cm}
+The probability of exactly $k$ successes can be understood in two steps.
+\begin{enumerate}
+  \item Find the probability of one specific arrangement of successes and failures
+  \item Count how many arrangements produce the same total number of successes
+\end{enumerate}
+
+This logic leads directly to the binomial probability formula.
+\end{frame}
+
+\begin{frame}{Example 12.4: Blood Donations and the Binomial Formula}
+\begin{block}{Question}
+Each donor has probability 0.45 of having type O blood. Among the next five unrelated donors, what is the probability that exactly two have type O blood?
+\end{block}
+
+\pause
+
+\begin{block}{Explanation}
+The count is binomial with $n=5$ and $p=0.45$. Exactly two successes means two type O donations and three non-type O donations.
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 12.4: One Arrangement}
+One particular arrangement is SFSFF.
+
+\pause
+
+\vspace{0.15cm}
+Because the trials are independent, the probability of this one arrangement is found by multiplication.
+\[
+P(\text{SFSFF})=(0.45)(0.55)(0.45)(0.55)(0.55)
+\]
+
+\pause
+
+This simplifies to
+\[
+P(\text{SFSFF})=(0.45)^2(0.55)^3
+\]
+
+Every arrangement containing two successes and three failures has this same probability.
+\end{frame}
+
+\begin{frame}{Example 12.4: Counting Arrangements and Solving}
+There are 10 different ways to place two successes among five trials.
+
+\pause
+
+\vspace{0.15cm}
+The overall probability is therefore
+\[
+P(X=2)=10(0.45)^2(0.55)^3
+\]
+
+\pause
+
+\[
+P(X=2)=0.3369
+\]
+
+The probability that exactly two of the five donors have type O blood is about 0.3369.
+\end{frame}
+
+\begin{frame}[fragile]{Example 12.4: R Code}
+The exact binomial probability can be calculated with \texttt{dbinom()}.
+
+\scriptsize
+\begin{verbatim}
+# Exact binomial probability for two type O donations
+prob_blood <- dbinom(
+  x = 2,
+  size = 5,
+  prob = 0.45
+)
+
+print(round(prob_blood, 4))
+\end{verbatim}
+\normalsize
+
+The output is 0.3369, which matches the calculation from the binomial formula.
+\end{frame}
+
+\begin{frame}{The Binomial Formula}
+The binomial coefficient counts how many arrangements contain exactly $k$ successes among $n$ trials.
+\[
+\binom{n}{k}=\frac{n!}{k!(n-k)!}
+\]
+
+Factorial notation is defined by
+\[
+n!=n(n-1)(n-2)\cdots 1
+\]
+
+with the convention
+\[
+0!=1
+\]
+\end{frame}
+
+\begin{frame}{Binomial Probability Formula}
+If $X \sim \operatorname{Bin}(n,p)$, then the probability of exactly $k$ successes is
+\[
+P(X=k)=\binom{n}{k}p^k(1-p)^{n-k}
+\]
+
+where $k=0,1,2,\ldots,n$.
+
+\vspace{0.2cm}
+The coefficient counts arrangements, $p^k$ accounts for the successes and $(1-p)^{n-k}$ accounts for the failures.
+\end{frame}
+
+\begin{frame}{Calculating Binomial Probabilities with R}
+Two R functions are especially important.
+
+\begin{table}
+\centering
+\small
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.28\textwidth} >{\RaggedRight\arraybackslash}p{0.28\textwidth} X}
+\toprule
+Probability question & R function & Meaning \\
+\midrule
+Exactly $x$ successes & \texttt{dbinom(x, size, prob)} & Probability mass at one count \\
+At most $q$ successes & \texttt{pbinom(q, size, prob)} & Cumulative probability from 0 through $q$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+For discrete random variables, \texttt{dbinom()} gives a probability mass rather than a continuous density.
+\end{frame}
+
+\begin{frame}{Translating Wording into Notation}
+The wording of a question should be translated before R is used.
+\begin{itemize}
+  \item Exactly 2 means $P(X=2)$
+  \item At most 2 or no more than 2 means $P(X\le 2)$
+  \item More than 2 means $P(X>2)$
+  \item At least 2 means $P(X\ge 2)$
+\end{itemize}
+
+This translation step is often more important than the mechanics of the calculation.
+\end{frame}
+
+\begin{frame}{Example 12.5: Inspecting Pharmaceutical Containers}
+\begin{block}{Question}
+The number of contaminated containers is modelled by $X \sim \operatorname{Bin}(10,0.10)$. What is the probability that a sample contains no more than one contaminated container?
+\end{block}
+
+\pause
+
+\begin{block}{Explanation}
+The phrase \textit{no more than one} means the count can be 0 or 1. These outcomes are disjoint, so their probabilities can be added.
+\[
+P(X\le 1)=P(X=0)+P(X=1)
+\]
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 12.5: Solution}
+Using the binomial formula,
+\[
+P(X\le 1)=\binom{10}{0}(0.1)^0(0.9)^{10}+\binom{10}{1}(0.1)^1(0.9)^9
+\]
+
+\pause
+
+The two exact probabilities are about 0.3487 and 0.3874, so
+\[
+P(X\le 1)=0.3487+0.3874
+\]
+
+\pause
+
+\[
+P(X\le 1)=0.7361
+\]
+
+Under this model, about 73.61\% of samples contain no more than one contaminated container.
+\end{frame}
+
+\begin{frame}[fragile]{Example 12.5: R Code}
+The cumulative probability can be found directly with \texttt{pbinom()} or by adding two exact binomial masses.
+
+\scriptsize
+\begin{verbatim}
+# P(X <= 1) for n = 10 and p = 0.10
+prob_pharma_cum <- pbinom(
+  q = 1, size = 10, prob = 0.10
+)
+
+prob_pharma_manual <-
+  dbinom(x = 0, size = 10, prob = 0.10) +
+  dbinom(x = 1, size = 10, prob = 0.10)
+
+print(round(prob_pharma_cum, 4))
+print(round(prob_pharma_manual, 4))
+\end{verbatim}
+\normalsize
+\end{frame}
+
+\begin{frame}{A Binomial Distribution for the Pharmaceutical Example}
+  \centering
+  \lectureimage[0.8\linewidth]{fig_ch12_pharma_binom.png}
+\end{frame}
+
+\section{Binomial Mean and Standard Deviation}
+
+\begin{frame}{Expected Count and Spread}
+A binomial distribution has simple formulas for its centre and spread.
+
+\begin{block}{Binomial Mean, Variance and Standard Deviation}
+If $X \sim \operatorname{Bin}(n,p)$, then
+\[
+\mu=np
+\]
+\[
+\sigma^2=np(1-p)
+\]
+\[
+\sigma=\sqrt{np(1-p)}
+\]
+\end{block}
+
+These formulas are specific to the binomial model.
+\end{frame}
+
+\begin{frame}{Interpreting the Mean and Standard Deviation}
+The mean is a long-run average across many repetitions of the same binomial setting.
+
+\vspace{0.2cm}
+The standard deviation describes the typical amount of sample-to-sample variation around that mean.
+
+\vspace{0.2cm}
+The mean does not need to be a possible observed count. A mean of 13.5 does not imply that 13.5 successes can occur in one sample.
+\end{frame}
+
+\begin{frame}{Example 12.6: Inspecting Pharmaceutical Containers}
+\begin{block}{Question}
+For $X \sim \operatorname{Bin}(10,0.10)$, what are the mean and standard deviation of the number of contaminated containers?
+\end{block}
+
+\pause
+
+\begin{block}{Solution}
+The mean is
+\[
+\mu=np=(10)(0.10)=1
+\]
+
+The variance is
+\[
+\sigma^2=np(1-p)=(10)(0.10)(0.90)=0.9
+\]
+
+The standard deviation is
+\[
+\sigma=\sqrt{0.9}=0.9487
+\]
+
+Across many samples of 10 containers, the long-run average number contaminated is 1.
+\end{block}
+\end{frame}
+
+\begin{frame}{Centre of the Pharmaceutical Distribution}
+  \centering
+  \lectureimage[0.80\linewidth]{fig_ch12_binom_mean.png}
+\end{frame}
+
+\begin{frame}{Practice Examples: Binomial Probability, Mean and Variance}
+The remaining binomial examples use the same pattern.
+\begin{enumerate}
+  \item Identify the binomial model
+  \item Determine whether the question asks for a mean, a variance, a standard deviation or a probability
+  \item Use the appropriate formula or exact binomial probability
+  \item Interpret the result in the context of the problem
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Practice Example: Genetics}
+\begin{block}{Question}
+A Mendelian genetics model gives probability 0.25 that a pea-seed cross produces a yellow seed. Four seeds are considered. What are the expected number of yellow seeds, the variance and the probability of exactly one yellow seed?
+\end{block}
+
+\pause
+
+\begin{block}{Solution}
+With $X \sim \operatorname{Bin}(4,0.25)$,
+\[
+\mu=(4)(0.25)=1
+\]
+\[
+\sigma^2=(4)(0.25)(0.75)=0.75
+\]
+\[
+P(X=1)=\binom{4}{1}(0.25)(0.75)^3=0.4219
+\]
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Genetics Example: R Code}
+The exact probability is calculated with \texttt{dbinom()}.
+
+\begin{verbatim}
+# Probability of exactly one yellow seed
+prob_lvl1 <- dbinom(
+  x = 1,
+  size = 4,
+  prob = 0.25
+)
+
+print(round(prob_lvl1, 4))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Practice Example: Clinical Medicine}
+\begin{block}{Question}
+A treatment cures an infected patient with probability 0.80. Ten patients are treated. What are the mean and standard deviation of the number cured? What is the probability that exactly eight patients are cured?
+\end{block}
+
+\pause
+
+\begin{block}{Solution}
+With $X \sim \operatorname{Bin}(10,0.80)$,
+\[
+\mu=(10)(0.80)=8
+\]
+\[
+\sigma=\sqrt{(10)(0.80)(0.20)}=1.2649
+\]
+\[
+P(X=8)=\binom{10}{8}(0.80)^8(0.20)^2=0.3020
+\]
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Clinical Medicine Example: R Code}
+The exact probability is calculated with \texttt{dbinom()}.
+
+\begin{verbatim}
+# Probability of exactly eight cured patients
+prob_lvl2 <- dbinom(
+  x = 8,
+  size = 10,
+  prob = 0.80
+)
+
+print(round(prob_lvl2, 4))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Practice Example: Ecological Sampling}
+\begin{block}{Question}
+Marine biologists estimate that 30\% of a large fish population is tagged. A fisher catches 15 fish. What is the variance of the number of tagged fish? What is the probability of exactly five tagged fish?
+\end{block}
+
+\pause
+
+\begin{block}{Solution}
+Under the binomial approximation, $X \sim \operatorname{Bin}(15,0.30)$.
+\[
+\sigma^2=(15)(0.30)(0.70)=3.15
+\]
+\[
+P(X=5)=\binom{15}{5}(0.30)^5(0.70)^{10}=0.2061
+\]
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Ecological Sampling Example: R Code}
+The exact probability is calculated with \texttt{dbinom()}.
+
+\begin{verbatim}
+# Probability of exactly five tagged fish
+prob_lvl3 <- dbinom(
+  x = 5,
+  size = 15,
+  prob = 0.30
+)
+
+print(round(prob_lvl3, 4))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Practice Example: Expected Count and Exact Count}
+\begin{block}{Question}
+A medical supply company has a 5\% defect rate for glass micropipettes. A laboratory buys a box of 20 micropipettes. What is the expected number of defective micropipettes? What is the probability that the observed count is exactly equal to that expected value?
+\end{block}
+
+\pause
+
+\begin{block}{Solution}
+With $X \sim \operatorname{Bin}(20,0.05)$,
+\[
+\mu=(20)(0.05)=1
+\]
+\[
+P(X=1)=\binom{20}{1}(0.05)(0.95)^{19}=0.3774
+\]
+
+The mean is a long-run average. It does not have to occur in every sample.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Micropipette Example: R Code}
+The probability of observing exactly the expected count is
+
+\begin{verbatim}
+# Probability that the observed count equals the mean of one
+prob_lvl4 <- dbinom(
+  x = 1,
+  size = 20,
+  prob = 0.05
+)
+
+print(round(prob_lvl4, 4))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Practice Example: The Reverse Engineer}
+\begin{block}{Question}
+A vaccine study models the number of volunteers with a mild side effect as binomial with $n=100$. The success probability $p$ is unknown and $p<0.50$. The variance of the count is 16. What is $p$? What is the mean count? What is the probability that exactly 20 volunteers experience the side effect?
+\end{block}
+\end{frame}
+
+\begin{frame}{Practice Example: The Reverse Engineer Solution}
+The variance equation is
+\[
+100p(1-p)=16
+\]
+
+Rearranging gives
+\[
+25p^2-25p+4=0
+\]
+
+\pause
+
+The two mathematical solutions are $p=0.20$ and $p=0.80$. The condition $p<0.50$ gives
+\[
+p=0.20
+\]
+
+\pause
+
+Then
+\[
+\mu=(100)(0.20)=20
+\]
+\[
+P(X=20)=\binom{100}{20}(0.20)^{20}(0.80)^{80}=0.0993
+\]
+\end{frame}
+
+\begin{frame}[fragile]{Reverse Engineer Example: R Code}
+After solving for $p=0.20$, the exact probability is
+
+\begin{verbatim}
+# Probability of exactly 20 side effects after solving for p
+prob_lvl5 <- dbinom(
+  x = 20,
+  size = 100,
+  prob = 0.20
+)
+
+print(round(prob_lvl5, 4))
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Practice Example: Vaccine Efficacy}
+\begin{block}{Question}
+A seasonal flu vaccine is effective with probability 0.85 for each of 25 patients. What are the mean, variance and standard deviation of the number protected? What is the probability that exactly 22 patients are protected?
+\end{block}
+
+\pause
+
+\begin{block}{Solution}
+With $X \sim \operatorname{Bin}(25,0.85)$,
+\[
+\mu=(25)(0.85)=21.25
+\]
+\[
+\sigma^2=(25)(0.85)(0.15)=3.1875
+\]
+\[
+\sigma=\sqrt{3.1875}=1.7854
+\]
+\[
+P(X=22)=\binom{25}{22}(0.85)^{22}(0.15)^3=0.2174
+\]
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Vaccine Efficacy Example: R Code}
+The mean, variance, standard deviation and exact probability can all be calculated in R.
+
+\scriptsize
+\begin{verbatim}
+n <- 25
+p <- 0.85
+mean_calc <- n * p
+var_calc <- n * p * (1 - p)
+sd_calc <- sqrt(var_calc)
+prob <- dbinom(x = 22, size = n, prob = p)
+
+print(round(mean_calc, 4))
+print(round(var_calc, 4))
+print(round(sd_calc, 4))
+print(round(prob, 4))
+\end{verbatim}
+\normalsize
+\end{frame}
+
+\begin{frame}{Practice Example: Seed Germination}
+\begin{block}{Question}
+A wheat-seed model gives probability 0.75 of successful germination under heat stress. A scientist plants 40 seeds. What are the mean, variance and standard deviation of the number that germinate? What is the probability that exactly 30 seeds germinate?
+\end{block}
+
+\pause
+
+\begin{block}{Solution}
+With $X \sim \operatorname{Bin}(40,0.75)$,
+\[
+\mu=(40)(0.75)=30
+\]
+\[
+\sigma^2=(40)(0.75)(0.25)=7.5
+\]
+\[
+\sigma=\sqrt{7.5}=2.7386
+\]
+\[
+P(X=30)=\binom{40}{30}(0.75)^{30}(0.25)^{10}=0.1444
+\]
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Seed Germination Example: R Code}
+The same binomial quantities can be calculated in R.
+
+\scriptsize
+\begin{verbatim}
+n <- 40
+p <- 0.75
+mean_calc <- n * p
+var_calc <- n * p * (1 - p)
+sd_calc <- sqrt(var_calc)
+prob <- dbinom(x = 30, size = n, prob = p)
+
+print(round(mean_calc, 4))
+print(round(var_calc, 4))
+print(round(sd_calc, 4))
+print(round(prob, 4))
+\end{verbatim}
+\normalsize
+\end{frame}
+
+\begin{frame}{Practice Example: Policy Renewals}
+\begin{block}{Question}
+An insurance agent models each of 15 expiring policies as renewing with probability 0.90. What are the mean, variance and standard deviation of the number of renewals? What is the probability that exactly 14 clients renew?
+\end{block}
+
+\pause
+
+\begin{block}{Solution}
+With $X \sim \operatorname{Bin}(15,0.90)$,
+\[
+\mu=(15)(0.90)=13.5
+\]
+\[
+\sigma^2=(15)(0.90)(0.10)=1.35
+\]
+\[
+\sigma=\sqrt{1.35}=1.1619
+\]
+\[
+P(X=14)=\binom{15}{14}(0.90)^{14}(0.10)=0.3432
+\]
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Policy Renewals Example: R Code}
+The mean, spread and exact probability can be calculated in R.
+
+\scriptsize
+\begin{verbatim}
+n <- 15
+p <- 0.90
+mean_calc <- n * p
+var_calc <- n * p * (1 - p)
+sd_calc <- sqrt(var_calc)
+prob <- dbinom(x = 14, size = n, prob = p)
+
+print(round(mean_calc, 4))
+print(round(var_calc, 4))
+print(round(sd_calc, 4))
+print(round(prob, 4))
+\end{verbatim}
+\normalsize
+\end{frame}
+
+\section{The Poisson Distribution}
+
+\begin{frame}{From Fixed Trials to Events in an Interval}
+The binomial model counts successes among a fixed number of trials.
+
+\vspace{0.2cm}
+The Poisson model answers a different type of question. It counts how many events occur in a fixed interval of time, space or exposure.
+
+\vspace{0.2cm}
+Examples include the number of calls received in an hour, the number of organisms observed in a quadrat, the number of defects per metre of material and the number of disease cases in a month.
+\end{frame}
+
+\begin{frame}{The Poisson Setting}
+A Poisson model is based on assumptions about how events occur within the interval.
+\begin{block}{The Poisson Setting}
+\begin{enumerate}
+  \item The count refers to a clearly defined amount of time, space or exposure
+  \item The expected rate of occurrence is constant across comparable parts of the interval
+  \item Counts in non-overlapping parts of the interval are modelled as independent
+  \item Over a very small subinterval, the probability of more than one event is negligible relative to the probability of one event
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{The Poisson Probability Model}
+The Poisson distribution is determined by one positive parameter, usually written as $\lambda$.
+
+\vspace{0.15cm}
+The parameter $\lambda$ is the mean number of occurrences in the specified interval.
+\[
+X \sim \operatorname{Pois}(\lambda)
+\]
+
+The possible values are
+\[
+0,1,2,3,\ldots
+\]
+\end{frame}
+
+\begin{frame}{Poisson Probability Formula}
+If $X \sim \operatorname{Pois}(\lambda)$, then
+\[
+P(X=k)=\frac{e^{-\lambda}\lambda^k}{k!}
+\]
+
+for $k=0,1,2,\ldots$.
+
+\vspace{0.2cm}
+The Poisson distribution has the special property that its mean and variance are equal.
+\[
+\mu=\lambda
+\]
+\[
+\sigma^2=\lambda
+\]
+\[
+\sigma=\sqrt{\lambda}
+\]
+\end{frame}
+
+\begin{frame}{Poisson Probabilities and Surveillance}
+A Poisson model can describe what counts would look like if events occurred independently at a stable rate.
+
+\vspace{0.2cm}
+An unusually large count does not prove a cause by itself. It shows that the observation is difficult to reconcile with the assumed baseline model and may motivate further investigation.
+\end{frame}
+
+\begin{frame}{Example 12.10: Monitoring Mumps Cases}
+\begin{block}{Question}
+Suppose the baseline number of mumps cases in a month follows a Poisson distribution with mean $\lambda=0.1$. What is the probability of observing no more than one case in a month?
+\end{block}
+
+\pause
+
+\begin{block}{Explanation}
+The phrase \textit{no more than one} includes 0 and 1. These outcomes are disjoint, so their probabilities can be added.
+\[
+P(X\le 1)=P(X=0)+P(X=1)
+\]
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 12.10: Solution}
+Using the Poisson formula,
+\[
+P(X\le 1)=\frac{e^{-0.1}(0.1)^0}{0!}+\frac{e^{-0.1}(0.1)^1}{1!}
+\]
+
+\pause
+
+The two probabilities are about 0.9048 and 0.0905, so
+\[
+P(X\le 1)=0.9048+0.0905
+\]
+
+\pause
+
+\[
+P(X\le 1)=0.9953
+\]
+
+Under this baseline model, a month with zero or one case occurs about 99.53\% of the time.
+\end{frame}
+
+\begin{frame}[fragile]{Example 12.10: R Code}
+The cumulative Poisson probability can be found with \texttt{ppois()} or by adding exact masses from \texttt{dpois()}.
+
+\scriptsize
+\begin{verbatim}
+# P(X <= 1) for lambda = 0.1
+prob_mumps_1_cum <- ppois(q = 1, lambda = 0.1)
+
+prob_mumps_1_manual <-
+  dpois(x = 0, lambda = 0.1) +
+  dpois(x = 1, lambda = 0.1)
+
+print(round(prob_mumps_1_cum, 4))
+print(round(prob_mumps_1_manual, 4))
+\end{verbatim}
+\normalsize
+\end{frame}
+
+\begin{frame}{Poisson Distribution for the Mumps Example}
+  \centering
+  \lectureimage[0.90\linewidth]{fig_ch12_poisson_mumps.png}
+\end{frame}
+
+\begin{frame}{Example 12.11: A Count Far Above the Baseline}
+\begin{block}{Question}
+The same baseline model has $\lambda=0.1$ case per month. What is the probability of observing four or more cases in one month if the Poisson baseline model remains valid?
+\end{block}
+
+\pause
+
+\begin{block}{Explanation}
+The desired probability is an upper tail extending from four to infinity. The complement rule turns the problem into a cumulative probability through three cases.
+\[
+P(X\ge 4)=1-P(X\le 3)
+\]
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 12.11: Solution}
+Using R or a cumulative Poisson calculation,
+\[
+P(X\ge 4)\approx 0.00000385
+\]
+
+\pause
+
+This probability is extremely small under the baseline model. An observed count of four would therefore provide strong evidence that the baseline Poisson model is not describing that month well.
+\end{frame}
+
+\begin{frame}[fragile]{Example 12.11: R Code}
+The upper-tail probability can be calculated with the complement rule or with \texttt{lower.tail = FALSE}.
+
+\scriptsize
+\begin{verbatim}
+# Upper-tail probability P(X >= 4)
+prob_outbreak <- 1 - ppois(q = 3, lambda = 0.1)
+
+prob_outbreak_alt <- ppois(
+  q = 3,
+  lambda = 0.1,
+  lower.tail = FALSE
+)
+
+print(prob_outbreak)
+print(prob_outbreak_alt)
+\end{verbatim}
+\normalsize
+\end{frame}
+
+\begin{frame}{Calculating Poisson Probabilities with R}
+The R functions for the Poisson distribution follow the same pattern as the binomial functions.
+
+\begin{table}
+\centering
+\small
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.28\textwidth} >{\RaggedRight\arraybackslash}p{0.28\textwidth} X}
+\toprule
+Probability question & R function & Meaning \\
+\midrule
+Exactly $x$ occurrences & \texttt{dpois(x, lambda)} & Probability mass at one count \\
+At most $q$ occurrences & \texttt{ppois(q, lambda)} & Cumulative probability from 0 through $q$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The option \texttt{lower.tail = FALSE} is useful for upper-tail calculations.
+\end{frame}
+
+\section{Choosing the Model}
+
+\begin{frame}{Binomial and Poisson Models: Choosing the Right Count Model}
+\begin{table}
+\centering
+\small
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.20\textwidth} >{\RaggedRight\arraybackslash}p{0.35\textwidth} >{\RaggedRight\arraybackslash}X}
+\toprule
+Feature & Binomial model & Poisson model \\
+\midrule
+What is counted & Successes among trials & Occurrences in an interval \\
+Upper limit & Fixed at $n$ & No fixed upper limit \\
+Main parameters & $n$ and $p$ & $\lambda$ \\
+Mean & $np$ & $\lambda$ \\
+Variance & $np(1-p)$ & $\lambda$ \\
+Exact R function & \texttt{dbinom()} & \texttt{dpois()} \\
+Cumulative R function & \texttt{pbinom()} & \texttt{ppois()} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+\end{frame}
+
+\begin{frame}{How Should the Model Be Chosen}
+The model should be selected from the data-generating process.
+\begin{itemize}
+  \item A question about a fixed number of patients, seeds, products or policy renewals suggests checking the binomial conditions
+  \item A question about the number of events during a month, within a quadrat or over another fixed exposure suggests checking the Poisson assumptions
+\end{itemize}
+
+A count being a whole number is not enough to determine which model should be used.
+\end{frame}
+
+\section{Summary}
+
+\begin{frame}{R Functions Used in Chapter 12}
+\begin{table}
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{R function} & \textbf{Purpose} \\
+\midrule
+\texttt{dbinom()} & Exact binomial probability mass $P(X=x)$ \\
+\texttt{pbinom()} & Cumulative binomial probability $P(X\le q)$ \\
+\texttt{dpois()} & Exact Poisson probability mass $P(X=x)$ \\
+\texttt{ppois()} & Cumulative Poisson probability $P(X\le q)$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\pause
+
+For upper-tail Poisson probabilities, \texttt{ppois(..., lower.tail = FALSE)} can be used when the desired event is above a threshold.
+\end{frame}
+
+\begin{frame}[fragile]{R Code Patterns to Remember}
+\scriptsize
+\begin{verbatim}
+# Exact binomial probability
+ dbinom(x = x, size = n, prob = p)
+
+# Cumulative binomial probability
+ pbinom(q = q, size = n, prob = p)
+
+# Exact Poisson probability
+ dpois(x = x, lambda = lambda)
+
+# Cumulative Poisson probability
+ ppois(q = q, lambda = lambda)
+\end{verbatim}
+\normalsize
+
+The probability statement should be identified before the R function is selected.
+\end{frame}
+
+\begin{frame}{Chapter Summary}
+A binomial random variable counts successes among a fixed number of trials. The model requires a fixed number of trials, two outcome categories, independent trials and a constant success probability.
+
+\vspace{0.15cm}
+The binomial formula gives exact probabilities. The mean is $np$, the variance is $np(1-p)$ and the standard deviation is $\sqrt{np(1-p)}$.
+
+\vspace{0.15cm}
+A Poisson random variable counts occurrences in a fixed interval of time, space or exposure. Its parameter $\lambda$ is both the mean and the variance.
+
+\vspace{0.15cm}
+The central skill is not formula memorization. The central skill is matching the model to the way the count is generated.
+\end{frame}
+
+\begin{frame}{A Consistent Problem-Solving Process}
+A count-probability problem becomes easier when the model is identified before any calculation is attempted.
+\begin{enumerate}
+  \item Check whether the setting matches a binomial or Poisson model
+  \item Define the random variable clearly in words
+  \item Translate the wording into a probability statement such as $P(X=k)$ or $P(X\le k)$
+  \item Select the appropriate formula or R function
+  \item Interpret the result in the original context
+\end{enumerate}
+\end{frame}
+
+\end{document}
