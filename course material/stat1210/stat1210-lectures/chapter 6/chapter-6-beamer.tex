@@ -1,0 +1,621 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+
+\title[Chapter 6: Samples and Observational Studies]{\textbf{Chapter 6: Samples and Observational Studies}}
+\subtitle{The Practice of Statistics in the Life Sciences \\ by Brigitte Baldi and David S. Moore}
+\author{Instructor: Ali Raisolsadat}
+\date{Part III: Data Generation}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+\graphicspath{{./}{figures/}}
+
+\newcommand{\lectureimage}[2][0.90\linewidth]{%
+  \IfFileExists{#2}{%
+    \includegraphics[width=#1]{#2}%
+  }{%
+    \fbox{\parbox[c][0.36\textheight][c]{0.88\linewidth}{%
+      \centering\small
+      Figure file: \texttt{\detokenize{#2}}\\[0.15cm]
+      Generate this figure by knitting the revised Chapter 6 RMarkdown notes.
+    }}%
+  }%
+}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Why This Chapter Matters}
+Statistical methods are useful only when the data have been collected in a way that matches the scientific question.
+
+\vspace{0.15cm}
+Before a mean, proportion, confidence interval or test is interpreted, the study design should make clear
+\begin{itemize}
+  \item who or what is being studied
+  \item what variables are being measured
+  \item how the observations are obtained
+\end{itemize}
+
+The quality of a statistical conclusion depends on the quality of the data-generation process.
+\end{frame}
+%
+%\begin{frame}{Chapter Roadmap}
+%This chapter develops the main ideas in a sequence that matches the way studies are planned.
+%\begin{enumerate}
+%  \item Observational studies and experiments
+%  \item Lurking variables and confounding
+%  \item Populations, samples and parameters
+%  \item Sampling designs and probability sampling
+%  \item Bias in sample surveys
+%  \item Case-control and cohort studies
+%  \item Matching conclusions to study design
+%\end{enumerate}
+%\end{frame}
+
+\section{Observational Studies and Experiments}
+
+\begin{frame}{Gathering Data}
+Many scientific questions concern populations that are too large to study completely.
+
+\vspace{0.15cm}
+A health researcher may want to estimate a proportion for adults in a country. A wildlife biologist may want to learn about fish in a river system. A laboratory may want to understand a biological process from a manageable set of specimens.
+
+\vspace{0.15cm}
+In each setting, the main issue is not simply how much data are collected. The main issue is whether the data were collected through a design that supports the intended conclusion.
+\end{frame}
+
+\begin{frame}{Study Design Comes Before Statistical Analysis}
+A numerical method cannot repair a study design that systematically excludes important groups, measures the wrong variable or mixes the effect of an explanatory variable with other factors.
+
+\vspace{0.15cm}
+Statistical reasoning therefore begins with a clear description of how the data were generated.
+\end{frame}
+
+\begin{frame}{Observation versus Experiment}
+Two broad approaches are used to gather data in the life sciences.
+
+\begin{block}{Observational Study}
+An observational study records information without deliberately assigning the main explanatory condition being studied.
+\end{block}
+
+\begin{block}{Experiment}
+An experiment deliberately imposes one or more treatments on experimental units and compares their responses.
+\end{block}
+\end{frame}
+
+\begin{frame}{Why the Distinction Matters}
+The distinction matters because observational associations can have several explanations.
+
+\vspace{0.15cm}
+Individuals who differ in the explanatory variable may also differ in age, behaviour, environment, socioeconomic conditions or other characteristics.
+
+\vspace{0.15cm}
+A well-designed randomized experiment helps separate the treatment effect from those other variables, which strengthens causal interpretation.
+\end{frame}
+
+\begin{frame}{When Are Observational Studies Needed}
+Observational studies remain essential when an experiment would be unethical, impossible or scientifically inappropriate.
+
+\vspace{0.15cm}
+For example, researchers should not randomly assign people to smoke cigarettes in order to study long-term health effects.
+
+\vspace{0.15cm}
+In these situations, strong scientific conclusions still depend on careful design, subject-matter knowledge and attention to alternative explanations.
+\end{frame}
+
+\begin{frame}{Random Sampling and Random Assignment}
+These two ideas solve different problems.
+
+\begin{itemize}
+  \item \textbf{Random sampling} helps support generalization from a sample to a population
+  \item \textbf{Random assignment} helps support causal comparisons between treatments
+\end{itemize}
+
+A study can use one, both or neither of these forms of randomness.
+\end{frame}
+
+\section{Confounding and Lurking Variables}
+
+\begin{frame}{Lurking Variables and Confounding}
+The main difficulty in an observational study is that the explanatory variable can be related to other variables that also affect the response.
+
+\begin{block}{Lurking Variable}
+A lurking variable is a variable that is not included as an explanatory or response variable in the analysis but may help explain the observed relationship.
+\end{block}
+
+\begin{block}{Confounding}
+Confounding occurs when the effects of two or more explanatory variables on a response cannot be separated clearly from the available data.
+\end{block}
+\end{frame}
+
+\begin{frame}{How the Ideas Differ}
+A lurking variable is a possible source of an alternative explanation.
+
+\vspace{0.15cm}
+Confounding describes the resulting difficulty in separating effects.
+
+\vspace{0.15cm}
+The ideas are related, but they are not identical.
+\end{frame}
+
+\begin{frame}{Reducing Confounding}
+Confounding is a major concern in observational research because naturally occurring groups can differ in many ways.
+
+\vspace{0.15cm}
+Researchers may try to reduce confounding through methods such as restriction, matching, stratification or statistical adjustment.
+
+\vspace{0.15cm}
+These methods can reduce the problem, but unmeasured differences may still remain.
+\end{frame}
+
+\begin{frame}{Example 6.2: Wine, Beer, or Spirits?}
+\begin{block}{Question}
+Some observational studies have reported that health outcomes differ among moderate drinkers who prefer wine, beer or spirits.
+
+Does an observed difference in health establish that beverage type itself causes the difference?
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 6.2: Explanation}
+Beverage preference can be related to many other characteristics.
+
+\vspace{0.15cm}
+Groups that prefer different beverages may also differ in diet, smoking behaviour, exercise, income, education and access to health care.
+
+\vspace{0.15cm}
+If these characteristics also relate to the health outcome, the effect of beverage preference cannot be separated cleanly from the effects of the other variables.
+\end{frame}
+
+\begin{frame}{Example 6.2: Confounding Diagram}
+  \centering
+  \lectureimage[0.8\linewidth]{fig_ch6_confounding.png}
+\end{frame}
+
+\begin{frame}{Example 6.2: Solution}
+The observational association does not by itself establish a causal effect of beverage type.
+
+\vspace{0.15cm}
+Potential confounders provide alternative explanations for the observed difference.
+
+\vspace{0.15cm}
+A scientifically appropriate conclusion is that beverage preference and health are associated in the observed data after considering the study design. A stronger causal claim would require stronger evidence and careful control of competing explanations.
+\end{frame}
+
+\section{Sampling}
+
+\begin{frame}{Sampling}
+A sample is a subset of a larger population.
+
+\vspace{0.15cm}
+Sampling is necessary because a complete census is often too expensive, too slow or impossible.
+
+\vspace{0.15cm}
+The goal is not simply to obtain many observations. The goal is to obtain observations through a design that supports the intended generalization.
+\end{frame}
+
+\begin{frame}{Core Terminology}
+Several terms should be distinguished before a sample is selected.
+
+\begin{itemize}
+  \item \textbf{Population:} the full group of individuals or units about which information is desired
+  \item \textbf{Sample:} the subset of individuals or units from which data are actually collected
+  \item \textbf{Sampling frame:} the practical list or mechanism used to identify units that can be selected
+  \item \textbf{Sampling design:} the planned method used to choose the sample
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Parameter and Statistic}
+Two additional terms connect sampling to later inference.
+
+\begin{block}{Parameter}
+A numerical characteristic of a population
+\end{block}
+
+\begin{block}{Statistic}
+A numerical characteristic calculated from a sample
+\end{block}
+
+Statistical inference uses sample statistics to learn about unknown population parameters.
+\end{frame}
+
+\begin{frame}{Why a Representative Sample Matters}
+A spoonful from a well-mixed pot of soup can give useful information about the flavour of the pot because the ingredients are distributed throughout the mixture.
+
+\vspace{0.15cm}
+The analogy should not be interpreted to mean that one spoonful represents the pot perfectly. Small samples can still vary by chance.
+
+\vspace{0.15cm}
+Human populations and ecological systems are often much more heterogeneous than soup, so a deliberate sampling design is needed.
+\end{frame}
+
+\begin{frame}{Planning a Sample}
+A useful sampling plan begins with several questions.
+\begin{enumerate}
+  \item What is the target population
+  \item What variables will be measured and how will they be defined
+  \item What sampling frame will be used
+  \item What sampling method will select the units
+  \item How will missing data and nonresponse be handled
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Defining a Population and a Variable}
+\begin{block}{Question}
+A university health centre wants to estimate the proportion of first-year students who usually sleep at least 7 hours per night.
+
+What is the population and what is the main variable?
+\end{block}
+\end{frame}
+
+\begin{frame}{Defining a Population and a Variable: Solution}
+The population is all first-year students at that university.
+
+\vspace{0.15cm}
+The main variable is whether a student usually sleeps at least 7 hours per night.
+
+\vspace{0.15cm}
+This variable can be recorded as a yes-or-no categorical variable, or the number of hours slept can be recorded as a quantitative variable and then classified if needed.
+\end{frame}
+
+\begin{frame}{Generalizing from a Sample}
+A scientifically sensible generalization requires more than a large sample.
+
+\vspace{0.15cm}
+The sample must be connected to the target population through a design that gives relevant individuals a fair chance of selection.
+
+\vspace{0.15cm}
+If important groups are systematically missed, the result can be biased even when the sample size is large.
+\end{frame}
+
+\section{Sampling Designs}
+
+\begin{frame}{Sampling Variability and Bias}
+Two ideas are central in sampling.
+
+\begin{block}{Sampling Variability}
+The natural sample-to-sample variation that occurs because different random samples usually produce different statistics
+\end{block}
+
+\begin{block}{Bias}
+A systematic tendency for a sampling method or measurement process to miss the true population value in a particular direction
+\end{block}
+\end{frame}
+
+\begin{frame}{Archery Analogy for Sampling Designs}
+  \centering
+  \lectureimage[0.5\linewidth]{fig_ch6_archery.png}
+\end{frame}
+
+\begin{frame}{Reading the Archery Analogy}
+In the archery figure, each point represents an estimate from a repeated sample.
+
+\vspace{0.15cm}
+The centre of the target represents the true population value.
+
+\vspace{0.15cm}
+The figure illustrates four situations.
+\begin{itemize}
+  \item Small sample and high variability
+  \item Large sample and high variability
+  \item Small sample and low variability
+  \item Biased sampling that is systematically off-centre
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Key Lesson from the Archery Figure}
+Larger samples often reduce sampling variability.
+
+\vspace{0.15cm}
+Larger samples do not automatically remove systematic bias.
+
+\vspace{0.15cm}
+A method that consistently misses important parts of the population can remain wrong even when the sample becomes very large.
+\end{frame}
+
+\begin{frame}{Poor Sampling Designs}
+Not all samples are created in ways that support reliable inference.
+
+\begin{itemize}
+  \item Convenience samples are based on easy availability
+  \item Voluntary response samples are formed by individuals who choose themselves to respond
+\end{itemize}
+
+Both approaches can produce strong bias because participation is not controlled by a suitable probability mechanism.
+\end{frame}
+
+\begin{frame}{Convenience Samples}
+A convenience sample consists of units that are easiest to reach.
+
+\vspace{0.15cm}
+Examples include surveying people in one classroom, taking the first specimens that arrive in a lab or interviewing shoppers who happen to pass a kiosk.
+
+\vspace{0.15cm}
+These samples may be useful for preliminary work, but they usually do not support confident generalization to a broader population.
+\end{frame}
+
+\begin{frame}{Voluntary Response Samples}
+A voluntary response sample is formed when people choose for themselves whether to participate.
+
+\vspace{0.15cm}
+Examples include internet polls and call-in surveys.
+
+\vspace{0.15cm}
+People with especially strong opinions are often more likely to respond, which can create severe bias.
+\end{frame}
+
+\begin{frame}{Probability Samples}
+A probability sample uses a known chance mechanism to select units.
+
+\vspace{0.15cm}
+These designs create a clearer connection between the sample and the population.
+
+\vspace{0.15cm}
+The simplest example is a simple random sample.
+\end{frame}
+
+\begin{frame}{Simple Random Samples}
+In a simple random sample of size $n$, every possible sample of size $n$ has the same chance of being selected.
+
+\vspace{0.15cm}
+This design helps protect against selection bias and provides a foundation for statistical inference.
+\end{frame}
+
+\begin{frame}{Other Probability Designs}
+Other common probability designs include
+\begin{itemize}
+  \item \textbf{Stratified samples}, which sample separately within identified groups
+  \item \textbf{Cluster samples}, which randomly select groups or clusters, then observe units within them
+  \item \textbf{Multistage samples}, which apply random selection in several stages
+\end{itemize}
+
+These designs are often more practical than a single simple random sample in large populations.
+\end{frame}
+
+\begin{frame}{Random Sampling versus Random Assignment}
+Random sampling and random assignment both use chance, but they serve different scientific purposes.
+
+\begin{itemize}
+  \item Random sampling supports generalization to a population
+  \item Random assignment supports causal comparison of treatments
+\end{itemize}
+
+Confusing these ideas is a common first-year mistake, so it is important to keep their purposes separate.
+\end{frame}
+
+\section{Sample Surveys}
+
+\begin{frame}{Sample Surveys}
+A sample survey is a study that gathers information from a sample in order to describe a population.
+
+\vspace{0.15cm}
+Even a large survey can be misleading if some groups are missed, many selected individuals do not respond or the questions are poorly designed.
+\end{frame}
+
+\begin{frame}{Undercoverage}
+Undercoverage occurs when some groups in the population are left out of the sampling frame or are given little chance of selection.
+
+\vspace{0.15cm}
+A survey that samples only landline telephone numbers, for example, can underrepresent people who rely mainly on cell phones.
+\end{frame}
+
+\begin{frame}{Example 6.8: The Cell Phone Problem}
+\begin{block}{Question}
+A health survey uses only landline telephone numbers to sample adults. Why can this design produce undercoverage bias?
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 6.8: Solution}
+Adults who rely mainly on cell phones may be missed or underrepresented.
+
+\vspace{0.15cm}
+If cell-phone-only adults differ from landline users on the characteristic being measured, the sample statistic can be systematically different from the population value.
+
+\vspace{0.15cm}
+The problem is not simply that the sample is smaller. The problem is that the sampling frame excludes part of the target population.
+\end{frame}
+
+\begin{frame}{Nonresponse Bias}
+Nonresponse bias occurs when selected individuals do not participate and the nonrespondents differ in important ways from those who do respond.
+
+\vspace{0.15cm}
+Weighting or follow-up efforts may reduce the problem, but they do not automatically remove it.
+\end{frame}
+
+\begin{frame}{Response Bias}
+Response bias occurs when the answers given are systematically inaccurate.
+
+\vspace{0.15cm}
+Sensitive topics, interviewer effects, question wording and social pressure can all affect how people answer.
+\end{frame}
+
+\begin{frame}{Wording and Order of Questions}
+The wording and order of survey questions can influence the responses.
+
+\vspace{0.15cm}
+Leading wording can push respondents toward a particular answer. Earlier questions can also shape how later questions are interpreted.
+\end{frame}
+
+\begin{frame}{Example 6.10: Question Order and Reported Happiness}
+\begin{block}{Question}
+A survey first asks people about recent dating experiences and then asks how happy they are overall. Why might the answer to the second question be affected by the first?
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 6.10: Solution}
+The first question can bring a specific aspect of life to mind and make it unusually prominent when the respondent answers the second question.
+
+\vspace{0.15cm}
+The overall happiness response may therefore reflect the temporary influence of the earlier question rather than the person\textquotesingle s broader long-run judgment.
+\end{frame}
+
+\begin{frame}{A Survey Quality Checklist}
+When evaluating a survey, useful questions include
+\begin{itemize}
+  \item Who is the target population
+  \item What is the sampling frame
+  \item How were units selected
+  \item What was the response rate
+  \item Could wording or ordering influence the answers
+\end{itemize}
+\end{frame}
+
+\section{Cohort and Case-Control Studies}
+
+\begin{frame}{Cohort and Case-Control Studies}
+Case-control and cohort studies are observational designs used to study relationships between exposures and outcomes.
+
+\vspace{0.15cm}
+They are especially important when an experiment would be unethical, impractical or too slow.
+\end{frame}
+
+\begin{frame}{Case-Control Studies}
+A case-control study selects individuals according to their outcome status.
+
+\vspace{0.15cm}
+The cases have the outcome of interest. The controls do not and should ideally come from the same source population.
+
+\vspace{0.15cm}
+This design is especially useful for rare outcomes because researchers do not need to wait for enough cases to appear in a very large cohort.
+\end{frame}
+
+\begin{frame}{Case-Control Studies: What They Can and Cannot Do}
+Case-control studies can efficiently examine whether previous exposures were more common among cases than among controls.
+
+\vspace{0.15cm}
+They cannot directly estimate population prevalence or incidence from the researcher-chosen case-control ratio.
+\end{frame}
+
+\begin{frame}{Real-World Case Study: Reye's Syndrome and Aspirin Exposure}
+\begin{block}{Question}
+Why is a case-control design efficient for a rare outcome such as Reye\textquotesingle s syndrome? What population quantity cannot be estimated directly from the researcher-chosen case-control ratio?
+\end{block}
+\end{frame}
+
+\begin{frame}{Real-World Case Study: Explanation}
+The design begins by locating cases, so it does not require a huge random sample while waiting for a rare outcome to occur.
+
+\vspace{0.15cm}
+Controls provide a comparison group for examining whether previous exposures were more common among cases.
+\end{frame}
+
+\begin{frame}{Real-World Case Study: Solution}
+The design is efficient because it concentrates data collection on individuals who are informative about a rare outcome.
+
+\vspace{0.15cm}
+It cannot directly estimate population prevalence or incidence from the case-control sampling ratio.
+
+\vspace{0.15cm}
+It can, however, estimate measures of association between exposure and outcome when the cases and controls are selected appropriately.
+\end{frame}
+
+\begin{frame}{Cohort Studies}
+A cohort study identifies a group of individuals according to exposures or characteristics, then compares the occurrence of outcomes across those groups.
+
+\vspace{0.15cm}
+A prospective cohort collects exposure information before the outcomes occur and follows participants forward through time.
+\end{frame}
+
+\begin{frame}{Strengths and Limitations of Cohort Studies}
+Cohort studies can estimate incidence within the observed cohort, compare outcome rates across exposure groups and study several outcomes from the same exposures.
+
+\vspace{0.15cm}
+Their main practical disadvantages include time, cost and loss to follow-up.
+
+\vspace{0.15cm}
+Their main statistical limitation is that exposure groups are not created by random assignment, so confounding can remain.
+\end{frame}
+
+\begin{frame}{Real-World Case Study: The British Doctors Study}
+\begin{block}{Question}
+What information can a cohort design provide in a study of smoking and later health outcomes? What limitations remain?
+\end{block}
+\end{frame}
+
+\begin{frame}{Real-World Case Study: Explanation}
+A prospective cohort records exposure information before many outcomes occur, which clarifies the time order between exposure and outcome.
+
+\vspace{0.15cm}
+Because the cohort is followed over time, researchers can estimate rates of new outcomes and compare those rates across exposure groups.
+\end{frame}
+
+\begin{frame}{Real-World Case Study: Solution}
+A cohort study can estimate incidence within the observed cohort, compare outcome rates across exposure groups and study several outcomes from the same exposures.
+
+\vspace{0.15cm}
+Confounding can still remain because the exposure groups were not formed by random assignment.
+
+\vspace{0.15cm}
+Attrition can also create selection bias if loss to follow-up is related to both exposure and outcome.
+\end{frame}
+
+\begin{frame}{Comparing the Observational Designs}
+\small
+\begin{table}
+\centering
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.18\textwidth} >{\RaggedRight\arraybackslash}p{0.24\textwidth} >{\RaggedRight\arraybackslash}p{0.26\textwidth} X}
+\toprule
+Feature & Sample survey & Case-control study & Cohort study \\
+\midrule
+Typical starting point & A sample from a population & Outcome status & A defined cohort and exposure information \\
+Main direction & Usually a population snapshot & Often looks backward for exposure & Often follows outcomes forward \\
+Useful for rare outcomes & Usually inefficient & Especially useful & Can require a very large cohort \\
+Can estimate prevalence directly & Yes, with appropriate sampling and measurement & Not from the chosen case-control ratio & Sometimes, depending on the cohort and timing \\
+Can estimate incidence directly & Usually not from one cross-sectional survey & No & Yes, within a properly followed cohort \\
+Main concerns & Coverage, nonresponse and response bias & Selection, recall and confounding & Confounding, attrition and cost \\
+\bottomrule
+\end{tabularx}
+\end{table}
+\end{frame}
+
+\begin{frame}{From Observational Studies to Experiments}
+Observational studies can provide strong and scientifically important evidence, especially when experiments are impossible or unethical.
+
+\vspace{0.15cm}
+Their interpretation must still consider alternative explanations such as confounding and selection bias.
+
+\vspace{0.15cm}
+A randomized experiment addresses a different problem by assigning treatments through chance, which strengthens causal interpretation.
+\end{frame}
+
+\section{Summary}
+
+\begin{frame}{Chapter Summary: Core Ideas}
+Data collection determines what a statistical analysis can support.
+
+\vspace{0.12cm}
+An observational study measures naturally occurring variables without deliberately assigning the main explanatory condition. An experiment deliberately assigns treatments.
+
+\vspace{0.12cm}
+Probability sampling connects a sample to a population. Increasing sample size can reduce sampling variability, but it does not automatically remove bias.
+
+\vspace{0.12cm}
+Case-control and cohort studies are important observational designs with different strengths and limitations.
+\end{frame}
+
+\begin{frame}{A Consistent Study-Design Workflow}
+A first-year analysis of study design becomes easier when the same questions are asked in a consistent order.
+\begin{enumerate}
+  \item What is the scientific question
+  \item What is the target population
+  \item What are the explanatory and response variables
+  \item Is the design observational or experimental
+  \item If sampling is used, what frame and selection method were used
+  \item Could bias or confounding affect the conclusion
+  \item Does the final conclusion match what the design can support
+\end{enumerate}
+\end{frame}
+
+\end{document}
