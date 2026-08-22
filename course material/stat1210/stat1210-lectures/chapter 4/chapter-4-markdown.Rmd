@@ -2,7 +2,7 @@
 title: "Chapter 4: Regression"
 subtitle: "The Practice of Statistics in the Life Sciences<br>by Brigitte Baldi and David S. Moore"
 author: "Instructor: Ali Raisolsadat"
-date: "Part I: Collecting and Exploring Data"
+date: "Part I: Exploring Data"
 
 output:
   html_document:

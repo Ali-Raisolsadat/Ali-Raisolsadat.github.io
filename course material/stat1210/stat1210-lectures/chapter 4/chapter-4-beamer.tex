@@ -1,0 +1,913 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+
+\title[Chapter 4: Regression]{\textbf{Chapter 4: Regression}}
+\subtitle{School of Mathematics and Computational Sciences \\ University of Prince Edward Island}
+\author{Instructor: Ali Raisolsadat}
+\date{Part I: Exploring Data}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+\graphicspath{{./}{figures/}}
+
+\newcommand{\lectureimage}[2][0.90\linewidth]{%
+  \IfFileExists{#2}{%
+    \includegraphics[width=#1]{#2}%
+  }{%
+    \fbox{\parbox[c][0.36\textheight][c]{0.88\linewidth}{%
+      \centering\small
+      Figure file: \texttt{\detokenize{#2}}\\[0.15cm]
+      Generate this figure by knitting the revised Chapter 4 RMarkdown notes.
+    }}%
+  }%
+}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Why Regression Matters}
+Chapter 3 introduced scatterplots and correlation as tools for describing the direction and strength of a linear association between two quantitative variables.
+
+\vspace{0.15cm}
+Regression goes one step further. It gives an equation for a fitted line that can be used to describe how a response variable tends to change as an explanatory variable changes.
+
+\vspace{0.15cm}
+In first-year statistics, regression is important because it connects visual patterns, formulas, prediction and interpretation in context.
+\end{frame}
+
+\begin{frame}{Chapter Roadmap}
+This chapter develops regression in a sequence that matches the way the ideas are used.
+\begin{enumerate}
+  \item The meaning of a regression line
+  \item The slope and intercept of a fitted line
+  \item Least-squares regression and residuals
+  \item Calculating a least-squares line by hand and in R
+  \item Important facts about regression and the meaning of $R^2$
+  \item Outliers, leverage and influential observations
+  \item Logarithm transformations
+  \item Cautions about extrapolation and causation
+\end{enumerate}
+\end{frame}
+
+\section{From Correlation to Regression}
+
+\begin{frame}{From Correlation to Regression}
+Correlation and regression are related, but they answer different questions.
+
+\begin{table}
+\centering
+\small
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.24\textwidth} >{\RaggedRight\arraybackslash}p{0.32\textwidth} X}
+\toprule
+Idea & Correlation & Regression \\
+\midrule
+Main purpose & Describes the direction and strength of a linear association & Describes the fitted relationship and predicts the response \\
+Roles of variables & The two variables are treated symmetrically & One variable is explanatory and one is the response \\
+Units & Unitless & The slope has response units per explanatory-variable unit \\
+Typical question & How strong is the linear association & What response is predicted for a given value of $x$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+\end{frame}
+
+\begin{frame}{The Roles of the Variables}
+A regression analysis begins by assigning roles to the variables.
+\begin{itemize}
+  \item The explanatory variable $x$ is used to explain or predict
+  \item The response variable $y$ is the outcome being described or predicted
+\end{itemize}
+
+These roles come from the scientific question rather than from the order of the columns in a dataset.
+
+\vspace{0.15cm}
+A fitted line describes an average pattern. Two individuals with the same value of $x$ can still have different observed responses.
+\end{frame}
+
+\begin{frame}{Regression Is a Model}
+A fitted regression line summarizes a linear pattern in the observed data.
+
+\vspace{0.15cm}
+The fitted line does not guarantee that every point lies on the line. It also does not establish that changes in the explanatory variable cause changes in the response variable.
+
+\vspace{0.15cm}
+A useful interpretation should therefore distinguish clearly between
+\begin{itemize}
+  \item description of the observed relationship
+  \item prediction from the fitted line
+  \item causal conclusions, which require stronger evidence
+\end{itemize}
+\end{frame}
+
+\section{The Anatomy of a Straight Line}
+
+\begin{frame}{The Anatomy of a Straight Line}
+A straight line relating an explanatory variable $x$ to a response variable $y$ has the form
+\[
+y=a+bx
+\]
+
+The slope $b$ describes the change in the predicted response for a one-unit increase in $x$.
+
+\vspace{0.15cm}
+The intercept $a$ is the value of the line when $x=0$.
+\end{frame}
+
+\begin{frame}{From an Algebraic Line to a Regression Line}
+A regression line uses the same algebraic form, but the predicted response is written as $\hat y$.
+\[
+\hat y=a+bx
+\]
+
+The notation matters.
+\begin{itemize}
+  \item $y$ is an observed response taken from the data
+  \item $\hat y$ is the response predicted by the fitted line
+\end{itemize}
+
+This distinction becomes very important when residuals are introduced.
+\end{frame}
+
+\begin{frame}{How the Slope and Intercept Are Read}
+The slope and intercept do different jobs.
+\begin{itemize}
+  \item The intercept locates the line vertically
+  \item The slope determines how quickly the fitted response rises or falls as $x$ changes
+\end{itemize}
+
+The units of the slope are the units of the response variable divided by the units of the explanatory variable.
+
+\vspace{0.15cm}
+The units of the intercept are the units of the response variable.
+\end{frame}
+
+\begin{frame}{Additional Example: Reading a Regression Equation}
+\begin{block}{Question}
+A greenhouse study uses the fitted equation
+\[
+\widehat{\text{height}}=4.5+1.8(\text{hours of light})
+\]
+to predict final plant height in centimetres from daily light exposure in hours.
+
+What does the slope mean? What height does the model predict for a plant receiving 6 hours of light per day?
+\end{block}
+\end{frame}
+
+\begin{frame}{Additional Example: Explanation}
+The slope is 1.8 centimetres per hour of light.
+
+\vspace{0.15cm}
+According to the fitted linear model, a one-hour increase in daily light exposure is associated with an increase of 1.8 centimetres in predicted final height.
+
+\vspace{0.15cm}
+The intercept is 4.5 centimetres. It is the predicted height when the explanatory variable equals zero. Whether that interpretation is useful depends on the scientific setting.
+\end{frame}
+
+\begin{frame}{Additional Example: Solution}
+For 6 hours of light, the predicted height is
+\[
+\widehat{\text{height}}=4.5+1.8(6)
+\]
+\[
+\widehat{\text{height}}=15.3\text{ cm}
+\]
+
+The fitted model predicts a final height of 15.3 cm for a plant receiving 6 hours of light per day.
+\end{frame}
+
+\section{Example 4.1: Predicting Fat Gain}
+
+\begin{frame}{Example 4.1: Predicting Fat Gain}
+\begin{block}{Question}
+A study followed 16 young adults who overate for eight weeks.
+
+The explanatory variable was the change in nonexercise activity, abbreviated NEA, measured in Calories. The response variable was fat gain measured in kilograms.
+
+How can the fitted regression line be used to predict fat gain for a person whose NEA increases by 400 Calories?
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 4.1: The Observed Data}
+\scriptsize
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\centering
+\begin{tabular}{ccc}
+\toprule
+Volunteer & NEA Change & Fat Gain \\
+ & (Calories) & (kg) \\
+\midrule
+1 & -94 & 4.2 \\
+2 & -57 & 3.0 \\
+3 & -29 & 3.7 \\
+4 & 135 & 2.7 \\
+5 & 143 & 3.2 \\
+6 & 151 & 3.6 \\
+7 & 245 & 2.4 \\
+8 & 355 & 1.3 \\
+\bottomrule
+\end{tabular}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\begin{tabular}{ccc}
+\toprule
+Volunteer & NEA Change & Fat Gain \\
+ & (Calories) & (kg) \\
+\midrule
+9 & 392 & 3.8 \\
+10 & 473 & 1.7 \\
+11 & 486 & 1.6 \\
+12 & 535 & 2.2 \\
+13 & 571 & 1.0 \\
+14 & 580 & 0.4 \\
+15 & 620 & 2.3 \\
+16 & 690 & 1.1 \\
+\bottomrule
+\end{tabular}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Example 4.1: Explanation}
+The fitted least-squares regression line for these data is
+\[
+\widehat{\text{fat gain}}=3.505-0.00344(\text{NEA change})
+\]
+
+A prediction at an NEA change of 400 Calories is obtained by substituting $x=400$ into the fitted equation.
+
+\vspace{0.15cm}
+The value 400 lies inside the observed range of NEA changes, so this prediction is an interpolation rather than an extrapolation.
+\end{frame}
+
+\begin{frame}{Example 4.1: Solution}
+The predicted fat gain is
+\[
+\widehat{\text{fat gain}}=3.505-0.00344(400)
+\]
+\[
+\widehat{\text{fat gain}}\approx2.13\text{ kg}
+\]
+
+The value 2.13 kg is the response predicted by the fitted line for a person whose NEA increases by 400 Calories.
+\end{frame}
+
+\begin{frame}{Example 4.1: Scatterplot and Fitted Line}
+  \centering
+  \lectureimage[0.82\linewidth]{fig_ch4_regression.png}
+\end{frame}
+
+\begin{frame}{Reading the Biological Context}
+The slope is $-0.00344$ kg per Calorie.
+
+\vspace{0.15cm}
+Within the range of NEA values represented by the data, the fitted model predicts that fat gain decreases by about 0.00344 kg for each additional Calorie of NEA change.
+
+\vspace{0.15cm}
+A 100-Calorie increase in NEA corresponds to a predicted decrease of about 0.344 kg in fat gain according to the fitted line.
+\end{frame}
+
+\begin{frame}{The Meaning of the Intercept}
+The intercept is 3.505 kg. It represents the predicted fat gain when NEA change is zero.
+\[
+\widehat{\text{fat gain}}=3.505\text{ kg when NEA change}=0
+\]
+
+In this example, the value $x=0$ lies inside the observed range, so the intercept has a meaningful interpretation.
+
+\vspace{0.15cm}
+In other applications, the intercept may be mathematically necessary while having little practical meaning.
+\end{frame}
+
+\begin{frame}{A Reminder About Units}
+The numerical size of a slope depends on the units.
+
+\vspace{0.15cm}
+The slope $-0.00344$ does not imply that the relationship is unimportant simply because the number is close to zero.
+
+\vspace{0.15cm}
+If fat gain were measured in grams instead of kilograms, the slope would be $-3.44$ grams per Calorie. The fitted relationship would be unchanged.
+\end{frame}
+
+\section{Least-Squares Regression and Residuals}
+
+\begin{frame}{Least-Squares Regression}
+A line drawn by eye is subjective. Different people could draw slightly different lines through the same scatterplot.
+
+\vspace{0.15cm}
+Least-squares regression provides a precise mathematical rule for choosing one line.
+
+\vspace{0.15cm}
+For an observation $(x_i,y_i)$, the fitted line gives a predicted response $\hat y_i$. The residual is the signed vertical difference between the observed response and the predicted response.
+\[
+e_i=y_i-\hat y_i
+\]
+\end{frame}
+
+\begin{frame}{How Residuals Are Interpreted}
+A residual compares what was observed with what the fitted line predicted.
+\begin{itemize}
+  \item A positive residual means the observed point lies above the fitted line
+  \item A negative residual means the observed point lies below the fitted line
+  \item A residual close to zero means the fitted line predicted that observation well
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Residual Plot Illustration}
+  \centering
+  \lectureimage[0.82\linewidth]{fig_ch4_residuals.png}
+\end{frame}
+
+\begin{frame}{Residual Example from the NEA Study}
+\begin{block}{Question}
+Volunteer 8 had an NEA change of 355 Calories and an observed fat gain of 1.3 kg.
+
+What fat gain does the fitted line predict for this volunteer and what is the residual?
+\end{block}
+\end{frame}
+
+\begin{frame}{Residual Example: Solution}
+The fitted value is
+\[
+\hat y=3.505-0.00344(355)
+\]
+\[
+\hat y\approx2.28\text{ kg}
+\]
+
+The residual is
+\[
+e=y-\hat y=1.3-2.28
+\]
+\[
+e\approx-0.98\text{ kg}
+\]
+
+The residual is negative, so this point lies below the fitted line.
+\end{frame}
+
+\begin{frame}{Why Are the Residuals Squared}
+The least-squares line is the line that minimizes the sum of squared residuals.
+\[
+\text{Sum of squared residuals}=\sum e_i^2
+\]
+
+Squaring serves two purposes.
+\begin{itemize}
+  \item Positive and negative residuals do not cancel out
+  \item Large prediction errors are penalized more strongly than small ones
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Notation and Formula Reference}
+\begin{block}{Least-Squares Regression Formulas}
+\[
+b=r\frac{s_y}{s_x}
+\]
+\[
+a=\bar y-b\bar x
+\]
+\[
+\hat y=a+bx
+\]
+\[
+e=y-\hat y
+\]
+\end{block}
+
+These formulas connect the regression coefficients to the summary statistics from Chapter 3.
+\end{frame}
+
+\begin{frame}{What the Slope Formula Tells Us}
+The slope formula
+\[
+b=r\frac{s_y}{s_x}
+\]
+shows that the slope depends on three ingredients.
+\begin{itemize}
+  \item The sign and strength of the linear association through $r$
+  \item The spread of the response variable through $s_y$
+  \item The spread of the explanatory variable through $s_x$
+\end{itemize}
+
+A positive correlation gives a positive slope. A negative correlation gives a negative slope.
+\end{frame}
+
+\section{Example 4.2: Summary Statistics to the Regression Line}
+
+\begin{frame}{Example 4.2: Calculating the Line from Summary Statistics}
+\begin{block}{Question}
+For the NEA and fat-gain data, the summary statistics are
+\[
+\bar x=324.75
+\]
+\[
+\bar y=2.3875
+\]
+\[
+s_x=261.46
+\]
+\[
+s_y=1.1207
+\]
+\[
+r=-0.8021
+\]
+
+Use these summary statistics to calculate the least-squares regression line.
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 4.2: Calculate the Slope}
+Using the slope formula,
+\[
+b=r\frac{s_y}{s_x}
+\]
+\[
+b=(-0.8021)\left(\frac{1.1207}{261.46}\right)
+\]
+\[
+b\approx-0.00344
+\]
+
+The fitted line has a negative slope, which agrees with the negative association seen in the scatterplot.
+\end{frame}
+
+\begin{frame}{Example 4.2: Calculate the Intercept}
+Using the intercept formula,
+\[
+a=\bar y-b\bar x
+\]
+\[
+a=2.3875-(-0.00344)(324.75)
+\]
+\[
+a\approx3.505
+\]
+
+The least-squares regression line is therefore
+\[
+\widehat{\text{fat gain}}=3.505-0.00344(\text{NEA change})
+\]
+\end{frame}
+
+\section{Calculating the Least-Squares Line in R}
+
+\begin{frame}{Calculating the Least-Squares Line in R}
+R can reproduce the hand calculations and can also fit the model directly.
+
+\vspace{0.15cm}
+The same data are used in each method so that the connection between the formulas and the software remains clear.
+\end{frame}
+
+\begin{frame}[fragile]{R Code: Entering the Data}
+\begin{verbatim}
+# NEA change in Calories
+x <- c(
+  -94, -57, -29, 135, 143, 151, 245, 355,
+  392, 473, 486, 535, 571, 580, 620, 690
+)
+
+# Fat gain in kilograms
+y <- c(
+  4.2, 3.0, 3.7, 2.7, 3.2, 3.6, 2.4, 1.3,
+  3.8, 1.7, 1.6, 2.2, 1.0, 0.4, 2.3, 1.1
+)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{R Code: Step-by-Step Calculation}
+\scriptsize
+\begin{verbatim}
+# Summary statistics
+x_bar <- mean(x)
+y_bar <- mean(y)
+s_x <- sd(x)
+s_y <- sd(y)
+r <- cor(x, y)
+
+# Least-squares coefficients
+b <- r * (s_y / s_x)
+a <- y_bar - b * x_bar
+
+\end{verbatim}
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{R Code: A Custom Function}
+\scriptsize
+\begin{verbatim}
+calc_regression <- function(x_var, y_var) {
+  b_slope <- cor(x_var, y_var) * (sd(y_var) / sd(x_var))
+  a_intercept <- mean(y_var) - b_slope * mean(x_var)
+
+  data.frame(
+    Mean_X = mean(x_var),
+    Mean_Y = mean(y_var),
+    Correlation = cor(x_var, y_var),
+    Slope = b_slope,
+    Intercept = a_intercept
+  )
+}
+
+calc_regression(x_var = x, y_var = y)
+\end{verbatim}
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{R Code: Fitting the Model with \texttt{lm()}}
+\begin{verbatim}
+model <- lm(y ~ x)
+
+# Display the fitted coefficients
+coef(model)
+\end{verbatim}
+
+The formula \texttt{y ~ x} means that the response variable \texttt{y} is modelled as a function of the explanatory variable \texttt{x}.
+\end{frame}
+
+\begin{frame}[fragile]{R Code: A Prediction from the Fitted Model}
+\begin{verbatim}
+# Predicted fat gain for an NEA change of 400 Calories
+predict(model, newdata = data.frame(x = 400))
+\end{verbatim}
+
+This R output agrees with the earlier prediction of about 2.13 kg.
+\end{frame}
+
+\begin{frame}[fragile]{R Code: Fitted Values and Residuals}
+\scriptsize
+\begin{verbatim}
+# Fitted responses and residuals from the linear model
+fitted_values <- fitted(model)
+residual_values <- residuals(model)
+
+# The first six observations are displayed together
+head(
+  data.frame(
+    NEA = x,
+    Observed_Fat_Gain = y,
+    Predicted_Fat_Gain = fitted_values,
+    Residual = residual_values
+  )
+)
+\end{verbatim}
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{R Code: Model Summary}
+\begin{verbatim}
+# A standard summary of the fitted linear model
+summary(model)
+\end{verbatim}
+
+At this stage, the fitted coefficients and $R^2$ are the most relevant parts of the output.
+\end{frame}
+
+\section{Facts About Least-Squares Regression}
+
+\begin{frame}{Facts About Least-Squares Regression}
+Several mathematical properties help explain how a fitted line behaves.
+\begin{itemize}
+  \item The roles of $x$ and $y$ are not interchangeable
+  \item The sign of the slope always matches the sign of the correlation
+  \item The least-squares line always passes through $(\bar x,\bar y)$
+  \item The coefficient of determination $R^2$ summarizes how well the line accounts for variation in the response
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The Roles of $x$ and $y$}
+The least-squares line for predicting $y$ from $x$ is generally different from the least-squares line for predicting $x$ from $y$.
+
+\vspace{0.15cm}
+This difference occurs because the regression line minimizes vertical prediction errors in the response variable.
+
+\vspace{0.15cm}
+Regression is therefore directional in a way that correlation is not.
+\end{frame}
+
+\begin{frame}{Slope and Correlation}
+The slope and correlation are connected by the formula
+\[
+b=r\frac{s_y}{s_x}
+\]
+
+The sign of the slope always matches the sign of $r$.
+\begin{itemize}
+  \item If $r>0$, then $b>0$
+  \item If $r<0$, then $b<0$
+  \item If $r=0$, then $b=0$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The Point of Averages}
+The least-squares regression line always passes through the point of averages.
+\[
+(\bar x,\bar y)
+\]
+
+This fact is built into the intercept formula
+\[
+a=\bar y-b\bar x
+\]
+
+It provides a useful algebraic check when the fitted line is calculated by hand.
+\end{frame}
+
+\begin{frame}{The Coefficient of Determination}
+The coefficient of determination is written as $R^2$.
+
+\vspace{0.15cm}
+For simple linear regression with an intercept,
+\[
+R^2=r^2
+\]
+
+The value $R^2$ is the proportion of the observed variation in the response variable that is accounted for by the fitted linear relationship with the explanatory variable.
+\end{frame}
+
+\begin{frame}{A Second View of $R^2$}
+A useful interpretation of $R^2$ compares total variation with variation left unexplained by the model.
+\[
+R^2=1-\frac{\text{SSE}}{\text{SST}}
+\]
+
+Here, SSE is the sum of squared residuals and SST is the total sum of squares.
+
+\vspace{0.15cm}
+A larger $R^2$ means the fitted line leaves less variation unexplained.
+\end{frame}
+
+\begin{frame}{Example 4.3: Interpreting $R^2$}
+\begin{block}{Question}
+Suppose a fitted linear model has
+\[
+R^2=0.75
+\]
+
+How should this value be interpreted?
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 4.3: Solution}
+An $R^2$ value of 0.75 means that 75\% of the observed variation in the response variable is accounted for by the fitted linear relationship with the explanatory variable.
+
+\vspace{0.15cm}
+The remaining 25\% is not accounted for by the fitted line and remains in the residual variation.
+
+\vspace{0.15cm}
+This interpretation describes the quality of fit. It does not imply causation.
+\end{frame}
+
+\section{Outliers and Influential Observations}
+
+\begin{frame}{Outliers and Influential Observations}
+A single unusual observation can affect correlation and least-squares regression in important ways.
+
+\vspace{0.15cm}
+Three related ideas should be distinguished.
+\begin{itemize}
+  \item An outlier has an unusually large residual
+  \item A high-leverage point has an unusual value of $x$
+  \item An influential point changes the fitted line noticeably when it is included or removed
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Examples 4.4 and 4.5: The Empathy Study}
+\begin{block}{Question}
+An empathy study measures brain activity and empathy score for 16 women. Subject 16 has an unusually large empathy score.
+
+How does this point affect the correlation and the least-squares regression line?
+\end{block}
+\end{frame}
+
+\begin{frame}{Examples 4.4 and 4.5: Interpretation}
+Subject 16 changes the correlation substantially.
+\[
+r=0.515\text{ with Subject 16}
+\]
+\[
+r=0.331\text{ without Subject 16}
+\]
+
+The fitted regression line also changes, although less dramatically than the correlation.
+
+\vspace{0.15cm}
+This example shows that a point can be influential for both correlation and regression, with different levels of impact.
+\end{frame}
+
+\begin{frame}{Empathy Study Plot}
+  \centering
+  \lectureimage[0.83\linewidth]{fig_ch4_outliers.png}
+\end{frame}
+
+\begin{frame}{A Hypothetical High-Leverage Point}
+A point with an extreme $x$ value has leverage because it can pull the fitted line toward itself.
+
+\vspace{0.15cm}
+If a high-leverage point also has a large residual, it can become highly influential.
+
+\vspace{0.15cm}
+This is why unusual observations should be examined carefully before a fitted line is interpreted.
+\end{frame}
+
+\section{Working with Logarithm Transformations}
+
+\begin{frame}{Why Use a Logarithm Transformation}
+In biology and other sciences, data often span several orders of magnitude.
+
+\vspace{0.15cm}
+A logarithm transformation can help when
+\begin{itemize}
+  \item the raw data are strongly skewed
+  \item a few very large observations dominate the scale
+  \item a multiplicative relationship becomes more nearly linear after transformation
+\end{itemize}
+\end{frame}
+
+\begin{frame}{A Simple Base-10 Log Illustration}
+A base-10 logarithm compresses large scales.
+\[
+\log_{10}(10)=1
+\]
+\[
+\log_{10}(100)=2
+\]
+\[
+\log_{10}(1000)=3
+\]
+\[
+\log_{10}(10000)=4
+\]
+
+Values that are very far apart on the original scale become much closer on the log scale.
+\end{frame}
+
+\begin{frame}{Example 4.6: Mammal Brains and Body Weight}
+\begin{block}{Question}
+How does an animal's brain size relate to its body size across many mammal species?
+
+Why might a log-log transformation give a clearer regression picture than the raw variables?
+\end{block}
+\end{frame}
+
+\begin{frame}{Example 4.6: Explanation}
+On the raw scale, a few very large mammals dominate the axes and compress the smaller species near the origin.
+
+\vspace{0.15cm}
+After taking base-10 logarithms of both variables, the observations are spread more evenly and the relationship becomes more nearly linear.
+
+\vspace{0.15cm}
+The fitted log-log model is
+\[
+\log_{10}(\text{brain weight})=1.01+0.72\log_{10}(\text{body weight})
+\]
+\end{frame}
+
+\begin{frame}{Mammal Example Plot}
+  \centering
+  \lectureimage[0.88\linewidth]{fig_ch4_log_comparison.png}
+\end{frame}
+
+\begin{frame}{Back to the Original Scale}
+The log-log model can be rewritten as a power relationship.
+\[
+y=10^{1.01}x^{0.72}
+\]
+
+This form shows that a multiplicative relationship on the original scale becomes linear after taking logarithms.
+\end{frame}
+
+\section{Cautions About Correlation and Regression}
+
+\begin{frame}{Cautions About Correlation and Regression}
+A fitted line should always be interpreted in light of the data and the scientific question.
+\begin{itemize}
+  \item Correlation and simple linear regression describe linear patterns
+  \item Unusual observations can change the correlation and the fitted line
+  \item Predictions outside the observed range require caution
+  \item A lurking variable can help explain an observed association
+  \item Association by itself does not imply causation
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Linear Relationships}
+A scatterplot should be examined before a simple linear model is interpreted.
+
+\vspace{0.15cm}
+Curvature, separate clusters or changing spread can all indicate that a straight line is an inadequate summary.
+
+\vspace{0.15cm}
+Software can always produce a correlation coefficient and a fitted line, but those outputs are only useful when the relationship is reasonably linear.
+\end{frame}
+
+\begin{frame}{Interpolation and Extrapolation}
+A prediction within the observed range of $x$ values is called interpolation.
+
+\vspace{0.15cm}
+A prediction outside the observed range is called extrapolation.
+
+\vspace{0.15cm}
+Algebra allows the fitted line to be extended indefinitely, but the data do not show whether the same relationship continues beyond the observed range.
+\end{frame}
+
+\begin{frame}{Additional Example: Interpolation versus Extrapolation}
+\begin{block}{Question}
+A fertilizer study observes daily doses from 0 to 5 millilitres and fits a linear regression model over that range.
+
+Which prediction is better supported by the observed data: a prediction at 3 millilitres or a prediction at 100 millilitres?
+\end{block}
+\end{frame}
+
+\begin{frame}{Additional Example: Solution}
+The prediction at 3 millilitres is better supported because it is an interpolation.
+
+\vspace{0.15cm}
+The prediction at 100 millilitres is an extrapolation far beyond the observed data.
+
+\vspace{0.15cm}
+The fitted line contains no information about whether the biological relationship remains linear from 5 to 100 millilitres.
+\end{frame}
+
+\begin{frame}{Lurking Variables}
+A lurking variable is a variable that is not included as an explanatory or response variable in the analysis but may help explain the observed association.
+
+\vspace{0.15cm}
+For example, an observational study might find that coffee consumption is positively associated with heart-attack risk. Smoking could be a lurking variable if it is related to both coffee consumption and heart-attack risk.
+\end{frame}
+
+\section{Association and Causation}
+
+\begin{frame}{Association Does Not Imply Causation}
+Regression and correlation describe associations. They do not by themselves establish cause and effect.
+
+\vspace{0.15cm}
+A causal conclusion requires more than a strong correlation, a steep slope or a large $R^2$. The study design matters.
+\end{frame}
+
+\begin{frame}{Evidence for Causation}
+A well-designed randomized experiment can provide stronger evidence for a causal effect because random assignment helps balance lurking variables across treatment groups.
+
+\vspace{0.15cm}
+Observational studies generally require more caution because unmeasured confounding can remain even after statistical adjustment.
+\end{frame}
+
+\section{Summary}
+
+\begin{frame}{Chapter Summary: Core Ideas}
+Regression extends scatterplots and correlation by providing an equation for predicting a response variable from an explanatory variable when a linear model is reasonable.
+
+\vspace{0.12cm}
+The least-squares regression line has the form
+\[
+\hat y=a+bx
+\]
+
+A residual is the observed response minus the predicted response.
+\[
+e_i=y_i-\hat y_i
+\]
+
+For simple linear regression with an intercept,
+\[
+R^2=r^2
+\]
+\end{frame}
+
+\begin{frame}{Chapter Summary: Interpretation Points}
+A good regression interpretation explains the fitted line in context.
+\begin{itemize}
+  \item The slope describes how the predicted response changes as $x$ increases by one unit
+  \item The intercept should be interpreted only when $x=0$ is meaningful
+  \item $R^2$ describes how well the fitted linear model accounts for variation in the response
+  \item Residuals describe individual prediction errors
+  \item Association should be kept separate from causation
+\end{itemize}
+\end{frame}
+
+\begin{frame}{A Consistent Regression Workflow}
+A useful first-year workflow is to interpret regression in the same order every time.
+\begin{enumerate}
+  \item Identify the explanatory variable and the response variable
+  \item Examine the scatterplot for linearity and unusual observations
+  \item Write and interpret the fitted line
+  \item Calculate or interpret a prediction when appropriate
+  \item Use residuals and $R^2$ to assess the fit
+  \item Consider limitations such as extrapolation, lurking variables and causation
+\end{enumerate}
+\end{frame}
+
+\end{document}

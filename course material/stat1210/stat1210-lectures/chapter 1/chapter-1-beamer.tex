@@ -12,7 +12,7 @@
 \title[Chapter 1: Picturing Distributions]{\textbf{Chapter 1: Picturing Distributions with Graphs}}
 \subtitle{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
 \author{Ali Raisolsadat}
-\date{Part I: Exploring Data (The Basics)}
+\date{Part I: Exploring Data}
 
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{itemize items}[circle]
@@ -51,10 +51,11 @@
 \begin{frame}{The Course Roadmap: The 5-Part Journey}
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
-      \textbf{I: Exploring Data (The Basics)}
+      \textbf{I: Exploring Data}
       \begin{itemize}
         \item Ch 1--2: Distributions \& Numerical Summaries
         \item Ch 3: Scatterplots \& Correlation
+        \item Ch 4: Regression
       \end{itemize}
       \vspace{0.1cm}
       \textbf{II: Probability \& Distributions}
@@ -64,9 +65,8 @@
         \item Ch 12: Binomial / Poisson
       \end{itemize}
       \vspace{0.1cm}
-      \textbf{III: Data Production}
+      \textbf{III: Data Generation}
       \begin{itemize}
-        \item Ch 4: Regression
         \item Ch 6: Samples \& Observational Studies
         \item Ch 7: Designing Experiments
       \end{itemize}
@@ -93,36 +93,37 @@
 \end{frame}
 
 % SLIDE 3
-\begin{frame}{Chapter 1 Learning Objectives}
-  By the end of this chapter, you should be able to:
-  \begin{enumerate}
-    \item identify \textbf{individuals} and \textbf{variables} in a dataset;
-    \item distinguish \textbf{categorical} and \textbf{quantitative} variables;
-    \item recognize \textbf{discrete} and \textbf{continuous} quantitative variables;
-    \item choose an appropriate \textbf{bar graph, pie chart, histogram, dotplot, or time plot};
-    \item describe a quantitative distribution using \textbf{SOCS};
-    \item recognize common ways graphs can be \textbf{misleading}; and
-    \item use graphs to detect possible \textbf{outliers and data-quality problems}.
-  \end{enumerate}
-\end{frame}
+%\begin{frame}{Chapter 1 Learning Objectives}
+%  By the end of this chapter, you should be able to:
+%  \begin{enumerate}
+%    \item identify \textbf{individuals} and \textbf{variables} in a dataset;
+%    \item distinguish \textbf{categorical} and \textbf{quantitative} variables;
+%    \item recognize \textbf{discrete} and \textbf{continuous} quantitative variables;
+%    \item choose an appropriate \textbf{bar graph, pie chart, histogram, dotplot, or time plot};
+%    \item describe a quantitative distribution using \textbf{SOCS};
+%    \item recognize common ways graphs can be \textbf{misleading}; and
+%    \item use graphs to detect possible \textbf{outliers and data-quality problems}.
+%  \end{enumerate}
+%\end{frame}
 
 % SLIDE 4
 \begin{frame}{What Is Statistics?}
   \begin{block}{Definition}
     \textbf{Statistics is the science of learning from data.}
   \end{block}
+  \begin{block}{Ernest Rutherford}
+    \textbf{All science is either physics or stamp collecting.}
+  \end{block}
   \vspace{0.15cm}
   Statistics gives us tools to:
   \begin{itemize}
     \item collect information;
     \item organize and display data;
-    \item summarize patterns;
-    \item compare groups; and
-    \item use data to answer questions.
+    \item summarize patterns, compare groups and use data to answer questions.
   \end{itemize}
   \vspace{0.15cm}
   \begin{alertblock}{Statistics Is More Than Formulas}
-    A statistical thinker asks: \emph{What does the data show, what does it not show, and how confident should we be in the conclusion?}
+    A statistical thinker asks: \emph{What does the data show, what does it not show and how confident should we be in the conclusion?}
   \end{alertblock}
 \end{frame}
 
@@ -132,22 +133,17 @@
     \item \textbf{Biology:} Do plants given fertilizer grow taller than plants that do not receive it?
     \item \textbf{Chemistry:} Does changing the catalyst increase reaction yield?
     \item \textbf{Psychology:} Do students who sleep longer tend to report better concentration?
-    \item \textbf{Economics:} Are grocery prices increasing over time, or did one unusual month distort our impression?
+    \item \textbf{Economics:} Are grocery prices increasing over time, or was it only COVID that distort our impression?
     \item \textbf{Artificial Intelligence:} Does the training dataset fairly represent the population where the AI system will be used?
   \end{itemize}
-  \vspace{0.2cm}
-  \begin{block}{Common First Step}
-    Before making a conclusion, \textbf{look carefully at the data}.
-  \end{block}
 \end{frame}
 
 % SLIDE 6
-\begin{frame}{Why Statistics Still Matters in the Age of AI}
-  Modern AI can process huge datasets and create tables or graphs almost instantly.
+\begin{frame}{Why Statistics Still Matters}
   \vspace{0.15cm}
   \begin{columns}[T]
     \begin{column}{0.47\textwidth}
-      \begin{block}{AI Can Help Us}
+      \begin{block}{LLMs and AI Can Help Us}
         \begin{itemize}
           \item organize data quickly;
           \item calculate summaries;
@@ -167,9 +163,6 @@
       \end{alertblock}
     \end{column}
   \end{columns}
-  \vspace{0.15cm}
-  \centering
-  \textbf{Fast analysis is not automatically good analysis.}
 \end{frame}
 
 % SLIDE 7
@@ -200,7 +193,7 @@
 % SLIDE 8
 \begin{frame}{Anatomy of a Dataset}
   \begin{block}{The Rectangular Data Idea}
-    In a typical dataset, \textbf{rows represent individuals or cases} and \textbf{columns represent variables}.
+    In a typical dataset \textbf{rows represent individuals or cases} and \textbf{columns represent variables}.
   \end{block}
   \vspace{0.15cm}
   \begin{table}
@@ -224,7 +217,7 @@
 \end{frame}
 
 % SLIDE 9
-\begin{frame}{Individuals, Variables, and Identifiers}
+\begin{frame}{Individuals, Variables and Identifiers}
   From the plant dataset:
   \begin{itemize}
     \item \textbf{Individuals:} the individual plants.
@@ -238,7 +231,7 @@
     \item \textbf{Plant ID:} mainly an identifier used to keep track of each plant.
   \end{itemize}
   \vspace{0.2cm}
-  \begin{block}{Core Definition}
+  \begin{block}{Definition}
     A \textbf{variable} is a characteristic recorded for each individual that can take different values.
   \end{block}
 \end{frame}
@@ -247,7 +240,7 @@
 \begin{frame}{Two Fundamental Types of Variables}
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
-      \begin{block}{Categorical (Qualitative)}
+      \begin{block}{Qualitative (Categorical)}
         Places an individual into a group or category.
         \begin{itemize}
           \item Blood type: A, B, AB, O
@@ -306,7 +299,7 @@
 \begin{frame}{The Coding Trap: Numbers Can Still Be Categories}
   Suppose a spreadsheet uses:
   \[
-    1 = \text{Control}, \qquad 2 = \text{Fertilizer A}, \qquad 3 = \text{Fertilizer B}.
+    1 = \text{Base Fertilizer}, \qquad 2 = \text{Fertilizer A}, \qquad 3 = \text{Fertilizer B}.
   \]
   \begin{itemize}
     \item The values are written using numbers.
@@ -333,7 +326,6 @@
           \item Number of customers
           \item Number of incorrect answers
         \end{itemize}
-        A plant can have 7 or 8 leaves, but not 7.42 leaves.
       \end{block}
     \end{column}
     \begin{column}{0.48\textwidth}
@@ -345,14 +337,13 @@
           \item Temperature
           \item Concentration
         \end{itemize}
-        More precise instruments can record finer values.
       \end{block}
     \end{column}
   \end{columns}
 \end{frame}
 
 % SLIDE 14
-\begin{frame}{Count or Measure? A Simple First-Year Rule}
+\begin{frame}{Count or Measure?}
   \begin{table}
     \centering
     \begin{tabular}{lll}
@@ -368,7 +359,7 @@
   \end{table}
   \vspace{0.25cm}
   \begin{block}{Good Starting Point}
-    This rule is not perfect for every advanced application, but it works well for most introductory examples.
+    This rule is not perfect for every advanced application but it works well for most introductory examples.
   \end{block}
 \end{frame}
 
@@ -452,7 +443,7 @@
     \item Ordinal categories should usually keep their natural order.
   \end{itemize}
   \vspace{0.15cm}
-  \begin{alertblock}{When Reading a Bar Graph, Ask}
+  \begin{alertblock}{When Reading a Bar Graph}
     Which category is largest? Smallest? Are any similar? Are the values counts or percentages? Does the vertical axis start at zero?
   \end{alertblock}
 \end{frame}
@@ -462,7 +453,7 @@
 % SLIDE 19
 \begin{frame}{Anatomy of a Bar Graph}
   \centering
-  \lectureimage[0.92\linewidth]{fig_bar_anatomy.png}
+  \lectureimage[0.8\linewidth]{fig_bar_anatomy.png}
 \end{frame}
 
 % SLIDE 20
@@ -473,7 +464,7 @@
   \begin{enumerate}
     \item all categories belong to the \textbf{same group};
     \item categories are \textbf{mutually exclusive};
-    \item categories represent the \textbf{entire whole}; and
+    \item categories represent the \textbf{entire sample population}; and
     \item there are only a few categories.
   \end{enumerate}
   \begin{block}{Practical Rule}
@@ -515,7 +506,7 @@
 \section{Misleading Graphs}
 
 % SLIDE 23
-\begin{frame}{Choosing the Wrong Graph: What Can Go Wrong?}
+\begin{frame}{What Can Go Wrong?}
   A graph can look polished and still communicate the data poorly.
   \vspace{0.2cm}
   In this chapter, we will watch for three common problems:
@@ -526,12 +517,12 @@
   \end{enumerate}
   \vspace{0.2cm}
   \begin{alertblock}{Statistical Literacy}
-    Creating a graph is only half the job. You must also be able to judge whether a graph is \textbf{appropriate and fair}.
+    Creating a graph is only half the job. You must also be able to judge whether a graph explains \textbf{what data can't, is appropriate and without bias}.
   \end{alertblock}
 \end{frame}
 
 % SLIDE 24
-\begin{frame}{Mistake 1: Using a Line Graph for Nominal Categories}
+\begin{frame}{Using a Line Graph for Nominal Categories}
   \begin{columns}[c]
     \begin{column}{0.58\textwidth}
       \centering
@@ -551,7 +542,7 @@
 \end{frame}
 
 % SLIDE 25
-\begin{frame}{Mistake 2: Truncating the Axis of a Bar Graph}
+\begin{frame}{Truncating the Axis of a Bar Graph}
   \begin{columns}[c]
     \begin{column}{0.58\textwidth}
       \centering
@@ -573,7 +564,7 @@
 \end{frame}
 
 % SLIDE 26
-\begin{frame}{Mistake 3: A Pie Chart with Different Denominators}
+\begin{frame}{A Pie Chart with Different Denominators}
   \begin{columns}[c]
     \begin{column}{0.58\textwidth}
       \centering
@@ -640,7 +631,7 @@
   \end{enumerate}
   \vspace{0.2cm}
   \begin{alertblock}{Crucial Difference from a Bar Graph}
-    Histogram bars \textbf{touch} because the horizontal axis is a continuous numerical scale.
+    Histogram bars are adjacent to eachother because the horizontal axis is a continuous numerical scale.
   \end{alertblock}
 \end{frame}
 
@@ -662,7 +653,7 @@
       \midrule
       Variable type & Categorical & Quantitative \\
       Horizontal axis & Category labels & Numerical intervals \\
-      Bars & Separated & Touching \\
+      Bars & Separated & Adjacent \\
       Order & May be rearranged & Must follow numerical order \\
       Main purpose & Compare categories & Show distribution shape \\
       \bottomrule
@@ -734,7 +725,7 @@
 \end{frame}
 
 % SLIDE 32
-\begin{frame}{The Bin-Width Problem}
+\begin{frame}{The Bin Width Problem}
   \begin{columns}[c]
     \begin{column}{0.60\textwidth}
       \centering
@@ -763,14 +754,10 @@
     \item[\textbf{C -- Center:}] Where is a typical or middle value?
     \item[\textbf{S -- Spread:}] How variable are the observations? What is the approximate range?
   \end{description}
-  \vspace{0.2cm}
-  \begin{alertblock}{Always Use Context}
-    Mention the \textbf{variable name and units}, not only ``right-skewed'' or ``one outlier.''
-  \end{alertblock}
 \end{frame}
 
 % SLIDE 34
-\begin{frame}{Shape: Symmetry, Skewness, and Peaks}
+\begin{frame}{Shape: Symmetry, Skewness and Peaks}
   \begin{columns}[c]
     \begin{column}{0.57\textwidth}
       \centering
@@ -793,7 +780,7 @@
 \end{frame}
 
 % SLIDE 35
-\begin{frame}{Outliers, Center, and Spread}
+\begin{frame}{Outliers, Center and Spread}
   \begin{columns}[T]
     \begin{column}{0.31\textwidth}
       \begin{block}{Outliers}
@@ -854,7 +841,7 @@
     \item Clusters, gaps, center, spread, and outliers are easy to inspect.
     \item Small groups can be compared directly.
   \end{itemize}
-  \begin{block}{Use a Dotplot When}
+  \begin{block}{When?}
     The sample is small or moderate and the individual observations are still readable.
   \end{block}
 \end{frame}
@@ -917,7 +904,7 @@
 \begin{frame}{Time Plots: When Order Matters}
   A histogram or dotplot tells us \textbf{what values occurred}. It does not tell us \textbf{when they occurred}.
   \vspace{0.15cm}
-  When chronological order matters, use a \textbf{time plot}:
+  When chronological order matters (such as time series), use a \textbf{time plot}:
   \begin{itemize}
     \item \textbf{$x$-axis:} time;
     \item \textbf{$y$-axis:} measured variable;
@@ -926,10 +913,10 @@
   \vspace{0.15cm}
   Look for:
   \begin{itemize}
-    \item \textbf{trend};
-    \item \textbf{cycle};
-    \item \textbf{sudden change};
-    \item \textbf{unusual observation}.
+    \item \textbf{trend}
+    \item \textbf{cycle}
+    \item \textbf{sudden change}
+    \item \textbf{unusual observation}
   \end{itemize}
 \end{frame}
 
@@ -1015,9 +1002,6 @@
         \item The graph makes the error obvious.
         \item Without plotting first, the typo could badly distort numerical summaries.
       \end{itemize}
-      \begin{block}{Practical Lesson}
-        \textbf{Plot before calculating.}
-      \end{block}
     \end{column}
   \end{columns}
 \end{frame}
@@ -1112,20 +1096,20 @@
 \end{frame}
 
 % SLIDE 49
-\begin{frame}{A Five-Step Approach for Exam Questions}
-  When given a new dataset or graph-selection problem:
-  \begin{enumerate}
-    \item \textbf{Identify the individual:} What does one row represent?
-    \item \textbf{Identify the variable:} What characteristic was recorded?
-    \item \textbf{Classify the variable:} Categorical or quantitative? If quantitative, discrete or continuous?
-    \item \textbf{Ask whether time order matters.}
-    \item \textbf{Choose the graph} that answers the question most clearly.
-  \end{enumerate}
-  \vspace{0.2cm}
-  \begin{alertblock}{Then Interpret}
-    Do not stop after naming the graph. State the main pattern that the graph is meant to reveal.
-  \end{alertblock}
-\end{frame}
+%\begin{frame}{A Five-Step Approach for Exam Questions}
+%  When given a new dataset or graph-selection problem:
+%  \begin{enumerate}
+%    \item \textbf{Identify the individual:} What does one row represent?
+%    \item \textbf{Identify the variable:} What characteristic was recorded?
+%    \item \textbf{Classify the variable:} Categorical or quantitative? If quantitative, discrete or continuous?
+%    \item \textbf{Ask whether time order matters.}
+%    \item \textbf{Choose the graph} that answers the question most clearly.
+%  \end{enumerate}
+%  \vspace{0.2cm}
+%  \begin{alertblock}{Then Interpret}
+%    Do not stop after naming the graph. State the main pattern that the graph is meant to reveal.
+%  \end{alertblock}
+%\end{frame}
 
 % SLIDE 50
 \begin{frame}{Master Guide: Which Graph Should You Use?}
@@ -1147,72 +1131,72 @@
 \end{frame}
 
 % SLIDE 51
-\begin{frame}{What Should You Say When Describing a Graph?}
-  \begin{columns}[T]
-    \begin{column}{0.31\textwidth}
-      \begin{block}{Bar Graph}
-        \begin{itemize}
-          \item largest / smallest categories;
-          \item important comparisons;
-          \item counts or percentages;
-          \item denominator when relevant.
-        \end{itemize}
-      \end{block}
-    \end{column}
-    \begin{column}{0.31\textwidth}
-      \begin{block}{Histogram / Dotplot}
-        Use \textbf{SOCS}:
-        \begin{itemize}
-          \item Shape
-          \item Outliers
-          \item Center
-          \item Spread
-        \end{itemize}
-      \end{block}
-    \end{column}
-    \begin{column}{0.31\textwidth}
-      \begin{block}{Time Plot}
-        Describe:
-        \begin{itemize}
-          \item trend;
-          \item cycles;
-          \item sudden changes;
-          \item unusual observations.
-        \end{itemize}
-      \end{block}
-    \end{column}
-  \end{columns}
-\end{frame}
+%\begin{frame}{What Should You Say When Describing a Graph?}
+%  \begin{columns}[T]
+%    \begin{column}{0.31\textwidth}
+%      \begin{block}{Bar Graph}
+%        \begin{itemize}
+%          \item largest / smallest categories;
+%          \item important comparisons;
+%          \item counts or percentages;
+%          \item denominator when relevant.
+%        \end{itemize}
+%      \end{block}
+%    \end{column}
+%    \begin{column}{0.31\textwidth}
+%      \begin{block}{Histogram / Dotplot}
+%        Use \textbf{SOCS}:
+%        \begin{itemize}
+%          \item Shape
+%          \item Outliers
+%          \item Center
+%          \item Spread
+%        \end{itemize}
+%      \end{block}
+%    \end{column}
+%    \begin{column}{0.31\textwidth}
+%      \begin{block}{Time Plot}
+%        Describe:
+%        \begin{itemize}
+%          \item trend;
+%          \item cycles;
+%          \item sudden changes;
+%          \item unusual observations.
+%        \end{itemize}
+%      \end{block}
+%    \end{column}
+%  \end{columns}
+%\end{frame}
 
 % SLIDE 52
-\begin{frame}{Chapter 1 Summary: The Core Rules}
-  \begin{enumerate}
-    \item Know what \textbf{one row represents}.
-    \item Classify the variable before choosing a graph.
-    \item Use \textbf{bar graphs} for categorical comparisons; pie charts only for simple parts of one whole.
-    \item Use \textbf{histograms} for the shape of larger quantitative datasets and inspect the bin width.
-    \item Use \textbf{dotplots} when individual values remain readable.
-    \item Use \textbf{time plots} when chronological order matters.
-    \item Describe quantitative distributions using \textbf{SOCS}.
-    \item Check axes, scales, denominators, labels, and other design choices.
-    \item \textbf{Plot before calculating} so errors and unusual observations are visible.
-  \end{enumerate}
-\end{frame}
+%\begin{frame}{Chapter 1 Summary: The Core Rules}
+%  \begin{enumerate}
+%    \item Know what \textbf{one row represents}.
+%    \item Classify the variable before choosing a graph.
+%    \item Use \textbf{bar graphs} for categorical comparisons; pie charts only for simple parts of one whole.
+%    \item Use \textbf{histograms} for the shape of larger quantitative datasets and inspect the bin width.
+%    \item Use \textbf{dotplots} when individual values remain readable.
+%    \item Use \textbf{time plots} when chronological order matters.
+%    \item Describe quantitative distributions using \textbf{SOCS}.
+%    \item Check axes, scales, denominators, labels, and other design choices.
+%    \item \textbf{Plot before calculating} so errors and unusual observations are visible.
+%  \end{enumerate}
+%\end{frame}
 
 % SLIDE 53
-\begin{frame}{Final Graph Checklist}
-  Before interpreting or presenting a graph, ask:
-  \begin{itemize}
-    \item What are the \textbf{individuals}?
-    \item What \textbf{variable} is being displayed?
-    \item Is it \textbf{categorical or quantitative}?
-    \item Does \textbf{time order} matter?
-    \item Is this the \textbf{right graph} for the variable and question?
-    \item Are the \textbf{title, axes, and units} clear?
-    \item Could the \textbf{scale or binning} exaggerate or hide a pattern?
-    \item What is the \textbf{main pattern} visible in the data?
-  \end{itemize}
-\end{frame}
+%\begin{frame}{Final Graph Checklist}
+%  Before interpreting or presenting a graph, ask:
+%  \begin{itemize}
+%    \item What are the \textbf{individuals}?
+%    \item What \textbf{variable} is being displayed?
+%    \item Is it \textbf{categorical or quantitative}?
+%    \item Does \textbf{time order} matter?
+%    \item Is this the \textbf{right graph} for the variable and question?
+%    \item Are the \textbf{title, axes, and units} clear?
+%    \item Could the \textbf{scale or binning} exaggerate or hide a pattern?
+%    \item What is the \textbf{main pattern} visible in the data?
+%  \end{itemize}
+%\end{frame}
 
 
 
@@ -1232,7 +1216,6 @@
       \begin{block}{Your Task}
         The graph shows students' \textbf{favourite study drink}. Identify the main problem with the display.
       \end{block}
-      \vspace{0.15cm}
       \textbf{Ask yourself:}
       \begin{itemize}
         \item What type of variable is \emph{drink}?
@@ -1257,12 +1240,11 @@
       \begin{block}{Your Task}
         Treatment A has a success rate of \textbf{78\%}; Treatment B has a success rate of \textbf{82\%}. What makes this graph misleading?
       \end{block}
-      \vspace{0.15cm}
       \textbf{Look carefully at:}
       \begin{itemize}
-        \item the vertical axis;
-        \item the visual size of the difference;
-        \item the actual numerical difference.
+        \item the vertical axis
+        \item the visual size of the difference
+        \item the actual numerical difference
       \end{itemize}
       \pause
       \begin{alertblock}{Answer}
@@ -1293,8 +1275,22 @@
   \end{columns}
 \end{frame}
 
-
 % SLIDE 57
+\begin{frame}{Chapter 1 Summary: The Core Rules}
+  \begin{enumerate}
+    \item Know what \textbf{one row represents}.
+    \item Classify the variable before choosing a graph.
+    \item Use \textbf{bar graphs} for categorical comparisons; pie charts only for simple parts of one whole.
+    \item Use \textbf{histograms} for the shape of larger quantitative datasets and inspect the bin width.
+    \item Use \textbf{dotplots} when individual values remain readable.
+    \item Use \textbf{time plots} when chronological order matters.
+    \item Describe quantitative distributions using \textbf{SOCS}.
+    \item Check axes, scales, denominators, labels, and other design choices.
+    \item \textbf{Plot before calculating} so errors and unusual observations are visible.
+  \end{enumerate}
+\end{frame}
+
+% SLIDE 58
 \begin{frame}{Looking Ahead: Chapter 2}
   In Chapter 1, we learned to \textbf{see} center and spread.
   \vspace{0.2cm}
