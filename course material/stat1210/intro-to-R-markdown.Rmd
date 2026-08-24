@@ -1,0 +1,639 @@
+---
+title: "Introduction to R for First-Year Statistics"
+subtitle: "A Short Reference for Statistical Computing"
+author: "Instructor: Ali Raisolsadat"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+    number_sections: true
+    toc_depth: 3
+    theme: flatly
+    highlight: tango
+    code_folding: show
+    self_contained: true
+---
+
+<style>
+body {
+  font-size: 17px;
+  line-height: 1.65;
+  color: #23364a;
+}
+
+.main-container {
+  max-width: 1050px !important;
+}
+
+h2 {
+  border-bottom: 3px solid #2c3e50;
+  padding-bottom: 0.25em;
+}
+
+h3 {
+  border-bottom: 1px solid #d8dee4;
+  padding-bottom: 0.2em;
+}
+
+table {
+  width: 100%;
+}
+
+blockquote {
+  border-left: 4px solid #2c3e50;
+  background: #f7f9fa;
+  padding: 0.7em 1em;
+}
+</style>
+
+# Getting Started with R
+
+R is a programming language designed for data analysis, statistics and graphics. In this course, R is mainly used as a statistical calculator. The goal is not to become a software developer. The goal is to use a small set of functions correctly and to understand what the output means.
+
+R is **case-sensitive**. The names `x`, `X` and `x_value` refer to different objects.
+
+A line beginning with `#` is a comment. Comments are ignored by R and should be used to explain what the code is doing.
+
+```{r basic_syntax}
+# Store a value in an object
+x <- 12
+
+# Display the value
+print(x)
+
+# Perform a calculation
+2 + 3 * 4
+```
+
+The assignment operator `<-` stores a value in an object. The equals sign `=` is often used inside a function to identify an argument.
+
+```{r named_arguments}
+# The names mean and sd identify arguments supplied to rnorm()
+rnorm(n = 5, mean = 10, sd = 2)
+```
+
+> **Useful habit**
+>
+> Object names should describe what they contain. Names such as `heights`, `sample_mean` and `prob_success` are usually easier to understand than names such as `a`, `b` and `temp1`.
+
+## R Markdown Code Chunks
+
+R Markdown combines written notes with R code. Code is placed inside an R chunk.
+
+````markdown
+```{r}
+mean(c(4, 5, 7, 8))
+```
+````
+
+A chunk can contain comments, calculations and function calls. The output appears below the code when the document is knitted.
+
+# Understanding R Functions
+
+Most work in R is done by calling **functions**. A function takes one or more inputs, performs a task and returns a result.
+
+A simple example is
+
+```{r function_call_example}
+mean(c(4, 6, 8, 10))
+```
+
+The function name is `mean`. The values inside the parentheses are supplied to the function as input.
+
+Many functions have several **arguments**. Arguments tell R what values to use or how the function should behave.
+
+```{r function_arguments_example}
+round(x = 3.14159, digits = 2)
+```
+
+In this example, `x` is the number being rounded and `digits` tells R how many decimal places should be kept.
+
+Arguments can often be supplied by position.
+
+```{r positional_arguments}
+round(3.14159, 2)
+```
+
+For first-year work, named arguments are often easier to read because the purpose of each value is clear.
+
+## Getting Help for a Function
+
+R includes a help page for its functions. The command `?function_name` opens the documentation.
+
+```{r help_example, eval=FALSE}
+# Open the help page for the mean() function
+?mean
+
+# Open the help page for the Normal cumulative distribution function
+?pnorm
+```
+
+A help page usually describes the purpose of the function, its arguments and examples of how it is used.
+
+## Writing a Simple Function
+
+Students may sometimes want to combine several calculations into one reusable command. A new function is created with `function()`.
+
+```{r custom_function}
+# This function calculates the range of a numeric vector
+data_range <- function(x) {
+  max(x) - min(x)
+}
+
+values <- c(4, 7, 10, 15)
+
+data_range(values)
+```
+
+The object `x` inside the function is an **argument**. When `data_range(values)` is called, R temporarily uses the contents of `values` as `x`.
+
+A function can have more than one argument.
+
+```{r function_two_arguments}
+# This function converts a z-score back to an original measurement
+from_z_score <- function(z, mean_value, sd_value) {
+  mean_value + z * sd_value
+}
+
+from_z_score(
+  z = 1.5,
+  mean_value = 100,
+  sd_value = 15
+)
+```
+
+The final expression inside a simple R function is returned automatically. The function above returns the converted measurement.
+
+> **Why write a function**
+>
+> A function is useful when the same calculation would otherwise be copied several times. For an introductory statistics course, functions should remain short and should have clear argument names.
+
+# Vectors and Basic Data
+
+A **vector** stores several values of the same general type. The function `c()` combines values into a vector.
+
+```{r vectors}
+# A vector of observations
+heights <- c(168, 172, 175, 169, 181)
+
+# Display the vector
+print(heights)
+```
+
+Important vector operations include the following.
+
+| Function or syntax | Purpose | Example |
+|:--|:--|:--|
+| `c()` | Combines values into a vector | `c(2, 4, 6)` |
+| `length()` | Counts the number of values | `length(heights)` |
+| `sum()` | Adds the values | `sum(heights)` |
+| `x[1]` | Selects one position | `heights[1]` |
+| `x[2:4]` | Selects several positions | `heights[2:4]` |
+| `seq()` | Creates a regular sequence | `seq(0, 10, by = 2)` |
+| `rep()` | Repeats values | `rep(1, 5)` |
+
+R performs arithmetic on vectors element by element.
+
+```{r vector_arithmetic}
+values <- c(2, 4, 6)
+
+values + 1
+values * 2
+values^2
+```
+
+## Missing Values
+
+R represents a missing value with `NA`. Many statistical functions return `NA` when the data contain a missing value unless `na.rm = TRUE` is used.
+
+```{r missing_values}
+scores <- c(72, 81, NA, 90, 85)
+
+# Ignore the missing value when calculating the mean
+mean(scores, na.rm = TRUE)
+```
+
+# Descriptive Statistics
+
+Descriptive statistics summarize the main features of a quantitative dataset. Different summaries answer different questions. The mean describes the arithmetic centre, the median describes the middle ordered value and the standard deviation describes how much the observations vary around the mean.
+
+The following functions are used frequently for quantitative data.
+
+| Function | Purpose |
+|:--|:--|
+| `mean(x)` | Sample mean |
+| `median(x)` | Sample median |
+| `sd(x)` | Sample standard deviation |
+| `var(x)` | Sample variance |
+| `min(x)` | Minimum value |
+| `max(x)` | Maximum value |
+| `range(x)` | Minimum and maximum |
+| `quantile(x)` | Sample quantiles |
+| `summary(x)` | A compact numerical summary |
+
+```{r descriptive_statistics}
+weights <- c(61, 64, 68, 70, 72, 75)
+
+mean(weights)
+median(weights)
+sd(weights)
+summary(weights)
+```
+
+The functions `sd()` and `var()` use the usual **sample** formulas, which use $n-1$ in the denominator.
+
+For two quantitative variables, `cor()` calculates the Pearson correlation.
+
+```{r correlation}
+x <- c(1, 2, 3, 4, 5)
+y <- c(2, 3, 5, 7, 8)
+
+cor(x, y)
+```
+
+# Categorical Data
+
+The function `table()` counts how many observations belong to each category. The function `prop.table()` converts those counts to proportions.
+
+```{r categorical_data}
+blood_type <- c("O", "A", "O", "B", "A", "O", "AB", "A")
+
+counts <- table(blood_type)
+counts
+
+prop.table(counts)
+```
+
+A **factor** tells R that a variable represents categories.
+
+```{r factors}
+treatment <- factor(c("Control", "Treatment", "Control", "Treatment"))
+print(treatment)
+```
+
+# Data Frames
+
+A **data frame** stores several variables in a table. Each row usually represents one observation and each column represents one variable.
+
+```{r data_frames}
+study <- data.frame(
+  id = 1:5,
+  age = c(19, 20, 18, 22, 21),
+  heart_rate = c(72, 68, 75, 64, 70)
+)
+
+# Display the first rows
+head(study)
+
+# Select one variable
+study$heart_rate
+```
+
+Useful data-frame functions include the following.
+
+| Function or syntax | Purpose |
+|:--|:--|
+| `data.frame()` | Creates a data frame |
+| `head()` | Displays the first rows |
+| `names()` | Displays variable names |
+| `nrow()` | Counts rows |
+| `ncol()` | Counts columns |
+| `df$variable` | Selects one variable |
+
+# Basic Graphs in Base R
+
+R can create useful statistical graphs without loading any additional packages. These built-in plotting functions are a good starting point for a first statistics course because each function is designed for a common type of graph.
+
+The most important idea is to choose a graph that matches the type of variable being studied. A histogram is used for one quantitative variable. A bar chart is used for categorical counts. A scatterplot is used for two quantitative variables.
+
+## Histograms
+
+The function `hist()` creates a histogram for quantitative data.
+
+```{r histogram_example}
+exam_scores <- c(62, 68, 71, 74, 75, 78, 81, 82, 85, 88, 91, 94)
+
+# A histogram shows the distribution of one quantitative variable
+hist(
+  exam_scores,
+  main = "Distribution of Exam Scores",
+  xlab = "Exam Score"
+)
+```
+
+The argument `main` provides the graph title. The argument `xlab` labels the horizontal axis.
+
+A histogram should be interpreted by looking at its shape, centre, spread and unusual observations.
+
+## Bar Charts
+
+A bar chart is useful for displaying counts or proportions for categories. The function `table()` is often used first to calculate the category counts.
+
+```{r barplot_example}
+blood_type <- c("O", "A", "O", "B", "A", "O", "AB", "A")
+
+blood_counts <- table(blood_type)
+
+# A bar chart displays the frequency of each category
+barplot(
+  blood_counts,
+  main = "Blood Type Counts",
+  xlab = "Blood Type",
+  ylab = "Count"
+)
+```
+
+The bars in a bar chart represent separate categories. This differs from a histogram, where the bars represent adjacent intervals of a quantitative variable.
+
+## Scatterplots
+
+The function `plot()` creates a scatterplot when two quantitative variables are supplied.
+
+```{r scatterplot_example}
+age <- c(18, 19, 20, 21, 22, 23)
+heart_rate <- c(76, 74, 72, 70, 69, 67)
+
+# A scatterplot displays the relationship between two quantitative variables
+plot(
+  age,
+  heart_rate,
+  main = "Age and Resting Heart Rate",
+  xlab = "Age",
+  ylab = "Resting Heart Rate"
+)
+```
+
+A scatterplot is usually examined for direction, form, strength and unusual observations.
+
+## Adding a Regression Line
+
+A fitted regression line can be added to a scatterplot with `abline()`.
+
+```{r base_regression_plot}
+x <- c(1, 2, 3, 4, 5)
+y <- c(2.1, 3.9, 6.2, 8.1, 9.8)
+
+model <- lm(y ~ x)
+
+# Plot the observed data
+plot(
+  x,
+  y,
+  main = "Scatterplot with Regression Line",
+  xlab = "Explanatory Variable",
+  ylab = "Response Variable"
+)
+
+# Add the least-squares regression line
+abline(model)
+```
+
+The points represent the observed data. The line represents the responses predicted by the fitted regression model.
+
+## Boxplots
+
+The function `boxplot()` provides a compact display of a quantitative variable and is especially useful for comparing groups.
+
+```{r boxplot_example}
+group <- c("A", "A", "A", "B", "B", "B")
+score <- c(72, 78, 84, 69, 75, 91)
+
+# Compare the score distributions for two groups
+boxplot(
+  score ~ group,
+  main = "Scores by Group",
+  xlab = "Group",
+  ylab = "Score"
+)
+```
+
+A boxplot emphasizes the median, quartiles, overall spread and possible unusual observations.
+
+> **Choosing a graph**
+>
+> A histogram or boxplot is appropriate for quantitative data. A bar chart is appropriate for categorical data. A scatterplot is appropriate when the relationship between two quantitative variables is being studied.
+
+# Probability Distributions in R
+
+R includes built-in functions for many probability distributions. These functions are useful only after the correct probability model and its parameters have been identified.
+
+Many R probability functions follow a useful naming pattern.
+
+| Prefix | Meaning | Typical question |
+|:--:|:--|:--|
+| `d` | Density or probability mass | What is the probability mass at an exact discrete value |
+| `p` | Cumulative probability | What is the probability at or below a boundary |
+| `q` | Quantile | What value corresponds to a given cumulative probability |
+| `r` | Random generation | Generate simulated observations |
+
+This pattern appears across several probability distributions.
+
+## Normal Distribution
+
+| Function | Purpose |
+|:--|:--|
+| `dnorm()` | Normal density |
+| `pnorm()` | Normal cumulative probability |
+| `qnorm()` | Normal percentile or boundary |
+| `rnorm()` | Simulates Normal observations |
+
+```{r normal_functions}
+# P(X <= 110) for X ~ N(100, 15)
+pnorm(q = 110, mean = 100, sd = 15)
+
+# The 90th percentile
+qnorm(p = 0.90, mean = 100, sd = 15)
+
+# Five simulated observations
+rnorm(n = 5, mean = 100, sd = 15)
+```
+
+The option `lower.tail = FALSE` requests an upper-tail probability.
+
+```{r upper_tail}
+# P(X > 110)
+pnorm(
+  q = 110,
+  mean = 100,
+  sd = 15,
+  lower.tail = FALSE
+)
+```
+
+For a continuous distribution, `dnorm()` returns a **density**, not the probability that $X$ equals one exact value.
+
+## Binomial Distribution
+
+| Function | Purpose |
+|:--|:--|
+| `dbinom()` | Exact binomial probability $P(X=x)$ |
+| `pbinom()` | Cumulative binomial probability $P(X\le q)$ |
+| `rbinom()` | Simulates binomial counts |
+
+```{r binomial_functions}
+# Exactly 2 successes when n = 5 and p = 0.45
+dbinom(x = 2, size = 5, prob = 0.45)
+
+# At most 2 successes
+pbinom(q = 2, size = 5, prob = 0.45)
+```
+
+## Poisson Distribution
+
+| Function | Purpose |
+|:--|:--|
+| `dpois()` | Exact Poisson probability $P(X=x)$ |
+| `ppois()` | Cumulative Poisson probability $P(X\le q)$ |
+| `rpois()` | Simulates Poisson counts |
+
+```{r poisson_functions}
+# Exactly 2 events when lambda = 1.5
+dpois(x = 2, lambda = 1.5)
+
+# At most 2 events
+ppois(q = 2, lambda = 1.5)
+```
+
+# Regression in R
+
+The function `lm()` fits a least-squares linear regression model. The formula `y ~ x` means that `y` is the response variable and `x` is the explanatory variable.
+
+The fitted model should usually be interpreted together with a scatterplot. The slope describes how the predicted response changes when the explanatory variable increases by one unit. The intercept is the predicted response when the explanatory variable equals zero, when that value has a meaningful interpretation.
+
+```{r regression_example}
+regression_data <- data.frame(
+  x = c(1, 2, 3, 4, 5),
+  y = c(2.1, 3.9, 6.2, 8.1, 9.8)
+)
+
+model <- lm(y ~ x, data = regression_data)
+
+# Intercept and slope
+coef(model)
+
+# Standard regression output
+summary(model)
+```
+
+Several useful functions work with an `lm()` model.
+
+| Function | Purpose |
+|:--|:--|
+| `coef(model)` | Returns the intercept and slope |
+| `predict(model, newdata = ...)` | Predicts the response at new explanatory values |
+| `fitted(model)` | Returns fitted responses for the observed data |
+| `residuals(model)` | Returns residuals $y-\hat{y}$ |
+| `summary(model)` | Displays a detailed model summary |
+
+```{r regression_prediction}
+# Predict y when x = 6
+predict(
+  model,
+  newdata = data.frame(x = 6)
+)
+
+# Residuals for the observed data
+residuals(model)
+```
+
+# Simulation and Reproducibility
+
+Simulation is useful for studying probability and sampling distributions. The function `set.seed()` makes a random simulation reproducible so that the same code produces the same simulated values again.
+
+```{r simulation}
+set.seed(123)
+
+# Simulate 10 fair die rolls
+rolls <- sample(1:6, size = 10, replace = TRUE)
+rolls
+```
+
+The function `replicate()` repeats an R expression many times.
+
+```{r replicate_example}
+set.seed(123)
+
+# Simulate 500 sample means from samples of size 25
+sample_means <- replicate(
+  500,
+  mean(rnorm(25, mean = 100, sd = 15))
+)
+
+mean(sample_means)
+sd(sample_means)
+```
+
+# Small Utility Functions
+
+The following functions appear frequently in statistical calculations.
+
+| Function | Purpose |
+|:--|:--|
+| `sqrt(x)` | Square root |
+| `log(x)` | Natural logarithm |
+| `log10(x)` | Base-10 logarithm |
+| `round(x, digits)` | Rounds a value |
+| `abs(x)` | Absolute value |
+| `print(x)` | Displays an object |
+
+```{r utility_functions}
+x <- 3.14159265
+
+sqrt(25)
+log10(1000)
+round(x, 3)
+```
+
+# Reading R Code Carefully
+
+A few symbols appear often in R code.
+
+| Symbol | Meaning |
+|:--:|:--|
+| `<-` | Assignment |
+| `==` | Equal to in a logical comparison |
+| `!=` | Not equal to |
+| `<`, `<=`, `>`, `>=` | Numerical comparisons |
+| `&` | Both conditions are true |
+| `|` | At least one condition is true |
+| `!` | Logical NOT |
+| `$` | Selects a variable from a data frame |
+| `#` | Begins a comment |
+
+The comparison `x == 5` asks whether `x` equals 5. The statement `x <- 5` stores the value 5 in `x`. These operations are different.
+
+# A Compact First-Year R Checklist
+
+A student does not need to memorize every R command. The most useful skill is knowing which type of function is needed.
+
+| Task | Common function |
+|:--|:--|
+| Create a vector | `c()` |
+| Calculate a mean | `mean()` |
+| Calculate a standard deviation | `sd()` |
+| Calculate a correlation | `cor()` |
+| Count categories | `table()` |
+| Convert counts to proportions | `prop.table()` |
+| Create a data frame | `data.frame()` |
+| Make a histogram | `hist()` |
+| Make a bar chart | `barplot()` |
+| Make a scatterplot | `plot()` |
+| Add a regression line | `abline()` |
+| Find a Normal probability | `pnorm()` |
+| Find a Normal percentile | `qnorm()` |
+| Find an exact binomial probability | `dbinom()` |
+| Find a cumulative binomial probability | `pbinom()` |
+| Find an exact Poisson probability | `dpois()` |
+| Find a cumulative Poisson probability | `ppois()` |
+| Fit a regression line | `lm()` |
+| Make a regression prediction | `predict()` |
+| Generate Normal observations | `rnorm()` |
+| Repeat a simulation | `replicate()` |
+| Make results reproducible | `set.seed()` |
+| Create a simple reusable function | `function()` |
+
+> **Final advice**
+>
+> R should support the statistical reasoning rather than replace it. A probability function is useful only after the correct distribution and parameters have been identified. A regression function is useful only after the explanatory and response variables have been identified. The code should come after the statistical question is understood.
