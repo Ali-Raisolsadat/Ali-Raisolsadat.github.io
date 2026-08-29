@@ -22,7 +22,7 @@ output:
 
 <style>
 /* ============================================================
-   CHAPTER 9 — PAGE + COLLAPSIBLE TABLE OF CONTENTS
+   CHAPTER 2 — PAGE + COLLAPSIBLE TABLE OF CONTENTS
    ============================================================ */
 
 :root {
@@ -58,15 +58,15 @@ body {
 
 
 /* ============================================================
-   HIDE DUMMY CHAPTER CONTENT
+   HIDE THE CHAPTER TITLE FROM THE MAIN CONTENT
    ============================================================ */
 
 /*
-   Chapter 9 is used as the numbering root.
+   Chapter 2 is the visible chapter heading. Pandoc applies a section-number offset of 1 so that its subsections begin at 2.1.
 
-   Hide the visible "Chapter 9" H1 because the document title
-   already says Chapter 9, but KEEP the section itself so that
-   H2 headings are numbered 9.1, 9.2, 9.3, ...
+   Hide the visible "Chapter 2" H1 because the document title
+   already says Chapter 2, but KEEP the section itself so that
+   H2 headings are numbered 2.1, 2.2, 2.3, ...
 */
 .section.chapter-root > h1 {
   display: none !important;
@@ -74,42 +74,26 @@ body {
 
 
 /* ============================================================
-   HIDE CHAPTERS 1–8 FROM THE TABLE OF CONTENTS
+   HIDE THE CHAPTER 2 PARENT FROM THE TABLE OF CONTENTS
    ============================================================ */
 
-/*
-   R Markdown/tocify does not reliably expose the chapter names
-   through data-unique, so select them through their generated
-   href values instead.
-*/
 
-#TOC li:has(a[href="#chapter-1-dummy"]),
-#TOC li:has(a[href="#chapter-2-dummy"]),
-#TOC li:has(a[href="#chapter-3-dummy"]),
-#TOC li:has(a[href="#chapter-4-dummy"]),
-#TOC li:has(a[href="#chapter-5-dummy"]),
-#TOC li:has(a[href="#chapter-6-dummy"]),
-#TOC li:has(a[href="#chapter-7-dummy"]),
-#TOC li:has(a[href="#chapter-8-dummy"]) {
+/*
+   Hide the Chapter 2 parent entry itself so that only the numbered subsections appear in the floating table of contents.
+
+   Its children — 2.1, 2.2, 2.3, ... — remain visible.
+*/
+#TOC li:has(> a[href="#chapter-2-describing-distributions-with-numbers"]) >
+  a[href="#chapter-2-describing-distributions-with-numbers"] {
   display: none !important;
 }
 
 
 /*
-   Also hide the Chapter 9 parent entry itself.
-
-   Its children — 9.1, 9.2, 9.3, ... — remain visible.
-*/
-#TOC li:has(> a[href="#chapter-9"]) > a[href="#chapter-9"] {
-  display: none !important;
-}
-
-
-/*
-   tocify may place the Chapter 9 subsections inside the same
+   tocify may place the Chapter 2 subsections inside the same
    list item. Remove spacing belonging to the hidden parent.
 */
-#TOC li:has(> a[href="#chapter-9"]) {
+#TOC li:has(> a[href="#chapter-2-describing-distributions-with-numbers"]) {
   margin-top: 0 !important;
 }
 
@@ -683,6 +667,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 
+
 ```{r generate_all_lecture_figures, include=FALSE, echo=FALSE, warning=FALSE, message=FALSE}
 knitr::opts_chunk$set(
   echo = FALSE,
@@ -691,31 +676,23 @@ knitr::opts_chunk$set(
   error = FALSE
 )
 
-required_packages <- c("ggplot2", "gridExtra", "dplyr", "tidyr")
-missing_packages <- required_packages[
-  !vapply(required_packages, requireNamespace, logical(1), quietly = TRUE)
-]
-
-if (length(missing_packages) > 0) {
-  stop(
-    "Install the following R packages before knitting: ",
-    paste(missing_packages, collapse = ", ")
-  )
+# ggplot2 is used only to create the lecture figures that are saved as PNG files.
+# Students do not need ggplot2 to complete the visible R examples in this chapter.
+if (!requireNamespace("ggplot2", quietly = TRUE)) {
+  stop("Install the ggplot2 package before knitting this chapter.")
 }
 
 suppressPackageStartupMessages({
   library(ggplot2)
-  library(gridExtra)
-  library(dplyr)
-  library(tidyr)
 })
 
-set.seed(123) # Set seed for reproducible figures
+set.seed(123)
 
-# Shared publication-style theme and colour palette.
+# A shared theme keeps all lecture figures visually consistent.
 lecture_theme <- theme_minimal(base_size = 11) +
   theme(
     plot.title = element_text(size = 13, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 10.5, hjust = 0.5),
     axis.title = element_text(size = 12),
     axis.text = element_text(size = 10, colour = "#333333"),
     panel.grid.minor = element_blank(),
@@ -726,6 +703,7 @@ lecture_theme <- theme_minimal(base_size = 11) +
 
 palette_main <- c("#4C72B0", "#55A868", "#C44E52", "#8172B2", "#CCB974")
 
+# This helper saves each figure at a consistent resolution.
 save_plot <- function(filename, plot, width, height) {
   ggsave(
     filename = filename,
@@ -739,615 +717,1140 @@ save_plot <- function(filename, plot, width, height) {
 }
 
 # =============================================================
-# 1. Mean vs Median: Skewed Distribution (Viral Load)
+# Figure 1: Mean and median in a right-skewed viral-load dataset
 # =============================================================
-viral_load <- rlnorm(500, meanlog = 4, sdlog = 0.8)
+
+# These are illustrative viral-load measurements in copies per mL.
+# The same values are shown to students in the worked example below.
+viral_load <- c(
+  120, 140, 160, 180, 200,
+  220, 250, 270, 300, 330,
+  360, 400, 450, 520, 600,
+  750, 900, 1300, 2500, 6000
+)
+
 viral_df <- data.frame(load = viral_load)
-v_mean <- mean(viral_load)
-v_median <- median(viral_load)
+
+viral_mean <- mean(viral_load)
+viral_median <- median(viral_load)
 
 p_skewed <- ggplot(viral_df, aes(x = load)) +
-  geom_histogram(bins = 30, fill = "#caced3", colour = "white") +
-  geom_vline(xintercept = v_median, colour = palette_main[2], size = 1.2, linetype = "solid") +
-  geom_vline(xintercept = v_mean, colour = palette_main[3], size = 1.2, linetype = "dashed") +
-  annotate("text", x = v_median, y = Inf, label = "Median", colour = palette_main[2], vjust = 1.5, hjust = 1.2, fontface="bold") +
-  annotate("text", x = v_mean, y = Inf, label = "Mean", colour = palette_main[3], vjust = 1.5, hjust = -0.2, fontface="bold") +
+  geom_histogram(
+    bins = 20,
+    fill = "#caced3",
+    colour = "white"
+  ) +
+  geom_vline(
+    xintercept = viral_median,
+    colour = palette_main[2],
+    linewidth = 1.2
+  ) +
+  geom_vline(
+    xintercept = viral_mean,
+    colour = palette_main[3],
+    linewidth = 1.2,
+    linetype = "dashed"
+  ) +
+  annotate(
+    "text",
+    x = viral_median,
+    y = Inf,
+    label = paste0("Median = ", viral_median),
+    colour = palette_main[2],
+    size = 3,
+    vjust = 1.6,
+    hjust = 1.05,
+    fontface = "bold"
+  ) +
+  annotate(
+    "text",
+    x = viral_mean,
+    y = Inf,
+    label = paste0("Mean = ", round(viral_mean, 1)),
+    colour = palette_main[3],
+    vjust = 3.0,
+    hjust = -0.05,
+    fontface = "bold"
+  ) +
   labs(
-    title = "Right-Skewed Data: The Mean is Pulled to the Right",
-    x = "Viral Load (Copies / mL)",
+    title = "Viral-Load",
+    subtitle = "The long right tail pulls the mean above the median",
+    x = "Viral Load (copies/mL)",
     y = "Frequency"
   ) +
   lecture_theme
 
-save_plot("fig_ch2_skewed_mean_median.png", p_skewed, width = 6, height = 4)
-
+save_plot(
+  "fig_ch2_skewed_mean_median.png",
+  p_skewed,
+  width = 7,
+  height = 4
+)
 
 # =============================================================
-# 2. Resistance to Outliers: Small Dotplot Example
+# Figure 2: Resistance to an outlier
 # =============================================================
-base_data <- c(12, 13, 14, 15, 16)
-outlier_data <- c(12, 13, 14, 15, 45)
+
+base_data <- c(4, 6, 7, 8, 9)
+outlier_data <- c(4, 6, 7, 8, 45)
 
 df_resist <- data.frame(
   Value = c(base_data, outlier_data),
-  Group = factor(rep(c("A: Normal Sample", "B: Sample with Outlier"), each = 5))
+  Group = factor(
+    rep(c("Original Sample", "Sample with an Outlier"), each = 5),
+    levels = c("Original Sample", "Sample with an Outlier")
+  )
 )
 
-means <- df_resist %>% group_by(Group) %>% summarize(m = mean(Value))
-medians <- df_resist %>% group_by(Group) %>% summarize(m = median(Value))
+summary_points <- data.frame(
+  Group = factor(
+    rep(c("Original Sample", "Sample with an Outlier"), times = 2),
+    levels = levels(df_resist$Group)
+  ),
+  Statistic = rep(c("Mean", "Median"), each = 2),
+  Value = c(
+    mean(base_data),
+    mean(outlier_data),
+    median(base_data),
+    median(outlier_data)
+  )
+)
 
 p_resist <- ggplot(df_resist, aes(x = Value, y = Group)) +
-  geom_point(size = 4, fill = palette_main[1], colour = "black", shape = 21) +
-  geom_point(data = means, aes(x = m, y = Group), shape = 4, size = 5, colour = palette_main[3], stroke = 2) +
-  geom_point(data = medians, aes(x = m, y = Group), shape = 3, size = 5, colour = palette_main[2], stroke = 2) +
-  scale_y_discrete(limits = rev) +
-  annotate("text", x = 14, y = 2.3, label = "Median (+) = 14\nMean (x) = 14", size=3.5) +
-  annotate("text", x = 30, y = 1.3, label = "Median (+) stays at 14\nMean (x) gets pulled to 19.8!", size=3.5) +
+  geom_point(
+    size = 4,
+    fill = palette_main[1],
+    colour = "black",
+    shape = 21
+  ) +
+  geom_point(
+    data = subset(summary_points, Statistic == "Mean"),
+    aes(x = Value, y = Group),
+    shape = 4,
+    size = 5,
+    colour = palette_main[3],
+    stroke = 2
+  ) +
+  geom_point(
+    data = subset(summary_points, Statistic == "Median"),
+    aes(x = Value, y = Group),
+    shape = 3,
+    size = 5,
+    colour = palette_main[2],
+    stroke = 2
+  ) +
+  annotate(
+    "text",
+    x = 19,
+    y = 1.65,
+    label = "Median (+) stays at 7\nMean (x) changes from 6.8 to 14",
+    size = 3.5
+  ) +
   labs(
-    title = "The Concept of Resistance to Outliers",
+    title = "Resistance to an Extreme Observation",
+    subtitle = "The median changes little while the mean is strongly affected",
+    x = "Recovery Time (days)",
+    y = NULL
+  ) +
+  lecture_theme
+
+save_plot(
+  "fig_ch2_resistance.png",
+  p_resist,
+  width = 7,
+  height = 3.5
+)
+
+# =============================================================
+# Figure 3: Anatomy of a modified boxplot
+# =============================================================
+
+set.seed(321)
+box_data <- c(rnorm(100, mean = 50, sd = 10), 15, 85, 92)
+box_stats <- boxplot.stats(box_data)
+
+box_df <- data.frame(
+  value = box_data,
+  group = factor("Sample")
+)
+
+p_box_anatomy <- ggplot(box_df, aes(x = group, y = value)) +
+  geom_boxplot(
+    width = 0.4,
+    fill = palette_main[4],
+    alpha = 0.5,
+    outlier.shape = 21,
+    outlier.size = 3,
+    outlier.fill = palette_main[3]
+  ) +
+  annotate(
+    "text",
+    x = 1.28,
+    y = median(box_data),
+    label = "Median",
+    fontface = "bold",
+    hjust = 0
+  ) +
+  annotate(
+    "text",
+    x = 1.28,
+    y = unname(quantile(box_data, 0.75)),
+    label = "Q3",
+    hjust = 0
+  ) +
+  annotate(
+    "text",
+    x = 1.28,
+    y = unname(quantile(box_data, 0.25)),
+    label = "Q1",
+    hjust = 0
+  ) +
+  annotate(
+    "text",
+    x = 1.28,
+    y = box_stats[["stats"]][5],
+    label = "Upper whisker",
+    hjust = 0
+  ) +
+  annotate(
+    "text",
+    x = 1.28,
+    y = box_stats[["stats"]][1],
+    label = "Lower whisker",
+    hjust = 0
+  ) +
+  annotate(
+    "text",
+    x = 1.08,
+    y = max(box_stats[["out"]]),
+    label = "Suspected outlier",
+    colour = palette_main[3],
+    fontface = "bold",
+    hjust = 0
+  ) +
+  annotate(
+    "segment",
+    x = 0.72,
+    xend = 0.72,
+    y = unname(quantile(box_data, 0.25)),
+    yend = unname(quantile(box_data, 0.75)),
+    arrow = arrow(
+      ends = "both",
+      length = grid::unit(0.1, "cm")
+    )
+  ) +
+  annotate(
+    "text",
+    x = 0.62,
+    y = median(box_data),
+    label = "IQR",
+    angle = 90,
+    fontface = "bold"
+  ) +
+  theme_void(base_size = 12) +
+  labs(title = "Anatomy of a Modified Boxplot") +
+  theme(
+    plot.title = element_text(
+      face = "bold",
+      hjust = 0.5,
+      margin = margin(b = 10)
+    )
+  )
+
+save_plot(
+  "fig_ch2_boxplot_anatomy.png",
+  p_box_anatomy,
+  width = 6,
+  height = 5
+)
+
+# =============================================================
+# Figure 4: Side-by-side boxplots for illustrative CRISPR data
+# =============================================================
+
+set.seed(42)
+
+crispr_df <- data.frame(
+  Method = factor(
+    rep(
+      c(
+        "Lipid Nanoparticles",
+        "Viral Vector",
+        "Electroporation"
+      ),
+      each = 40
+    ),
+    levels = c(
+      "Lipid Nanoparticles",
+      "Viral Vector",
+      "Electroporation"
+    )
+  ),
+  Efficiency = c(
+    rnorm(40, 45, 12),
+    rnorm(40, 75, 8),
+    rnorm(40, 30, 15)
+  )
+)
+
+# Editing efficiency is a percentage, so simulated values are restricted to 0-100.
+crispr_df$Efficiency <- pmax(
+  0,
+  pmin(100, crispr_df$Efficiency)
+)
+
+p_side_box <- ggplot(
+  crispr_df,
+  aes(x = Method, y = Efficiency, fill = Method)
+) +
+  geom_boxplot(
+    alpha = 0.7,
+    outlier.shape = 21,
+    outlier.size = 2.5
+  ) +
+  scale_fill_manual(values = palette_main[1:3]) +
+  labs(
+    title = "Illustrative CRISPR-Cas9 Delivery Data",
+    subtitle = "Side-by-side boxplots compare centre, spread and unusual observations",
+    x = "Delivery Method",
+    y = "Editing Efficiency (%)"
+  ) +
+  lecture_theme +
+  theme(
+    legend.position = "none",
+    axis.text.x = element_text(angle = 15, hjust = 1)
+  )
+
+save_plot(
+  "fig_ch2_side_by_side_boxplots.png",
+  p_side_box,
+  width = 7,
+  height = 4
+)
+
+# =============================================================
+# Figure 5: Understanding one standard deviation
+# =============================================================
+
+x_val <- seq(-3.5, 3.5, length.out = 1000)
+sd_df <- data.frame(
+  x = x_val,
+  y = dnorm(x_val)
+)
+
+p_sd <- ggplot(sd_df, aes(x = x, y = y)) +
+  geom_line(linewidth = 1) +
+  geom_area(
+    data = subset(sd_df, x >= -1 & x <= 1),
+    fill = palette_main[1],
+    alpha = 0.3
+  ) +
+  geom_vline(
+    xintercept = 0,
+    linetype = "dashed"
+  ) +
+  geom_segment(
+    aes(
+      x = 0,
+      y = 0.15,
+      xend = 1,
+      yend = 0.15
+    ),
+    arrow = arrow(length = grid::unit(0.2, "cm")),
+    linewidth = 0.8,
+    colour = "black"
+  ) +
+  annotate(
+    "text",
+    x = 0.5,
+    y = 0.18,
+    label = "One standard deviation",
+    fontface = "bold"
+  ) +
+  scale_x_continuous(
+    breaks = c(-2, -1, 0, 1, 2),
+    labels = c("-2s", "-1s", "Mean", "+1s", "+2s")
+  ) +
+  scale_y_continuous(breaks = NULL) +
+  labs(
+    title = "Standard Deviation Measures Spread Around the Mean",
     x = "Measured Value",
     y = NULL
   ) +
   lecture_theme
 
-save_plot("fig_ch2_resistance.png", p_resist, width = 7, height = 3.5)
-
-
-# =============================================================
-# 3. Anatomy of a Boxplot
-# =============================================================
-box_data <- rnorm(100, mean = 50, sd = 10)
-# Force a couple of outliers
-box_data <- c(box_data, 15, 85, 92)
-box_df <- data.frame(y = box_data, x = factor("A"))
-
-# Calculate 5-number summary
-stats <- boxplot.stats(box_df$y)$stats
-
-p_box_anatomy <- ggplot(box_df, aes(x = x, y = y)) +
-  geom_boxplot(width = 0.4, fill = palette_main[4], alpha = 0.5, outlier.shape = 21, outlier.size = 3, outlier.fill = palette_main[3]) +
-  annotate("text", x = 1.3, y = stats[3], label = "Median (Middle 50%)", fontface="bold") +
-  annotate("text", x = 1.3, y = stats[4], label = "Q3 (75th Percentile)") +
-  annotate("text", x = 1.3, y = stats[2], label = "Q1 (25th Percentile)") +
-  annotate("text", x = 1.3, y = stats[5], label = "Maximum non-outlier") +
-  annotate("text", x = 1.3, y = stats[1], label = "Minimum non-outlier") +
-  annotate("text", x = 1.1, y = 92, label = "Suspected Outliers", colour = palette_main[3], fontface="bold", hjust=0) +
-  annotate("segment", x = 0.7, xend = 0.7, y = stats[2], yend = stats[4], 
-           arrow = arrow(ends = "both", length = unit(0.1, "cm"))) +
-  annotate("text", x = 0.6, y = stats[3], label = "IQR\n(Middle 50%\nof data)", angle=90) +
-  theme_void(base_size = 12) +
-  labs(title = "The Anatomy of a Boxplot") +
-  theme(plot.title = element_text(face = "bold", hjust = 0.5, margin = margin(b=10)))
-
-save_plot("fig_ch2_boxplot_anatomy.png", p_box_anatomy, width = 6, height = 5)
-
-
-# =============================================================
-# 4. Side-by-Side Boxplots (CRISPR Efficiency)
-# =============================================================
-set.seed(42)
-crispr_df <- data.frame(
-  Method = factor(rep(c("Lipid Nanoparticles", "Viral Vector", "Electroporation"), each = 40),
-                  levels = c("Lipid Nanoparticles", "Viral Vector", "Electroporation")),
-  Efficiency = c(rnorm(40, 45, 12), rnorm(40, 75, 8), rnorm(40, 30, 15))
+save_plot(
+  "fig_ch2_standard_deviation.png",
+  p_sd,
+  width = 6,
+  height = 3.5
 )
-# Ensure no values outside 0-100
-crispr_df$Efficiency <- pmax(0, pmin(100, crispr_df$Efficiency))
-
-p_side_box <- ggplot(crispr_df, aes(x = Method, y = Efficiency, fill = Method)) +
-  geom_boxplot(alpha = 0.7, outlier.shape = 21, outlier.size = 2.5) +
-  scale_fill_manual(values = palette_main[1:3]) +
-  labs(
-    title = "Comparing CRISPR-Cas9 Delivery Methods",
-    x = "Delivery Vector Type",
-    y = "Target Cell Editing Efficiency (%)"
-  ) +
-  lecture_theme +
-  theme(legend.position = "none")
-
-save_plot("fig_ch2_side_by_side_boxplots.png", p_side_box, width = 7, height = 4)
-
-
-# =============================================================
-# 5. Understanding Standard Deviation
-# =============================================================
-x_val <- seq(-3.5, 3.5, length.out = 1000)
-y_val <- dnorm(x_val)
-sd_df <- data.frame(x = x_val, y = y_val)
-
-p_sd <- ggplot(sd_df, aes(x = x, y = y)) +
-  geom_line(size = 1) +
-  geom_area(data = subset(sd_df, x >= -1 & x <= 1), fill = palette_main[1], alpha = 0.3) +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  geom_segment(aes(x = 0, y = 0.15, xend = 1, yend = 0.15), arrow = arrow(length = unit(0.2, "cm")), size=0.8, colour="black") +
-  annotate("text", x = 0.5, y = 0.17, label = "+1 Standard Deviation (s)", fontface="bold") +
-  scale_x_continuous(breaks = c(-2, -1, 0, 1, 2), labels = c( "-2s", "-1s", "Mean (x̄)", "+1s", "+2s")) +
-  scale_y_continuous(breaks = NULL) +
-  labs(
-    title = "Standard Deviation: The 'Average' Distance from the Mean",
-    x = "Measured Values",
-    y = NULL
-  ) +
-  lecture_theme
-
-save_plot("fig_ch2_standard_deviation.png", p_sd, width = 6, height = 3.5)
 ```
 
 # Chapter 2: Describing Distributions with Numbers {.chapter-root .unlisted}
 
 ## Describing Distributions with Numbers
 
-### The Limits of Human Perception
+Chapter 1 introduced graphs for describing the distribution of a variable. Histograms, dotplots and other displays help reveal shape, unusual observations, centre and spread. A graph should usually be the first step because a numerical summary alone can hide important features of the data.
 
-In Chapter 1, we learned that the first rule of modern data analysis is to **always plot your data**. Visualizations like histograms and dotplots allow our eyes to quickly spot shapes, trends, bimodal clusters, and data entry errors.
+Numerical summaries provide a second description of the same distribution. They allow researchers to communicate the centre and variability of a dataset using values that can be reproduced exactly.
 
-However, human eyes are subjective. If you ask two different scientists to look at a slightly skewed histogram and point to the "center," they will likely point to two different spots. If we want to write a reproducible research paper or train a machine-learning model, we cannot rely on pointing.
+This chapter develops two pairs of summaries. The **mean and standard deviation** are commonly used for reasonably symmetric distributions without strong outliers. The **median and interquartile range** are more resistant and are often preferred for skewed distributions or distributions with extreme observations.
 
-We need to translate our visual descriptions—**Shape, Outliers, Center, and Spread (SOCS)**—into objective, mathematical summaries.
+> **A useful workflow**
+>
+> The graph comes first. The numerical summaries should then be chosen to match the shape and unusual features visible in the graph.
 
----
+### From a Graph to Numerical Summaries
 
-<!-- ### Chapter Learning Objectives -->
+A visual description often follows the ideas of **shape, outliers, centre and spread**. Numerical summaries turn the last two ideas into quantities that can be calculated.
 
-<!-- By the end of this chapter, students should be able to: -->
+A measure of **centre** describes where the distribution is located. A measure of **spread** describes how much the observations vary around that centre.
 
-<!-- 1. Calculate and interpret the **mean** ($\bar{x}$) and the **median** ($M$) as measures of center. -->
-<!-- 2. Explain the concept of **resistance** and predict how outliers or skewness will shift the mean compared to the median. -->
-<!-- 3. Calculate and interpret the **quartiles** ($Q_1, Q_3$) and the **Interquartile Range** ($IQR$). -->
-<!-- 4. Construct the **five-number summary** and use it to build and interpret **boxplots**. -->
-<!-- 5. Use the $1.5 \times IQR$ rule to objectively flag suspected outliers. -->
-<!-- 6. Calculate and interpret the **standard deviation** ($s$) as a measure of spread. -->
-<!-- 7. Choose the appropriate set of numerical summaries based on the shape of the data. -->
+The choice of numerical summary should not be made before the distribution is examined. The mean can be strongly influenced by an extreme observation, while the median is much more resistant. The same distinction will later appear between standard deviation and the interquartile range.
 
 ---
 
-## Measuring Center: Mean and Median
+## Measuring Centre: Mean and Median
 
-When a biologist asks, *"What is the typical length of a pine needle?"* or *"What is the normal number of flood events on the coast?"*, they are asking for a measure of **center**. Statistics gives us two primary ways to define "typical," and they behave very differently depending on the shape of the data.
+A researcher who asks for a typical pine needle length, a typical metabolic rate or a typical viral load is asking about the centre of a distribution. Two common measures of centre are the mean and the median.
 
 ### The Mean ($\bar{x}$)
 
-The most commonly reported measure of center is the ordinary arithmetic average, or **mean**. To find the mean of a set of observations, you add their values together and divide by the number of observations ($n$).
+The **sample mean** is the ordinary arithmetic average. Every observation contributes its numerical value to the calculation.
 
-If the $n$ observations are $x_1, x_2, \dots, x_n$, their sample mean is:
+If the observations are $x_1,x_2,\ldots,x_n$, then
 
-$$ \bar{x} = \frac{x_1 + x_2 + \dots + x_n}{n} $$
+$$
+\bar{x}
+=
+\frac{x_1+x_2+\cdots+x_n}{n}
+$$
 
-In statistics, we use the uppercase Greek letter sigma ($\sum$) as the mathematical symbol for summation (which just means "add them all up"). Therefore, the compact formula for the mean is: 
+Summation notation provides a shorter form.
 
-$$ \bar{x} = \frac{1}{n} \sum x_i $$
+$$
+\bar{x}
+=
+\frac{1}{n}\sum_{i=1}^{n}x_i
+$$
 
-> **Notation Note:** We use $\bar{x}$ (pronounced "x-bar") to represent the mean of a *sample* of data. Later in the course, we will use the Greek letter $\mu$ (mu) to represent the theoretical mean of an entire *population*.
+The symbol $\bar{x}$ is pronounced **x-bar**. It represents the mean of a sample. Later in the course, the Greek letter $\mu$ will be used for a population mean.
 
 #### Example 2.3: Mean of Pine Needle Lengths
 
-Let's find the mean needle length for a sample of $15$ Aleppo pine needles. First, we can organize our $n = 15$ observations ($x_i$) into a table:
+**Question**
 
-| Observation ($i$) | Length $x_i$ (cm) | | Observation ($i$) | Length $x_i$ (cm) | | Observation ($i$) | Length $x_i$ (cm) |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1** | 7.2 | | **6** | 9.0 | | **11** | 10.2 |
-| **2** | 7.6 | | **7** | 9.0 | | **12** | 10.9 |
-| **3** | 8.5 | | **8** | 9.3 | | **13** | 11.3 |
-| **4** | 8.5 | | **9** | 9.4 | | **14** | 12.1 |
-| **5** | 8.7 | | **10** | 9.4 | | **15** | 12.8 |
+A sample contains 15 Aleppo pine needles with the following lengths in centimetres. What is the sample mean length?
 
-To calculate the mean, we first use the summation notation ($\sum$) to add up all $15$ individual lengths:
+| Observation | Length (cm) | Observation | Length (cm) | Observation | Length (cm) |
+|:--:|--:|:--:|--:|:--:|--:|
+| 1 | 7.2 | 6 | 9.0 | 11 | 10.2 |
+| 2 | 7.6 | 7 | 9.0 | 12 | 10.9 |
+| 3 | 8.5 | 8 | 9.3 | 13 | 11.3 |
+| 4 | 8.5 | 9 | 9.4 | 14 | 12.1 |
+| 5 | 8.7 | 10 | 9.4 | 15 | 12.8 |
 
-$$ \sum_{i=1}^{15} x_i = 143.9 \text{ cm} $$
+**Explanation**
 
-Next, we divide that total sum by the number of observations ($n = 15$):
+The mean uses all 15 measurements. The observations are added, then the total is divided by the sample size.
 
-$$ \bar{x} = \frac{1}{n} \sum_{i=1}^{15} x_i = \frac{143.9}{15} \approx 9.59 \text{ cm} $$
+The total length is
 
-*In practice, you will type this data into a calculator or statistical software, which will label the output as "Mean" or "$\bar{x}$". However, paying attention to the formula reminds us of a critical fact: **the mean uses the actual numerical value of every single observation in the dataset.***
+$$
+\sum_{i=1}^{15}x_i
+=
+143.9\text{ cm}
+$$
 
-**Calculating the Mean in R:**
-```{r, include=TRUE, echo=TRUE}
-# Create a vector of the 15 pine needle lengths
-aleppo_needles <- c(7.2, 7.6, 8.5, 8.5, 8.7, 9.0, 9.0, 9.3, 9.4, 9.4, 10.2, 10.9, 11.3, 12.1, 12.8)
-                    
-# Calculate the mean
-mean(aleppo_needles)                    
+**Solution**
+
+$$
+\bar{x}
+=
+\frac{143.9}{15}
+\approx
+9.59\text{ cm}
+$$
+
+The mean needle length is approximately 9.59 cm.
+
+The calculation can also be performed in R.
+
+```{r mean_aleppo, include=TRUE, echo=TRUE}
+# The vector contains the 15 observed pine needle lengths in centimetres.
+aleppo_needles <- c(
+  7.2, 7.6, 8.5, 8.5, 8.7,
+  9.0, 9.0, 9.3, 9.4, 9.4,
+  10.2, 10.9, 11.3, 12.1, 12.8
+)
+
+# mean() calculates the arithmetic average.
+mean(aleppo_needles)
 ```
+
+The formula and the R calculation emphasize an important property: the mean uses the numerical value of every observation.
 
 ### The Median ($M$)
 
-The **median** is the exact geometric midpoint of a distribution. It is the 50th percentile—the number such that exactly half (50%) of the observations are smaller and the other half are larger.
+The **median** is the middle of the ordered data. It separates the observations into a lower part and an upper part.
 
-To find the median by hand:
+For an odd number of observations, the median is the single middle observation after the data are sorted. Its position is
 
-1. **Sort** all observations in order of size, from smallest to largest.
-2. Use the location rule: the median is always located at position **$\frac{n+1}{2}$** in the ordered list.
-3. If $n$ is **odd**, this location lands on a single center number. If $n$ is **even**, this location lands between two numbers, and you must take their exact average.
+$$
+\frac{n+1}{2}
+$$
 
-> **Software Note:** Different statistical programs label the median slightly differently. You will typically see it called **"Median"** or **"Med"**, but SPSS labels it **"Percentile 50"** and JMP calls it a **"Quantile."** They all mean the exact same center point!
+For an even number of observations, there are two middle observations. The median is the average of the values in positions $n/2$ and $n/2+1$.
 
-#### Example: Finding the Median
+The median is also the 50th percentile. With repeated values, it is more precise to say that at least half of the observations are no larger than the median and at least half are no smaller than the median.
 
-**Example 2.1: Aleppo Pine Needles (Odd $n$)**  
-What is the median length for our $15$ Aleppo pine needles?
+#### Example 2.1: Aleppo Pine Needles with Odd $n$
 
-| Step | Action | Result |
-| :--- | :--- | :--- |
-| **1.** | Sort the data | 7.2, 7.6, 8.5, 8.5, 8.7, 9.0, 9.0, **9.3**, 9.4, 9.4, 10.2, 10.9, 11.3, 12.1, 12.8 |
-| **2.** | Locate the median | $\frac{n+1}{2} = \frac{15+1}{2} = 8$ |
-| **3.** | Find the middle | The 8th observation in the sorted list is 9.3 cm. |
-| | **Result** | **Median ($M$) = 9.3 cm** |
+**Question**
 
-```{r, include=TRUE, echo=TRUE}
-# Using our aleppo_needles vector from earlier
+What is the median of the 15 Aleppo pine needle lengths?
+
+**Explanation**
+
+The data are already sorted. Because $n=15$ is odd, the median occurs at position
+
+$$
+\frac{15+1}{2}
+=
+8
+$$
+
+The eighth observation is 9.3 cm.
+
+**Solution**
+
+$$
+M
+=
+9.3\text{ cm}
+$$
+
+The same result can be obtained in R.
+
+```{r median_aleppo, include=TRUE, echo=TRUE}
+# median() returns the middle value of the ordered data.
 median(aleppo_needles)
 ```
 
-**Example 2.2: Torrey Pine Needles (Even $n$)**  
-Now we have the lengths of $18$ needles from a noticeably different species, the Torrey pine. 
+#### Example 2.2: Torrey Pine Needles with Even $n$
 
-| Step | Action | Result |
-| :--- | :--- | :--- |
-| **1.** | Sort the data | 21.2, 21.6, 21.7, 23.1, 23.7, 24.2, 24.2, 25.5, **26.6, 26.8**, 28.9, 29.0, 29.7, 29.7, 30.2, 32.5, 33.7, 33.7 |
-| **2.** | Locate the median | $\frac{n+1}{2} = \frac{18+1}{2} = 9.5$ |
-| **3.** | Find the middle | The location 9.5 means halfway between the 9th and 10th observations: $\frac{26.6 + 26.8}{2}$ |
-| | **Result** | **Median ($M$) = 26.7 cm** |
+**Question**
 
-Calculating the Median in R (Even $n$):
-```{r, include=TRUE, echo=TRUE}
-# Create a vector of the 18 Torrey pine needle lengths
-torrey_needles <- c(21.2, 21.6, 21.7, 23.1, 23.7, 24.2, 24.2, 25.5, 26.6, 
-                    26.8, 28.9, 29.0, 29.7, 29.7, 30.2, 32.5, 33.7, 33.7)
+A sample contains 18 Torrey pine needle lengths.
 
-# Calculate the median
+21.2, 21.6, 21.7, 23.1, 23.7, 24.2, 24.2, 25.5, 26.6, 26.8, 28.9, 29.0, 29.7, 29.7, 30.2, 32.5, 33.7, 33.7
+
+What is the median length?
+
+**Explanation**
+
+Because $n=18$ is even, the middle observations are the ninth and tenth values.
+
+$$
+x_{(9)}
+=
+26.6
+$$
+
+$$
+x_{(10)}
+=
+26.8
+$$
+
+The median is their average.
+
+**Solution**
+
+$$
+M
+=
+\frac{26.6+26.8}{2}
+=
+26.7\text{ cm}
+$$
+
+```{r median_torrey, include=TRUE, echo=TRUE}
+# The vector contains the 18 Torrey pine needle lengths.
+torrey_needles <- c(
+  21.2, 21.6, 21.7, 23.1, 23.7, 24.2,
+  24.2, 25.5, 26.6, 26.8, 28.9, 29.0,
+  29.7, 29.7, 30.2, 32.5, 33.7, 33.7
+)
+
+# median() automatically handles an even sample size.
 median(torrey_needles)
 ```
 
+The mean and median can be close when a distribution is roughly symmetric. Their behaviour can be very different when the data contain an extreme observation.
 
 ---
 
+## Comparing the Mean and Median: Resistance
 
-## Comparing the Mean and the Median: Resistance
+A numerical summary is called **resistant** when a small number of extreme observations do not change it very much.
 
-If both the mean and the median measure the "center," why do we need both? We need them because they react differently to extreme biology.
+The median is resistant because it depends mainly on the order of the observations. The mean is non-resistant because every observed value enters directly into its calculation.
 
-Let's look at the recovery times of our first 5 patients again. For roughly symmetric data, the mean and median are very close together:
+### An Extreme Recovery Time
 
-*   **Sorted Data:** 4, 6, 7, 8, 9
-*   **Median:** 7 days
-*   **Mean:** $\frac{4+6+7+8+9}{5} = 6.8$ days
+**Question**
 
-But what happens if our 5th patient is a "long-hauler" who takes **45 days** to recover instead of 9?
+Consider the following two samples of recovery times.
 
-Our new dataset is: 4, 6, 7, 8, 45.
+Original sample:
 
-<img src="fig_ch2_resistance.png" alt="Dotplot showing a normal sample vs a sample with an outlier, illustrating how the mean is pulled while the median stays fixed." />
+4, 6, 7, 8, 9
 
-| Statistic | Normal Sample (4, 6, 7, 8, 9) | Outlier Sample (4, 6, 7, 8, **45**) |
-| :--- | :--- | :--- |
-| **Median ($M$)** | 7 days | **7 days** (It didn't change at all!) |
-| **Mean ($\bar{x}$)** | 6.8 days | **14 days** (Drastically pulled to the right) |
+Sample with one extreme recovery time:
 
-### The Concept of Resistance
+4, 6, 7, 8, 45
 
-A statistical measure is called **resistant** (or robust) if it is not strongly influenced by a few extreme observations (outliers).
+How do the mean and median change?
 
-*   **The median is resistant:** Because it only cares about the physical *order* of the numbers, you can change the largest number to a million, and the median won't budge.
-*   **The mean is non-resistant:** Because the mean mathematically incorporates the exact value of every single observation, a single massive outlier will drag the mean toward it.
+**Explanation**
 
-### Shape Determines the Center
+The central four values remain almost unchanged. Only the largest value changes substantially.
 
-Because of this concept of resistance, the visual shape of your histogram immediately tells you how the mean and median will relate to each other mathematically.
+For the original sample,
 
-<img src="fig_ch2_skewed_mean_median.png" alt="Histogram of right-skewed viral load data showing the mean pulled to the right of the median." />
+$$
+\bar{x}
+=
+6.8
+$$
 
-| Distribution Shape | Mathematical Relationship | Biological Example |
-| :--- | :--- | :--- |
-| **Symmetric** | Mean $\approx$ Median | Adult penguin body masses. Both sit in the center of the symmetric peak. |
-| **Skewed Right** | Mean $>$ Median | Viral loads. Extreme high values in the long right tail act like heavy weights, pulling the mean to the right. |
-| **Skewed Left** | Mean $<$ Median | Age at retirement. Extreme low values drag the mean to the left. |
+$$
+M
+=
+7
+$$
 
-> **First-Year Rule of Thumb:**  
-> The mean is always drawn toward the long tail of a skewed distribution. If the tail points to the right, the mean gets pulled to the right of the median!
+For the sample containing 45,
+
+$$
+\bar{x}
+=
+14
+$$
+
+$$
+M
+=
+7
+$$
+
+**Solution**
+
+<img src="fig_ch2_resistance.png" alt="Dotplot comparing an original recovery-time sample with a sample containing an extreme observation, showing that the mean changes more than the median" />
+
+The median remains at 7 days, while the mean changes from 6.8 days to 14 days. The median is therefore much more resistant to this extreme value.
+
+| Statistic | Original sample | Sample with 45 days |
+|:--|--:|--:|
+| Median | 7 days | 7 days |
+| Mean | 6.8 days | 14 days |
+
+### Shape and the Choice of Centre
+
+The resistance of the median explains why the shape of a distribution matters when choosing a measure of centre.
+
+A long right tail contains unusually large observations. These values tend to pull the mean upward. A long left tail contains unusually small observations, which tend to pull the mean downward.
+
+The relationship is a useful pattern rather than a universal mathematical rule for every possible distribution.
+
+#### Illustrative Example: Viral Load and Skewness
+
+**Question**
+
+A laboratory records the following illustrative viral-load measurements in copies per mL for 20 patients.
+
+| 120 | 140 | 160 | 180 | 200 |
+|--:|--:|--:|--:|--:|
+| 220 | 250 | 270 | 300 | 330 |
+| 360 | 400 | 450 | 520 | 600 |
+| 750 | 900 | 1300 | 2500 | 6000 |
+
+What are the mean and median? Which measure better represents a typical value for this strongly right-skewed dataset?
+
+**Explanation**
+
+Most observations are below 1000 copies/mL, while a small number of observations are much larger. The values 2500 and 6000 create a long right tail.
+
+The median depends on the middle observations.
+
+$$
+M
+=
+345
+$$
+
+The mean uses every value.
+
+$$
+\bar{x}
+=
+797.5
+$$
+
+The large observations in the right tail increase the mean substantially.
+
+**Solution**
+
+<img src="fig_ch2_skewed_mean_median.png" alt="Histogram of the stated illustrative viral-load data showing the median at 345 copies per mL and the mean at 797.5 copies per mL" />
+
+The median of 345 copies/mL provides a more resistant description of the centre of this dataset. The mean of 797.5 copies/mL is much larger because it is pulled toward the long right tail.
+
+The calculation can be checked in R.
+
+```{r viral_load_summary, include=TRUE, echo=TRUE}
+# These values are the same illustrative viral-load data shown above.
+viral_load <- c(
+  120, 140, 160, 180, 200,
+  220, 250, 270, 300, 330,
+  360, 400, 450, 520, 600,
+  750, 900, 1300, 2500, 6000
+)
+
+# Compare the two measures of centre.
+mean(viral_load)
+median(viral_load)
+```
+
+A useful summary is shown below.
+
+| Distribution shape | Typical relationship | Preferred centre when the pattern is strong |
+|:--|:--|:--|
+| Roughly symmetric | Mean and median are often similar | Mean or median may both be informative |
+| Strongly right-skewed | Mean is often above the median | Median |
+| Strongly left-skewed | Mean is often below the median | Median |
+
+The graph should still be examined before the summary is chosen.
 
 ---
 
-## Measuring Spread: Quartiles and Boxplots
+## Measuring Spread: Quartiles and the IQR
 
-Saying that the median penguin weighs **4.5 kg** tells us the center, but it doesn't tell us how widely penguin weights vary. Are most penguins exactly **4.5 kg**, or do they range wildly from **2 kg** to **8 kg**? A measure of center must always be accompanied by a measure of **spread** (variability).
+A measure of centre does not describe how widely the observations vary. Two datasets can have the same median but very different amounts of spread.
 
-### The Quartiles ($Q_1$ and $Q_3$)
+Quartiles describe the positions that divide ordered data into lower and upper portions.
 
-Just as the median divides the data exactly in half, the quartiles divide the data into exactly four equal quarters.
+### Quartiles
 
-*   **Quartile 1 ($Q_1$):** The median of the lower half of the data. Exactly **25%** of the data falls below $Q_1$.
-*   **Quartile 3 ($Q_3$):** The median of the upper half of the data. Exactly **75%** of the data falls below $Q_3$ (and **25%** is above it).
+The first quartile $Q_1$ is the 25th percentile and the third quartile $Q_3$ is the 75th percentile.
 
-**To calculate the quartiles by hand:**
-1.  Sort the data and find the overall Median ($M$).
-2.  Locate the lower half of the data. *(Note: If $n$ is odd, do not include the overall median in this lower half).* The median of this lower half is $Q_1$.
-3.  Locate the upper half of the data. The median of this upper half is $Q_3$.
+Different statistical software packages use slightly different interpolation rules for quartiles. For hand calculations in this course, the **median-of-halves convention** will be used unless another method is specified.
 
-> **Data Entry Tip:**  
-> Be careful when several observations take the exact same numerical value. Include all the duplicate observations in your list and apply the rules just as if they all had distinct values!
+Under this convention:
 
----
+1. The observations are sorted from smallest to largest.
+2. The overall median is located.
+3. For odd $n$, the overall median is excluded from the lower and upper halves.
+4. The median of the lower half is $Q_1$.
+5. The median of the upper half is $Q_3$.
 
-#### Example 2.5: Finding the Quartiles (Odd $n$)
+#### Example 2.5: Quartiles with Odd $n$
 
-Let's find the quartiles for our sample of $15$ Aleppo pine needles. Here are the data, arranged in increasing order:
+**Question**
 
-| | Lower Half | Median | Upper Half |
-| :--- | :--- | :--- | :--- |
-| **Values** | 7.2, 7.6, 8.5, **8.5**, 8.7, 9.0, 9.0 | **9.3** | 9.4, 9.4, 10.2, **10.9**, 11.3, 12.1, 12.8 |
+What are $Q_1$ and $Q_3$ for the 15 Aleppo pine needle lengths?
 
-We have an odd number of observations ($n=15$), so the overall median is the middle one: **$M = 9.3$ cm**.
+**Explanation**
 
-*   **Finding $Q_1$:** The first quartile is the median of the 7 observations to the left of $9.3$. With $n=7$, the middle is the 4th observation.
-    *   **$Q_1 = 8.5$ cm**
-*   **Finding $Q_3$:** The third quartile is the median of the 7 observations to the right of $9.3$.
-    *   **$Q_3 = 10.9$ cm**
+The overall median is 9.3 cm. Because the sample size is odd, that value is excluded when the lower and upper halves are formed.
 
-Notice that the quartiles are highly **resistant to outliers**. For example, $Q_3$ would still be $10.9$ cm even if the largest needle length was a massive $50$ cm rather than $12.8$ cm!
+The lower half is
 
-Finding Quartiles and the Five-Number Summary in R:
-```{r, include=TRUE, echo=TRUE}
-# The summary() function gives the min, Q1, median, mean, Q3, and max all at once.
+7.2, 7.6, 8.5, 8.5, 8.7, 9.0, 9.0
 
-# Aleppo pines (Odd n)
+The upper half is
+
+9.4, 9.4, 10.2, 10.9, 11.3, 12.1, 12.8
+
+**Solution**
+
+The middle value of the lower half is
+
+$$
+Q_1
+=
+8.5\text{ cm}
+$$
+
+The middle value of the upper half is
+
+$$
+Q_3
+=
+10.9\text{ cm}
+$$
+
+R can also summarize the data.
+
+```{r summary_aleppo, include=TRUE, echo=TRUE}
+# summary() reports the minimum, Q1, median, mean, Q3 and maximum.
 summary(aleppo_needles)
 ```
 
----
+R uses an interpolation rule for quartiles that can differ slightly from the hand-calculation convention used above. A small difference is therefore not necessarily an error.
 
-#### Example 2.6: Finding the Quartiles (Even $n$)
+#### Example 2.6: Quartiles with Even $n$
 
-Now let's look at the lengths of the $18$ Torrey pine needles, arranged in increasing order:
+**Question**
 
-| | Lower Half | | Upper Half |
-| :--- | :--- | :--- | :--- |
-| **Values** | 21.2, 21.6, 21.7, 23.1, **23.7**, 24.2, 24.2, 25.5, 26.6 | *(Median = 26.7)* | 26.8, 28.9, 29.0, 29.7, **29.7**, 30.2, 32.5, 33.7, 33.7 |
+What are $Q_1$ and $Q_3$ for the 18 Torrey pine needle lengths?
 
-We have an even number of observations ($n=18$). As we found earlier, the overall median lies exactly midway between the 9th and 10th values (26.6 and 26.8), so **$M = 26.7$ cm**.
+**Explanation**
 
-*   **Finding $Q_1$:** The first quartile is the median of the first 9 observations (since these are all strictly to the left of our median location). The middle of 9 items is the 5th value.
-    *   **$Q_1 = 23.7$ cm**
-*   **Finding $Q_3$:** The third quartile is the median of the upper 9 observations. 
-    *   **$Q_3 = 29.7$ cm**
+The median lies between 26.6 and 26.8. The lower half contains the first nine observations and the upper half contains the final nine observations.
 
-```{r, include=TRUE, echo=TRUE}
-# Torrey pines (Even n)
+The middle observation of the lower half is 23.7 cm. The middle observation of the upper half is 29.7 cm.
+
+**Solution**
+
+$$
+Q_1
+=
+23.7\text{ cm}
+$$
+
+$$
+Q_3
+=
+29.7\text{ cm}
+$$
+
+```{r summary_torrey, include=TRUE, echo=TRUE}
+# summary() gives R's numerical summary for the Torrey pine sample.
 summary(torrey_needles)
 ```
 
-> **Why does R give a slightly different answer?**  
-> If you type the 15 Aleppo pine needle lengths into different programs, you might notice small differences. A graphing calculator might say $Q_1 = 8.5$, but R might say $Q_1 = 8.6$. 
-> 
-> *How can this be?* There are actually several different mathematical rules (interpolation algorithms) for finding quartiles when the splits aren't perfectly even. Our hand-calculation rule is the simplest way to perform the computations manually. The computer's rules give slightly different, but always very close, answers. When analyzing real data in the lab, **always trust the output your software package gives you!**
+### The Interquartile Range
 
----
+The **interquartile range**, abbreviated IQR, measures the width of the middle 50% of the ordered data.
 
-### The Interquartile Range (IQR)
+$$
+IQR
+=
+Q_3-Q_1
+$$
 
-The distance between the first and third quartiles is called the **Interquartile Range**. 
+The IQR is resistant because the most extreme observations in the tails do not directly determine its value.
 
-$$IQR = Q_3 - Q_1$$
-
-The IQR is the exact span of the **middle 50%** of your data. Because the IQR completely ignores the bottom 25% and top 25% of the data, it is a highly **resistant** measure of spread. A giant outlier in the tail will not affect the width of the middle 50%.
-
-Calculating IQR in R:
-```{r, include=TRUE, echo=TRUE}
+```{r iqr_examples, include=TRUE, echo=TRUE}
+# IQR() calculates the interquartile range using R's quartile convention.
 IQR(aleppo_needles)
-
 IQR(torrey_needles)
 ```
 
----
-
 ### The Five-Number Summary
 
-By combining our measures of center, our measures of spread, and the absolute extremes of our data, we get a highly efficient snapshot of the entire distribution called the **five-number summary**:
+The five-number summary consists of
 
-$$ \text{Minimum} \quad Q_1 \quad \text{Median} \quad Q_3 \quad \text{Maximum} $$
+$$
+\text{Minimum}
+\quad
+Q_1
+\quad
+\text{Median}
+\quad
+Q_3
+\quad
+\text{Maximum}
+$$
 
-These five numbers offer a reasonably complete mathematical description of a dataset's center and spread.
-
----
-
-### Boxplots: Visualizing the Five-Number Summary
-
-A **boxplot** is a graph built directly from the five-number summary. While histograms are great for showing the shape of a single dataset, boxplots are the gold standard in the life sciences for comparing multiple groups side-by-side.
-
-<img src="fig_ch2_boxplot_anatomy.png" alt="Annotated diagram of a boxplot showing quartiles, median, and outliers." />
-
-#### How to Read a Boxplot
-
-*   The central **box** spans from $Q_1$ to $Q_3$. The width of this box is the exact **IQR** (the middle **50%** of the data).
-*   The thick line inside the box is the **Median**.
-*   Lines (called **whiskers**) extend outward from the box to the smallest and largest observations *that are not considered outliers*.
-*   Individual dots floating beyond the whiskers are suspected **outliers**.
-
-#### Side-by-Side Comparisons
-
-Why are boxplots so popular in modern biology? Because they allow us to compare dozens of experimental groups cleanly in a single graphic. 
-
-Suppose researchers are testing three different methods for delivering CRISPR-Cas9 genome editors into a patient's cells: *Lipid Nanoparticles*, *Viral Vectors*, and *Electroporation*.
-
-<img src="fig_ch2_side_by_side_boxplots.png" alt="Side-by-side boxplots showing CRISPR editing efficiency across three delivery methods." />
-
-A quick glance at this boxplot reveals:
-
-*   **Center:** Viral vectors yield the highest median editing efficiency.
-*   **Spread:** Electroporation is highly unstable (the IQR box is very tall, meaning highly variable results).
-*   **Outliers:** Lipid nanoparticles are generally consistent, but had a few cells that successfully edited at an unexpectedly high rate (the two outlier dots).
+These values describe the overall location and spread of the ordered data. A modified boxplot uses the quartiles together with the $1.5\times IQR$ rule to display suspected outliers separately.
 
 ---
 
-## Identifying Outliers: The $1.5 \times IQR$ Rule
+## Boxplots
 
-In Chapter 1, we said an outlier is an observation that falls "well outside" the overall pattern. But "well outside" is a subjective judgment. How does R or Python automatically know which dots to plot outside the whiskers of a boxplot?
+A **boxplot** provides a compact visual summary of a quantitative distribution. It is especially useful for comparing several groups.
 
-Statisticians use an objective mathematical formula called the **$1.5 \times IQR$ Rule** to flag suspected outliers.
+<img src="fig_ch2_boxplot_anatomy.png" alt="Annotated modified boxplot showing Q1, the median, Q3, whiskers, the IQR and a suspected outlier" />
 
-#### The Outlier Formula
-An observation is flagged as a suspected outlier if it falls more than $1.5 \times IQR$ above the third quartile or below the first quartile.
+### Reading a Modified Boxplot
 
-| Boundary | Formula |
-| :--- | :--- |
-| **Upper Fence** | $Q_3 + (1.5 \times IQR)$ |
-| **Lower Fence** | $Q_1 - (1.5 \times IQR)$ |
+The box extends from $Q_1$ to $Q_3$, so its height or width represents the IQR. The line inside the box marks the median.
 
-Any data point larger than the Upper Fence or smaller than the Lower Fence is plotted as an individual dot.
+The whiskers extend to the most extreme observations that remain within the outlier fences. Observations beyond the fences are shown separately as suspected outliers.
+
+A point marked as a suspected outlier should be investigated rather than automatically deleted.
+
+### Comparing Groups with Side-by-Side Boxplots
+
+Side-by-side boxplots allow the centres, spreads and unusual observations of several groups to be compared on the same scale.
+
+The figure below uses simulated editing-efficiency values only to illustrate how such a comparison can be read.
+
+<img src="fig_ch2_side_by_side_boxplots.png" alt="Side-by-side boxplots of illustrative CRISPR-Cas9 editing efficiency values for three delivery methods" />
+
+The comparison should focus on several features.
+
+- The medians show differences in centre between the groups.
+- The IQRs show differences in the spread of the middle 50%.
+- The whiskers and separately plotted points show the behaviour of the tails.
+- The amount of overlap helps describe how distinct or similar the group distributions appear.
+
+The graph is descriptive. A difference between boxplots alone does not establish that one delivery method causes a better biological outcome.
+
+---
+
+## Identifying Suspected Outliers: The $1.5\times IQR$ Rule
+
+A modified boxplot uses the IQR to define objective boundaries called **fences**.
+
+The lower fence is
+
+$$
+Q_1-1.5(IQR)
+$$
+
+The upper fence is
+
+$$
+Q_3+1.5(IQR)
+$$
+
+An observation below the lower fence or above the upper fence is flagged as a suspected outlier.
+
+The word **suspected** is important. The rule identifies an unusual numerical value. It does not determine whether the observation is a data-entry error, a measurement problem or a valid biological observation.
+
+#### Example: Applying the Outlier Rule
+
+**Question**
+
+The following needle-length dataset contains an unusually large observation.
+
+7.2, 7.6, 8.5, 8.5, 8.7, 9.0, 9.0, 9.3, 9.4, 9.4, 10.2, 10.9, 11.3, 12.1, 15.8
+
+How can R identify observations outside the $1.5\times IQR$ fences?
+
+**Explanation**
+
+The first quartile, third quartile and IQR are calculated first. The two fences are then constructed. The final logical condition selects values that fall outside those boundaries.
+
+**Solution**
 
 ```{r outlier_rule, include=TRUE, echo=TRUE}
-# Sample vector of needle lengths with an added extreme value (15.8)
-data <- c(7.2, 7.6, 8.5, 8.5, 8.7, 9.0, 9.0, 9.3, 9.4, 9.4, 10.2, 10.9, 11.3, 12.1, 15.8)
+# The vector contains the observed needle lengths.
+needle_data <- c(
+  7.2, 7.6, 8.5, 8.5, 8.7,
+  9.0, 9.0, 9.3, 9.4, 9.4,
+  10.2, 10.9, 11.3, 12.1, 15.8
+)
 
-# 1. Calculate Q1, Q3, and IQR
-q1 <- quantile(data, 0.25)
-q3 <- quantile(data, 0.75)
-iqr_val <- IQR(data)
+# R's default quartile convention is used for this software calculation.
+q1 <- quantile(needle_data, 0.25)
+q3 <- quantile(needle_data, 0.75)
+iqr_value <- IQR(needle_data)
 
-# 2. Calculate Upper and Lower Fences
-lower_fence <- q1 - (1.5 * iqr_val)
-upper_fence <- q3 + (1.5 * iqr_val)
+# The lower and upper fences define the usual suspected-outlier region.
+lower_fence <- q1 - 1.5 * iqr_value
+upper_fence <- q3 + 1.5 * iqr_value
 
-# Display the boundary fences
-c(Lower_Fence = lower_fence, Upper_Fence = upper_fence)
+# Display both fences.
+c(
+  Lower_Fence = lower_fence,
+  Upper_Fence = upper_fence
+)
 
-# 3. Identify values outside the fences
-outliers <- data[data < lower_fence | data > upper_fence]
-outliers
+# Select observations outside either fence.
+suspected_outliers <- needle_data[
+  needle_data < lower_fence |
+  needle_data > upper_fence
+]
+
+suspected_outliers
 ```
 
-> **Exam Warning:**  
-> This mathematical rule tells you *that* a data point is mathematically unusual, but it does **NOT** give you permission to delete it! You must investigate the biology or lab methodology before removing any outlier.
+A flagged observation should be investigated scientifically before any decision is made about excluding it.
 
 ---
 
-## Measuring Spread: The Standard Deviation ($s$)
+## Measuring Spread: Standard Deviation
 
-If we use the Median to measure center, we use the IQR to measure spread. 
-But if we use the Mean ($\bar{x}$) to measure center, we need a different measure of spread: the **Standard Deviation** ($s$).
+The median is naturally paired with the IQR because both are resistant. The mean is commonly paired with the **standard deviation**, denoted by $s$ for a sample.
 
-The standard deviation measures spread by looking at how far each individual observation falls from the mean. Conceptually, you can think of standard deviation as the **"average distance"** of all the data points from the center.
+The standard deviation describes how much the observations vary around the sample mean. It is based on squared deviations from the mean, so large deviations receive substantial weight.
 
-<img src="fig_ch2_standard_deviation.png" alt="Density curve illustrating one standard deviation from the mean." />
+<img src="fig_ch2_standard_deviation.png" alt="Normal-shaped curve illustrating a distance of one standard deviation from the mean" />
 
-### The Math Behind Standard Deviation
+### Deviations, Variance and Standard Deviation
 
-To calculate how far the data is spread out, we first find the distance (deviation) of each point from the mean: $(x_i - \bar{x})$. 
+For observation $x_i$, the deviation from the sample mean is
 
-However, if we just added these distances up, the negative distances (points below the mean) would exactly cancel out the positive distances (points above the mean), resulting in a sum of zero. 
+$$
+x_i-\bar{x}
+$$
 
-To fix this, we **square** the distances to make them all positive, average them, and then take the **square root** to get back to our original biological units.
+Positive deviations correspond to observations above the mean. Negative deviations correspond to observations below the mean.
 
-*   The **Variance** ($s^2$) is the average of the squared distances:
-    $$ s^2 = \frac{1}{n-1} \sum (x_i - \bar{x})^2 $$
+The deviations always sum to zero.
 
-*   The **Standard Deviation** ($s$) is the square root of the variance:
-    $$ s = \sqrt{\frac{1}{n-1} \sum (x_i - \bar{x})^2} $$
+$$
+\sum_{i=1}^{n}(x_i-\bar{x})
+=
+0
+$$
 
-> **Why $(n-1)$ instead of $n$?**  
-> Notice that we divide by $(n-1)$ instead of $n$. This is called **degrees of freedom**. Because we already used our sample data to estimate the mean ($\bar{x}$), we "spent" one piece of independent information. Dividing by $(n-1)$ corrects a mathematical bias, ensuring our sample standard deviation perfectly estimates the true population spread.
+The deviations are squared so that positive and negative differences do not cancel.
 
----
+The sample variance is
 
-### Example 2.7: Calculating the Standard Deviation (Metabolic Rates)
+$$
+s^2
+=
+\frac{1}{n-1}
+\sum_{i=1}^{n}
+(x_i-\bar{x})^2
+$$
 
-A person’s metabolic rate is the rate at which the body consumes energy. Here are the metabolic rates of $7$ men who took part in a dieting study. The units are kilocalories (Cal) for a 24-hour period.
+The sample standard deviation is the square root of the sample variance.
 
-**Raw Data ($n=7$):** 1792, 1666, 1362, 1614, 1460, 1867, 1439
+$$
+s
+=
+\sqrt{
+\frac{1}{n-1}
+\sum_{i=1}^{n}
+(x_i-\bar{x})^2
+}
+$$
 
-**Step 1: Find the Mean ($\bar{x}$)**
-$$ \bar{x} = \frac{1792 + 1666 + 1362 + 1614 + 1460 + 1867 + 1439}{7} = \frac{11{,}200}{7} = 1600 \text{ Cal} $$
+The denominator $n-1$ reflects one degree of freedom used when the sample mean is estimated from the same data. Under the usual independent random-sampling model, dividing by $n-1$ makes the sample variance $s^2$ an unbiased estimator of the population variance $\sigma^2$.
 
-**Step 2: Find the Deviations and Square Them**
-Now we subtract the mean ($1600$) from every observation, and square the result. 
+The sample standard deviation itself is not exactly unbiased for $\sigma$, so it is better to interpret $n-1$ through the variance calculation.
 
-| Observation ($x_i$) | Deviation from Mean ($x_i - \bar{x}$) | Squared Deviation $(x_i - \bar{x})^2$ |
-| :---: | :--- | :--- |
-| **1792** | $1792 - 1600 = 192$ | $192^2 = 36{,}864$ |
-| **1666** | $1666 - 1600 = 66$ | $66^2 = 4{,}356$ |
-| **1362** | $1362 - 1600 = -238$ | $(-238)^2 = 56{,}644$ |
-| **1614** | $1614 - 1600 = 14$ | $14^2 = 196$ |
-| **1460** | $1460 - 1600 = -140$ | $(-140)^2 = 19{,}600$ |
-| **1867** | $1867 - 1600 = 267$ | $267^2 = 71{,}289$ |
-| **1439** | $1439 - 1600 = -161$ | $(-161)^2 = 25{,}921$ |
-| | **Sum of Deviations = 0** | **Sum of Squares = 214,870** |
+### Example 2.7: Metabolic Rates
 
-*Notice that the sum of the un-squared deviations is exactly zero. This will always happen, which is why we must square them!*
+**Question**
 
-**Step 3: Calculate Variance ($s^2$)**
-Divide the sum of squared deviations by $n - 1$ (which is $7 - 1 = 6$):
-$$ s^2 = \frac{214{,}870}{6} = 35{,}811.67 \text{ Cal}^2 $$
+The metabolic rates of seven men in a dieting study are measured in Calories per 24 hours.
 
-**Step 4: Calculate Standard Deviation ($s$)**
-Take the square root of the variance to return to the original biological units:
-$$ s = \sqrt{35{,}811.67} = 189.24 \text{ Cal} $$
+1792, 1666, 1362, 1614, 1460, 1867, 1439
 
-**Conclusion:** The men burn an average of **1600 Cal** per day, and their individual metabolic rates typically vary from that mean by about **189.24 Cal**.
+What are the sample variance and sample standard deviation?
 
-```{r, include=TRUE, echo=TRUE}
-# Create a vector of the 7 metabolic rates
-metabolic_rates <- c(1792, 1666, 1362, 1614, 1460, 1867, 1439)
+**Explanation**
 
-# Calculate the sample variance (s^2)
+The first step is the sample mean.
+
+$$
+\bar{x}
+=
+\frac{11200}{7}
+=
+1600\text{ Cal}
+$$
+
+Each observation is compared with 1600. The deviations and squared deviations are shown below.
+
+| Observation $x_i$ | Deviation $x_i-\bar{x}$ | Squared deviation $(x_i-\bar{x})^2$ |
+|--:|--:|--:|
+| 1792 | 192 | 36,864 |
+| 1666 | 66 | 4,356 |
+| 1362 | -238 | 56,644 |
+| 1614 | 14 | 196 |
+| 1460 | -140 | 19,600 |
+| 1867 | 267 | 71,289 |
+| 1439 | -161 | 25,921 |
+| **Total** | **0** | **214,870** |
+
+The sum of the deviations is zero, which is why the squared deviations are used to measure spread.
+
+**Solution**
+
+The sample variance is
+
+$$
+s^2
+=
+\frac{214870}{7-1}
+=
+35811.67\text{ Cal}^2
+$$
+
+The sample standard deviation is
+
+$$
+s
+=
+\sqrt{35811.67}
+\approx
+189.24\text{ Cal}
+$$
+
+The metabolic rates have a mean of 1600 Cal per day and a standard deviation of about 189.24 Cal.
+
+R performs both calculations directly.
+
+```{r metabolic_rate_sd, include=TRUE, echo=TRUE}
+# The vector contains the seven observed metabolic rates.
+metabolic_rates <- c(
+  1792, 1666, 1362, 1614,
+  1460, 1867, 1439
+)
+
+# var() calculates the sample variance using n - 1.
 var(metabolic_rates)
-#> [1] 35811.67
 
-# Calculate the sample standard deviation (s)
+# sd() calculates the sample standard deviation.
 sd(metabolic_rates)
-#> [1] 189.2397
 ```
----
 
-### Properties of the Standard Deviation
+### Properties of Standard Deviation
 
-*   **$s$ measures spread around the mean.** It should only be used when the mean is chosen as the measure of center.
-*   **$s = 0$ only when there is zero spread.** This means all observations have the exact same value. Otherwise, $s$ is always greater than zero.
-*   **$s$ has the same units of measurement as the original observations.** If you measure metabolic rate in Calories, the standard deviation is in Calories. (The variance would be in $\text{Calories}^2$, which is biologically unhelpful to talk about).
-*   **$s$ is non-resistant!** Because the formula uses the mean and squares the distances, a single extreme outlier will inflate the standard deviation drastically.
+Several properties help with interpretation.
 
----
+- The value of $s$ measures spread around the sample mean.
+- The value of $s$ is zero only when all observations are identical.
+- The standard deviation has the same measurement units as the original data.
+- The variance has squared units.
+- The standard deviation is non-resistant because extreme observations create large squared deviations.
 
-## Choosing the Right Summary
-
-You now have two complete sets of tools to summarize a quantitative distribution:
-1.  **The Mean and Standard Deviation** ($\bar{x}$ and $s$).
-2.  **The Five-Number Summary** ($\text{Minimum}$, $Q_1$, $M$, $Q_3$, $\text{Maximum}$).
-
-How do you know which one to report in your research paper? It depends entirely on the **Shape** and **Outliers** of your distribution!
-
-| When to Use | Mean & Standard Deviation | Median & IQR (Five-Number) |
-| :--- | :--- | :--- |
-| **Shape** | Reasonably Symmetric | Skewed (Left or Right) |
-| **Outliers** | No extreme outliers | Contains suspected outliers |
-| **Why?** | These are **non-resistant**. They mathematically incorporate every value, making them powerful for normal biology, but easily ruined by extreme values. | These are **resistant**. They ignore the extreme tails of the data, providing a stable snapshot of "typical" biology even when outliers are present. |
-
-> **Real-World Example:**  
-> If you are measuring the wingspans of 100 monarch butterflies, the data will likely be symmetric and bell-shaped. You should report the **Mean and Standard Deviation**.  
->  
-> If you are measuring the circulating viral load in 100 COVID-19 patients, the data will be severely right-skewed (most people have moderate viral loads, but a few "super-spreaders" will have loads 10,000x higher). You should report the **Median and IQR**.
+The phrase **average distance from the mean** can be useful as an informal intuition, but the standard deviation is not the ordinary arithmetic average of the absolute distances. Its formula is based on squared deviations.
 
 ---
 
-## Summary: Descriptive Statistics Checklist
+## Choosing the Appropriate Numerical Summary
 
-When asked to summarize a quantitative dataset, always follow this workflow:
+The graph should guide the choice of numerical summaries.
 
-*   **Plot the data first:** Use a histogram or dotplot to check for shape and outliers.
-*   **Choose your tools:**
-    *   If symmetric $\rightarrow$ use **Mean** ($\bar{x}$) and **Standard Deviation** ($s$).
-    *   If skewed or has outliers $\rightarrow$ use **Median** ($M$) and **IQR**.
-*   **Calculate resistance:** Remember that the mean is pulled toward the long tail of a skewed distribution, while the median stands its ground.
-*   **Visualize comparisons:** Use side-by-side **boxplots** to compare the five-number summaries of different experimental groups.
-*   **Check for outliers mathematically:** Use the **$1.5 \times IQR$ rule** to flag unusual points, but investigate them scientifically before deciding to exclude them.
+| Distribution | Centre | Spread | Reason |
+|:--|:--|:--|:--|
+| Roughly symmetric without strong outliers | Mean | Standard deviation | Both summaries use all observed values |
+| Strongly skewed or containing extreme observations | Median | IQR | Both summaries are resistant |
+
+This guideline does not replace scientific judgment. The context of the variable matters. Both sets of summaries can sometimes be reported when a fuller description is useful.
+
+The important principle is that centre and spread should be reported as a pair. A centre without a measure of variability gives an incomplete description of a distribution.
 
 ---
 
-### What’s Next? Looking Ahead to Chapter 3
+## Chapter Summary
 
-In Chapters 1 and 2, we explored data that had only **one variable** recorded per individual (e.g., just measuring body weight, or just measuring viral load). 
+A clear numerical description of a quantitative distribution usually follows a consistent workflow.
 
-But in biology, we often want to know if two different variables are connected:
-*   *Does a higher dosage of a drug cause a faster drop in blood pressure?*
-*   *Is a specific genetic mutation linked to a higher risk of heart disease?*
+1. **The distribution is plotted first.** Its shape and unusual observations should be examined before numerical summaries are selected.
+2. **A measure of centre is chosen.** The mean is sensitive to extreme values, while the median is resistant.
+3. **A matching measure of spread is chosen.** The standard deviation is commonly paired with the mean, while the IQR is commonly paired with the median.
+4. **Quartiles and the five-number summary describe ordered positions.** They provide the foundation for boxplots.
+5. **The $1.5\times IQR$ rule flags suspected outliers.** A flagged observation should be investigated rather than automatically removed.
+6. **Side-by-side boxplots compare distributions across groups.** The comparison should consider centre, spread, tails and unusual observations.
 
-In **Chapter 3: Scatterplots and Correlation**, we will learn how to visualize and measure the relationship between **two quantitative variables** measured on the same individual.
+A useful final question is: **Do the numerical summaries tell the same story as the graph?** When the graph and the chosen summaries disagree, the graph often reveals the reason.
+
+### Looking Ahead to Chapter 3
+
+Chapters 1 and 2 focus mainly on describing one variable at a time. Many scientific questions instead involve two quantitative variables measured on the same individuals.
+
+Examples include whether blood pressure tends to change with drug dosage or whether body size is associated with another biological measurement.
+
+Chapter 3 introduces scatterplots and correlation as tools for describing relationships between two quantitative variables.
