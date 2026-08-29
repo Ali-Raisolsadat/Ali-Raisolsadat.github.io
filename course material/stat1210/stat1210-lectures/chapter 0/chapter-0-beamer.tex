@@ -1,0 +1,300 @@
+%============================================================
+% STAT 1210-2 — Chapter 0: Course Information
+% Fall 2026
+%============================================================
+
+\documentclass[aspectratio=169,10pt]{beamer}
+
+%========================
+% Theme and appearance
+%========================
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+
+\setbeamersize{text margin left=10mm, text margin right=10mm}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{theorems}[numbered]
+\setbeamertemplate{itemize items}[circle]
+
+%========================
+% Core packages
+%========================
+
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+%========================
+% Course colours
+%========================
+
+\definecolor{CourseBlue}{RGB}{41,67,98}
+\definecolor{CourseAccent}{RGB}{112,142,172}
+\definecolor{CourseLight}{RGB}{238,243,248}
+
+\setbeamercolor{structure}{fg=CourseBlue}
+\setbeamercolor{palette primary}{bg=CourseBlue,fg=white}
+\setbeamercolor{palette secondary}{bg=CourseAccent,fg=white}
+\setbeamercolor{palette tertiary}{bg=CourseBlue!88!black,fg=white}
+\setbeamercolor{frametitle}{bg=CourseBlue,fg=white}
+\setbeamercolor{block title}{bg=CourseBlue,fg=white}
+\setbeamercolor{block body}{bg=CourseLight,fg=black}
+
+%========================
+% Custom footline
+%========================
+
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.34\paperwidth,ht=2.7ex,dp=1.2ex,center]{author in head/foot}%
+      \usebeamerfont{author in head/foot}\insertshortauthor
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.46\paperwidth,ht=2.7ex,dp=1.2ex,center]{title in head/foot}%
+      \usebeamerfont{title in head/foot}\insertshorttitle
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.20\paperwidth,ht=2.7ex,dp=1.2ex,right]{date in head/foot}%
+      \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+    \end{beamercolorbox}%
+  }%
+}
+
+%========================
+% Title information
+%========================
+
+\title[STAT 1210-2: Course Information]{STAT 1210-2}
+\subtitle{Introduction to Statistics for the Life and Social Sciences\\[1mm]Chapter 0: Course Information}
+\author[Ali Raisolsadat]{Ali Raisolsadat}
+\institute{School of Mathematical and Computational Sciences\\University of Prince Edward Island}
+\date{Fall 2026}
+
+%========================
+% Begin document
+%========================
+
+\begin{document}
+
+%------------------------------------------------------------
+% Title frame
+%------------------------------------------------------------
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+%------------------------------------------------------------
+% Course information
+%------------------------------------------------------------
+
+\begin{frame}{Welcome to STAT 1210-2}
+
+\begin{center}
+  \textbf{Introduction to Statistics for the Life and Social Sciences — Fall 2026}
+\end{center}
+
+\vspace{3mm}
+
+\begin{tabular}{@{}ll@{}}
+  \textbf{Instructor:} & Ali Raisolsadat \\[1.5mm]
+  \textbf{Office:} & TBD \\[1.5mm]
+  \textbf{E-mail:} & \href{mailto:sraisolsadat@upei.ca}{sraisolsadat@upei.ca} \\[1.5mm]
+  \textbf{Lectures:} & TBD \\[1.5mm]
+  \textbf{Office hours:} & TBD
+\end{tabular}
+
+\end{frame}
+
+%------------------------------------------------------------
+% Instructor background
+%------------------------------------------------------------
+
+\begin{frame}{Your Instructor}
+
+I am Ali Raisolsadat.
+
+\begin{itemize}
+  \item Master of Mathematics (MMath) in Computational Mathematics, University of Waterloo
+  \item Bachelor of Science in Actuarial Science, University of Prince Edward Island
+  \item Bachelor of Science in Financial Mathematics, University of Prince Edward Island
+\end{itemize}
+
+\begin{center}
+  \includegraphics[width=0.45\textwidth]{meme_1.jpg}
+\end{center}
+
+\end{frame}
+
+%------------------------------------------------------------
+% Course materials
+%------------------------------------------------------------
+
+\begin{frame}{Course Materials and Communication}
+
+\textbf{Textbook}
+
+\vspace{1mm}
+
+\emph{The Practice of Statistics in the Life Sciences} by Brigitte Baldi and David S. Moore
+
+\vspace{4mm}
+
+\textbf{Course website and Moodle}
+
+\begin{itemize}
+  \item The course website will contain the outline, lecture slides and supporting materials.
+  \item Moodle will be used for official course communication, announcements and schedule updates and grades.
+  \item Students are responsible for checking course announcements regularly.
+\end{itemize}
+
+\begin{block}{Course Goal}
+Develop the statistical reasoning needed to organize data, describe patterns, quantify uncertainty and draw appropriate conclusions in life-science and social-science settings.
+\end{block}
+
+\end{frame}
+
+%------------------------------------------------------------
+% Course roadmap I and II
+%------------------------------------------------------------
+
+\begin{frame}{Course Roadmap: Exploring Data and Probability}
+
+\large In the first part of the course, we begin by learning how to describe data and using probability to model and understand uncertainty.
+
+  \begin{block}{I. Exploring Data}
+    \begin{itemize}
+      \item \textbf{Chapters 1--2:} Distributions and numerical summaries
+      \item \textbf{Chapter 3:} Scatterplots and correlation
+      \item \textbf{Chapter 4:} Regression
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{II. Probability and Distributions}
+    \begin{itemize}
+      \item \textbf{Chapters 9--10:} Probability rules
+      \item \textbf{Chapter 11:} Normal distributions
+      \item \textbf{Chapter 12:} Binomial and Poisson distributions
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+
+%------------------------------------------------------------
+% Course roadmap III and IV
+%------------------------------------------------------------
+
+\begin{frame}{Course Roadmap: Statistical Inference}
+
+\large In the second half of the course we use sample data to make conclusions about populations.
+
+  \begin{block}{III. Foundations of Inference}
+    \begin{itemize}
+      \item \textbf{Chapter 6:} Samples and observational studies
+      \item \textbf{Chapter 13:} Sampling distributions
+      \item \textbf{Chapter 14:} Confidence intervals and $p$-values
+      \item \textbf{Chapter 15:} Inference in practice
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{IV. Specific Procedures}
+    \begin{itemize}
+      \item \textbf{Chapter 17:} Inference about a population mean
+      \item \textbf{Chapter 19:} Inference about a population proportion
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+
+%------------------------------------------------------------
+% Evaluation
+%------------------------------------------------------------
+
+\begin{frame}{How Your Final Grade Is Determined}
+
+\begin{center}
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Assessment} & \textbf{Weight} \\
+\midrule
+Four assignments (5\% each) & 20\% \\
+Examinations: midterm or quiz option & 40\% \\
+Final examination & 40\% \\
+\midrule
+\textbf{Total} & \textbf{100\%} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+  \begin{block}{Option A: Two Midterms}
+    \begin{center}
+       \textbf{20\% + 20\% = 40\%}
+    \end{center}
+    Two 75 minutes midterms.
+  \end{block}
+
+  \begin{block}{Option B: Four Quizzes}
+    \begin{center}
+      \textbf{10\% + 10\% + 10\% + 10\% = 40\%}
+    \end{center}
+    Four 40 minutes quizzes.
+  \end{block}
+
+\end{frame}
+
+%------------------------------------------------------------
+% Academic integrity and AI
+%------------------------------------------------------------
+
+\begin{frame}{Academic Integrity and the Use of AI Tools}
+
+ChatGPT, Claude, Gemini and other large language models may be used as study aids unless an assessment states otherwise. Students must not submit AI-generated answers as their own work or use these tools in ways that violate assessment instructions.
+
+\vspace{1mm}
+
+If your submitted work raises concerns about unauthorized assistance or academic dishonesty, I may ask you to explain the calculations, reasoning, interpretations and conclusions. You must be able to explain and defend the work they submit.
+
+\vspace{1mm}
+
+Failure to demonstrate understanding may result in a substantial mark reduction and may be addressed under the University's academic integrity procedures.
+
+\begin{center}
+  \includegraphics[width=0.3\textwidth]{meme_4.png}
+\end{center}
+
+\end{frame}
+
+%------------------------------------------------------------
+% Optional introductory task
+%------------------------------------------------------------
+
+\begin{frame}{Optional 2\% Course Introduction Task}
+
+\begin{block}{Your Task}
+Write an approximately \textbf{250-word handwritten paragraph} introducing yourself and your goals for this course.
+\end{block}
+
+In your paragraph, address the following questions:
+
+\begin{itemize}
+  \item What is your major and why did you choose it? What interests you about it?
+  \item If you have not selected a major, what options are you currently considering? If you are beyond first year, explain why you chose your current major.
+  \item How do you think STAT 1210 will help you and what do you want from the course? For example, are you interested in learning statistics, taking it mainly as a program requirement, or both?
+  \item What final grade do you realistically think you will achieve in this course?
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Optional 2\% Course Introduction Task}
+\begin{center}
+\includegraphics[width=0.3\textwidth]{meme_2.jpg}
+\end{center}
+\begin{alertblock}{Credit}
+A thoughtful response that follows the instructions will add \textbf{2\% to your course grade}. Ensure to include your name and student ID.
+\end{alertblock}
+
+\end{frame}
+
+\end{document}

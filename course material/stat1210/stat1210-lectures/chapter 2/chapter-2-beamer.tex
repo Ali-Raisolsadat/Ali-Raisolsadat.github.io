@@ -25,13 +25,13 @@
 % SLIDE 2: The Limits of Human Perception
 \begin{frame}{The Limits of Human Perception}
   \begin{itemize}
-    \item In Chapter 1, we learned the first rule of modern data analysis: \textbf{always plot your data}.
-    \item Visualizations (histograms, dotplots) allow our eyes to quickly spot shapes, trends, bimodal clusters, and data entry errors.
+    \item In Chapter 1 we learned the first rule of modern data analysis: \textbf{always plot your data}.
+    \item Visualizations (histograms, dotplots) allow our eyes to quickly spot shapes, trends, bimodal clusters and data entry errors.
     \item \textbf{The Problem:} Human eyes are subjective! 
     \begin{itemize}
       \item If you ask two scientists to point to the "center" of a skewed histogram, they will point to two different spots.
     \end{itemize}
-    \item \textbf{The Solution:} We need to translate our visual descriptions—Shape, Outliers, Center, and Spread (SOCS)—into objective, reproducible mathematical summaries.
+    \item \textbf{The Solution:} We need to translate our visual descriptions - Shape, Outliers, Center and Spread (SOCS) - into objective, reproducible statistical summaries.
   \end{itemize}
 \end{frame}
 
@@ -56,10 +56,10 @@
 % SLIDE 4: Measuring Center
 \begin{frame}{Measuring Center: What is "Typical"?}
   \begin{block}{Defining the Center}
-    When a biologist asks, \emph{"What is the typical length of a pine needle?"} or \emph{"What is the normal number of flood events on the coast?"}, they are asking for a measure of \textbf{center}.
+    When a biologist asks \emph{"What is the typical length of a pine needle?"} or \emph{"What is the normal number of flood events on the coast?"}, they are asking for a measure of \textbf{center}.
   \end{block}
   \vspace{0.3cm}
-  Statistics gives us two primary ways to define "typical," and they behave very differently depending on the shape of the data:
+  Statistics gives us two primary ways to define "typical" and they behave very differently depending on the shape of the data:
   \begin{itemize}
     \item The \textbf{Mean} ($\bar{x}$)
     \item The \textbf{Median} ($M$)
@@ -68,13 +68,13 @@
 
 % SLIDE 5: The Mean
 \begin{frame}{The Mean ($\bar{x}$)}
-  The most commonly reported measure of center is the ordinary arithmetic average, or \textbf{mean}. To find it, add all values together and divide by the number of observations ($n$).
+  The most commonly reported measure of center is the ordinary arithmetic average or \textbf{mean}. To find it, add all values together and divide by the number of observations ($n$).
   
   \vspace{0.2cm}
-  If the $n$ observations are $x_1, x_2, \dots, x_n$, their sample mean is:
+  If the $n$ observations are $x_1, x_2, \dots, x_n$, their sample mean is
   $$ \bar{x} = \frac{x_1 + x_2 + \dots + x_n}{n} $$
 
-  In statistics, we use the uppercase Greek letter sigma ($\sum$) to mean "add them all up." Therefore, the compact formula is:
+  We use the uppercase Greek letter sigma ($\sum$) to mean "add them all up". So the compact formula is
   $$ \bar{x} = \frac{1}{n} \sum x_i $$
 \end{frame}
 
@@ -83,17 +83,16 @@
   \begin{itemize}
     \item The subscripts ($x_i$) just keep the $n$ observations distinct; they do not necessarily indicate chronological order.
     \item The bar over the $x$ indicates the mean of all the $x$-values.
-    \item $\bar{x}$ is pronounced \textbf{"x-bar."}
   \end{itemize}
   \vspace{0.3cm}
   \begin{alertblock}{Important Distinction}
-    We use $\bar{x}$ to represent the mean of a \emph{sample} of data. Later in the course, we will use the Greek letter $\mu$ (mu) to represent the theoretical mean of an entire \emph{population}. Whenever you see $\bar{x}$ in a paper, the authors are discussing sample data!
+    We use $\bar{x}$ to represent the mean of a \emph{sample} of data. Later in the course, we will use the Greek letter $\mu$ (mu) to represent the theoretical mean of an entire \emph{population}. Whenever you see $\bar{x}$ in a paper, the authors are discussing sample data.
   \end{alertblock}
 \end{frame}
 
 % SLIDE 7: Example 2.3 - Mean of Pine Needles (Setup)
 \begin{frame}{Example 2.3: Mean of Pine Needle Lengths}
-  Let's find the mean needle length for a sample of $n = 15$ Aleppo pine needles. First, we organize our observations ($x_i$):
+Let's find the mean of the needle length for a sample of $n = 15$ Aleppo pine needles. The sample lengths are given in the table below.
   \vspace{0.2cm}
   \begin{table}
     \centering
@@ -121,12 +120,12 @@
   $$ \bar{x} = \frac{1}{n} \sum_{i=1}^{15} x_i = \frac{143.9}{15} \approx 9.59 \text{ cm} $$
   
   \vspace{0.3cm}
-  \emph{Takeaway:} In practice, R calculates this instantly. However, the formula reminds us of a critical fact: \textbf{the mean mathematically incorporates the actual numerical value of every single observation.}
+  \emph{Takeaway:} The he formula reminds us of a critical fact that the mean mathematically incorporates the actual numerical value of every single observation.
 \end{frame}
 
 % SLIDE 9: R Code - Mean
 \begin{frame}[fragile]{Example 2.3: Calculating the Mean in R}
-  Instead of calculating by hand, we can use R to find the mean instantly.
+  We can use R to find the mean instantly.
   \vspace{0.3cm}
   \begin{block}{R Code}
   \begin{verbatim}
@@ -146,14 +145,14 @@ mean(pine_needles)
 \begin{frame}{The Median ($M$)}
   \begin{itemize}
     \item The \textbf{median} is the exact geometric midpoint of a distribution.
-    \item It is the 50th percentile—the number such that exactly half (50\%) of the observations are smaller and the other half are larger.
+    \item It is the 50th percentile. This is the number such that exactly half (50\%) of the observations are smaller and the other half are larger.
   \end{itemize}
   \vspace{0.3cm}
-  \textbf{How to locate the median ($M$) by hand:}
+  \textbf{How to locate the median ($M$)}
   \begin{enumerate}
     \item \textbf{Sort} all observations in order from smallest to largest.
-    \item Use the location rule: the median is always located at position \textbf{$\frac{n+1}{2}$} in the ordered list.
-    \item If $n$ is \textbf{odd}, this lands on a single center number. If $n$ is \textbf{even}, this lands between two numbers, and you take their average.
+    \item If $n$ is \textbf{odd}, the median is located at position \textbf{$\frac{n+1}{2}$} of the ordered data.
+    \item If $n$ is \textbf{even}, this lands between two numbers, and you take their average.
   \end{enumerate}
 \end{frame}
 
@@ -163,7 +162,7 @@ mean(pine_needles)
     In R, the median is calculated using the simple \texttt{median()} function.
   \end{block}
   \vspace{0.3cm}
-  Unlike calculating by hand where we must sort the data first, R handles the sorting, locating, and averaging (if $n$ is even) automatically behind the scenes. 
+  Unlike calculating by hand where we must sort the data first, R handles the sorting, locating and averaging (if $n$ is even) automatically behind the scenes. 
 \end{frame}
 
 % SLIDE 12: Example 2.1 - Median (Odd n)
