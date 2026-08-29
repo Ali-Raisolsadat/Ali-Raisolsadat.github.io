@@ -1,0 +1,19 @@
+\frametitle{Summary of R Commands (Chapter 3)}
+Here are the key functions introduced in this chapter for bivariate analysis:
+  \vspace{0.3cm}
+  \begin{table}
+    \centering
+    \begin{tabular}{lp{8cm}}
+      \toprule
+      \textbf{R Command} & \textbf{What it Calculates} \\
+      \midrule
+      \texttt{length(x)} & Returns the number of elements ($n$) in a vector. \\
+      \addlinespace
+      \texttt{sum(x * y)} & Multiplies two vectors together element-by-element, then sums the result. \\
+      \addlinespace
+      \texttt{function(x, y) \{...\}} & Allows you to create your own custom, reusable mathematical formulas. \\
+      \addlinespace
+      \texttt{cor(x, y)} & Calculates Pearson's Correlation Coefficient ($r$) between two variables instantly. \\
+      \bottomrule
+    \end{tabular}
+  \end{table}

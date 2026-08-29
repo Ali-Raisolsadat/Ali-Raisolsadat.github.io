@@ -1,0 +1,50 @@
+\frametitle{Summary of R Commands (Chapter 2)}
+
+ Here are the key functions introduced in this chapter for calculating numerical summaries of a dataset (vector) \texttt{x}:
+
+  \begin{table}
+
+    \centering
+
+    \small
+
+    \begin{tabular}{lp{8.5cm}}
+
+      \toprule
+
+      \textbf{R Command} & \textbf{What it Calculates} \\
+
+      \midrule
+
+      \texttt{c(1, 2, 3)} & Combines individual data values into a single vector. \\
+
+      \addlinespace
+
+      \texttt{mean(x)} & Calculates the sample mean ($\bar{x}$) \\
+
+      \addlinespace
+
+      \texttt{median(x)} & Calculates the exact median ($M$) \\
+
+      \addlinespace
+
+      \texttt{summary(x)} & Outputs the five number summary (Minimum, $Q_1$, Median, $Q_3$, Maximum) plus the mean \\
+
+      \addlinespace
+
+      \texttt{IQR(x)} & Calculates the Interquartile Range ($Q_3 - Q_1$) \\
+
+      \addlinespace
+
+      \texttt{var(x)} & Calculates the sample variance ($s^2$) \\
+
+      \addlinespace
+
+      \texttt{sd(x)} & Calculates the sample standard deviation ($s$) \\
+
+      \bottomrule
+
+    \end{tabular}
+
+  \end{table}
+

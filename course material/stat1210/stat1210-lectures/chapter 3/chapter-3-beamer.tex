@@ -9,7 +9,7 @@
 \title[Chapter 3: Scatterplots \& Correlation]{\textbf{Chapter 3: Scatterplots and Correlation}}
 \subtitle{School of Mathematical and Computational Sciences \\ University of Prince Edward Island}
 \author{Ali Raisolsadat}
-\date{Part I: Exploring Data (The Basics)}
+\date{Part I: Exploring Data}
 
 \begin{document}
 
@@ -442,5 +442,45 @@ cor(length_x, leap_y)
     \end{tabular}
   \end{table}
 \end{frame}
+
+% SLIDE 26: Homework Question 1 - Explanatory and Response Variables
+\begin{frame}{Homework Questions}
+ Problem 1: A greenhouse study records the amount of fertilizer applied to each plant and the plant's height after four weeks.
+
+  \begin{enumerate}
+    \item Identify the \textbf{explanatory variable} and the \textbf{response variable}.
+    \item Which variable should be placed on the horizontal axis of a scatterplot?
+    \item Which variable should be placed on the vertical axis?
+  \end{enumerate}
+
+  \vspace{0.25cm}
+
+  \begin{block}{Variables}
+    Fertilizer amount is measured in grams and plant height is measured in centimetres.
+  \end{block}
+\end{frame}
+
+
+% SLIDE 28: Homework Question 3 - Calculating and Interpreting Correlation
+\begin{frame}{Homework Questions}
+ Problem 2: A researcher records an explanatory variable $x$ and a response variable $y$ for six observations.
+
+  \begin{center}
+    \begin{tabular}{c|rrrrrr}
+      \toprule
+      $x$ & 1 & 2 & 3 & 4 & 5 & 6 \\
+      $y$ & 7.1 & 8.9 & 8.0 & 10.5 & 9.8 & 12.1 \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+
+  \begin{enumerate}
+    \item Enter the two variables as vectors in R.
+    \item Use \texttt{cor(x, y)} to calculate Pearson's correlation coefficient.
+    \item Interpret the \textbf{direction} and \textbf{strength} of the linear association in context.
+    \item Explain why a scatterplot should still be examined even after $r$ has been calculated.
+  \end{enumerate}
+\end{frame}
+
 
 \end{document}
