@@ -1,0 +1,294 @@
+---
+title: "STAT 1210: Assignment 1 - Solutions"
+subtitle: "Part I: Exploring Data"
+author: "Fall Semester 2026"
+date: ""
+output:
+  pdf_document:
+    number_sections: false
+    toc: false
+    latex_engine: xelatex
+geometry: margin=1in
+fontsize: 11pt
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{array}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  out.width = "82%"
+)
+```
+
+
+## Question 1: Choosing and Evaluating a Categorical Display
+
+1. The **individuals** are the 235 individual seeds. The variables recorded for each seed are:
+
+   - **Habitat:** categorical (coastal dunes, forest edge, or restored field).
+   - **Germination status within 14 days:** categorical (germinated or did not germinate).
+
+  Note: The values "seeds tested" and "seeds germinated" in the table are aggregated counts. Counts are discrete quantitative summaries, but they are not the individual-level variables in this dataset.
+
+2. The germination rates are
+
+$$
+\begin{aligned}
+\text{Coastal dunes: }&\frac{30}{40}(100\%)=75\%,\\
+\text{Forest edge: }&\frac{48}{75}(100\%)=64\%,\\
+\text{Restored field: }&\frac{84}{120}(100\%)=70\%.
+\end{aligned}
+$$
+
+  The restored field has the largest number of germinated seeds (84), but the coastal dunes have the highest germination rate (75%). The counts depend heavily on the unequal numbers tested. Rates adjust for the different denominators and therefore provide a fairer comparison of germination success.
+
+3. The three counts do not represent mutually exclusive parts of one meaningful whole for this research question. More importantly, each count comes from a different number of tested seeds. A slice of 84 would appear largest simply because 120 seeds were tested in that habitat. The proposed pie chart would conceal the denominators and fail to compare success rates fairly.
+
+4. An appropriate display is a bar graph of germination percentage by habitat. Habitat should appear on the horizontal axis and germination percentage on the vertical axis. The vertical axis must start at zero so that the bar heights do not exaggerate the differences between habitats. Showing the numerical percentages and sample sizes on or above the bars would also improve the display.
+
+\newpage
+
+## Question 2: A Distribution Viewed in Two Ways
+
+1. A reasonable SOCS description is:
+
+   - **Shape:** The histogram is fairly broad and roughly flat (uniform) across much of its range. It does not show a clear bell shape. Its exact appearance will depend somewhat on the selected bin width.
+   - **Outliers:** No observation is clearly separated from the rest of the distribution. In particular, the final value of 7.55 mg/L is not unusual when chronological order is removed.
+   - **Center:** The visual center is approximately 7.3 to 7.4 mg/L. (The exact mean and median are roughly 7.32 and 7.36 mg/L, though exact calculation is not required).
+   - **Spread:** Values range from approximately 6.69 to 7.90 mg/L, giving a range of about 1.21 mg/L.
+
+2. The time plot shows a strong, steady downward trend for the first 35 hours, followed by a sudden spike at hour 36. The histogram completely discards this chronological order, making the gradual decline look like ordinary, random variation. Because the scientific question specifically concerns stability over time, the time plot is the more useful first display.
+
+3. The final observation should not be deleted automatically. Reasonable checks include:
+
+   - Verifying the recorded value against the original laboratory record to rule out a simple transcription error.
+   - Checking the calibration procedure to see if the recalibration legitimately shifted the baseline measurement.
+   - Examining whether the sensor had been drifting prior to recalibration. (The steady decline in the time plot strongly suggests the earlier data might actually be flawed, not the final point).
+   - Repeating the measurement, if possible, to confirm the new reading.
+
+The observation may contain important information about the instrument rather than being a simple error.
+
+4. Four wide bins would combine many distinct oxygen values into large blocks. This smoothing could make the distribution appear flatter or more symmetric than it actually is, hiding small gaps or local features. The underlying data observations would be unchanged; only the visual grouping would change.
+
+\newpage
+
+## Question 3: Resistance of Measures of Center and Spread
+
+1. For the original data, R gives approximately:
+
+| Statistic | Value |
+|:--|--:|
+| Mean | 14.755 min |
+| Median | 13.100 min |
+| Standard deviation | 5.616 min |
+| IQR | 0.900 min |
+
+2. After replacing 31.6 with 13.6, R gives approximately:
+
+| Statistic | Corrected value |
+|:--|--:|
+| Mean | 13.118 min |
+| Median | 13.100 min |
+| Standard deviation | 0.591 min |
+| IQR | 0.800 min |
+
+   One possible R solution is:
+
+```{r q3-solution-code, echo=TRUE, eval=FALSE}
+reaction_time <- c(12.1, 12.4, 12.7, 12.8, 13.0, 13.1,
+                   13.3, 13.5, 13.8, 14.0, 31.6)
+mean(reaction_time); median(reaction_time)
+sd(reaction_time); IQR(reaction_time)
+
+reaction_time[11] <- 13.6
+mean(reaction_time); median(reaction_time)
+sd(reaction_time); IQR(reaction_time)
+```
+
+3. Correcting the error reduces the mean by about 1.636 minutes, but the median does not change at all. The standard deviation falls dramatically from 5.616 to 0.591 minutes, whereas the IQR only shifts from 0.900 to 0.800 minutes. The mean and standard deviation are non-resistant because their calculations incorporate every single valu. Additionally, the standard deviation squares the distances from the mean, which heavily exaggerates the impact of extreme values. The median and IQR depend mainly on the ordered ranking of the middle portion of the data, making them resistant to a single extreme value.
+
+4. Before the error was discovered, the **median and IQR** were much more representative. The single outlier (31.6) created strong right-skewness, artificially inflating both the mean and standard deviation. The median of 13.1 minutes and IQR of 0.9 minutes accurately represented the main cluster of ten reaction times, which all fell tightly between 12.1 and 14.0 minutes.
+
+\newpage
+
+## Question 4: Boxplots, Outlier Fences, and Scientific Interpretation
+
+1. For Method A:
+
+$$
+IQR_A=20.8-19.4=1.4.
+$$
+
+$$
+\text{Lower fence}_A=19.4-1.5(1.4)=17.3,
+\qquad
+\text{Upper fence}_A=20.8+1.5(1.4)=22.9.
+$$
+
+   For Method B:
+
+$$
+IQR_B=21.2-18.9=2.3.
+$$
+
+$$
+\text{Lower fence}_B=18.9-1.5(2.3)=15.45,
+\qquad
+\text{Upper fence}_B=21.2+1.5(2.3)=24.65.
+$$
+
+2. Method A has no flagged outliers because its minimum (18.2) is greater than 17.3 and its maximum (22.0) is less than 22.9.Method B, however, flags both extremes as suspected outliers because its minimum (12.5) falls below the lower fence (15.45) and its maximum (28.4) rises above the upper fence (24.65).
+
+3. The two methods have almost identical centers: their medians are 20.1 and 20.0, and their means are 20.1 and 20.2. However, Method A is much more consistent. Its IQR is narrower (1.4 compared to 2.3), its standard deviation is much smaller (0.9 compared to 3.6), and its overall range is much tighter (3.8 compared to 15.9 for Method B).
+
+4. The similar means only describe the center of the data; they provide no information about variability, shape, or outliers. For Method B, the median and IQR should be emphasized because the extreme observations (outliers) make the mean and standard deviation non-resistant and potentially misleading.
+
+5. Statistical fences only identify observations that are mathematically unusual; they do not explain why those observations occurred. The technician must investigate the calibration, data entry process, and sample handling to determine if the values are genuine measurements or errors. A valid but unusual result may be scientifically important and should never be deleted merely to make a dataset look cleaner or less variable.
+
+\newpage
+
+## Question 5: Interpreting a Scatterplot
+
+1. The explanatory variable is the **vegetated shoreline percentage**, and the response variable is the **number of dragonfly species**. The ecological question asks whether the amount of shoreline vegetation may help explain or predict the observed insect diversity, making vegetation the natural explanatory variable.
+
+2. The overall association is positive, approximately linear, and fairly strong for most of the ponds. Generally, as the percentage of vegetation increases, the species count also increases.
+
+3. The point near (88, 8) departs most clearly from the overall pattern. A vegetation value of 88% is not necessarily unusual by itself, and a count of 8 species also occurs elsewhere in the data. However, their combination is highly unusual because a pond with such a high amount of vegetation has far fewer species than the established linear trend would predict.
+
+4. Removing (88, 8) would increase the magnitude of the positive correlation. Without this point, the remaining observations follow a much tighter, stronger linear pattern. (For reference: $r \approx 0.816$ with all observations included, and $r \approx 0.984$ without the final point. Students are not required to calculate these exact values).
+
+5. No. This is an observational study, and correlation does not establish causation. There are many plausible lurking (confounding) variables, such as pond size, water quality, pesticide exposure, fish abundance, surrounding land use, or the time of day the survey was conducted. Any of these variables could influence both the amount of shoreline vegetation and the dragonfly diversity.
+
+\newpage
+
+## Question 6: Correlation Can Miss a Strong Pattern
+
+1. The scatterplot forms a perfectly symmetric U-shaped parabola. There is no single positive or negative direction across the full range: $y$ decreases as $x$ moves from $-3$ to $0$, and then increases as $x$ moves from $0$ to $3$. This non-linear relationship is perfect and infinitely strong because $y = x^2$.
+
+2. R gives a correlation of $r = 0$. This correctly indicates that there is no linear association between $x$ and $y$. However, it does not indicate the absence of every type of association.
+
+3. The classmate's conclusion is incorrect because Pearson's $r$ only measures linear direction and linear strength. The negative linear trend on the left side of the graph and the positive linear trend on the right side perfectly cancel each other out in the correlation calculation, even though y is determined exactly by $x^2$.
+
+4. The correlation remains $0$. Adding $50$ shifts the location of the $x$ values and multiplying by a positive $10$ changes their scale, but positive linear transformations do not change the standardized linear association (correlation) between two variables.
+
+5. **Always inspect a scatterplot before interpreting correlation**. A correlation close to zero can easily coexist with a very strong non-linear relationship. Relying on summary statistics without visualizing the data can lead to entirely false conclusions.
+
+\newpage
+
+## Question 7: Least-Squares Regression by Hand and in R
+
+### Part 1: Construct and Interpret the Regression Line
+
+1. The slope is
+
+$$
+b=r\frac{s_y}{s_x}
+=0.775\left(\frac{1.225}{1.581}\right)
+\approx0.600.
+$$
+
+   The intercept is
+
+$$
+a=\bar y-b\bar x=4-(0.600)(3)=2.200.
+$$
+
+2. The regression equation is
+
+$$
+\widehat{\text{biomass}}=2.2+0.6(\text{light}).
+$$
+
+3. For each additional hour of daily light exposure, the model predicts an average increase of approximately 0.6 g in dry biomass after four weeks.
+
+4. The intercept predicts 2.2 g of dry biomass at zero hours of daily light. Zero hours is outside the observed range of 1 to 5 hours, so this interpretation is an extrapolation and has limited scientific usefulness.
+
+### Part 2: Prediction and Residual
+
+1. At four hours,
+
+$$
+\hat y=2.2+0.6(4)=4.6\text{ g}.
+$$
+
+2. The residual is
+
+$$
+e=y-\hat y=4.0-4.6=-0.6\text{ g}.
+$$
+
+3. The negative residual means the observed biomass was below the prediction. The group produced 0.6 g less dry biomass than the fitted model predicted for four hours of daily light.
+
+### Part 3: Strength and Limitations
+
+1. The coefficient of determination is
+
+$$
+R^2=r^2=(0.775)^2\approx0.601,
+$$
+
+   or 0.600 when calculated from the unrounded correlation.
+
+2. Approximately 60% of the observed variation in dry biomass is accounted for by the fitted linear relationship with daily light exposure. Approximately 40% is not accounted for by this model.
+
+3. Predicting at eight hours is **extrapolation** because the observed light values range only from one to five hours. The data provide no evidence that the linear pattern continues from five to eight hours, so the prediction should be treated cautiously.
+
+### Part 4: Reproduce the Analysis in R
+
+The requested code is:
+
+```{r q7-solution-code, echo=TRUE, eval=FALSE}
+light <- c(1, 2, 3, 4, 5)
+biomass <- c(2, 4, 5, 4, 5)
+
+model <- lm(biomass ~ light)
+model
+summary(model)
+predict(model, newdata = data.frame(light = 4))
+residuals(model)
+```
+
+1. R reports an intercept of $2.2$ and a slope of $0.6$. These exactly match the hand calculations. (Note: slight differences could occur due to using rounded summary statistics in hand calculations).
+
+2. R predicts $4.6 g$ at four hours, and the residual for the fourth observation is $-0.6 g$. Both perfectly agree with the hand calculations. The full residual vector is
+
+$$
+(-0.8,\ 0.6,\ 1.0,\ -0.6,\ -0.2).
+$$
+
+3. R reports multiple ($R^2=0.600$).
+
+4. This comparison demonstrates that `lm()` obtains the exact same least-squares coefficients as the theoretical hand formulas. While R completes the arithmetic instantly and removes human calculation error, the researcher must still understand the underlying logic to accurately specify the variables, check conditions, and interpret the software's output contextually.
+
+\newpage
+
+## Solution for Bonus Question
+
+1. **Calculating $Q_1$ ($p=0.25$):**
+   * **Index position:** 
+   $$h=(6-1)(0.25)+1=5(0.25)+1=2.25$$
+   * **Split:** The integer part $i$ is 2, and the fractional part $f$ is 0.25. This means $Q_1$ is located 25% of the way between the 2nd value (14) and the 3rd value (18).
+   * **Interpolate:** 
+   $$Q_1=14+0.25(18-14)=14+0.25(4)=15.0$$
+
+2. **Calculating $Q_3$ ($p=0.75$):**
+   * **Index position:** 
+   $$h=(6-1)(0.75)+1=5(0.75)+1=4.75$$
+   * **Split:** The integer part $i$ is 4, and the fractional part $f$ is 0.75. This means $Q_3$ is located 75% of the way between the 4th value (24) and the 5th value (30).
+   * **Interpolate:** 
+   $$Q_3=24+0.75(30-24)=24+0.75(6)=24+4.5=28.5$$
+
+3. **Yes, the manual calculations match R's output exactly (15.0 and 28.5).** 
+   Interpolation is often preferred for small datasets because it provides a smooth transition between values and utilizes information from the two adjacent points. Simply picking the nearest observation in a small dataset can lead to abrupt jumps in the quartile values if a single data point changes slightly, whereas interpolation creates a more stable and representative summary of the data's spread.
+   
+
+\vfill
+
+\begin{center}
+\textit{End of solutions}
+\end{center}
