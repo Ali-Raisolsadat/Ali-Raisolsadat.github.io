@@ -1,0 +1,1280 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+
+\title[Chapter 14: Introduction to Inference]{\textbf{Chapter 14: Introduction to Inference}}
+\subtitle{The Practice of Statistics in the Life Sciences \\ by Brigitte Baldi and David S. Moore}
+\author{Instructor: Ali Raisolsadat}
+\date{Part III: Foundations of Inference}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+\graphicspath{{./}{figures/}}
+
+\newcommand{\lectureimage}[2][0.90\linewidth]{%
+  \IfFileExists{#2}{%
+    \includegraphics[width=#1,height=0.74\textheight,keepaspectratio]{#2}%
+  }{%
+    \fbox{\parbox[c][0.38\textheight][c]{0.88\linewidth}{%
+      \centering\small
+      Figure file: \texttt{\detokenize{#2}}\\[0.15cm]
+      Generate this figure by knitting the revised Chapter 14 RMarkdown notes.
+    }}%
+  }%
+}
+
+\begin{document}
+
+% SLIDE 1: Title
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% SLIDE 2: From Sampling Distributions to Inference
+\begin{frame}{From Sampling Distributions to Inference}
+Chapter 13 explained how sample statistics vary from one random sample to another.
+
+\vspace{0.25cm}
+Chapter 14 uses those sampling distributions to answer a new question:
+
+\begin{center}
+\large
+\textbf{What can a sample tell us about an unknown population parameter?}
+\end{center}
+
+\vspace{0.2cm}
+Statistical inference connects sample evidence to population conclusions while accounting for random sampling variation.
+\end{frame}
+
+% SLIDE 3: Two Main Goals of Inference
+\begin{frame}{Two Main Goals of Inference}
+Two major forms of inference are introduced in this chapter.
+
+\begin{itemize}
+  \item A \textbf{confidence interval} estimates an unknown population parameter and describes the precision of the estimate.
+  \item A \textbf{hypothesis test} evaluates how compatible the observed data are with a specific claim about a population parameter.
+\end{itemize}
+
+\vspace{0.25cm}
+Both methods depend on the sampling distributions developed in Chapter 13.
+\end{frame}
+
+% SLIDE 4: Simple Conditions for Introductory Inference
+\begin{frame}{Simple Conditions for Introductory Inference}
+The first procedures in this chapter use a simplified setting so that the reasoning is easy to see.
+
+\begin{enumerate}
+  \item The observations come from an appropriate random sampling process and can be treated as independent.
+  \item The sampling distribution of $\bar{x}$ can be modelled by a Normal distribution.
+  \item The population standard deviation $\sigma$ is treated as known.
+\end{enumerate}
+
+\vspace{0.2cm}
+Later chapters replace the known value of $\sigma$ with the sample standard deviation $s$ and use Student's $t$ distribution.
+\end{frame}
+
+% SLIDE 5: Why Start with Known Sigma
+\begin{frame}{Why Start with a Known Population Standard Deviation?}
+Knowing the true value of $\sigma$ is unusual in real applications.
+
+\vspace{0.2cm}
+The assumption is useful here because it separates two ideas:
+
+\begin{itemize}
+  \item The \textbf{logic of inference} can be learned first.
+  \item The additional mathematics required when $\sigma$ must be estimated can be introduced later.
+\end{itemize}
+
+\vspace{0.2cm}
+The study design still matters. A correct formula cannot repair serious bias caused by an inappropriate sample.
+\end{frame}
+
+\section{Statistical Estimation}
+
+% SLIDE 6: Statistical Estimation
+\begin{frame}{Statistical Estimation}
+A sample statistic can be used as an estimate of a population parameter.
+
+\vspace{0.2cm}
+For a population mean $\mu$, the natural point estimate is
+
+\[
+\bar{x}
+\]
+
+A point estimate gives one number. A confidence interval adds a margin of error so that sampling uncertainty is also described.
+\end{frame}
+
+% SLIDE 7: Height Example Question
+\begin{frame}{Examples 14.1 and 14.2: Mean Height}
+\begin{block}{Question}
+A health survey provides a sample of $n=217$ eight-year-old boys from the population of interest. The sample mean height is $\bar{x}=132.5$ cm. For this introductory example, assume the population standard deviation is $\sigma=10$ cm.
+
+How can the sample mean be used to estimate the unknown population mean height $\mu$ while accounting for random sampling variation?
+\end{block}
+\end{frame}
+
+% SLIDE 8: Height Example Explanation Step 1
+\begin{frame}{Examples 14.1 and 14.2: Sampling Distribution}
+\begin{block}{Explanation}
+The sampling distribution of $\bar{x}$ has centre $\mu$ and standard deviation
+\[
+\sigma_{\bar{x}}
+=
+\frac{\sigma}{\sqrt{n}}
+\]
+\end{block}
+
+\pause
+
+For this sample size,
+\[
+\sigma_{\bar{x}}
+=
+\frac{10}{\sqrt{217}}
+\approx
+0.679\text{ cm}
+\]
+
+\pause
+
+This quantity is the \textbf{standard error} of the sample mean under the model.
+\end{frame}
+
+% SLIDE 9: Height Example Explanation Step 2
+\begin{frame}{Examples 14.1 and 14.2: Approximate 95\% Distance}
+\begin{block}{Explanation}
+The 68--95--99.7 rule says that approximately 95\% of a Normal distribution lies within two standard deviations of its mean.
+\end{block}
+
+\pause
+
+Using the exact standard error gives
+\[
+2(0.679)
+\approx
+1.36\text{ cm}
+\]
+
+\pause
+
+The textbook-style calculation rounds the standard error to 0.7 cm first, which gives an approximate margin of error of
+\[
+2(0.7)
+=
+1.4\text{ cm}
+\]
+\end{frame}
+
+% SLIDE 10: Height Example Solution
+\begin{frame}{Examples 14.1 and 14.2: Confidence Interval}
+\begin{block}{Solution}
+The lower endpoint is
+\[
+132.5-1.4
+=
+131.1
+\]
+\end{block}
+
+\pause
+
+The upper endpoint is
+\[
+132.5+1.4
+=
+133.9
+\]
+
+\pause
+
+The approximate 95\% confidence interval is
+\[
+(131.1,\ 133.9)\text{ cm}
+\]
+
+\pause
+
+We are approximately 95\% confident that the population mean height lies between 131.1 cm and 133.9 cm because this method captures the true mean in about 95\% of repeated samples under the stated model.
+\end{frame}
+
+% SLIDE 11: Repeated Confidence Intervals Plot
+\begin{frame}{Repeated 95\% Confidence Intervals}
+\centering
+\lectureimage[0.92\linewidth]{fig_ch14_sampling_dist.png}
+\end{frame}
+
+% SLIDE 12: Long-Run Coverage
+\begin{frame}{What Does 95\% Coverage Mean?}
+The population mean is fixed. The intervals change from sample to sample.
+
+
+A 95\% confidence procedure has a \textbf{long-run coverage rate of 95\%} under the model.
+
+
+This means that approximately 95\% of intervals produced by the method would contain the true parameter over many repeated random samples.
+
+
+A small simulation does not need to show exactly 95\% coverage. The theoretical statement concerns the long-run procedure.
+\end{frame}
+
+\section{Margin of Error and Confidence Level}
+
+% SLIDE 13: Anatomy of a Confidence Interval
+\begin{frame}{Anatomy of a Confidence Interval}
+Most confidence intervals have the form
+
+\[
+\text{estimate}
+\pm
+\text{margin of error}
+\]
+
+\vspace{0.3cm}
+Three ideas determine the interval:
+
+\begin{itemize}
+  \item The \textbf{estimate} determines the centre.
+  \item The \textbf{standard error} describes sampling variability.
+  \item The \textbf{confidence level} determines how wide the interval must be for the desired long-run coverage.
+\end{itemize}
+\end{frame}
+
+% SLIDE 14: The Estimate
+\begin{frame}{The Estimate}
+When estimating a population mean, the centre of the interval is usually the sample mean.
+
+\[
+\bar{x}
+\]
+
+For the height example,
+\[
+\bar{x}
+=
+132.5\text{ cm}
+\]
+
+The sample mean is unbiased for $\mu$ under the usual random-sampling model. This property does not guarantee that one particular sample mean is close to the population mean.
+\end{frame}
+
+% SLIDE 15: The Margin of Error
+\begin{frame}{The Margin of Error}
+For a confidence interval based on the Normal distribution,
+
+\[
+m
+=
+z^*
+\frac{\sigma}{\sqrt{n}}
+\]
+
+
+The margin of error describes uncertainty caused by random sampling under the model.
+
+
+It does not automatically account for other sources of error such as poor measurement, nonresponse or selection bias.
+\end{frame}
+
+% SLIDE 16: The Confidence Level
+\begin{frame}{The Confidence Level}
+The confidence level $C$ describes the long-run success rate of the interval-building procedure.
+
+\begin{itemize}
+  \item A 90\% interval uses a smaller critical value than a 95\% interval.
+  \item A 99\% interval uses a larger critical value than a 95\% interval.
+\end{itemize}
+
+
+Higher confidence requires a wider interval when the sample size and population standard deviation remain unchanged.
+\end{frame}
+
+% SLIDE 17: Precision and Confidence
+\begin{frame}{Precision and Confidence}
+Two changes have predictable effects on interval width.
+
+
+\begin{block}{Larger Sample Size}
+A larger sample reduces the standard error because
+\[
+\frac{\sigma}{\sqrt{n}}
+\]
+becomes smaller as $n$ increases.
+\end{block}
+
+
+\begin{block}{Higher Confidence Level}
+A higher confidence level uses a larger $z^*$ value, which makes the interval wider.
+\end{block}
+\end{frame}
+
+\section{Interpreting Confidence Intervals}
+
+% SLIDE 18: Correct Interpretation
+\begin{frame}{How to Interpret a Confidence Interval}
+A suitable interpretation is:
+
+\begin{block}{95\% Confidence}
+We are 95\% confident that the population parameter lies between the reported endpoints because the procedure used to construct the interval captures the true parameter in 95\% of repeated samples under the stated conditions.
+\end{block}
+
+The confidence level describes the reliability of the \textbf{method} over repeated sampling.
+\end{frame}
+
+% SLIDE 19: What 95 Percent Confidence Does Not Mean
+\begin{frame}{What 95\% Confidence Does Not Mean}
+After an interval has been calculated, the population parameter is fixed.
+
+
+The interval either contains the parameter or it does not. The difficulty is that the parameter is unknown.
+
+
+For a frequentist confidence interval, we do not say that there is a 95\% probability that the fixed parameter lies inside the specific interval that was already calculated.
+\end{frame}
+
+% SLIDE 20: Twenty-Five Confidence Intervals Plot
+\begin{frame}{Twenty-Five Simulated 95\% Confidence Intervals}
+\centering
+\lectureimage[0.92\linewidth]{fig_ch14_25_intervals.png}
+\end{frame}
+
+\section{Confidence Intervals for the Mean}
+
+% SLIDE 21: Common Critical Values
+\begin{frame}{Common Critical Values}
+The critical value $z^*$ is chosen so that the central area under the Standard Normal curve equals the desired confidence level.
+
+\vspace{0.2cm}
+\begin{center}
+\begin{tabular}{cc}
+\toprule
+\textbf{Confidence Level} & \textbf{Critical Value $z^*$} \\
+\midrule
+90\% & 1.645 \\
+95\% & 1.960 \\
+99\% & 2.576 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+% SLIDE 22: Confidence Interval Formula
+\begin{frame}{Confidence Interval for a Population Mean}
+Under the introductory conditions with known $\sigma$,
+
+\[
+\bar{x}
+\pm
+z^*
+\frac{\sigma}{\sqrt{n}}
+\]
+
+
+The same formula can be viewed as
+
+\[
+\text{estimate}
+\pm
+\text{critical value}\times\text{standard error}
+\]
+
+
+The estimate determines the centre. The standard error measures sampling variation. The critical value sets the desired confidence level.
+\end{frame}
+
+% SLIDE 23: Four-Step Process for Confidence Intervals
+\begin{frame}{The Four-Step Process for Confidence Intervals}
+A consistent process keeps the calculation connected to the scientific question.
+
+\begin{enumerate}
+  \item \textbf{STATE:} The population question and parameter are identified.
+  \item \textbf{PLAN:} The confidence level and appropriate procedure are selected.
+  \item \textbf{SOLVE:} The conditions are assessed before the interval is calculated.
+  \item \textbf{CONCLUDE:} The interval is interpreted in the context of the population.
+\end{enumerate}
+\end{frame}
+
+% SLIDE 24: Leaf Surface Area Question
+\begin{frame}{Example 14.3: Leaf Surface Area}
+\begin{block}{Question}
+A botanist wants to estimate the mean surface area of mature \textit{Monstera deliciosa} leaves in a greenhouse population. A random sample contains 31 mature leaves. The population standard deviation is treated as known at $\sigma=15$ cm$^2$.
+
+What is a 95\% confidence interval for the population mean leaf surface area?
+\end{block}
+\end{frame}
+
+% SLIDE 25: Leaf Surface Area Data
+\begin{frame}{Example 14.3: Observed Leaf Data}
+\scriptsize
+\begin{center}
+\begin{tabular}{rrrrrrrr}
+114 & 100 & 104 & 89 & 102 & 91 & 114 & 114 \\
+103 & 105 & 108 & 130 & 120 & 132 & 111 & 128 \\
+118 & 119 & 86 & 72 & 111 & 103 & 74 & 112 \\
+107 & 103 & 98 & 96 & 112 & 112 & 93 & \\
+\end{tabular}
+\end{center}
+\normalsize
+
+\pause
+
+\begin{block}{Explanation}
+The parameter is the population mean leaf surface area $\mu$. The first step is to assess whether the sampling model is reasonable before calculating the interval.
+\end{block}
+\end{frame}
+
+% SLIDE 26: Leaf Surface Area Plot
+\begin{frame}{Example 14.3: Leaf Surface Area Distribution}
+\centering
+\lectureimage[0.92\linewidth]{fig_ch14_leaf_dotplot.png}
+\end{frame}
+
+% SLIDE 27: Leaf Surface Area Conditions
+\begin{frame}{Example 14.3: Checking the Conditions}
+\begin{block}{Explanation}
+The sample was described as randomly selected, which supports the sampling condition.
+\end{block}
+
+\pause
+
+The observed distribution is somewhat left-skewed with no extreme outliers.
+
+\pause
+
+With $n=31$, the Central Limit Theorem provides additional support for an approximately Normal sampling distribution of $\bar{x}$ when the population has finite variance.
+
+\pause
+
+The population standard deviation is treated as known at
+\[
+\sigma=15\text{ cm}^2
+\]
+\end{frame}
+
+% SLIDE 28: Leaf Surface Area Calculation
+\begin{frame}{Example 14.3: Calculating the Interval}
+The sample mean is
+\[
+\bar{x}
+\approx
+105.84
+\]
+
+\pause
+
+The standard error is
+\[
+SE
+=
+\frac{15}{\sqrt{31}}
+\approx
+2.69
+\]
+
+\pause
+
+The 95\% critical value is
+\[
+z^*=1.960
+\]
+
+\pause
+
+The margin of error is
+\[
+m
+=
+1.960(2.69)
+\approx
+5.28
+\]
+\end{frame}
+
+% SLIDE 29: Leaf Surface Area Solution
+\begin{frame}{Example 14.3: Confidence Interval Solution}
+\begin{block}{Solution}
+The interval is
+\[
+105.84
+\pm
+5.28
+\]
+\end{block}
+
+\pause
+
+Therefore,
+\[
+(100.56,\ 111.12)
+\]
+
+\pause
+
+We are 95\% confident that the population mean surface area of mature leaves in the greenhouse population is between approximately 100.6 cm$^2$ and 111.1 cm$^2$.
+\end{frame}
+
+% SLIDE 30: Leaf Surface Area R Code
+\begin{frame}[fragile]{Example 14.3: Confidence Interval in R}
+\scriptsize
+\begin{verbatim}
+# The 31 observed leaf surface areas are stored in a vector.
+leaf_data <- c(
+  114, 100, 104, 89, 102, 91, 114, 114,
+  103, 105, 108, 130, 120, 132, 111, 128,
+  118, 119, 86, 72, 111, 103, 74, 112,
+  107, 103, 98, 96, 112, 112, 93
+)
+
+# The population standard deviation is treated as known.
+sigma_leaf <- 15
+xbar_leaf <- mean(leaf_data)
+n_leaf <- length(leaf_data)
+
+# qnorm(0.975) gives the 95% Normal critical value.
+z_star_leaf <- qnorm(0.975)
+se_leaf <- sigma_leaf / sqrt(n_leaf)
+margin_leaf <- z_star_leaf * se_leaf
+
+c(xbar_leaf - margin_leaf, xbar_leaf + margin_leaf)
+\end{verbatim}
+\end{frame}
+
+% SLIDE 31: Beyond the Simple Conditions
+\begin{frame}{Looking Beyond the Simple Conditions}
+The known-$\sigma$ assumption is mainly a teaching device.
+
+\vspace{0.2cm}
+In most real studies, the population standard deviation is unknown.
+
+
+Later chapters replace $\sigma$ with the sample standard deviation $s$ and use Student's $t$ distribution.
+
+
+The central logic remains the same: an estimate is combined with a standard error and an appropriate critical value.
+\end{frame}
+
+\section{Hypothesis Testing}
+
+% SLIDE 32: From Estimation to Testing
+\begin{frame}{From Estimation to Hypothesis Testing}
+A confidence interval begins with an unknown parameter and asks for a plausible range of values.
+
+
+A hypothesis test begins with a specific population claim and asks whether the observed sample data are compatible with that claim.
+
+
+The central question is:
+
+\begin{center}
+\large
+\textbf{If the null hypothesis were true, how unusual would the observed sample result be?}
+\end{center}
+\end{frame}
+
+% SLIDE 33: Phosphorus Example Question
+\begin{frame}{Examples 14.4 and 14.5: Phosphorus Levels}
+\begin{block}{Question}
+In the general adult population, blood phosphorus levels are modelled as Normal with mean 1.2 mmol/L and standard deviation 0.1 mmol/L. Researchers suspect that the mean may be lower among adults aged 75 to 79.
+
+A retrospective chart review provides measurements from 12 patients. Does the sample provide evidence that the population mean for this older group is below 1.2 mmol/L?
+\end{block}
+\end{frame}
+
+% SLIDE 34: Phosphorus Data
+\begin{frame}{Examples 14.4 and 14.5: Phosphorus Data}
+\begin{center}
+\begin{tabular}{rrrrrr}
+\toprule
+1.26 & 1.39 & 1.00 & 1.00 & 1.00 & 1.10 \\
+0.87 & 1.23 & 1.19 & 1.29 & 1.03 & 1.18 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\pause
+
+The sample mean is
+\[
+\bar{x}
+\approx
+1.1283\text{ mmol/L}
+\]
+
+\pause
+
+The sample mean is below 1.2, but sampling variation alone can produce differences between $\bar{x}$ and $\mu$.
+\end{frame}
+
+% SLIDE 35: Phosphorus Hypotheses
+\begin{frame}{Examples 14.4 and 14.5: Hypotheses}
+\begin{block}{Explanation}
+The test compares the observed difference with the variation expected if the general-adult mean still applied to the older population.
+\end{block}
+
+\pause
+
+\begin{block}{Solution}
+The null hypothesis is
+\[
+H_0:\mu=1.2
+\]
+\end{block}
+
+\pause
+
+The alternative hypothesis is
+\[
+H_a:\mu<1.2
+\]
+
+The alternative is one-sided because the scientific question concerns a decrease.
+\end{frame}
+
+% SLIDE 36: Null and Alternative Hypotheses
+\begin{frame}{The Null and Alternative Hypotheses}
+The \textbf{null hypothesis} gives the specific population value or model being evaluated.
+
+\[
+H_0:\mu=\mu_0
+\]
+
+
+The \textbf{alternative hypothesis} gives the competing population claim that is supported when the data provide sufficient evidence against $H_0$.
+
+
+Hypotheses refer to population parameters. They do not describe sample statistics that have already been observed.
+\end{frame}
+
+% SLIDE 37: One-Sided and Two-Sided Alternatives
+\begin{frame}{One-Sided and Two-Sided Alternatives}
+A lower-tail alternative has the form
+\[
+H_a:\mu<\mu_0
+\]
+
+An upper-tail alternative has the form
+\[
+H_a:\mu>\mu_0
+\]
+
+A two-sided alternative has the form
+\[
+H_a:\mu\ne\mu_0
+\]
+
+The direction should be determined by the scientific question before the sample result is used to choose the test.
+\end{frame}
+
+% SLIDE 38: Aspirin Example Question
+\begin{frame}{Example 14.6: Aspirin Tablet Manufacturing}
+\begin{block}{Question}
+A pharmaceutical process is designed to produce aspirin tablets with a population mean active-ingredient amount of 325 mg. Both underfilling and overfilling are undesirable.
+
+What hypotheses should be used to evaluate whether the population mean differs from the target?
+\end{block}
+\end{frame}
+
+% SLIDE 39: Aspirin Example Solution
+\begin{frame}{Example 14.6: Choosing the Hypotheses}
+\begin{block}{Explanation}
+The reference value is 325 mg. The scientific concern includes departures above or below the target.
+\end{block}
+
+\pause
+
+\begin{block}{Solution}
+The null hypothesis is
+\[
+H_0:\mu=325
+\]
+\end{block}
+
+\pause
+
+The alternative hypothesis is
+\[
+H_a:\mu\ne325
+\]
+
+This is a two-sided test because deviations in either direction matter.
+\end{frame}
+
+\section{P-Values and Statistical Significance}
+
+% SLIDE 40: Logic of the P-Value
+\begin{frame}{The Logic of a P-Value}
+A hypothesis test begins by temporarily assuming that $H_0$ is true.
+
+
+The null sampling distribution then tells us which sample results are common and which are unusual.
+
+
+A result that is very unusual under the null model provides evidence against that model.
+\end{frame}
+
+% SLIDE 41: The Test Statistic
+\begin{frame}{The Test Statistic}
+For a one-sample $z$ test of a population mean,
+
+\[
+z
+=
+\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}
+\]
+
+
+The numerator measures the observed difference from the null value.
+
+
+The denominator is the standard error expected from random sampling.
+
+
+The resulting $z$ value tells us how many standard errors the observed sample mean is from the null mean.
+\end{frame}
+
+% SLIDE 42: The P-Value
+\begin{frame}{The P-Value}
+\begin{block}{Definition}
+The P-value is the probability, calculated under the assumption that the null hypothesis and model conditions are true, of obtaining a test statistic at least as extreme as the observed statistic in the direction or directions specified by the alternative hypothesis.
+\end{block}
+
+
+A P-value is not the probability that $H_0$ is true.
+
+
+A P-value is not the probability that the observed result happened only because of chance.
+\end{frame}
+
+% SLIDE 43: Interpreting P-Values
+\begin{frame}{Interpreting P-Values}
+\begin{itemize}
+  \item A small P-value provides stronger evidence against $H_0$ because the observed result is unusual under the null model.
+  \item A large P-value means the observed result remains reasonably compatible with $H_0$.
+  \item Failure to reject $H_0$ does not prove that $H_0$ is true.
+\end{itemize}
+
+\vspace{0.2cm}
+Statistical significance does not measure the practical or biological importance of an effect.
+\end{frame}
+
+% SLIDE 44: Phosphorus P-Value Question
+\begin{frame}{Example 14.7: One-Sided Phosphorus Test}
+\begin{block}{Question}
+For the phosphorus study,
+\[
+H_0:\mu=1.2
+\]
+\[
+H_a:\mu<1.2
+\]
+with $n=12$, $\bar{x}\approx1.1283$ mmol/L and known $\sigma=0.1$ mmol/L.
+
+What is the one-sided P-value?
+\end{block}
+\end{frame}
+
+% SLIDE 45: Phosphorus Standard Error
+\begin{frame}{Example 14.7: Standard Error}
+\begin{block}{Explanation}
+Under $H_0$, the sample mean has centre 1.2 mmol/L.
+\end{block}
+
+\pause
+
+The standard error is
+\[
+SE
+=
+\frac{0.1}{\sqrt{12}}
+\approx
+0.0289
+\]
+
+\pause
+
+The observed sample mean is lower than the null mean, so the next step is to measure that difference in standard-error units.
+\end{frame}
+
+% SLIDE 46: Phosphorus Test Statistic
+\begin{frame}{Example 14.7: Test Statistic and Tail}
+The test statistic is
+\[
+z
+=
+\frac{1.1283-1.2}{0.0289}
+\approx
+-2.48
+\]
+
+\pause
+
+The alternative hypothesis is
+\[
+H_a:\mu<1.2
+\]
+
+\pause
+
+Therefore, the P-value is the Standard Normal area to the \textbf{left} of the observed $z$ statistic.
+\end{frame}
+
+% SLIDE 47: Phosphorus P-Value Solution
+\begin{frame}{Example 14.7: P-Value Solution}
+\begin{block}{Solution}
+\[
+P(Z\le-2.48)
+\approx
+0.0065
+\]
+\end{block}
+
+\pause
+
+Under the null model, a sample mean of approximately 1.1283 mmol/L or lower would occur in about 0.65\% of repeated samples of size 12.
+
+\pause
+
+The data provide strong evidence against $H_0$ under the stated assumptions and support the conclusion that the population mean is below 1.2 mmol/L.
+\end{frame}
+
+% SLIDE 48: Phosphorus R Code
+\begin{frame}[fragile]{Example 14.7: One-Sided Test in R}
+\scriptsize
+\begin{verbatim}
+# The observed phosphorus measurements are stored in mmol/L.
+phosphorus <- c(
+  1.26, 1.39, 1.00, 1.00, 1.00, 1.10,
+  0.87, 1.23, 1.19, 1.29, 1.03, 1.18
+)
+
+# The null mean and population standard deviation define the model.
+mu_null_phos <- 1.2
+sigma_phos <- 0.1
+
+xbar_phos <- mean(phosphorus)
+n_phos <- length(phosphorus)
+se_phos <- sigma_phos / sqrt(n_phos)
+z_phos <- (xbar_phos - mu_null_phos) / se_phos
+
+# The alternative is lower-tailed, so pnorm() gives the left-tail area.
+p_phos <- pnorm(z_phos)
+p_phos
+\end{verbatim}
+\end{frame}
+
+% SLIDE 49: Aspirin P-Value Question
+\begin{frame}{Example 14.8: Two-Sided Aspirin Test}
+\begin{block}{Question}
+A manufacturing process targets $\mu=325$ mg with known $\sigma=5$ mg. A random sample of $n=10$ tablets has mean $\bar{x}=326.9$ mg.
+
+The hypotheses are
+\[
+H_0:\mu=325
+\]
+\[
+H_a:\mu\ne325
+\]
+
+What is the two-sided P-value?
+\end{block}
+\end{frame}
+
+% SLIDE 50: Aspirin Explanation
+\begin{frame}{Example 14.8: Standard Error and Test Statistic}
+\begin{block}{Explanation}
+The standard error is
+\[
+SE
+=
+\frac{5}{\sqrt{10}}
+\approx
+1.581
+\]
+\end{block}
+
+\pause
+
+The test statistic is
+\[
+z
+=
+\frac{326.9-325}{1.581}
+\approx
+1.202
+\]
+
+\pause
+
+The two-sided alternative requires equally extreme outcomes in both tails.
+\end{frame}
+
+% SLIDE 51: Aspirin Solution
+\begin{frame}{Example 14.8: Two-Sided P-Value Solution}
+\begin{block}{Solution}
+For the symmetric Standard Normal distribution,
+\[
+2P(Z\ge1.202)
+\approx
+0.2295
+\]
+\end{block}
+
+\pause
+
+A P-value of about 0.2295 is not small.
+
+\pause
+
+The data do not provide statistically significant evidence that the population mean differs from 325 mg. This conclusion does not prove that the process mean is exactly 325 mg.
+\end{frame}
+
+% SLIDE 52: Aspirin R Code
+\begin{frame}[fragile]{Example 14.8: Two-Sided Test in R}
+\scriptsize
+\begin{verbatim}
+# The null value is the target tablet amount.
+mu_null_aspirin <- 325
+sigma_aspirin <- 5
+n_aspirin <- 10
+xbar_aspirin <- 326.9
+
+# The z statistic measures the standardized distance from the target.
+se_aspirin <- sigma_aspirin / sqrt(n_aspirin)
+z_aspirin <- (xbar_aspirin - mu_null_aspirin) / se_aspirin
+
+# abs() lets the same two-sided formula work for positive or negative z.
+p_aspirin <- 2 * pnorm(-abs(z_aspirin))
+p_aspirin
+\end{verbatim}
+\end{frame}
+
+\section{Significance Levels and One-Sample Tests}
+
+% SLIDE 53: Significance Levels
+\begin{frame}{Significance Levels $\alpha$}
+The significance level is a decision threshold chosen before the analysis.
+
+
+The usual decision rule is
+
+\begin{itemize}
+  \item When $P\le\alpha$, the result is statistically significant and $H_0$ is rejected.
+  \item When $P>\alpha$, the result is not statistically significant and $H_0$ is not rejected.
+\end{itemize}
+
+
+Common values include
+\[
+\alpha=0.05
+\]
+\[
+\alpha=0.01
+\]
+\end{frame}
+
+% SLIDE 54: What Alpha Means
+\begin{frame}{What Does $\alpha$ Mean?}
+For a correctly calibrated test, $\alpha$ controls the long-run probability of a Type I error when the null hypothesis is true.
+
+
+The statement
+\[
+\alpha=0.05
+\]
+does not mean that there is a 5\% probability that $H_0$ is true.
+
+
+The word \textbf{significant} also does not mean that an effect is large or biologically important.
+\end{frame}
+
+% SLIDE 55: One-Sample Z Test
+\begin{frame}{The One-Sample $z$ Test for a Mean}
+Under the introductory conditions, the null hypothesis is
+\[
+H_0:\mu=\mu_0
+\]
+
+The test statistic is
+\[
+z
+=
+\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}
+\]
+
+The test statistic measures the observed difference from the null value in units of the standard error.
+\end{frame}
+
+% SLIDE 56: Which Tail Gives the P-Value
+\begin{frame}{Which Tail Gives the P-Value?}
+The alternative hypothesis determines the relevant tail or tails.
+
+\begin{itemize}
+  \item For $H_a:\mu>\mu_0$, the P-value is the area to the right of the observed $z$ value.
+  \item For $H_a:\mu<\mu_0$, the P-value is the area to the left of the observed $z$ value.
+  \item For $H_a:\mu\ne\mu_0$, the P-value includes equally extreme outcomes in both tails.
+\end{itemize}
+
+
+For a two-sided $z$ test in R,
+\[
+P=2\,\texttt{pnorm}(-|z|)
+\]
+\end{frame}
+
+\section{Body Temperature Example}
+
+% SLIDE 57: Body Temperature Question
+\begin{frame}{Example 14.9: Body Temperature}
+\begin{block}{Question}
+An historical reference value for mean human body temperature is 98.6$^\circ$F. A later study reports oral temperatures from $n=130$ healthy adult volunteers with sample mean $\bar{x}=98.25^\circ$F.
+
+For this introductory exercise, assume the observations can be treated as independent and representative of the population being studied. Also assume known $\sigma=0.6^\circ$F.
+
+Do the data provide evidence that the population mean differs from 98.6$^\circ$F?
+\end{block}
+\end{frame}
+
+% SLIDE 58: Body Temperature Hypotheses and Standard Error
+\begin{frame}{Example 14.9: Plan and Standard Error}
+\begin{block}{Explanation}
+The question concerns a difference in either direction, so a two-sided test is appropriate.
+\end{block}
+
+\pause
+
+\[
+H_0:\mu=98.6
+\]
+\[
+H_a:\mu\ne98.6
+\]
+
+\pause
+
+The standard error is
+\[
+SE
+=
+\frac{0.6}{\sqrt{130}}
+\approx
+0.0526
+\]
+\end{frame}
+
+% SLIDE 59: Body Temperature Test Statistic
+\begin{frame}{Example 14.9: Test Statistic}
+The test statistic is
+\[
+z
+=
+\frac{98.25-98.6}{0.0526}
+\approx
+-6.65
+\]
+
+\pause
+
+The observed sample mean is about 6.65 standard errors below the null mean.
+
+\pause
+
+A result at least this far from 98.6 in either direction would be extremely unusual under the null model.
+\end{frame}
+
+% SLIDE 60: Body Temperature Solution
+\begin{frame}{Example 14.9: P-Value and Conclusion}
+\begin{block}{Solution}
+The two-sided P-value is approximately
+\[
+2.9\times10^{-11}
+\]
+\end{block}
+
+\pause
+
+The P-value is extremely small. Under the stated assumptions, the data provide extremely strong evidence against $H_0$.
+
+\pause
+
+The result is not impossible under $H_0$. Its probability is simply extremely small. The strength of the population conclusion also depends on whether the study sample appropriately represents the population of interest.
+\end{frame}
+
+% SLIDE 61: Body Temperature R Code
+\begin{frame}[fragile]{Example 14.9: Body Temperature Test in R}
+\scriptsize
+\begin{verbatim}
+# The null model uses the historical reference mean.
+mu_null_temp <- 98.6
+xbar_temp <- 98.25
+n_temp <- 130
+sigma_temp <- 0.6
+
+# The standard error and z statistic describe the observed difference.
+se_temp <- sigma_temp / sqrt(n_temp)
+z_temp <- (xbar_temp - mu_null_temp) / se_temp
+
+# The alternative is two-sided, so both tails are included.
+p_temp <- 2 * pnorm(-abs(z_temp))
+
+c(Standard_Error = se_temp, Z_Statistic = z_temp, P_Value = p_temp)
+\end{verbatim}
+\end{frame}
+
+\section{Tests from Confidence Intervals}
+
+% SLIDE 62: Confidence Interval and Test Connection
+\begin{frame}{The Confidence Interval and Test Connection}
+Two-sided confidence intervals and two-sided hypothesis tests are closely connected when they use the same model.
+
+
+A test at significance level $\alpha$ corresponds to a confidence level
+\[
+C=1-\alpha
+\]
+
+
+For example,
+\[
+\alpha=0.05
+\]
+corresponds to
+\[
+C=0.95
+\]
+\end{frame}
+
+% SLIDE 63: Decision from a Confidence Interval
+\begin{frame}{Using a Confidence Interval to Test a Null Value}
+Under the same two-sided model,
+
+\begin{itemize}
+  \item A null value outside the corresponding confidence interval leads to rejection of $H_0$.
+  \item A null value inside the corresponding confidence interval leads to failure to reject $H_0$.
+\end{itemize}
+
+\vspace{0.2cm}
+This equivalence requires the same standard error, significance level and two-sided model.
+\end{frame}
+
+% SLIDE 64: Body Temperature Confidence Interval Question
+\begin{frame}{Example 14.10: Body Temperature Confidence Interval}
+\begin{block}{Question}
+Using $\bar{x}=98.25^\circ$F, $n=130$ and known $\sigma=0.6^\circ$F, what is the 95\% confidence interval for the population mean?
+
+How does the interval lead to the same conclusion as the two-sided test of
+\[
+H_0:\mu=98.6
+\]
+at $\alpha=0.05$?
+\end{block}
+\end{frame}
+
+% SLIDE 65: Body Temperature Confidence Interval Explanation
+\begin{frame}{Example 14.10: Calculating the Interval}
+\begin{block}{Explanation}
+The 95\% critical value is
+\[
+z^*=1.960
+\]
+\end{block}
+
+\pause
+
+The standard error is
+\[
+SE
+\approx
+0.0526
+\]
+
+\pause
+
+The margin of error is
+\[
+m
+=
+1.960(0.0526)
+\approx
+0.1031
+\]
+\end{frame}
+
+% SLIDE 66: Body Temperature Confidence Interval Solution
+\begin{frame}{Example 14.10: Confidence Interval Solution}
+\begin{block}{Solution}
+The interval is
+\[
+98.25
+\pm
+0.1031
+\]
+\end{block}
+
+\pause
+
+Therefore,
+\[
+(98.15,\ 98.35)
+\]
+
+\pause
+
+The null value 98.6$^\circ$F lies outside the 95\% confidence interval. The corresponding two-sided test rejects $H_0$ at the 5\% significance level.
+\end{frame}
+
+% SLIDE 67: Body Temperature Confidence Interval R Code
+\begin{frame}[fragile]{Example 14.10: Confidence Interval in R}
+\scriptsize
+\begin{verbatim}
+# qnorm(0.975) gives the critical value for a 95% interval.
+z_star_temp <- qnorm(0.975)
+
+# The confidence interval uses the same standard error as the test.
+margin_temp <- z_star_temp * se_temp
+lower_temp <- xbar_temp - margin_temp
+upper_temp <- xbar_temp + margin_temp
+
+round(
+  c(Lower_Bound = lower_temp, Upper_Bound = upper_temp),
+  2
+)
+\end{verbatim}
+\end{frame}
+
+\section{Chapter Summary}
+
+% SLIDE 68: Chapter Summary
+\begin{frame}{Chapter 14 Summary}
+\begin{itemize}
+  \item Statistical inference uses sample data to learn about population parameters while accounting for sampling variation.
+  \item Confidence intervals combine an estimate with a margin of error.
+  \item A P-value measures how unusual the observed evidence would be under the null model.
+  \item The significance level $\alpha$ provides a decision threshold chosen before the analysis.
+  \item Two-sided confidence intervals and two-sided tests are directly connected when they use the same statistical model.
+\end{itemize}
+\end{frame}
+
+% SLIDE 69: Consistent Inference Workflow
+\begin{frame}{A Consistent Inference Workflow}
+A first-year inference problem becomes easier when the same reasoning is used each time.
+
+\begin{enumerate}
+  \item The population parameter and scientific question are identified.
+  \item The study design and assumptions are assessed.
+  \item The sampling distribution and standard error are identified.
+  \item The confidence interval or test is calculated.
+  \item The numerical result is interpreted in context.
+  \item The conclusion respects both statistical evidence and the limitations of the study design.
+\end{enumerate}
+\end{frame}
+
+\end{document}
