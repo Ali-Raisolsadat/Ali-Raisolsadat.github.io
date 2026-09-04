@@ -1,0 +1,352 @@
+
+\documentclass[10pt]{article}
+
+%============================================================
+% STAT 1210-2 — Course Syllabus
+% Fall 2026
+%============================================================
+
+\usepackage[margin=0.65in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{parskip}
+
+%------------------------------------------------------------
+% Colours and links
+%------------------------------------------------------------
+
+\definecolor{CourseBlue}{RGB}{41,67,98}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=CourseBlue,
+    urlcolor=CourseBlue
+}
+
+%------------------------------------------------------------
+% Compact formatting
+%------------------------------------------------------------
+
+\titleformat{\section}
+  {\normalsize\bfseries\color{CourseBlue}}
+  {}
+  {0pt}
+  {}
+
+\titleformat{\subsection}
+  {\small\bfseries}
+  {}
+  {0pt}
+  {}
+
+\titlespacing*{\section}{0pt}{7pt}{3pt}
+\titlespacing*{\subsection}{0pt}{5pt}{2pt}
+
+\setlist[itemize]{
+    leftmargin=1.4em,
+    itemsep=0pt,
+    topsep=2pt,
+    parsep=0pt
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+
+%------------------------------------------------------------
+% Document
+%------------------------------------------------------------
+
+\begin{document}
+
+%------------------------------------------------------------
+% Header
+%------------------------------------------------------------
+
+\begin{center}
+
+{\Large\bfseries UNIVERSITY OF PRINCE EDWARD ISLAND}
+
+\vspace{1mm}
+
+{\large\bfseries STAT 1210-2 --- Introduction to Statistics for the Life and Social Sciences}
+
+{\normalsize Fall 2026}
+
+School of Mathematical and Computational Sciences
+
+\end{center}
+
+\vspace{2mm}
+
+\hrule
+
+\vspace{4mm}
+
+%------------------------------------------------------------
+% Instructor Information
+%------------------------------------------------------------
+
+\section{Instructor Information}
+
+\begin{tabular}{@{}>{\bfseries}l l@{}}
+Instructor: & Ali Raisolsadat \\
+E-mail: & \href{mailto:sraisolsadat@upei.ca}{sraisolsadat@upei.ca} \\
+Office Hours: & TBD \\
+Lectures: & Tuesdays and Thursdays, 1:00 PM--2:15 PM \\
+Classroom: & Irving Chemistry Centre, Room 104 \\
+Course Website: & \url{https://ali-raisolsadat.github.io/courses}
+\end{tabular}
+
+Moodle will be used for official announcements, communication, schedule
+updates and grades.
+
+%------------------------------------------------------------
+% Course Description
+%------------------------------------------------------------
+
+\section{Course Description}
+
+STAT 1210 is an introductory statistics course for students in the life and social sciences. The course introduces descriptive statistics, probability, sampling, statistical inference, correlation and introductory regression. Emphasis will be placed on statistical reasoning, interpretation and the appropriate use of statistical methods in applications from areas such as biology, health sciences, psychology, environmental science and economics.
+
+%------------------------------------------------------------
+% Prerequisite
+%------------------------------------------------------------
+
+\section{Prerequisite}
+Grade XII academic Mathematics. Previous experience with statistics or programming is not required.
+
+%------------------------------------------------------------
+% Textbook
+%------------------------------------------------------------
+
+\section{Textbook}
+\textit{The Practice of Statistics in the Life Sciences}, Brigitte Baldi and David S. Moore.
+
+%------------------------------------------------------------
+% Course Materials
+%------------------------------------------------------------
+
+\section{Course Materials}
+Lecture slides, course notes, assignments, practice material and other supporting resources will be made available through the course website and/or Moodle. Students are responsible for checking Moodle regularly for announcements and schedule changes.
+
+%------------------------------------------------------------
+% Course Content
+%------------------------------------------------------------
+
+\section{Course Content}
+
+\subsection{I. Exploring Data}
+
+\begin{itemize}
+    \item \textbf{Chapters 1--2:} Visualization and Numerical Summaries
+    \item \textbf{Chapter 3:} Scatterplots and Correlation
+    \item \textbf{Chapter 4:} Regression
+\end{itemize}
+
+\subsection{II. Probability and Distributions}
+
+\begin{itemize}
+    \item \textbf{Chapters 9--10:} Probability
+    \item \textbf{Chapter 11:} Normal Distributions
+    \item \textbf{Chapter 12:} Binomial and Poisson Distributions
+\end{itemize}
+
+\subsection{III. Foundations of Statistical Inference}
+
+\begin{itemize}
+    \item \textbf{Chapter 6:} Samples and Observational Studies
+    \item \textbf{Chapter 13:} Sampling Distributions
+    \item \textbf{Chapter 14:} Confidence Intervals and \(p\)-values
+    \item \textbf{Chapter 15:} Inference in Practice
+\end{itemize}
+
+\subsection{IV. Specific Inference Procedures}
+
+\begin{itemize}
+    \item \textbf{Chapter 17:} Inference about a Population Mean
+    \item \textbf{Chapter 19:} Inference about a Population Proportion
+\end{itemize}
+
+The exact pacing and amount of material covered may be adjusted during the semester when necessary.
+
+%------------------------------------------------------------
+% Software
+%------------------------------------------------------------
+
+\section{Statistical Software}
+R may occasionally be used during lectures for statistical calculations, visualization, and data analysis. No previous programming experience is required.
+
+%------------------------------------------------------------
+% Assessment
+%------------------------------------------------------------
+
+\section{Assessment and Grading}
+
+\begin{center}
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Assessment} & \textbf{Weight} \\
+\midrule
+Three Assignments  & 20\% \\
+Midterms or Quizzes & 40\% \\
+Final Examination & 40\% \\
+\midrule
+\textbf{Total} & \textbf{100\%} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Assignments} 
+There will be three assignments. Each assignment will include 7-12 questions and one or two optional bonus questions. If a student earns a score greater than 100\% on an assignment by completing the bonus questions, \textbf{one additional percentage point} will be added to the student's quiz or midterm grade. This is a one-percentage-point increase to the applicable quiz or midterm mark, not an additional 1\% toward the final course grade.
+
+\subsection{Midterm or Quiz Option}
+The examination component will account for 40\% of the final grade. One of the following formats will be used:
+
+\begin{itemize}
+    \item \textbf{Option A:} Two 75-minute midterm tests worth 20\% each.
+    \item \textbf{Option B:} Four 40-minute quizzes worth 10\% each.
+\end{itemize}
+
+The selected format and associated dates will be confirmed early in the
+semester.
+
+\subsection{Final Examination}
+The final examination will be worth 40\% of the final grade. The date and time will be determined according to the University's final examination schedule.
+
+%------------------------------------------------------------
+% Class Cancellation
+%------------------------------------------------------------
+
+\section{Class Cancellation}
+If a class is cancelled because of weather or another unexpected circumstance, course material and assessment dates may be adjusted as necessary. A quiz or midterm scheduled for a cancelled class will normall move to the next class unless otherwise announced.
+
+%------------------------------------------------------------
+% Calculators and Electronic Devices
+%------------------------------------------------------------
+
+\section{Calculators and Electronic Devices}
+A non-programmable, non-graphing calculator may be used during quizzes and midterm tests unless otherwise announced. Cell phones, smart watches, tablets, laptops, translators and other electronic devices may not be used during quizzes, tests or examinations unless specifically authorized.
+
+%------------------------------------------------------------
+% Academic Integrity
+%------------------------------------------------------------
+
+\section{Academic Integrity}
+Students are expected to follow the University of Prince Edward Island's Academic Integrity regulations. Academic dishonesty includes plagiarism, cheating, unauthorized collaboration, falsification of information, unauthorized use of technology, and other forms of misrepresentation of academic work. Suspected cases of academic dishonesty will be addressed according to University procedures.
+
+The complete regulations are available at:
+
+\url{https://calendar.upei.ca/current/chapter/undergraduate-and-professional-programs-academic-regulations/}
+
+%------------------------------------------------------------
+% AI Policy
+%------------------------------------------------------------
+
+\section{Use of ChatGPT and Other Generative AI Tools}
+ChatGPT, Claude, Gemini and other generative AI tools may be used as learning aids unless the instructions for a particular assessment state otherwise. Students must not submit AI-generated answers as their own work or use these tools during quizzes, tests, or examinations unless explicitly authorized.
+
+Students are responsible for understanding and verifying all submitted work. When submitted work raises concerns regarding unauthorized assistance, a student may be asked to explain the calculations, reasoning, interpretations or conclusions contained in the submission. Academic integrity concerns will be handled according to University procedures.
+
+\newpage
+
+%------------------------------------------------------------
+% Tentative Course Schedule
+%------------------------------------------------------------
+
+\section{Tentative Course Schedule}
+
+The following schedule is tentative and may be adjusted during the semester. Any changes will be announced through Moodle.
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.15}
+
+\begin{tabular}{@{}p{2.3cm}p{3.2cm}p{3.2cm}p{6.2cm}@{}}
+\toprule
+\textbf{Week (Mon--Fri)} &
+\textbf{Tuesday} &
+\textbf{Thursday} &
+\textbf{Deliverables} \\
+\midrule
+
+Sept 7--11 &
+Lecture 0; Chapter 1 &
+Chapter 1 &
+--- \\
+
+Sept 14--18 &
+Chapter 2 &
+Chapter 3 &
+Introduction Task Memo Due Sept 15; Assignment 1 Published Sept 14 \\
+
+Sept 21--25 &
+Chapter 3; Chapter 4 &
+Chapter 4 &
+--- \\
+
+Sept 28--Oct 2 &
+Chapter 9 &
+Chapter 9; Chapter 10 &
+Assignment 1 Due Sept 28; Assignment 2 Published Sept 28 \\
+
+Oct 5--9 &
+Chapter 10 &
+Chapter 11 &
+--- \\
+
+Oct 12--16 &
+Mid-semester break &
+Mid-semester break &
+--- \\
+
+Oct 19--23 &
+Chapter 11; Chapter 12 &
+Chapter 12 &
+--- \\
+
+Oct 26--30 &
+Quiz 2; Chapter 6 &
+Chapter 6 &
+Assignment 2 Due Oct 26; Assignment 3 Published Oct 26 \\
+
+Nov 2--6 &
+Chapter 13 &
+Chapter 14 &
+--- \\
+
+Nov 9--13 &
+Chapter 14; Chapter 15 &
+Chapter 15 &
+Nov 11: Remembrance Day (No classes) \\
+
+Nov 16--20 &
+Quiz 3; Chapter 17 &
+Chapter 17 &
+Assignment 3 Due Nov 16 \\
+
+Nov 23--27 &
+Lecture 19 &
+Statistics in Soviet Union &
+--- \\
+
+Nov 30--Dec 4 &
+Quiz 4; Final Exam Review &
+Final Exam Review &
+--- \\
+
+Dec 7--11 &
+Final Exam Review &
+--- &
+--- \\
+
+\bottomrule
+\end{tabular}
+
+\end{center}
+
+
+\end{document}
