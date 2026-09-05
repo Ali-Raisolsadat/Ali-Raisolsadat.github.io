@@ -39,73 +39,54 @@ Statistics}
 \begin{document}
 \maketitle
 
+% =======================================
 % Question 1
+% =======================================
 \subsection{Question 1}
-
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
-\item
-Probabilities in a discrete model must sum to 1. So
-\end{enumerate}
+	\item Probabilities in a discrete model must sum to 1. So
+	\[
+		c=1-(0.18+0.31+0.29+0.16)=0.06
+	\]
+	
+	\item The requested event probabilities are
+	\[
+		P(X\ge2)=0.29+0.16+0.06=0.51
+	\]
+	
+	\[
+		P(X<3)=0.18+0.31+0.29=0.78
+	\]
+	
+	and
+	
+	\[
+		P(X\ne0)=1-P(X=0)=1-0.18=0.82
+	\]
+	
+	\item The mean is
+	\[
+		\mu_X=0(0.18)+1(0.31)+2(0.29)+3(0.16)+4(0.06)=1.61
+	\]
+	
+	Using either the stated variance formula or \(E(X^2)-[E(X)]^2\)
+	
+	\[
+		E(X^2)=0^2(0.18)+1^2(0.31)+2^2(0.29)+3^2(0.16)+4^2(0.06)=3.87
+	\]
+	
+	\[
+		\sigma_X^2=3.87-(1.61)^2=1.2779
+	\qquad
+		\sigma_X=\sqrt{1.2779}=1.1304
+	\]
 
-\[
-	c=1-(0.18+0.31+0.29+0.16)=0.06
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-The requested event probabilities are
-\end{enumerate}
-
-\[
-	P(X\ge2)=0.29+0.16+0.06=0.51
-\]
-
-\[
-	P(X<3)=0.18+0.31+0.29=0.78
-\]
-
-and
-
-\[
-	P(X\ne0)=1-P(X=0)=1-0.18=0.82
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item
-The mean is
-\end{enumerate}
-
-\[
-	\mu_X=0(0.18)+1(0.31)+2(0.29)+3(0.16)+4(0.06)=1.61
-\]
-
-Using either the stated variance formula or \(E(X^2)-[E(X)]^2\)
-
-\[
-	E(X^2)=0^2(0.18)+1^2(0.31)+2^2(0.29)+3^2(0.16)+4^2(0.06)=3.87
-\]
-
-\[
-	\sigma_X^2=3.87-(1.61)^2=1.2779
-\qquad
-	\sigma_X=\sqrt{1.2779}=1.1304
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{3}
-\item Across many repetitions of the experiment, the long run average number showing root growth would approach approximately 1.61 per group of four. The expected value is an average across repetitions, so it does not need to be an outcome possible in one group.
-\item The supplied R code returns \passthrough{\lstinline!sum(p) = 1!}, followed by mean 1.61, variance 1.2779 and standard deviation approximately 1.1304.
-\end{enumerate}
-
+	\item Across many repetitions of the experiment, the long run average number showing root growth would approach approximately 1.61 per group of four. The expected value is an average across repetitions, so it does not need to be an outcome possible in one group.
+	
+	\item The supplied R code returns \passthrough{\lstinline!sum(p) = 1!}, followed by mean 1.61, variance 1.2779 and standard deviation approximately 1.1304.
+	
 \begin{lstlisting}[language=R]
 x <- 0:4
 p <- c(0.18, 0.31, 0.29, 0.16, 0.06)
@@ -114,642 +95,362 @@ mu <- sum(x * p)                    # 1.61
 variance <- sum((x - mu)^2 * p)     # 1.2779
 sqrt(variance)                      # 1.1304
 \end{lstlisting}
+\end{enumerate}
 
 \newpage
 
+% =======================================
 % Question 2
+% =======================================
 \subsection{Question 2}
-
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
-\item The base of the uniform rectangle has length \(8-2=6\). Since its area must equal 1, its height is $h=\frac{1}{6}$.
+	\item The base of the uniform rectangle has length \(8-2=6\). Since its area must equal 1, its height is $h=\frac{1}{6}$.
+	
+	\item Uniform probabilities equal interval length divided by total length:
+	\[
+		P(3.5\le T\le6.2)=\frac{6.2-3.5}{6}=\frac{2.7}{6}=0.45
+	\]
+
+	The two tail intervals are disjoint, so
+	
+	\[
+		P(T<2.8\text{ or }T>7.4) =\frac{2.8-2}{6}+\frac{8-7.4}{6}=\frac{1.4}{6}=0.2333
+	\]
+
+	\item \(P(T=5)=0\). In a continuous model, probability is area over an interval and a single point has zero width. A recorded time of 5 minutes can still occur because measurements are rounded to finite precision.
+	\item The expected number is \(1200(0.45)=540\). The Law of Large Numbers states that the observed proportion should tend toward 0.45 as the number of independent calibrations grows; it does not require exactly 540 in one set of 1200.
+
 \end{enumerate}
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item Uniform probabilities equal interval length divided by total length:
-\end{enumerate}
-
-\[
-	P(3.5\le T\le6.2)=\frac{6.2-3.5}{6}=\frac{2.7}{6}=0.45
-\]
-
-The two tail intervals are disjoint, so
-
-\[
-	P(T<2.8\text{ or }T>7.4) =\frac{2.8-2}{6}+\frac{8-7.4}{6}=\frac{1.4}{6}=0.2333
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{2}
-\item \(P(T=5)=0\). In a continuous model, probability is area over an interval and a single point has zero width. A recorded time of 5 minutes can still occur because measurements are rounded to finite precision.
-\item The expected number is \(1200(0.45)=540\). The Law of Large Numbers states that the observed proportion should tend toward 0.45 as the number of independent calibrations grows; it does not require exactly 540 in one set of 1200.
-\end{enumerate}
-
+% =======================================
 % Question 3
+% =======================================
 \subsection{Question 3}
-
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
-\item The marginal and joint probabilities are
-\end{enumerate}
+	\item The marginal and joint probabilities are
+	\[
+		P(A)=\frac{100}{400}=0.25 \qquad P(S)=\frac{150}{400}=0.375 \qquad P(A\cap S)=\frac{60}{400}=0.15
+	\]
 
-\[
-	P(A)=\frac{100}{400}=0.25 \qquad P(S)=\frac{150}{400}=0.375 \qquad P(A\cap S)=\frac{60}{400}=0.15
-\]
+	\item Among South samples,
+	\[
+		P(A\mid S)=\frac{60}{150}=0.40
+	\]
+	
+	Among above-threshold samples
+	
+	\[
+		P(S\mid A)=\frac{60}{100}=0.60
+	\]
+	
+	The first denominator is all South samples; the second is all above-threshold samples. Thus, the first is the above-threshold rate within the South, while the second is the South-region share among above-threshold samples.
+	
+	\item The general addition rule gives
+	\[
+		P(S\cup A)=P(S)+P(A)-P(S\cap A)=0.375+0.25-0.15=0.475.
+	\]
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item Among South samples,
-\end{enumerate}
+	\item The conditional rates are
+	\[
+		P(A\mid N)=\frac{16}{100}=0.16 \quad P(A\mid C)=\frac{24}{150}=0.16 \quad P(A\mid S)=\frac{60}{150}=0.40.
+	\]
+	
+	The higher South rate provides evidence of an association between region and threshold status in this dataset.
 
-\[
-	P(A\mid S)=\frac{60}{150}=0.40
-\]
-
-Among above-threshold samples
-
-\[
-	P(S\mid A)=\frac{60}{100}=0.60
-\]
-
-The first denominator is all South samples; the second is all above-threshold samples. Thus, the first is the above-threshold rate within the South, while the second is the South-region share among above-threshold samples.
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item The general addition rule gives
-\end{enumerate}
-
-\[
-	P(S\cup A)=P(S)+P(A)-P(S\cap A)=0.375+0.25-0.15=0.475.
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{3}
-\tightlist
-\item The conditional rates are
-\end{enumerate}
-
-\[
-	P(A\mid N)=\frac{16}{100}=0.16 \quad P(A\mid C)=\frac{24}{150}=0.16 \quad P(A\mid S)=\frac{60}{150}=0.40.
-\]
-
-The higher South rate provides evidence of an association between region and threshold status in this dataset.
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{4}
-\tightlist
-\item The program is observational, so other regional differences could explain some or all of the association. Relevant variables could include nearby land use, sampling season, rainfall, industrial activity or differences in sampling locations.
+	\item The program is observational, so other regional differences could explain some or all of the association. Relevant variables could include nearby land use, sampling season, rainfall, industrial activity or differences in sampling locations.
 \end{enumerate}
 
 \newpage 
 
+% =======================================
 % Question 4
+% =======================================
 \subsection{Question 4}
-
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\item The events are not disjoint because \(P(A\cap B)=0.12>0\); they can occur together.
-\item By the general addition rule,
+	\item The events are not disjoint because \(P(A\cap B)=0.12>0\); they can occur together.
+	\item By the general addition rule
+	\[
+		P(A\cup B)=0.32+0.25-0.12=0.45
+	\]
+	\item The probability of neither event is
+	\[
+		1-P(A\cup B)=1-0.45=0.55
+	\]
+	\item The conditional probabilities are
+	\[
+		P(A\mid B)=\frac{0.12}{0.25}=0.48 \qquad P(B\mid A)=\frac{0.12}{0.32}=0.375
+	\]
+	The first is the resistant proportion among isolates with the marker. The second is the marker proportion among resistant isolates.
+	
+	\item  The events are not independent because
+	\[
+		P(A)P(B)=(0.32)(0.25)=0.08\ne0.12=P(A\cap B)
+	\]
+	Equivalently, \(P(A\mid B)=0.48\ne0.32=P(A)\)
+
+	
 \end{enumerate}
 
-\[
-	P(A\cup B)=0.32+0.25-0.12=0.45
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item The probability of neither event is
-\end{enumerate}
-
-\[
-	1-P(A\cup B)=1-0.45=0.55
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{3}
-\tightlist
-\item The conditional probabilities are
-\end{enumerate}
-
-\[
-	P(A\mid B)=\frac{0.12}{0.25}=0.48 \qquad P(B\mid A)=\frac{0.12}{0.32}=0.375
-\]
-
-The first is the resistant proportion among isolates with the marker. The second is the marker proportion among resistant isolates.
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{4}
-\tightlist
-\item The events are not independent because
-\end{enumerate}
-
-\[
-	P(A)P(B)=(0.32)(0.25)=0.08\ne0.12=P(A\cap B)
-\]
-
-Equivalently, \(P(A\mid B)=0.48\ne0.32=P(A)\).
-
+% =======================================
 % Question 5
+% =======================================
 \subsection{Question 5}
-
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\item The first split is Supplier A \(0.65\) or Supplier B \(0.35\). Each supplier then splits into defective and not defective. For A, those probabilities are 0.03 and 0.97; for B, they are 0.08 and 0.92.
-\item Multiplying along each path gives:
-\end{enumerate}
-
-\begin{longtable}[]{@{}lr@{}}
-\toprule\noalign{}
-Path & Joint probability \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-A and defective & \(0.65(0.03)=0.0195\) \\
-A and not defective & \(0.65(0.97)=0.6305\) \\
-B and defective & \(0.35(0.08)=0.0280\) \\
-B and not defective & \(0.35(0.92)=0.3220\) \\
-\end{longtable}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item The defective paths are disjoint, so $P(D)=0.0195+0.0280=0.0475$.
-\end{enumerate}
-
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{3}
-\tightlist
-\item The reverse conditional probability is
-\end{enumerate}
-
-\[
-	P(B\mid D)=\frac{P(B\cap D)}{P(D)} =\frac{0.0280}{0.0475}=0.5895
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{4}
-\tightlist
-\item Since \(P(D^c)=1-0.0475=0.9525\),
-\end{enumerate}
-
-\[
-	P(A\mid D^c)=\frac{0.6305}{0.9525}=0.6619
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{5}
-\tightlist
-\item Supplier and defect status are not independent because \(P(D\mid A)=0.03\), \(P(D\mid B)=0.08\), and \(P(D)=0.0475\) are not equal.
+	\item The first split is Supplier A \(0.65\) or Supplier B \(0.35\). Each supplier then splits into defective and not defective. For A, those probabilities are 0.03 and 0.97; for B, they are 0.08 and 0.92.
+	\item Multiplying along each path gives
+	\begin{longtable}[]{@{}lr@{}}
+	\toprule\noalign{}
+	Path & Joint probability \\
+	\midrule\noalign{}
+	\endhead
+	\bottomrule\noalign{}
+	\endlastfoot
+	A and defective & \(0.65(0.03)=0.0195\) \\
+	A and not defective & \(0.65(0.97)=0.6305\) \\
+	B and defective & \(0.35(0.08)=0.0280\) \\
+	B and not defective & \(0.35(0.92)=0.3220\) \\
+	\end{longtable}
+	\item The defective paths are disjoint, so $P(D)=0.0195+0.0280=0.0475$.
+	\item The reverse conditional probability is
+	\[
+		P(B\mid D)=\frac{P(B\cap D)}{P(D)} =\frac{0.0280}{0.0475}=0.5895
+	\]
+	\item Since \(P(D^c)=1-0.0475=0.9525\)
+	\[
+		P(A\mid D^c)=\frac{0.6305}{0.9525}=0.6619
+	\]
+	\item Supplier and defect status are not independent because \(P(D\mid A)=0.03\), \(P(D\mid B)=0.08\), and \(P(D)=0.0475\) are not equal.
 \end{enumerate}
 
 \newpage
 
+% =======================================
 % Question 6
+% =======================================
 \subsection{Question 6}
 Let \(C\) denote carrying the pathogen and \(+\) denote a positive result.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\item
-  Sensitivity is \(P(+\mid C)=0.92\). Specificity is
-  \(P(-\mid C^c)=0.95\). Therefore, the false-positive rate is
-  \(P(+\mid C^c)=0.05\), and the false-negative rate is
-  \(P(-\mid C)=0.08\).
-\item
-  Among 10,000 plants, the expected counts are:
+	\item Sensitivity is \(P(+\mid C)=0.92\). Specificity is \(P(-\mid C^c)=0.95\). Therefore, the false-positive rate is  \(P(+\mid C^c)=0.05\), and the false-negative rate is  \(P(-\mid C)=0.08\).
+	\item Among 10,000 plants, the expected counts are
+	\begin{longtable}[]{@{}llr@{}}
+	\toprule\noalign{}
+	Category & Calculation & Expected count \\
+	\midrule\noalign{}
+	\endhead
+	\bottomrule\noalign{}
+	\endlastfoot
+	True positive & (600\(0.92\)) & 552 \\
+	False negative & (600\(0.08\)) & 48 \\
+	False positive & (9400\(0.05\)) & 470 \\
+	True negative & (9400\(0.95\)) & 8,930 \\
+	\end{longtable}
+	\item The overall positive probability is $P(+)=0.06(0.92)+0.94(0.05)=0.1022$.
+	\item Among positive results
+	\[
+		P(C\mid+)=\frac{0.06(0.92)}{0.1022} =\frac{0.0552}{0.1022}=0.5401
+	\]
+	\item The overall negative probability is \(0.06(0.08)+0.94(0.95)=0.8978\). Therefore
+	\[
+		P(C\mid-)=\frac{0.06(0.08)}{0.8978}=0.0053
+	\]
+	\item Sensitivity conditions on known pathogen status and asks about the  test result. Part 4 reverses the condition and asks about pathogen status after observing a positive result. Because only 6\% of plants carry the pathogen, false positives from the much larger pathogen free group materially affect the positive-result group.
 \end{enumerate}
 
-\begin{longtable}[]{@{}llr@{}}
-\toprule\noalign{}
-Category & Calculation & Expected count \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-True positive & (600\(0.92\)) & 552 \\
-False negative & (600\(0.08\)) & 48 \\
-False positive & (9400\(0.05\)) & 470 \\
-True negative & (9400\(0.95\)) & 8,930 \\
-\end{longtable}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item The overall positive probability is $P(+)=0.06(0.92)+0.94(0.05)=0.1022$.
-\end{enumerate}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{3}
-\tightlist
-\item Among positive results
-\end{enumerate}
-
-\[
-	P(C\mid+)=\frac{0.06(0.92)}{0.1022} =\frac{0.0552}{0.1022}=0.5401
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{4}
-\tightlist
-\item The overall negative probability is \(0.06(0.08)+0.94(0.95)=0.8978\). Therefore
-\end{enumerate}
-
-\[
-	P(C\mid-)=\frac{0.06(0.08)}{0.8978}=0.0053
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{5}
-\tightlist
-\item Sensitivity conditions on known pathogen status and asks about the  test result. Part 4 reverses the condition and asks about pathogen status after observing a positive result. Because only 6\% of plants carry the pathogen, false positives from the much larger pathogen free group materially affect the positive-result group.
-\end{enumerate}
-
-\newpage
-
+% =======================================
 % Question 7
+% =======================================
 \subsection{Question 7}
-
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
-\item
-  The standardized values are
-\end{enumerate}
-
-\[
-z_A=\frac{150-120}{15}=2.00,
-\qquad
-z_B=\frac{92-80}{5}=2.40.
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\item
-  The Laboratory B measurement is farther above its centre because it is
-  2.4 standard deviations above its mean, compared with 2.0 standard
-  deviations for the Laboratory A measurement.
-\item
-  The interval 90 to 150 is \(120\pm2(15)\). The 68-95-99.7 rule
-  therefore places approximately 95\% of the Laboratory A model in this
-  interval.
-\item
-  The exact interval probability is
-\end{enumerate}
-
-\[
-P(105<X<145)=0.7936.
-\]
-
-Approximately 79.36\% of Laboratory A measurements fall between 105 and
-145 units under the model. The right-tail probability is
-
-\[
-P(X>150)=0.0228.
-\]
-
-Thus, approximately 2.28\% lie above 150 units under the model.
-
+	\item The standardized values are
+	\[
+		z_A=\frac{150-120}{15}=2.00 \qquad z_B=\frac{92-80}{5}=2.40.
+	\]
+	\item The Laboratory B measurement is farther above its centre because it is 2.4 standard deviations above its mean, compared with 2.0 standard deviations for the Laboratory A measurement.
+	\item The interval 90 to 150 is \(120\pm2(15)\). The 68-95-99.7 rule therefore places approximately 95\% of the Laboratory A model in this interval.
+	\item The exact interval probability is
+	\[
+		P(105<X<145)=0.7936
+	\]
+	Approximately 79.36\% of Laboratory A measurements fall between 105 and 145 units under the model. The probability is
+	\[
+		P(X>150)=0.0228
+	\]
+	Thus, approximately 2.28\% lie above 150 units under the model.
 \begin{lstlisting}[language=R]
-pnorm(145, mean = 120, sd = 15) -
-  pnorm(105, mean = 120, sd = 15)  # 0.7935544
+pnorm(145, mean = 120, sd = 15) - pnorm(105, mean = 120, sd = 15)  # 0.7935544
 1 - pnorm(150, mean = 120, sd = 15) # 0.02275013
 \end{lstlisting}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{4}
-\tightlist
-\item
-  A Normal model is symmetric, while strong right-skewness and unusual
-  high values indicate a different shape. The calculated Normal areas
-  might then poorly represent the actual proportions, even if the sample
-  mean and standard deviation could still be calculated.
+	\item A Normal model is symmetric, while strong right-skewness and unusual high values indicate a different shape. The calculated Normal areas might then poorly represent the actual proportions, even if the sample mean and standard deviation could still be calculated.
 \end{enumerate}
 
-\hypertarget{question-8-percentiles-cutoffs-and-model-assessment}{%
-\subsection{Question 8: Percentiles, Cutoffs, and Model
-Assessment}\label{question-8-percentiles-cutoffs-and-model-assessment}}
 
+% =======================================
+% Question 8
+% =======================================
+\subsection{Question 8}
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
-\item
-  The central 90\% leaves 5\% in each tail, so the cumulative
-  probabilities are 0.05 and 0.95. R gives
-\end{enumerate}
-
-\[
-q_{0.05}=245.0654\text{ g},
-\qquad
-q_{0.95}=254.9346\text{ g}.
-\]
-
-Thus, the central 90\% lies approximately between 245.07 g and 254.93 g.
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  The heaviest 1\% begins at the 99th percentile:
-\end{enumerate}
-
-\[
-q_{0.99}=256.9790\text{ g}.
-\]
-
+	\item The central 90\% leaves 5\% in each tail, so the cumulative probabilities are 0.05 and 0.95.
+	\[
+		q_{0.05}=245.0654\text{ g}
+	\qquad
+		q_{0.95}=254.9346\text{ g}
+	\]
+	Thus, the central 90\% lies approximately between 245.07 g and 254.93 g.
+	\item The  1\% begins at the 99th percentile
+	\[
+		q_{0.99}=256.9790\text{ g}
+	\]
 \begin{lstlisting}[language=R]
-qnorm(c(0.05, 0.95), mean = 250, sd = 3)
-# 245.0654 254.9346
+qnorm(c(0.05, 0.95), mean = 250, sd = 3) # [245.0654, 254.9346]
 qnorm(0.99, mean = 250, sd = 3) # 256.9790
 \end{lstlisting}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{2}
-\item
-  The expected number above this cutoff is \(2000(0.01)=20\), assuming
-  the model is accurate.
-\item
-  Approximately 5\% of package masses lie below 245.0654 g, 90\% lie
-  between the central cutoffs, and 5\% lie above 254.9346 g.
-  Approximately 1\% exceed 256.9790 g.
-\item
-  The cutoffs depend on Normal tail areas, not only on the mean and
-  standard deviation. Strong right-skewness can produce a heavier upper
-  tail than the Normal model, so the 99th-percentile cutoff and central
-  interval may be inaccurate.
+	\item The expected number above this cutoff is \(2000(0.01)=20\) assuming the model is accurate.
+	\item Approximately 5\% of package masses lie below 245.0654 g, 90\% lie between the central cutoffs, and 5\% lie above 254.9346 g. Approximately 1\% exceed 256.9790 g.
+	\item The cutoffs depend on Normal tail areas, not only on the mean and standard deviation. Strong right-skewness can produce a heavier upper tail than the Normal model, so the 99th percentile cutoff and central interval may be inaccurate.
 \end{enumerate}
 
-\newpage
-
-\hypertarget{question-9-selecting-an-appropriate-count-model}{%
-\subsection{Question 9: Selecting an Appropriate Count
-Model}\label{question-9-selecting-an-appropriate-count-model}}
-
+% =======================================
+% Question 9
+% =======================================
+\subsection{Question 9}
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
-\item
-  \textbf{Binomial.} There are 20 fixed trials, two outcomes,
-  independent trials, and constant success probability 0.08.
-\item
-  \textbf{Poisson.} Colonies are counted within a fixed equal-area
-  exposure under a stable rate and independence assumption.
-\item
-  \textbf{Neither as an exact Binomial or Poisson model.} Sampling
-  without replacement makes the trials dependent, and selecting 8 of 12
-  is not a small sampling fraction. The exact model is hypergeometric.
-  Sampling with replacement, or taking a small sample from a much larger
-  collection with a stable marked proportion, could support a Binomial
-  approximation.
-\item
-  \textbf{Neither under one constant-rate Poisson model for all hours.}
-  A rate that changes substantially by time violates the stable-rate
-  assumption. Separate models for homogeneous time periods, or a model
-  that explicitly allows the rate to change with time, could be
-  considered.
+	\item \textbf{Binomial.} There are 20 fixed trials, two outcomes,independent trials, and constant success probability 0.08.
+	\item \textbf{Poisson.} Colonies are counted within a fixed equal area exposure under a stable rate and independence assumption.
+	\item \textbf{Neither as an exact Binomial or Poisson model.} Sampling without replacement makes the trials dependent, and selecting 8 of 12 is not a small sampling fraction. The exact model is hypergeometric. Sampling with replacement, or taking a small sample from a much larger collection with a stable marked proportion, could support a Binomial approximation.
+	\item \textbf{Neither under one constant-rate Poisson model for all hours.} A rate that changes substantially by time violates the stable rate assumption. Separate models for homogeneous time periods, or a model that explicitly allows the rate to change with time, could be considered.
 \end{enumerate}
 
-\hypertarget{question-10-a-binomial-model}{%
-\subsection{Question 10: A Binomial
-Model}\label{question-10-a-binomial-model}}
 
+
+% =======================================
+% Question 10
+% =======================================
+\subsection{Question 10}
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
-\item
-  The number of trials is fixed at 12; each sensor either passes or does
-  not pass; the outcomes are assumed independent; and every sensor has
-  pass probability 0.85. Therefore,
-\end{enumerate}
-
-\[
-X\sim\operatorname{Bin}(12,0.85).
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  The exact probability is
-\end{enumerate}
-
-\[
-P(X=10)=\binom{12}{10}(0.85)^{10}(0.15)^2=0.2924.
-\]
-
-The upper cumulative probability is
-
-\[
-P(X\ge10)=P(X=10)+P(X=11)+P(X=12)=0.7358.
-\]
-
+	\item The number of trials is fixed at 12; each sensor either passes or does not pass; the outcomes are assumed independent; and every sensor has pass probability 0.85. Therefore
+		\[
+			X\sim\operatorname{Bin}(12,0.85)
+		\]
+		
+		\item The exact probability is
+		
+		\[
+			P(X=10)=\binom{12}{10}(0.85)^{10}(0.15)^2=0.2924
+		\]
+		
+		The upper cumulative probability is
+		
+		\[
+			P(X\ge10)=P(X=10)+P(X=11)+P(X=12)=0.7358.
+		\]
 \begin{lstlisting}[language=R]
 dbinom(10, size = 12, prob = 0.85)                 # 0.2923585
 pbinom(9, size = 12, prob = 0.85, lower.tail=FALSE) # 0.7358181
 \end{lstlisting}
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item
-  The mean and standard deviation are
+	\item The mean and standard deviation are
+		\[
+			\mu=np=12(0.85)=10.2,
+		\]
+		
+		\[
+			\sigma=\sqrt{np(1-p)} =\sqrt{12(0.85)(0.15)}=1.2369.
+		\]
+
+	\item Across many repeated groups of 12, an average of approximately 10.2 sensors per group would pass. The pass count typically varies on a scale of about 1.24 sensors around this mean.
+
+	\item The mean is a long run average across groups. Each individual group still has a whole-number count.
 \end{enumerate}
 
-\[
-\mu=np=12(0.85)=10.2,
-\]
-
-\[
-\sigma=\sqrt{np(1-p)}
-=\sqrt{12(0.85)(0.15)}=1.2369.
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{3}
-\item
-  Across many repeated groups of 12, an average of approximately 10.2
-  sensors per group would pass. The pass count typically varies on a
-  scale of about 1.24 sensors around this mean.
-\item
-  The mean is a long-run average across groups. Each individual group
-  still has a whole-number count.
-\end{enumerate}
-
-\hypertarget{question-11-a-poisson-model-with-a-changed-exposure}{%
-\subsection{Question 11: A Poisson Model with a Changed
-Exposure}\label{question-11-a-poisson-model-with-a-changed-exposure}}
+% =======================================
+% Question 11
+% =======================================
+\subsection{Question 11}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
-\item
-  The variable counts occurrences in a fixed length, with a stable rate
-  and independent increments. The 250-metre rate is
-\end{enumerate}
+	\item The variable counts occurrences in a fixed length, with a stable rate and independent increments. The 250-metre rate is
+	\[
+	\lambda=2.4\left(\frac{250}{100}\right)=6
+	\]
+	
+	Thus, \(Y\sim\operatorname{Pois}(6)\)
 
-\[
-\lambda=2.4\left(\frac{250}{100}\right)=6.
-\]
-
-Thus, \(Y\sim\operatorname{Pois}(6)\).
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  The probabilities are
-\end{enumerate}
-
-\[
-P(Y=4)=0.1339,
-\qquad
-P(Y\le2)=0.0620,
-\qquad
-P(Y\ge1)=1-P(Y=0)=0.9975.
-\]
-
+	\item The probabilities are
+	\[
+		P(Y=4)=0.1339 \qquad P(Y\le2)=0.0620 \qquad P(Y\ge1)=1-P(Y=0)=0.9975
+	\]
 \begin{lstlisting}[language=R]
 dpois(4, lambda = 6)                         # 0.1338526
 ppois(2, lambda = 6)                         # 0.0619688
 ppois(0, lambda = 6, lower.tail = FALSE)     # 0.9975212
 \end{lstlisting}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item
-  For a Poisson model,
+	
+	\item For a Poisson model
+	\[
+		\mu=\lambda=6 \qquad \sigma^2=\lambda=6 \qquad \sigma=\sqrt6=2.4495
+	\]
+	
+	\item For 50 metres
+	\[
+		\lambda=2.4\left(\frac{50}{100}\right)=1.2
+	\]
+	
 \end{enumerate}
 
-\[
-\mu=\lambda=6,
-\qquad
-\sigma^2=\lambda=6,
-\qquad
-\sigma=\sqrt6=2.4495.
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{3}
-\tightlist
-\item
-  For 50 metres,
-\end{enumerate}
-
-\[
-\lambda=2.4\left(\frac{50}{100}\right)=1.2.
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{4}
-\tightlist
-\item
-  A changing machine condition, different material batches, clustered
-  defects, or one defect causing another nearby could violate the
-  constant-rate or independent-increments assumptions.
-\end{enumerate}
-
-\hypertarget{question-12-recovering-an-unknown-binomial-probability}{%
-\subsection{Question 12: Recovering an Unknown Binomial
-Probability}\label{question-12-recovering-an-unknown-binomial-probability}}
-
+% =======================================
+% Question 12
+% =======================================
+\subsection{Question 12}
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
-\item
-  Substitution into the variance formula gives
-\end{enumerate}
+	\item Substitution into the variance formula gives
+	\[
+		80p(1-p)=12.8
+	\]
+	Dividing by 80 and rearranging gives
+	\[
+		p^2-p+0.16=0
+	\]
 
-\[
-80p(1-p)=12.8.
-\]
+	\item Factoring or using the quadratic formula gives \(p=0.20\) or \(p=0.80\). The condition \(p<0.50\) selects \(p=0.20\).
+	
+	\item The model is \(X\sim\operatorname{Bin}(80,0.20)\) with
+	\[
+		\mu=np=80(0.20)=16
+	\]
+	and
+	\[
+		\sigma=\sqrt{12.8}=3.5777
+	\]
+	
+	\item The inclusive interval is
+	\[
+		P(14\le X\le18)=P(X\le18)-P(X\le13)=0.5151
+	\]
 
-Dividing by 80 and rearranging gives
-
-\[
-p^2-p+0.16=0.
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\item
-  Factoring or using the quadratic formula gives \(p=0.20\) or
-  \(p=0.80\). The condition \(p<0.50\) selects \(p=0.20\).
-\item
-  The model is \(X\sim\operatorname{Bin}(80,0.20)\), with
-\end{enumerate}
-
-\[
-\mu=np=80(0.20)=16
-\]
-
-and
-
-\[
-\sigma=\sqrt{12.8}=3.5777.
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{3}
-\tightlist
-\item
-  The inclusive interval is
-\end{enumerate}
-
-\[
-P(14\le X\le18)=P(X\le18)-P(X\le13)=0.5151.
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{4}
-\tightlist
-\item
-  The upper-tail probability is
-\end{enumerate}
-
-\[
-P(X\ge25)=1-P(X\le24)=0.0115.
-\]
-
+	\item The upper-tail probability is
+	\[
+		P(X\ge25)=1-P(X\le24)=0.0115
+	\]
 \begin{lstlisting}[language=R]
 pbinom(18, size = 80, prob = 0.20) -
   pbinom(13, size = 80, prob = 0.20)          # 0.5150654
@@ -757,10 +458,10 @@ pbinom(24, size = 80, prob = 0.20,
        lower.tail = FALSE)                    # 0.01148372
 \end{lstlisting}
 
-Only about 1.15\% of repeated groups would produce 25 or more
-adjustments under this model, so the result would generally be
-considered unusual. That conclusion remains conditional on the Binomial
-assumptions and the value \(p=0.20\).
+	Only about 1.15\% of repeated groups would produce 25 or more adjustments under this model, so the result would generally be considered unusual. That conclusion remains conditional on the Binomial assumptions and the value \(p=0.20\).
+\end{enumerate}
+
+
 
 \vfill
 \begin{center}
