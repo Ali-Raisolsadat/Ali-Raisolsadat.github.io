@@ -39,23 +39,18 @@ Statistics}
 \begin{document}
 \maketitle
 
-\begin{quote}
-\textit{Instructor copy. Numerical results are rounded to four decimal places where appropriate. Equivalent reasoning and interpretations should be accepted when statistically correct.}
-\end{quote}
-
-\hypertarget{question-1-a-discrete-probability-model}{%
-\subsection{Question 1: A Discrete Probability
-Model}\label{question-1-a-discrete-probability-model}}
+% Question 1
+\subsection{Question 1}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Probabilities in a discrete model must sum to 1. Therefore,
+Probabilities in a discrete model must sum to 1. So
 \end{enumerate}
 
 \[
-c=1-(0.18+0.31+0.29+0.16)=0.06.
+	c=1-(0.18+0.31+0.29+0.16)=0.06
 \]
 
 \begin{enumerate}
@@ -63,21 +58,21 @@ c=1-(0.18+0.31+0.29+0.16)=0.06.
 \setcounter{enumi}{1}
 \tightlist
 \item
-  The requested event probabilities are
+The requested event probabilities are
 \end{enumerate}
 
 \[
-P(X\ge2)=0.29+0.16+0.06=0.51,
+	P(X\ge2)=0.29+0.16+0.06=0.51
 \]
 
 \[
-P(X<3)=0.18+0.31+0.29=0.78,
+	P(X<3)=0.18+0.31+0.29=0.78
 \]
 
 and
 
 \[
-P(X\ne0)=1-P(X=0)=1-0.18=0.82.
+	P(X\ne0)=1-P(X=0)=1-0.18=0.82
 \]
 
 \begin{enumerate}
@@ -85,37 +80,30 @@ P(X\ne0)=1-P(X=0)=1-0.18=0.82.
 \setcounter{enumi}{2}
 \tightlist
 \item
-  The mean is
+The mean is
 \end{enumerate}
 
 \[
-\mu_X=0(0.18)+1(0.31)+2(0.29)+3(0.16)+4(0.06)=1.61.
+	\mu_X=0(0.18)+1(0.31)+2(0.29)+3(0.16)+4(0.06)=1.61
 \]
 
-Using either the stated variance formula or \(E(X^2)-[E(X)]^2\),
+Using either the stated variance formula or \(E(X^2)-[E(X)]^2\)
 
 \[
-E(X^2)=0^2(0.18)+1^2(0.31)+2^2(0.29)+3^2(0.16)+4^2(0.06)=3.87,
+	E(X^2)=0^2(0.18)+1^2(0.31)+2^2(0.29)+3^2(0.16)+4^2(0.06)=3.87
 \]
 
 \[
-\sigma_X^2=3.87-(1.61)^2=1.2779,
+	\sigma_X^2=3.87-(1.61)^2=1.2779
 \qquad
-\sigma_X=\sqrt{1.2779}=1.1304.
+	\sigma_X=\sqrt{1.2779}=1.1304
 \]
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{3}
-\item
-  Across many repetitions of the experiment, the long-run average number
-  showing root growth would approach approximately 1.61 per group of
-  four. The expected value is an average across repetitions, so it does
-  not need to be an outcome possible in one group.
-\item
-  The supplied R code returns \passthrough{\lstinline!sum(p) = 1!},
-  followed by mean 1.61, variance 1.2779, and standard deviation
-  approximately 1.1304.
+\item Across many repetitions of the experiment, the long run average number showing root growth would approach approximately 1.61 per group of four. The expected value is an average across repetitions, so it does not need to be an outcome possible in one group.
+\item The supplied R code returns \passthrough{\lstinline!sum(p) = 1!}, followed by mean 1.61, variance 1.2779 and standard deviation approximately 1.1304.
 \end{enumerate}
 
 \begin{lstlisting}[language=R]
@@ -127,230 +115,163 @@ variance <- sum((x - mu)^2 * p)     # 1.2779
 sqrt(variance)                      # 1.1304
 \end{lstlisting}
 
-\hypertarget{question-2-a-continuous-model-and-long-run-probability}{%
-\subsection{Question 2: A Continuous Model and Long-Run
-Probability}\label{question-2-a-continuous-model-and-long-run-probability}}
+\newpage
+
+% Question 2
+\subsection{Question 2}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
-\item
-  The base of the uniform rectangle has length \(8-2=6\). Since its area
-  must equal 1, its height is
+\item The base of the uniform rectangle has length \(8-2=6\). Since its area must equal 1, its height is $h=\frac{1}{6}$.
 \end{enumerate}
-
-\[
-h=\frac{1}{6}.
-\]
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{1}
 \tightlist
-\item
-  Uniform probabilities equal interval length divided by total length:
+\item Uniform probabilities equal interval length divided by total length:
 \end{enumerate}
 
 \[
-P(3.5\le T\le6.2)=\frac{6.2-3.5}{6}=\frac{2.7}{6}=0.45.
+	P(3.5\le T\le6.2)=\frac{6.2-3.5}{6}=\frac{2.7}{6}=0.45
 \]
 
 The two tail intervals are disjoint, so
 
 \[
-P(T<2.8\text{ or }T>7.4)
-=\frac{2.8-2}{6}+\frac{8-7.4}{6}
-=\frac{1.4}{6}=0.2333.
+	P(T<2.8\text{ or }T>7.4) =\frac{2.8-2}{6}+\frac{8-7.4}{6}=\frac{1.4}{6}=0.2333
 \]
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{2}
-\item
-  \(P(T=5)=0\). In a continuous model, probability is area over an
-  interval, and a single point has zero width. A recorded time of 5
-  minutes can still occur because measurements are rounded to finite
-  precision.
-\item
-  The expected number is \(1200(0.45)=540\). The Law of Large Numbers
-  states that the observed proportion should tend toward 0.45 as the
-  number of independent calibrations grows; it does not require exactly
-  540 in one set of 1,200.
-\item
-  A long calibration has probability
+\item \(P(T=5)=0\). In a continuous model, probability is area over an interval and a single point has zero width. A recorded time of 5 minutes can still occur because measurements are rounded to finite precision.
+\item The expected number is \(1200(0.45)=540\). The Law of Large Numbers states that the observed proportion should tend toward 0.45 as the number of independent calibrations grows; it does not require exactly 540 in one set of 1200.
 \end{enumerate}
 
-\[
-p=P(T>7.4)=\frac{8-7.4}{6}=0.10.
-\]
-
-Its risk is 0.10, or 10\%. Its odds are
-
-\[
-\frac{p}{1-p}=\frac{0.10}{0.90}=0.1111,
-\]
-
-equivalent to event-to-non-event odds of \(1:9\).
-
-\newpage
-
-\hypertarget{question-3-joint-marginal-and-conditional-probabilities}{%
-\subsection{Question 3: Joint, Marginal, and Conditional
-Probabilities}\label{question-3-joint-marginal-and-conditional-probabilities}}
+% Question 3
+\subsection{Question 3}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
-\item
-  The marginal and joint probabilities are
+\item The marginal and joint probabilities are
 \end{enumerate}
 
 \[
-P(A)=\frac{100}{400}=0.25,
-\qquad
-P(S)=\frac{150}{400}=0.375,
-\qquad
-P(A\cap S)=\frac{60}{400}=0.15.
+	P(A)=\frac{100}{400}=0.25 \qquad P(S)=\frac{150}{400}=0.375 \qquad P(A\cap S)=\frac{60}{400}=0.15
 \]
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{1}
 \tightlist
-\item
-  Among South samples,
+\item Among South samples,
 \end{enumerate}
 
 \[
-P(A\mid S)=\frac{60}{150}=0.40.
+	P(A\mid S)=\frac{60}{150}=0.40
 \]
 
-Among above-threshold samples,
+Among above-threshold samples
 
 \[
-P(S\mid A)=\frac{60}{100}=0.60.
+	P(S\mid A)=\frac{60}{100}=0.60
 \]
 
-The first denominator is all South samples; the second is all
-above-threshold samples. Thus, the first is the above-threshold rate
-within the South, while the second is the South-region share among
-above-threshold samples.
+The first denominator is all South samples; the second is all above-threshold samples. Thus, the first is the above-threshold rate within the South, while the second is the South-region share among above-threshold samples.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{2}
 \tightlist
-\item
-  The general addition rule gives
+\item The general addition rule gives
 \end{enumerate}
 
 \[
-P(S\cup A)=P(S)+P(A)-P(S\cap A)
-=0.375+0.25-0.15=0.475.
+	P(S\cup A)=P(S)+P(A)-P(S\cap A)=0.375+0.25-0.15=0.475.
 \]
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{3}
 \tightlist
-\item
-  The conditional rates are
+\item The conditional rates are
 \end{enumerate}
 
 \[
-P(A\mid N)=\frac{16}{100}=0.16,
-\quad
-P(A\mid C)=\frac{24}{150}=0.16,
-\quad
-P(A\mid S)=\frac{60}{150}=0.40.
+	P(A\mid N)=\frac{16}{100}=0.16 \quad P(A\mid C)=\frac{24}{150}=0.16 \quad P(A\mid S)=\frac{60}{150}=0.40.
 \]
 
-The higher South rate provides evidence of an association between region
-and threshold status in this dataset.
+The higher South rate provides evidence of an association between region and threshold status in this dataset.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{4}
 \tightlist
-\item
-  The program is observational, so other regional differences could
-  explain some or all of the association. Relevant variables could
-  include nearby land use, sampling season, rainfall, industrial
-  activity, or differences in sampling locations.
+\item The program is observational, so other regional differences could explain some or all of the association. Relevant variables could include nearby land use, sampling season, rainfall, industrial activity or differences in sampling locations.
 \end{enumerate}
 
-\hypertarget{question-4-overlap-complements-and-independence}{%
-\subsection{Question 4: Overlap, Complements, and
-Independence}\label{question-4-overlap-complements-and-independence}}
+\newpage 
+
+% Question 4
+\subsection{Question 4}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\item
-  The events are not disjoint because \(P(A\cap B)=0.12>0\); they can
-  occur together.
-\item
-  By the general addition rule,
+\item The events are not disjoint because \(P(A\cap B)=0.12>0\); they can occur together.
+\item By the general addition rule,
 \end{enumerate}
 
 \[
-P(A\cup B)=0.32+0.25-0.12=0.45.
+	P(A\cup B)=0.32+0.25-0.12=0.45
 \]
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{2}
 \tightlist
-\item
-  The probability of neither event is
+\item The probability of neither event is
 \end{enumerate}
 
 \[
-1-P(A\cup B)=1-0.45=0.55.
+	1-P(A\cup B)=1-0.45=0.55
 \]
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{3}
 \tightlist
-\item
-  The conditional probabilities are
+\item The conditional probabilities are
 \end{enumerate}
 
 \[
-P(A\mid B)=\frac{0.12}{0.25}=0.48,
-\qquad
-P(B\mid A)=\frac{0.12}{0.32}=0.375.
+	P(A\mid B)=\frac{0.12}{0.25}=0.48 \qquad P(B\mid A)=\frac{0.12}{0.32}=0.375
 \]
 
-The first is the resistant proportion among isolates with the marker.
-The second is the marker proportion among resistant isolates.
+The first is the resistant proportion among isolates with the marker. The second is the marker proportion among resistant isolates.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{4}
 \tightlist
-\item
-  The events are not independent because
+\item The events are not independent because
 \end{enumerate}
 
 \[
-P(A)P(B)=(0.32)(0.25)=0.08\ne0.12=P(A\cap B).
+	P(A)P(B)=(0.32)(0.25)=0.08\ne0.12=P(A\cap B)
 \]
 
 Equivalently, \(P(A\mid B)=0.48\ne0.32=P(A)\).
 
-\hypertarget{question-5-a-sequential-model-and-a-tree-diagram}{%
-\subsection{Question 5: A Sequential Model and a Tree
-Diagram}\label{question-5-a-sequential-model-and-a-tree-diagram}}
+% Question 5
+\subsection{Question 5}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\item
-  The first split is Supplier A \(0.65\) or Supplier B \(0.35\). Each
-  supplier then splits into defective and not defective. For A, those
-  probabilities are 0.03 and 0.97; for B, they are 0.08 and 0.92.
-\item
-  Multiplying along each path gives:
+\item The first split is Supplier A \(0.65\) or Supplier B \(0.35\). Each supplier then splits into defective and not defective. For A, those probabilities are 0.03 and 0.97; for B, they are 0.08 and 0.92.
+\item Multiplying along each path gives:
 \end{enumerate}
 
 \begin{longtable}[]{@{}lr@{}}
@@ -370,55 +291,44 @@ B and not defective & \(0.35(0.92)=0.3220\) \\
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{2}
 \tightlist
-\item
-  The defective paths are disjoint, so
+\item The defective paths are disjoint, so $P(D)=0.0195+0.0280=0.0475$.
 \end{enumerate}
 
-\[
-P(D)=0.0195+0.0280=0.0475.
-\]
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{3}
 \tightlist
-\item
-  The reverse conditional probability is
+\item The reverse conditional probability is
 \end{enumerate}
 
 \[
-P(B\mid D)=\frac{P(B\cap D)}{P(D)}
-=\frac{0.0280}{0.0475}=0.5895.
+	P(B\mid D)=\frac{P(B\cap D)}{P(D)} =\frac{0.0280}{0.0475}=0.5895
 \]
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{4}
 \tightlist
-\item
-  Since \(P(D^c)=1-0.0475=0.9525\),
+\item Since \(P(D^c)=1-0.0475=0.9525\),
 \end{enumerate}
 
 \[
-P(A\mid D^c)=\frac{0.6305}{0.9525}=0.6619.
+	P(A\mid D^c)=\frac{0.6305}{0.9525}=0.6619
 \]
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{5}
 \tightlist
-\item
-  Supplier and defect status are not independent because
-  \(P(D\mid A)=0.03\), \(P(D\mid B)=0.08\), and \(P(D)=0.0475\) are not
-  equal.
+\item Supplier and defect status are not independent because \(P(D\mid A)=0.03\), \(P(D\mid B)=0.08\), and \(P(D)=0.0475\) are not equal.
 \end{enumerate}
 
-\hypertarget{question-6-bayess-theorem-and-a-screening-result}{%
-\subsection{Question 6: Bayes's Theorem and a Screening
-Result}\label{question-6-bayess-theorem-and-a-screening-result}}
+\newpage
 
-Let \(C\) denote carrying the pathogen and \(+\) denote a positive
-result.
+% Question 6
+\subsection{Question 6}
+Let \(C\) denote carrying the pathogen and \(+\) denote a positive result.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -448,57 +358,42 @@ True negative & (9400\(0.95\)) & 8,930 \\
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{2}
 \tightlist
-\item
-  The overall positive probability is
+\item The overall positive probability is $P(+)=0.06(0.92)+0.94(0.05)=0.1022$.
 \end{enumerate}
-
-\[
-P(+)=0.06(0.92)+0.94(0.05)=0.1022.
-\]
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{3}
 \tightlist
-\item
-  Among positive results,
+\item Among positive results
 \end{enumerate}
 
 \[
-P(C\mid+)=\frac{0.06(0.92)}{0.1022}
-=\frac{0.0552}{0.1022}=0.5401.
+	P(C\mid+)=\frac{0.06(0.92)}{0.1022} =\frac{0.0552}{0.1022}=0.5401
 \]
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{4}
 \tightlist
-\item
-  The overall negative probability is \(0.06(0.08)+0.94(0.95)=0.8978\).
-  Therefore,
+\item The overall negative probability is \(0.06(0.08)+0.94(0.95)=0.8978\). Therefore
 \end{enumerate}
 
 \[
-P(C\mid-)=\frac{0.06(0.08)}{0.8978}=0.0053.
+	P(C\mid-)=\frac{0.06(0.08)}{0.8978}=0.0053
 \]
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{5}
 \tightlist
-\item
-  Sensitivity conditions on known pathogen status and asks about the
-  test result. Part 4 reverses the condition and asks about pathogen
-  status after observing a positive result. Because only 6\% of plants
-  carry the pathogen, false positives from the much larger pathogen-free
-  group materially affect the positive-result group.
+\item Sensitivity conditions on known pathogen status and asks about the  test result. Part 4 reverses the condition and asks about pathogen status after observing a positive result. Because only 6\% of plants carry the pathogen, false positives from the much larger pathogen free group materially affect the positive-result group.
 \end{enumerate}
 
 \newpage
 
-\hypertarget{question-7-standardization-and-normal-probabilities}{%
-\subsection{Question 7: Standardization and Normal
-Probabilities}\label{question-7-standardization-and-normal-probabilities}}
+% Question 7
+\subsection{Question 7}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
