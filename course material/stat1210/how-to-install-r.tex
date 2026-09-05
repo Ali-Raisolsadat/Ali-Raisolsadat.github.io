@@ -1,0 +1,383 @@
+\documentclass[11pt]{article}
+
+%============================================================
+% STAT 1210-2 — Installing R and RStudio
+% Fall 2026
+%============================================================
+
+\usepackage[margin=0.8in]{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{parskip}
+\usepackage{listings}
+\usepackage{tcolorbox}
+
+%------------------------------------------------------------
+% Colours
+%------------------------------------------------------------
+
+\definecolor{CourseBlue}{RGB}{41,67,98}
+\definecolor{CourseLight}{RGB}{238,243,248}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=CourseBlue,
+    urlcolor=CourseBlue
+}
+
+%------------------------------------------------------------
+% Section formatting
+%------------------------------------------------------------
+
+\titleformat{\section}
+  {\large\bfseries\color{CourseBlue}}
+  {}
+  {0pt}
+  {}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries}
+  {}
+  {0pt}
+  {}
+
+\titlespacing*{\section}{0pt}{10pt}{4pt}
+\titlespacing*{\subsection}{0pt}{7pt}{3pt}
+
+\setlist[itemize]{
+    leftmargin=1.5em,
+    itemsep=2pt,
+    topsep=3pt
+}
+
+\setlist[enumerate]{
+    leftmargin=1.8em,
+    itemsep=4pt,
+    topsep=3pt
+}
+
+%------------------------------------------------------------
+% R code formatting
+%------------------------------------------------------------
+
+\lstset{
+    language=R,
+    basicstyle=\ttfamily\small,
+    frame=single,
+    breaklines=true,
+    showstringspaces=false,
+    backgroundcolor=\color{CourseLight}
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+
+%------------------------------------------------------------
+% Document
+%------------------------------------------------------------
+
+\begin{document}
+
+\begin{center}
+
+{\Large\bfseries Installing R and RStudio}
+
+\vspace{2mm}
+
+{\large\bfseries STAT 1210-2 --- Introduction to Statistics for the Life and Social Sciences}
+
+\vspace{1mm}
+
+{\large University of Prince Edward Island \\ School of Mathematics and Computational Sciences}
+
+\vspace{1mm}
+
+Fall 2026
+
+\end{center}
+
+\vspace{2mm}
+\hrule
+\vspace{5mm}
+
+%------------------------------------------------------------
+% Introduction
+%------------------------------------------------------------
+
+\section{Before You Begin}
+
+We will occasionally use the programming language \textbf{R} in STAT 1210 to perform statistical calculations and work with data. No previous programming experience is required.
+
+For this course, you should install two programs:
+
+\begin{enumerate}
+    \item \textbf{R} --- the programming language that performs the statistical calculations.
+    \item \textbf{RStudio} --- a program that provides a more convenient environment for writing and running R code.
+\end{enumerate}
+
+\begin{tcolorbox}[
+    colback=CourseLight,
+    colframe=CourseBlue,
+    title=\textbf{Important}
+]
+You must install \textbf{R first} and then install \textbf{RStudio}. RStudio requires R to be installed on your computer.
+\end{tcolorbox}
+
+Both R and RStudio Desktop are available free of charge.
+
+%------------------------------------------------------------
+% R
+%------------------------------------------------------------
+
+\section{Step 1: Install R}
+
+R should be downloaded from the Comprehensive R Archive Network (CRAN):
+
+\begin{center}
+\url{https://cran.r-project.org/}
+\end{center}
+
+Choose the instructions below that correspond to your operating system.
+
+%------------------------------------------------------------
+% Windows
+%------------------------------------------------------------
+
+\subsection{Windows}
+
+\begin{enumerate}
+    \item Open the CRAN website: \url{https://cran.r-project.org/}
+    \item Select \textbf{Download R for Windows}.
+    \item Select \textbf{base}.
+    \item Select the link to download the latest version of R for Windows.
+    \item Once the installer has downloaded, open the file.
+    \item Follow the installation instructions. The default installation options are appropriate for this course.
+    \item When the installation is complete, close the installer.
+\end{enumerate}
+
+You do not need to change the default installation folder or customize the installation.
+
+%------------------------------------------------------------
+% macOS
+%------------------------------------------------------------
+
+\subsection{macOS}
+
+\begin{enumerate}
+    \item Open the CRAN website: \url{https://cran.r-project.org/}
+    \item Select \textbf{Download R for macOS}.
+    \item Download the current R installer appropriate for your Mac.
+    \item Open the downloaded \texttt{.pkg} file.
+    \item Follow the installation instructions.
+    \item The default installation options are appropriate for this course.
+\end{enumerate}
+
+If the download page provides different installers for Apple Silicon and Intel Macs, choose the version appropriate for your computer.
+
+%------------------------------------------------------------
+% RStudio
+%------------------------------------------------------------
+
+\section{Step 2: Install RStudio}
+
+After R has been installed, install \textbf{RStudio Desktop}.
+
+The official RStudio download page is:
+
+\begin{center}
+\url{https://posit.co/download/rstudio-desktop/}
+\end{center}
+
+RStudio is developed by \textbf{Posit}. You may therefore see the names \emph{Posit} and \emph{RStudio} on the same website.
+
+\subsection{Windows}
+
+\begin{enumerate}
+    \item Open the RStudio Desktop download page.
+    \item Download the free version of \textbf{RStudio Desktop} for Windows.
+    \item Open the downloaded installer.
+    \item Follow the installation instructions.
+    \item The default installation options are sufficient for this course.
+    \item After installation is complete, open \textbf{RStudio}.
+
+\end{enumerate}
+
+%------------------------------------------------------------
+% macOS RStudio
+%------------------------------------------------------------
+
+\subsection{macOS}
+
+\begin{enumerate}
+    \item Open the RStudio Desktop download page.
+    \item Download the free version of \textbf{RStudio Desktop} for macOS.
+    \item Open the downloaded \texttt{.dmg} file.
+    \item Drag the RStudio application into the \textbf{Applications} folder when prompted.
+    \item Open RStudio from the Applications folder.
+\end{enumerate}
+
+%------------------------------------------------------------
+% Verify
+%------------------------------------------------------------
+
+\newpage 
+
+\section{Step 3: Check That Everything Works}
+
+Open \textbf{RStudio}.
+
+You should see several panels. One of these panels is called the \textbf{Console}. The Console is where R commands can be entered and run.
+
+Find the \texttt{>} symbol in the Console and enter:
+
+\begin{lstlisting}
+2 + 2
+\end{lstlisting}
+
+Press \textbf{Enter}.
+
+R should return:
+
+\begin{lstlisting}
+[1] 4
+\end{lstlisting}
+
+If you see this result, R and RStudio are working correctly.
+
+Next, try:
+
+\begin{lstlisting}
+sqrt(25)
+\end{lstlisting}
+
+The result should be:
+
+\begin{lstlisting}
+[1] 5
+\end{lstlisting}
+
+Finally, try creating a small collection of data and calculating its mean:
+
+\begin{lstlisting}
+x <- c(2, 4, 6, 8, 10)
+mean(x)
+\end{lstlisting}
+
+R should return:
+
+\begin{lstlisting}
+[1] 6
+\end{lstlisting}
+
+You are now ready to use R for STAT 1210.
+
+%------------------------------------------------------------
+% First script
+%------------------------------------------------------------
+
+\section{Creating an R Script}
+Although commands can be entered directly into the Console, most of the R code used in this course will be written in an \textbf{R script}.
+
+To create a new script in RStudio:
+
+\begin{enumerate}
+    \item Select \textbf{File} from the menu at the top of RStudio.
+    \item Select \textbf{New File}.
+    \item Select \textbf{R Script}.
+
+\end{enumerate}
+
+A new editor window will appear. Enter:
+
+\begin{lstlisting}
+x <- c(2, 4, 6, 8, 10)
+
+mean(x)
+median(x)
+sd(x)
+\end{lstlisting}
+
+To run a line of code:
+
+\begin{enumerate}
+    \item Place the cursor on the line that you want to run.
+    \item Select \textbf{Run} near the top of the script editor.
+\end{enumerate}
+
+You can also use the keyboard shortcut:
+
+\begin{itemize}
+    \item \textbf{Windows:} Ctrl + Enter
+    \item \textbf{macOS:} Command + Enter
+\end{itemize}
+
+The result will appear in the Console.
+
+%------------------------------------------------------------
+% Saving
+%------------------------------------------------------------
+
+\section{Saving Your R Script}
+R scripts use the file extension \texttt{.R}. For example:
+
+\begin{center}
+\texttt{stat1210-practice.R}
+\end{center}
+
+You should create a folder on your computer for STAT 1210 and save your R scripts in that folder. For example:
+
+\begin{center}
+\texttt{STAT1210}
+\end{center}
+
+You may create subfolders later for lectures, assignments, and other course material.
+
+%------------------------------------------------------------
+% Packages
+%------------------------------------------------------------
+
+\section{R Packages}
+R can be extended using collections of additional functions called \textbf{packages}. We may (highly unlikely)  use several packages during the course. If a package is required, installation instructions will be provided in class. In general, a package is installed using:
+
+\begin{lstlisting}
+install.packages("package_name")
+\end{lstlisting}
+
+For example:
+
+\begin{lstlisting}
+install.packages("ggplot2")
+\end{lstlisting}
+
+A package normally needs to be installed only \textbf{once} on your computer.
+
+After installation, the package can be loaded into the current R session using:
+
+\begin{lstlisting}
+library(ggplot2)
+\end{lstlisting}
+
+Unlike installation, the \texttt{library()} command normally needs to be run again when you start a new R session and want to use that package.
+
+%------------------------------------------------------------
+% Troubleshooting
+%------------------------------------------------------------
+
+\section{Common Installation Problems}
+
+\subsection{RStudio Opens but R Does Not Work}
+Make sure that \textbf{R was installed before RStudio}. If necessary, install R from CRAN and then restart RStudio.
+
+\subsection{Your Computer Prevents the Installer from Opening}
+Make sure that you downloaded R from the official CRAN website and RStudio from the official Posit website. Your operating system may ask you to confirm that you want to open an application downloaded from the Internet.
+
+\subsection{You Have an Older Version of R}
+For this course, using a reasonably current version of R is recommended. If R is already installed on your computer and RStudio works correctly you may not need to reinstall it immediately.
+
+\subsection{You Are Still Having Problems}
+If R or RStudio does not install correctly, contact me rightaway or bring your device to me during office hours. Include a screenshot or the complete error message when asking for assistance. This makes installation problems much easier to diagnose.
+
+
+\end{document}
