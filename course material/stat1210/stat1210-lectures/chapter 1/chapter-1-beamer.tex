@@ -48,7 +48,7 @@
 \end{frame}
 
 % SLIDE 2
-\begin{frame}{The Course Roadmap: The 5-Part Journey}
+\begin{frame}{The Course Roadmap}
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
       \textbf{I: Exploring Data}
@@ -156,25 +156,25 @@
   \end{columns}
 \end{frame}
 
-% SLIDE 7
-\begin{frame}{A First Lesson: Averages Do Not Tell the Whole Story}
-  \begin{columns}[c]
-    \begin{column}{0.56\textwidth}
-      \centering
-      \lectureimage{fig_same_mean_different_data.png}
-    \end{column}
-    \begin{column}{0.41\textwidth}
-      Both samples have an average plant height of \textbf{20 cm}.
-      \begin{itemize}
-        \item \textbf{Sample A:} tightly clustered near 20 cm.
-        \item \textbf{Sample B:} much more variable.
-      \end{itemize}
-      \begin{block}{Key Idea}
-        A single number can hide important structure. \textbf{Graphs help us see what summaries miss.}
-      \end{block}
-    \end{column}
-  \end{columns}
-\end{frame}
+%% SLIDE 7
+%\begin{frame}{A First Lesson: Averages Do Not Tell the Whole Story}
+%  \begin{columns}[c]
+%    \begin{column}{0.56\textwidth}
+%      \centering
+%      \lectureimage{fig_same_mean_different_data.png}
+%    \end{column}
+%    \begin{column}{0.41\textwidth}
+%      Both samples have an average plant height of \textbf{20 cm}.
+%      \begin{itemize}
+%        \item \textbf{Sample A:} tightly clustered near 20 cm.
+%        \item \textbf{Sample B:} much more variable.
+%      \end{itemize}
+%      \begin{block}{Key Idea}
+%        A single number can hide important structure. \textbf{Graphs help us see what summaries miss.}
+%      \end{block}
+%    \end{column}
+%  \end{columns}
+%\end{frame}
 
 % =============================================================
 % PART II: INDIVIDUALS AND VARIABLES
@@ -286,25 +286,25 @@
   \textbf{The labels describe groups; the labels themselves are not measurements.}
 \end{frame}
 
-% SLIDE 12
-\begin{frame}{The Coding Trap: Numbers Can Still Be Categories}
-  Suppose a spreadsheet uses:
-  \[
-    1 = \text{Base Fertilizer}, \qquad 2 = \text{Fertilizer A}, \qquad 3 = \text{Fertilizer B}.
-  \]
-  \begin{itemize}
-    \item The values are written using numbers.
-    \item But the numbers are only \textbf{codes for categories}.
-    \item An average treatment code of $1.8$ has no useful scientific meaning.
-  \end{itemize}
-  \begin{alertblock}{Diagnostic Question}
-    \textbf{Would taking an average of these numbers have a meaningful interpretation?}
-    \begin{itemize}
-      \item Yes $\rightarrow$ usually quantitative.
-      \item No $\rightarrow$ usually categorical.
-    \end{itemize}
-  \end{alertblock}
-\end{frame}
+%% SLIDE 12
+%\begin{frame}{The Coding Trap: Numbers Can Still Be Categories}
+%  Suppose a spreadsheet uses:
+%  \[
+%    1 = \text{Base Fertilizer}, \qquad 2 = \text{Fertilizer A}, \qquad 3 = \text{Fertilizer B}.
+%  \]
+%  \begin{itemize}
+%    \item The values are written using numbers.
+%    \item But the numbers are only \textbf{codes for categories}.
+%    \item An average treatment code of $1.8$ has no useful scientific meaning.
+%  \end{itemize}
+%  \begin{alertblock}{Diagnostic Question}
+%    \textbf{Would taking an average of these numbers have a meaningful interpretation?}
+%    \begin{itemize}
+%      \item Yes $\rightarrow$ usually quantitative.
+%      \item No $\rightarrow$ usually categorical.
+%    \end{itemize}
+%  \end{alertblock}
+%\end{frame}
 
 % SLIDE 13
 \begin{frame}{Quantitative Variables: Discrete vs. Continuous}
@@ -496,21 +496,21 @@
 % =============================================================
 \section{Misleading Graphs}
 
-% SLIDE 23
-\begin{frame}{What Can Go Wrong?}
-  A graph can look polished and still communicate the data poorly.
-  \vspace{0.2cm}
-  In this chapter, we will watch for three common problems:
-  \begin{enumerate}
-    \item using a \textbf{line graph for nominal categories};
-    \item \textbf{truncating the vertical axis} of a bar graph; and
-    \item making a \textbf{pie chart from percentages with different denominators}.
-  \end{enumerate}
-  \vspace{0.2cm}
-  \begin{alertblock}{Statistical Literacy}
-    Creating a graph is only half the job. You must also be able to judge whether a graph explains \textbf{what data can't, is appropriate and without bias}.
-  \end{alertblock}
-\end{frame}
+%% SLIDE 23
+%\begin{frame}{What Can Go Wrong?}
+%  A graph can look polished and still communicate the data poorly.
+%  \vspace{0.2cm}
+%  In this chapter, we will watch for three common problems:
+%  \begin{enumerate}
+%    \item using a \textbf{line graph for nominal categories};
+%    \item \textbf{truncating the vertical axis} of a bar graph; and
+%    \item making a \textbf{pie chart from percentages with different denominators}.
+%  \end{enumerate}
+%  \vspace{0.2cm}
+%  \begin{alertblock}{Statistical Literacy}
+%    Creating a graph is only half the job. You must also be able to judge whether a graph explains \textbf{what data can't, is appropriate and without bias}.
+%  \end{alertblock}
+%\end{frame}
 
 % SLIDE 24
 \begin{frame}{Using a Line Graph for Nominal Categories}
@@ -585,12 +585,12 @@
     \item Are the \textbf{axes} clearly labeled?
     \item Are the \textbf{units} shown?
     \item Does a bar graph begin at \textbf{zero}?
-    \item Are percentages using the \textbf{same denominator}?
-    \item Is anything important hidden by the \textbf{scale, bin width, or ordering}?
+   % \item Are percentages using the \textbf{same denominator}?
+    \item Is anything important hidden by the \textbf{scale, bin width or ordering}?
     \item Does the title describe the data without exaggerating the conclusion?
   \end{itemize}
   \begin{alertblock}{Remember}
-    A graph is an argument about the data. Design choices can make that argument more honest---or more misleading.
+    A graph is an argument about the data. Design choices can make that argument more honest or more misleading.
   \end{alertblock}
 \end{frame}
 
@@ -627,11 +627,10 @@
 \end{frame}
 
 
-
 % SLIDE 30
 \begin{frame}{Anatomy of a Histogram}
   \centering
-  \lectureimage[0.92\linewidth]{fig_hist_anatomy.png}
+  \lectureimage[0.82\linewidth]{fig_hist_anatomy.png}
 \end{frame}
 
 % SLIDE 31
@@ -734,6 +733,12 @@
     \end{column}
   \end{columns}
 \end{frame}
+
+\begin{frame}{Anatomy of a Histogram}
+  \centering
+  \lectureimage[0.60\linewidth]{meme_1.jpg}
+\end{frame}
+
 
 % SLIDE 33
 \begin{frame}{How to Describe a Quantitative Distribution: SOCS}
