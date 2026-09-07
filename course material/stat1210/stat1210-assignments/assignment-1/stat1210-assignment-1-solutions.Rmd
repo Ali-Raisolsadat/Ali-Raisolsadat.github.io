@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 ```
 
 
-## Question 1: Choosing and Evaluating a Categorical Display
+## Question 1
 
 1. The **individuals** are the 235 individual seeds. The variables recorded for each seed are:
 
@@ -53,7 +53,7 @@ $$
 
 \newpage
 
-## Question 2: A Distribution Viewed in Two Ways
+## Question 2
 
 1. A reasonable SOCS description is:
 
@@ -77,7 +77,7 @@ The observation may contain important information about the instrument rather th
 
 \newpage
 
-## Question 3: Resistance of Measures of Center and Spread
+## Question 3
 
 1. For the original data, R gives approximately:
 
@@ -116,7 +116,7 @@ sd(reaction_time); IQR(reaction_time)
 
 \newpage
 
-## Question 4: Boxplots, Outlier Fences, and Scientific Interpretation
+## Question 4
 
 1. For Method A:
 
@@ -152,7 +152,7 @@ $$
 
 \newpage
 
-## Question 5: Interpreting a Scatterplot
+## Question 5
 
 1. The explanatory variable is the **vegetated shoreline percentage**, and the response variable is the **number of dragonfly species**. The ecological question asks whether the amount of shoreline vegetation may help explain or predict the observed insect diversity, making vegetation the natural explanatory variable.
 
@@ -166,7 +166,7 @@ $$
 
 \newpage
 
-## Question 6: Correlation Can Miss a Strong Pattern
+## Question 6
 
 1. The scatterplot forms a perfectly symmetric U-shaped parabola. There is no single positive or negative direction across the full range: $y$ decreases as $x$ moves from $-3$ to $0$, and then increases as $x$ moves from $0$ to $3$. This non-linear relationship is perfect and infinitely strong because $y = x^2$.
 
@@ -180,7 +180,7 @@ $$
 
 \newpage
 
-## Question 7: Least-Squares Regression by Hand and in R
+## Question 7
 
 ### Part 1: Construct and Interpret the Regression Line
 
