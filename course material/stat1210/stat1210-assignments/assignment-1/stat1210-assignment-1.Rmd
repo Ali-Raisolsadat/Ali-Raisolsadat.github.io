@@ -153,7 +153,7 @@ plot(
 ```
 
 1. Identify the explanatory and response variables and explain why these roles are reasonable for this ecological question.
-2. Describe the overall association in terms of direction, form, and strength.
+2. Describe the overall association in terms of direction, form and strength.
 3. Identify the observation that departs most clearly from the overall pattern. Explain why it is a bivariate unusual observation even if each of its two values might not be unusual when considered separately.
 4. Predict qualitatively how removing this observation would affect the correlation: would its magnitude probably become larger, become smaller, or remain about the same? Explain your reasoning based on the scatterplot.
 5. Can this observational study establish that increasing shoreline vegetation causes greater dragonfly diversity? Explain your answer and identify one plausible lurking variable.
