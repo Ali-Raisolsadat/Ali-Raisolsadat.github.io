@@ -1,0 +1,917 @@
+---
+title: "STAT $1210$"
+subtitle: "Chapter $1$ Homework"
+author: "Fall $2026$"
+date: ""
+output:
+  html_document:
+    self_contained: true
+    toc: false
+    number_sections: false
+    theme: flatly
+    highlight: tango
+---
+
+<style>
+:root {
+  --ink: #263746;
+  --muted: #667786;
+  --blue: #294d73;
+  --blue-dark: #183a5c;
+  --blue-soft: #edf3f8;
+  --line: #d8e1e8;
+  --paper: #ffffff;
+  --page: #eef2f5;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+
+.main-container {
+  max-width: 980px !important;
+  margin-top: 28px;
+  margin-bottom: 42px;
+  padding: 42px 58px 56px;
+  background: var(--paper);
+  border: 1px solid #dde5eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(31, 50, 67, 0.10);
+}
+
+h1, h2, h3 { color: var(--blue-dark); }
+
+h1.title {
+  margin-bottom: 4px;
+  font-weight: 750;
+}
+
+h3.subtitle {
+  margin-top: 0;
+  color: var(--blue);
+  font-weight: 500;
+}
+
+h2 {
+  margin-top: 2.1em;
+  padding-bottom: 0.3em;
+  border-bottom: 3px solid var(--blue);
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 1.28em;
+  line-height: 1.35;
+}
+
+.question-card {
+  margin: 1.55em 0 2em;
+  padding: 1.3em 1.45em 1.1em;
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--blue);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(35, 54, 74, 0.07);
+}
+
+table {
+  width: 100%;
+  margin: 1.1em 0 1.3em;
+  border-collapse: collapse;
+  border: 1px solid var(--line);
+}
+
+thead th {
+  padding: 0.65em 0.75em !important;
+  background: var(--blue);
+  color: white;
+  border: 0 !important;
+}
+
+tbody td {
+  padding: 0.58em 0.75em !important;
+  border-bottom: 1px solid #e5ebf0 !important;
+}
+
+tbody tr:nth-child(even) td { background: #f7f9fb; }
+
+.figure-note {
+  margin-top: -0.5em;
+  color: var(--muted);
+  font-size: 0.9em;
+  text-align: center;
+}
+
+details.solution {
+  margin-top: 1.15em;
+  border: 1px solid #bfd1df;
+  border-radius: 7px;
+  background: #f8fbfd;
+  overflow: hidden;
+}
+
+details.solution summary {
+  padding: 0.72em 0.95em;
+  color: var(--blue-dark);
+  background: var(--blue-soft);
+  cursor: pointer;
+  font-weight: 700;
+  user-select: none;
+}
+
+details.solution summary:hover { background: #e2edf5; }
+
+.solution-body {
+  padding: 0.95em 1.1em 0.75em;
+}
+
+.solution-body ol { margin-bottom: 0.25em; }
+.solution-body li { margin-bottom: 0.6em; }
+
+@media (max-width: 768px) {
+  .main-container {
+    margin-top: 0;
+    padding: 24px 20px 38px;
+    border-radius: 0;
+  }
+}
+
+@media print {
+  body { background: white; font-size: 11pt; }
+  .main-container {
+    max-width: none !important;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+  .question-card { break-inside: avoid; box-shadow: none; }
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  fig.retina = 2,
+  out.width = "88%"
+)
+
+course_blue <- "#294D73"
+course_green <- "#3F7D58"
+course_gold <- "#C6923A"
+course_red <- "#A5524A"
+soft_grid <- "#D9E1E7"
+```
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("details.solution").forEach(function(item) {
+    item.removeAttribute("open");
+  });
+});
+</script>
+
+::: {.question-card}
+### Question 1
+
+A greenhouse researcher recorded the following information for six seedlings.
+
+| Plant ID | Species | Treatment | Number of leaves | Height (cm) |
+|:--|:--|:--|--:|--:|
+| P$101$ | Bean | Control | $7$ | $18.4$ |
+| P$102$ | Bean | Fertilizer | $10$ | $22.1$ |
+| P$103$ | Sunflower | Control | $8$ | $25.6$ |
+| P$104$ | Sunflower | Fertilizer | $12$ | $31.2$ |
+| P$105$ | Tomato | Control | $9$ | $20.8$ |
+| P$106$ | Tomato | Fertilizer | $13$ | $27.5$ |
+
+1. Who are the individuals in this dataset?
+2. Which four variables were recorded about each individual?
+3. What is the purpose of the Plant ID column? Why should it not be treated as a quantitative measurement?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The individuals are the six seedlings represented by the six rows of the table.</li>
+  <li>The four variables are species, treatment, number of leaves and height. Plant ID labels the individuals rather than measuring a characteristic of interest.</li>
+  <li>Plant ID allows each seedling to be identified. Although the labels contain numbers, their numerical values do not represent amounts. So arithmetic with them would have no useful meaning.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 2
+
+A bird-monitoring project records the following information for each nest:
+
+- the bird species;
+- the nesting stage, recorded as building, eggs, hatchlings, or fledged;
+- the number of eggs;
+- the average egg mass in grams; and
+- the nest identification code.
+
+1. Classify each characteristic as categorical or quantitative.
+2. For each categorical variable, state whether it is nominal or ordinal.
+3. For each quantitative variable, state whether it is discrete or continuous.
+4. Why is the nest identification code different from an ordinary categorical variable of scientific interest?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Bird species and nesting stage are categorical. Number of eggs and average egg mass are quantitative. The nest code is an identifier.</li>
+  <li>Bird species is nominal because its categories have no natural order. Nesting stage is ordinal because the stages follow a meaningful biological order.</li>
+  <li>Number of eggs is discrete because it is a count. Average egg mass is continuous because it is measured and can, in principle, take any value in an interval.</li>
+  <li>The nest code is used to distinguish records. Its labels are not outcomes whose distribution would normally answer the scientific question.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 3
+
+For each situation, select the most appropriate graph from the following list: **bar graph, pie chart, dotplot, histogram, or time plot**. Briefly justify each choice.
+
+1. The blood types of $250$ blood donors are recorded.
+2. The germination times, in days, of $12$ seeds are recorded.
+3. The body temperature of one animal is measured every hour for $48$ hours.
+4. The shell lengths of $500$ mussels are measured.
+5. A laboratory reports the percentage of samples in four outcome categories that together account for every sample.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>A bar graph is appropriate because blood type is categorical and the separated bars can compare category frequencies.</li>
+  <li>A dotplot is appropriate because germination time is quantitative and the sample is small enough to display every observation.</li>
+  <li>A time plot is appropriate because the order of the hourly measurements is essential for detecting trends or cycles.</li>
+  <li>A histogram is appropriate because shell length is quantitative and the sample is large.</li>
+  <li>A pie chart is permissible because the four percentages are parts of the same whole and sum to $100\%$. A bar graph would also be appropriate and would usually make comparisons easier.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 4
+
+During a field survey researchers recorded the first flower species visited by each of $200$ butterflies.
+
+| Flower species | Number of visits |
+|:--|--:|
+| Milkweed | $42$ |
+| Goldenrod | $68$ |
+| Aster | $55$ |
+| Clover | $35$ |
+
+```{r butterfly-bar-chart, fig.width=7, fig.height=4.1}
+butterfly_counts <- c(Milkweed = 42, Goldenrod = 68, Aster = 55, Clover = 35)
+
+old_par <- par(mar = c(4.5, 4.4, 2.5, 1), las = 1, bty = "l")
+positions <- barplot(
+  butterfly_counts,
+  col = course_green,
+  border = NA,
+  ylim = c(0, 75),
+  ylab = "Number of visits",
+  xlab = "Flower species",
+  main = "First Flower Visited by 200 Butterflies"
+)
+abline(h = seq(0, 70, by = 10), col = soft_grid, lty = 3)
+text(positions, butterfly_counts + 3, labels = butterfly_counts, cex = 0.9)
+box(bty = "l")
+par(old_par)
+```
+
+1. What percentage of visits occurred on each flower species?
+2. Which category is the modal category and what does that mean in context?
+3. Why are the bars separated rather than touching?
+4. Would a pie chart be valid for these data? Why or why not?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The percentages are $21\%$ for milkweed, $34\%$ for goldenrod, $27.5\%$ for aster and $17.5\%$ for clover.</li>
+  <li>Goldenrod is the modal category because it has the largest frequency with $68$ of the $200$ first visits.</li>
+  <li>The bars are separated because flower species is categorical. The spaces emphasize that the categories are distinct rather than intervals on a numerical scale.</li>
+  <li>Yes. Every butterfly contributes to exactly one category so the categories are parts of one whole and their percentages sum to $100\%$. A bar graph still makes close comparisons easier.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 5
+
+The graph below compares the percentage of seeds that germinated under three storage conditions. Each percentage is based on a separate group of seeds.
+
+```{r truncated-germination-chart, fig.width=7, fig.height=4.1}
+germination_rates <- c("Cold storage" = 84, "Room temperature" = 79, "Warm storage" = 76)
+baseline <- 70
+visible_heights <- germination_rates - baseline
+
+old_par <- par(mar = c(5, 4.5, 2.6, 1), las = 1, bty = "l")
+positions <- barplot(
+  visible_heights,
+  col = c(course_blue, course_gold, course_red),
+  border = NA,
+  ylim = c(0, 20),
+  axes = FALSE,
+  axisnames = FALSE,
+  ylab = "Seeds germinated (%)",
+  main = "Seed Germination by Storage Condition"
+)
+axis(2, at = seq(0, 20, by = 5), labels = seq(70, 90, by = 5), las = 1)
+axis(1, at = positions, labels = names(germination_rates), tick = FALSE)
+abline(h = seq(0, 20, by = 5), col = soft_grid, lty = 3)
+box(bty = "l")
+par(old_par)
+```
+
+1. What feature of the graph could create a misleading impression?
+2. What is the actual difference, in percentage points, between cold storage and warm storage?
+3. How should the graph be corrected?
+4. Can the number of germinated seeds in each group be determined from this graph? Explain.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The vertical axis begins at $70\%$ rather than $0\%$. Because the visible bar lengths are severely shortened, the graph exaggerates the differences among the three rates.</li>
+  <li>The difference is $84\% - 76\% = 8$ percentage points.</li>
+  <li>A corrected bar graph should begin its vertical axis at $0\%$. The title and axis labels should remain clear, and the group sample sizes should be reported.</li>
+  <li>No. A percentage does not reveal a count unless the denominator is known. For example, $84\%$ could represent $84$ of $100$ seeds or $420$ of $500$ seeds.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 6
+
+A researcher recorded whether a frog species was detected during surveys at three wetlands.
+
+| Wetland | Surveys with a detection | Total surveys | Detection percentage |
+|:--|--:|--:|--:|
+| A | $18$ | $25$ | $72\%$ |
+| B | $130$ | $200$ | $65\%$ |
+| C | $34$ | $50$ | $68\%$ |
+
+The researcher placed the three percentages into one pie chart.
+
+```{r invalid-wetland-pie, fig.width=6.4, fig.height=4.2, out.width="72%"}
+wetland_percentages <- c("Wetland A" = 72, "Wetland B" = 65, "Wetland C" = 68)
+
+old_par <- par(mar = c(1, 1, 3, 1))
+pie(
+  wetland_percentages,
+  labels = paste0(names(wetland_percentages), "\n", wetland_percentages, "%"),
+  col = c("#527FA8", "#72A184", "#D0A254"),
+  border = "white",
+  main = "Proposed Display of Wetland Detection Percentages"
+)
+par(old_par)
+```
+
+1. Why is this pie chart not a valid representation of the data?
+2. What does the sum of the three displayed percentages reveal about the problem?
+3. Which wetland has the highest detection percentage? Which wetland has the largest number of surveys with a detection?
+4. What display would communicate the comparison more accurately?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The percentages use three different denominators and do not represent parts of one common whole. A pie chart incorrectly forces them to appear as shares of a single total.</li>
+  <li>The percentages sum to $205\%$, not $100\%$. This confirms that the values cannot be slices of one whole.</li>
+  <li>Wetland A has the highest detection percentage at $72\%$. Wetland B has the largest number of surveys with a detection, with $130$, because it also has a much larger number of surveys.</li>
+  <li>A bar graph or dot plot of the three detection percentages would be appropriate. The total number of surveys for each wetland should appear in the labels, table or caption.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 7
+
+The following dotplot shows the number of days required for $15$ seeds to germinate.
+
+```{r germination-dotplot, fig.width=7, fig.height=3.4}
+germination_days <- c(4, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 9, 9, 10, 16)
+
+old_par <- par(mar = c(4.2, 1.2, 2.5, 0.8), bty = "n")
+stripchart(
+  germination_days,
+  method = "stack",
+  offset = 0.45,
+  pch = 21,
+  cex = 1.35,
+  bg = course_green,
+  col = "white",
+  xlim = c(3, 17),
+  axes = FALSE,
+  xlab = "Germination time (days)",
+  main = "Germination Times for 15 Seeds"
+)
+axis(1, at = 4:16)
+par(old_par)
+```
+
+1. Is germination time categorical or quantitative? Is it discrete or continuous as recorded here?
+2. Describe the distribution using **SOCS**: shape, outliers, centre and spread.
+3. Should the observation at $16$ days automatically be deleted? What should happen first?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Germination time is quantitative. Because it is recorded in whole days in this dataset, it is discrete as recorded, although time itself can be measured continuously.</li>
+  <li>The distribution is unimodal and right-skewed. A possible outlier occurs at $16$ days. The centre is approximately $7$ days and the observations range from $4$ to $16$ days. Most observations lie between $5$ and $10$ days.</li>
+  <li>No. The original record should first be checked for a data entry or measurement error. If the value is correct, it may represent meaningful biological variation and should not be removed without a defensible reason.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $8$
+
+Two histograms below display the same synthetic measurements of mussel shell length. Only the number of bins has changed.
+
+```{r mussel-histograms, fig.width=8.4, fig.height=4.1, out.width="100%"}
+set.seed(1210)
+mussel_lengths <- c(rnorm(42, mean = 48, sd = 1.7),
+                    rnorm(18, mean = 57, sd = 1.2))
+
+old_par <- par(mfrow = c(1, 2), mar = c(4.2, 4, 3, 1), las = 1, bty = "l")
+hist(
+  mussel_lengths,
+  breaks = 5,
+  col = "#6D91B4",
+  border = "white",
+  main = "A. Fewer, wider bins",
+  xlab = "Shell length (mm)",
+  ylab = "Frequency"
+)
+hist(
+  mussel_lengths,
+  breaks = 15,
+  col = "#D09A4A",
+  border = "white",
+  main = "B. More, narrower bins",
+  xlab = "Shell length (mm)",
+  ylab = "Frequency"
+)
+par(old_par)
+```
+
+1. What characteristics of the distribution appear different between the two histograms?
+2. Why can changing the bin width change the viewer's impression even though the data have not changed?
+3. Which features of the data remain unchanged regardless of the bin width?
+4. What is a responsible approach to choosing a histogram bin width?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The histogram with fewer bins gives a smoother and less detailed impression. The histogram with narrower bins more clearly suggests two clusters, one near $48$ mm and another near $57$ mm, but it also appears more irregular.</li>
+  <li>A histogram groups observations into intervals. Different interval boundaries and widths change which measurements are combined, so peaks, gaps, and apparent skewness can become more or less visible.</li>
+  <li>The sample size, individual measurements, overall minimum and maximum and underlying dataset do not change. Only the grouping used for the display changes.</li>
+  <li>Several reasonable bin widths should be examined. A useful width reveals important structure without creating excessive noise and the chosen width should not be selected merely to support a preferred conclusion.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 9
+
+An air quality laboratory checks a gas sensor once per day using a certified reference gas with a concentration of $50$ ppm. The sensor should produce readings close to $50$ ppm, apart from small random measurement variation. The same $60$ daily readings are displayed as a histogram and as a time plot. The data are illustrative but represent a realistic pattern of sensor drift followed by recalibration.
+
+```{r drift-comparison, fig.width=8.4, fig.height=4.1, out.width="100%"}
+set.seed(1210)
+day <- 1:60
+sensor_reading <- c(
+  50 + rnorm(20, mean = 0, sd = 0.18),
+  50 + seq(0.05, 2.60, length.out = 25) + rnorm(25, mean = 0, sd = 0.22),
+  50 + rnorm(15, mean = 0, sd = 0.18)
+)
+
+old_par <- par(mfrow = c(1, 2), mar = c(4.2, 4.2, 3, 1), las = 1, bty = "l")
+hist(
+  sensor_reading,
+  breaks = 12,
+  col = "#7B9F89",
+  border = "white",
+  main = "A. Histogram",
+  xlab = "Sensor reading (ppm)",
+  ylab = "Frequency"
+)
+plot(
+  day,
+  sensor_reading,
+  type = "o",
+  pch = 19,
+  cex = 0.50,
+  lwd = 1,
+  col = course_blue,
+  main = "B. Time plot",
+  xlab = "Day",
+  ylab = "Sensor reading (ppm)"
+)
+abline(h = 50, col = course_red, lty = 2, lwd = 1.5)
+par(old_par)
+```
+
+1. What information does the histogram communicate effectively?
+2. What important pattern is hidden by the histogram but visible in the time plot?
+3. Why is time order essential in this setting?
+4. What likely measurement issue should the laboratory investigate and what might explain the sudden change around day $46$?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The histogram summarizes the overall distribution of the readings, including their approximate range, clusters, centre and frequency within intervals. It does not show when each reading occurred.</li>
+  <li>The time plot shows readings that are fairly stable around $50$ ppm for approximately the first $20$ days, followed by a noisy upward drift through day $45$. At about day $46$, the readings suddenly return to values near $50$ ppm.</li>
+  <li>Time order reveals whether the measurement process remains stable and when a change begins. Without it, the gradual loss of calibration and the later return to the target value could be mistaken for ordinary variation in one distribution.</li>
+  <li>The laboratory should investigate sensor or calibration drift, which could be related to sensor aging, contamination or changing environmental conditions. The sudden return near $50$ ppm suggests that the sensor may have been recalibrated, cleaned, repaired or replaced around day $46$; the maintenance log should be checked before drawing a conclusion.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 10
+
+An economics report presents the illustrative data below. Average hourly wages and the consumer price level are both converted to indices with $2018$ set equal to $100$. Indexing allows their relative changes to be compared even though the original variables have different units.
+
+```{r wage-price-indices, fig.width=7.4, fig.height=4.4}
+year <- 2018:2026
+average_wage <- c(20.0, 20.5, 21.0, 21.6, 22.8, 24.0, 25.4, 26.5, 28.0)
+price_index <- c(100, 102, 104, 107, 114, 121, 127, 131, 135)
+wage_index <- average_wage / average_wage[1] * 100
+
+old_par <- par(mar = c(4.2, 4.5, 3, 1), las = 1, bty = "l")
+matplot(
+  year,
+  cbind(wage_index, price_index),
+  type = "o",
+  pch = c(16, 17),
+  lty = 1,
+  lwd = 2,
+  col = c(course_blue, course_red),
+  ylim = c(98, 143),
+  xaxt = "n",
+  xlab = "Year",
+  ylab = "Index (2018 = 100)",
+  main = "Illustrative Wage and Price Indices"
+)
+axis(1, at = year)
+abline(h = 100, col = soft_grid, lty = 3)
+legend(
+  "topleft",
+  legend = c("Average hourly wage", "Consumer price level"),
+  col = c(course_blue, course_red),
+  pch = c(16, 17),
+  lty = 1,
+  lwd = 2,
+  bty = "n"
+)
+par(old_par)
+```
+
+1. Why is a time plot appropriate for these data? Identify the time variable and the two measured series.
+2. Describe the trend in each series. Calculate the percentage change in average hourly wage and in the consumer price level from $2018$ to $2026$.
+3. A headline claims, **“Workers are $40\%$ better off than in $2018$.”** Explain why the graph does not support this conclusion.
+4. A simple purchasing-power index can be calculated as
+
+   $$\text{Purchasing-power index}=\frac{\text{wage index}}{\text{price index}}\times 100$$
+
+   Calculate this index for $2026$ and interpret the result relative to $2018$.
+5. Identify one additional piece of information that would be needed before making a broad conclusion about whether workers are financially better off.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>A time plot is appropriate because the observations are recorded across successive years and the goal is to study change over time. The time variable is year. The two measured series are the **average hourly wage** index and the **consumer price level** index.</li>
+  <li>Both series increase but the price level rises more rapidly during the middle years. The average wage changes from $20.00$ dollars to $28.00$ dollars, so its percentage increase is $$\frac{28-20}{20}\times100\%=40\%$$. The price index rises from $100$ to $135$, an increase of $35\%$.</li>
+  <li>The $40\%$ figure is a nominal wage increase and does not account for the $35\%$ increase in prices. Financial well-being depends partly on what wages can purchase, not only on the number of dollars earned. The graph also shows averages and therefore does not establish that every worker experienced the same wage change.</li>
+  <li>In $2026$, the wage index is $140$ and the price index is $135$. Therefore $$\frac{140}{135}\times100\approx103.7$$ Under this simplified comparison, average purchasing power is about $3.7\%$ higher than in $2018$, not $40\%$ higher.</li>
+  <li>Useful additional information could include the distribution of wage changes across workers, industries or regions; changes in hours worked; taxes and benefits; or whether the price index reflects the spending patterns of the population being discussed.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 11
+
+A municipal public health office received restaurant related illness complaints from four districts during one year. The figures below are illustrative.
+
+| District | Number of restaurants | Complaints received |
+|:--|--:|--:|
+| North | $120$ | $72$ |
+| Central | $800$ | $160$ |
+| South | $240$ | $96$ |
+| West | $90$ | $45$ |
+
+A newspaper graph displays only the number of complaints and concludes that restaurants in the Central district present the greatest concern.
+
+1. Why could comparing only the complaint counts be misleading?
+2. Calculate the number of complaints per $100$ restaurants for each district.
+3. Which district has the largest complaint count? Which district has the highest complaint rate?
+4. What graph would be appropriate for comparing complaint rates across districts? What additional information should accompany the graph?
+5. Can these data establish that restaurants in the district with the highest complaint rate are less safe? Explain one limitation.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The districts contain very different numbers of restaurants. A district with more restaurants has more opportunities to generate complaints so a large count does not necessarily represent a large complaint rate.</li>
+  <li>The rates per $100$ restaurants are $$\frac{72}{120}\times100=60$$ for North $$\frac{160}{800}\times100=20$$ for Central $$\frac{96}{240}\times100=40$$ for South and $$\frac{45}{90}\times100=50$$ for West.</li>
+  <li>Central has the largest complaint count with $160$ complaints. North has the highest complaint rate with $60$ complaints per $100$ restaurants.</li>
+  <li>A bar graph or dot plot of complaints per $100$ restaurants would allow the rates to be compared. The number of restaurants and the time period should also be reported so that the denominators and scope are clear.</li>
+  
+```{r complaint-rate-plots, echo=FALSE, warning=FALSE, message=FALSE, fig.width=9, fig.height=4.2, out.width="100%"}
+districts <- c("North", "Central", "South", "West")
+restaurants <- c(120, 800, 240, 90)
+complaints <- c(72, 160, 96, 45)
+
+rates <- complaints / restaurants * 100
+
+old_par <- par(
+  mfrow = c(1, 2),
+  mar = c(5, 4.5, 3, 1),
+  las = 1,
+  bty = "l"
+)
+
+# Bar graph
+bar_positions <- barplot(
+  rates,
+  names.arg = districts,
+  col = course_blue,
+  border = NA,
+  ylim = c(0, 70),
+  ylab = "Complaints per 100 restaurants",
+  main = "A. Bar Graph"
+)
+
+text(
+  bar_positions,
+  rates + 3,
+  labels = rates,
+  cex = 0.9
+)
+
+# Dotplot
+dotchart(
+  rates,
+  labels = paste0(districts, " (n = ", restaurants, ")"),
+  pch = 19,
+  color = course_blue,
+  xlim = c(0, 70),
+  xlab = "Complaints per 100 restaurants",
+  main = "B. Dotplot"
+)
+
+par(old_par)
+```
+
+  <li>No. Complaint rates may be affected by differences in reporting behaviour, restaurant type, customer volume or inspection practices. The number of restaurants also does not measure how many customers each district served.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 12
+
+An emergency department summarized the waiting times of $140$ patients using intervals of different widths.
+
+| Waiting time (minutes) | Interval width | Number of patients |
+|:--|--:|--:|
+| $0$ to under $15$ | $15$ | $24$ |
+| $15$ to under $30$ | $15$ | $36$ |
+| $30$ to under $60$ | $30$ | $48$ |
+| $60$ to under $120$ | $60$ | $32$ |
+
+The proposed display gives every interval the same physical width.
+
+```{r unequal-waiting-time-bins, fig.width=7.2, fig.height=4.2}
+waiting_counts <- c(24, 36, 48, 32)
+waiting_labels <- c("0–<15", "15–<30", "30–<60", "60–<120")
+
+old_par <- par(mar = c(4.8, 4.5, 2.8, 1), las = 1, bty = "l")
+barplot(
+  waiting_counts,
+  names.arg = waiting_labels,
+  space = 0,
+  col = course_blue,
+  border = "white",
+  ylim = c(0, 55),
+  xlab = "Waiting-time interval (minutes)",
+  ylab = "Number of patients",
+  main = "Proposed Display of Emergency Waiting Times"
+)
+abline(h = seq(0, 50, by = 10), col = soft_grid, lty = 3)
+box(bty = "l")
+par(old_par)
+```
+
+1. Why is the proposed graph not a valid histogram?
+2. Which interval contains the largest number of patients?
+3. In a histogram with unequal interval widths, rectangle area should represent frequency. Calculate the frequency density for each interval using
+
+   $$\text{frequency density}=\frac{\text{frequency}}{\text{interval width}}.$$
+
+4. Which interval would have the greatest height in the corrected histogram?
+5. Describe how the horizontal and vertical axes should be constructed in the corrected display.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The numerical intervals do not have equal widths but the graph draws them as equally wide categories. This gives the $60$ minute interval the same horizontal width as each $15$ minute interval and distorts the distribution.</li>
+  <li>The interval from $30$ to under $60$ minutes contains the largest number of patients ($48$).</li>
+  <li>The frequency densities are $$\frac{24}{15}=1.6$$ $$\frac{36}{15}=2.4$$ $$\frac{48}{30}=1.6$$ and $$\frac{32}{60}\approx0.53$$ patients per minute, respectively.</li>
+  <li>The interval from $15$ to under $30$ minutes would be tallest because it has the greatest frequency density, $2.4$ patients per minute.</li>
+  <li>The horizontal axis should be a continuous waiting time scale from $0$ to $120$ minutes so the four rectangles have widths of $15$, $15$, $30$ and $60$ minutes. The vertical axis should show frequency density. Each rectangle's area will then correspond to the number of patients in its interval.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 13
+
+An environmental team measured dissolved oxygen in a river on six dates. Lower dissolved oxygen concentrations can place aquatic organisms under stress. The measurements are illustrative.
+
+| Sampling date | Dissolved oxygen (mg/L) |
+|:--|--:|
+| June $1$ | $9.1$ |
+| June $2$ | $8.8$ |
+| June $3$ | $8.4$ |
+| June $10$ | $8.0$ |
+| July $1$ | $7.7$ |
+| August $1$ | $7.5$ |
+
+The analyst produced the following time plot by placing consecutive observations at equal distances along the horizontal axis.
+
+```{r irregular-river-sampling, fig.width=7.4, fig.height=4.3}
+sample_labels <- c("Jun 1", "Jun 2", "Jun 3", "Jun 10", "Jul 1", "Aug 1")
+dissolved_oxygen <- c(9.1, 8.8, 8.4, 8.0, 7.7, 7.5)
+
+old_par <- par(mar = c(5.5, 4.5, 2.8, 1), las = 1, bty = "l")
+plot(
+  seq_along(dissolved_oxygen),
+  dissolved_oxygen,
+  type = "o",
+  pch = 19,
+  lwd = 2,
+  col = course_blue,
+  xaxt = "n",
+  xlab = "Sampling date",
+  ylab = "Dissolved oxygen (mg/L)",
+  main = "River Monitoring Results",
+  ylim = c(7.2, 9.4)
+)
+axis(1, at = seq_along(sample_labels), labels = sample_labels, las = 2)
+abline(h = seq(7.5, 9.0, by = 0.5), col = soft_grid, lty = 3)
+par(old_par)
+```
+
+1. What impression does the equal spacing create about the rate of change over time?
+2. Why is that impression misleading?
+3. During which part of the study did dissolved oxygen decline most rapidly? Support your answer using the dates and measurements.
+4. How should the horizontal axis be corrected?
+5. Even after correcting the axis why should the connecting lines be interpreted cautiously?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The equal spacing makes the measurements appear to decline at a fairly steady rate from June through August.</li>
+  <li>The actual gaps between measurements are $1$ day, $1$ day, $7$ days, $21$ days and $31$ days. Treating these unequal gaps as equal visually stretches short periods and compresses long periods.</li>
+  <li>The most rapid observed decline occurred from June $1$ to June $3$. The concentration fell by $0.7$ mg/L in two days. Later decreases occurred over much longer periods.</li>
+  <li>The measurements should be plotted against actual calendar dates on a continuous date axis. For example, the horizontal distance between July $1$ and August $1$ should be much larger than the distance between June $1$ and June $2$.</li>
+  <li>A line between two observations does not show what happened on the unmeasured days. Sudden changes or temporary recoveries could have occurred between sampling dates particularly across the longer gaps.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 14
+
+A municipal report states that a recycling program diverted $120$ tonnes of material from landfill in $2025$ and $180$ tonnes in $2026$. An infographic represents each total with a circle whose **radius** is proportional to the number of tonnes.
+
+```{r recycling-circle-graphic, fig.width=7.2, fig.height=4.1}
+old_par <- par(mar = c(1, 1, 3, 1), bty = "n")
+plot.new()
+plot.window(xlim = c(0, 5), ylim = c(-1.5, 1.8), asp = 1)
+symbols(
+  x = c(1.25, 3.75),
+  y = c(0, 0),
+  circles = c(0.65, 0.975),
+  inches = FALSE,
+  add = TRUE,
+  bg = c("#7EA68A", "#3F7D58"),
+  fg = "white"
+)
+text(c(1.25, 3.75), c(0, 0), labels = c("120", "180"), col = "white", font = 2, cex = 1.1)
+text(c(1.25, 3.75), c(-1.25, -1.25), labels = c("2025", "2026"), cex = 1.05)
+title("Material Diverted from Landfill (tonnes)")
+par(old_par)
+```
+
+1. By what factor did the reported tonnage increase from $2025$ to $2026$? What was the percentage increase?
+2. Because viewers perceive the **area** of each circle, calculate the ratio of the displayed circle areas. Recall that the area of a circle is $A=\pi r^2$.
+3. How does the visual comparison exaggerate the actual change?
+4. Describe two fairer ways to display the two values.
+5. If circles must be used, by what factor should the $2026$ radius increase so that circle area, rather than radius, is proportional to tonnage?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The tonnage increased by a factor of $$\frac{180}{120}=1.5$$. This represents a $$\frac{180-120}{120}\times100\%=50\%$$ increase.</li>
+  <li>The radius ratio is $1.5$ so the area ratio is $1.5^2=2.25$. The $2026$ circle therefore appears to have $2.25$ times the area of the $2025$ circle.</li>
+  <li>The data increased by $50\%$ but the displayed area increased by $125\%$. The graphic therefore makes the increase appear substantially larger than it was.</li>
+  <li>A bar graph beginning at zero would provide a fair comparison. A labelled dot plot on a common numerical scale would also work. A simple table with both values is sufficient when only two totals are compared.</li>
+  <li>The radius should increase by $\sqrt{1.5}\approx1.225$, or about $22.5\%$, because squaring this radius factor produces the required area factor of $1.5$.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 15
+
+An electricity grid operator recorded the daily peak demand during a two-week heat event. A report displays both the observed daily values and a centred three day moving average. The data are illustrative.
+
+```{r electricity-demand-smoothing, fig.width=7.6, fig.height=4.4}
+day <- 1:14
+peak_demand <- c(40, 41, 42, 43, 44, 60, 45, 44, 43, 42, 41, 40, 39, 38)
+moving_average <- as.numeric(stats::filter(peak_demand, rep(1 / 3, 3), sides = 2))
+
+old_par <- par(mar = c(4.3, 4.5, 2.8, 1), las = 1, bty = "l")
+plot(
+  day,
+  peak_demand,
+  type = "o",
+  pch = 19,
+  lwd = 1.4,
+  col = "#A5524A",
+  ylim = c(35, 63),
+  xlab = "Day",
+  ylab = "Peak electricity demand (GW)",
+  main = "Daily Peak Electricity Demand"
+)
+lines(day, moving_average, type = "o", pch = 17, lwd = 2.2, col = course_blue)
+abline(h = seq(35, 60, by = 5), col = soft_grid, lty = 3)
+legend(
+  "topright",
+  legend = c("Observed daily demand", "Centred 3-day moving average"),
+  col = c("#A5524A", course_blue),
+  pch = c(19, 17),
+  lty = 1,
+  lwd = c(1.4, 2.2),
+  bty = "n"
+)
+par(old_par)
+```
+
+1. Why is a time plot appropriate for these data?
+2. What is the largest observed daily demand and on which day did it occur?
+3. Calculate the centred three day moving average for day $6$. How does it compare with the observed value on that day?
+4. A summary based only on the moving average line states **"Demand remained below $50$ GW throughout the event"**. Is this statement accurate? Explain.
+5. Which series is more important for short-term capacity planning, and which is more useful for describing the underlying trend? What information about the moving average should appear in the graph or caption?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>A time plot preserves the order of the daily observations and reveals changes, unusual peaks and short-term patterns across the event.</li>
+  <li>The largest observed daily demand is $60$ GW on day $6$.</li>
+  <li>The centred moving average for day $6$ is $$\frac{44+60+45}{3}\approx49.7$$ GW. Averaging the spike with the adjacent days reduces its displayed height by approximately $10.3$ GW.</li>
+  <li>No. The observed demand reached $60$ GW on day $6$. The statement describes the smoothed line but incorrectly presents it as a statement about the actual daily peaks.</li>
+  <li>The observed series is essential for capacity planning because the grid must be able to meet short lived peaks. The moving average is useful for describing the broader trend. The graph or caption should identify the smoothing method, the three day window and whether the average is centred or trailing. Displaying the raw observations alongside the smoothed series prevents the peaks from being hidden.</li>
+</ol>
+</div>
+</details>
+:::
