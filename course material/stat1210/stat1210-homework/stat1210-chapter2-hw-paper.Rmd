@@ -1,0 +1,859 @@
+---
+title: "STAT $1210$"
+subtitle: "Chapter $2$ Homework"
+author: "Fall $2026$"
+date: ""
+output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: false
+    number_sections: false
+geometry: margin=0.75in
+fontsize: 10pt
+header-includes:
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  fig.retina = 2,
+  fig.pos = "H",
+  out.width = "88%"
+)
+
+course_blue <- "#294D73"
+course_green <- "#3F7D58"
+course_gold <- "#C6923A"
+course_red <- "#A5524A"
+soft_grid <- "#D9E1E7"
+```
+
+## Questions
+
+### Question 1
+
+A freshwater researcher measured the dissolved oxygen concentration ($\text{ mg/L}$) in a pond on ten mornings:
+
+$$
+7.8\quad 8.1\quad 7.6\quad 8.3\quad 8.0\quad 7.9\quad 7.5\quad 8.0\quad 7.7\quad 7.8
+$$
+
+1. Calculate the mean dissolved oxygen concentration.
+2. Interpret the mean in the context of the study.
+3. Is the mean necessarily one of the observed measurements? Explain.
+
+
+### Question 2
+
+The waiting times, in minutes, for eleven clients at a community service office were
+
+$$
+18\quad 22\quad 25\quad 27\quad 31\quad 34\quad 50\quad 20\quad 22\quad 48\quad 34
+$$
+
+1. Find the median waiting time and state its location in the ordered list.
+2. An eighth client with a waiting time of $29$ minutes is added. Find the new median.
+3. Why does the method for finding the median change when the sample size changes from odd to even?
+
+
+### Question 3
+
+A transit agency recorded the delays, in minutes, for five buses on a route:
+
+$$
+2\quad 3\quad 3\quad 4\quad 5
+$$
+
+A data-entry error changes the last value from $5$ minutes to $35$ minutes.
+
+1. Calculate the mean and median before the error.
+2. Calculate the mean and median after the error.
+3. Which measure of centre is more resistant to this unusual value?
+4. If the agency reported only the mean after the error, what misleading impression might be created?
+
+\newpage
+
+### Question 4
+
+Eight water samples have a reported mean nitrate concentration of $6.4$ mg/L. Seven of the measurements are
+
+$$
+5.8\quad 6.1\quad 6.3\quad 6.5\quad 6.7\quad 6.8\quad 6.2
+$$
+
+1. What total concentration is required for all eight measurements?
+2. Find the missing measurement.
+3. Verify your answer by recalculating the mean.
+4. Why is it important to use all eight observations when converting the mean back to a total?
+
+
+### Question 5
+
+For each distribution below, decide whether the mean is likely to be less than, approximately equal to or greater than the median. Then choose either the mean and standard deviation or the median and interquartile range as the more appropriate summaries.
+
+1. Annual household repair costs, where most households have modest costs but a few require very expensive repairs.
+2. Repeated readings from a calibrated instrument that form an approximately symmetric distribution with no outliers.
+3. Scores on an easy examination, where most students score highly but a small number receive much lower scores.
+
+Explain each choice using the shape of the distribution.
+
+
+### Question 6
+
+Biologists counted frog calls during evening surveys at two wetlands. Wetland A was surveyed $12$ times and had a mean of $18$ calls per survey. Wetland B was surveyed $28$ times and had a mean of $11$ calls per survey.
+
+1. How many frog calls were recorded across the surveys at each wetland?
+2. Calculate the mean number of calls per survey across all $40$ surveys.
+3. A student averages the two reported means and obtains $14.5$. Why is this not the correct combined mean?
+4. Under what condition would simply averaging the two group means produce the correct combined mean?
+
+### Question 7
+
+The operating lives, in days, of $11$ air-quality sensors are listed in increasing order:
+
+$$
+42\quad 45\quad 47\quad 48\quad 50\quad 52\quad 54\quad 55\quad 58\quad 60\quad 81
+$$
+
+Use the hand-calculation method from class: when $n$ is odd, exclude the overall median before finding the quartiles.
+
+1. Find the median.
+2. Find $Q_1$ and $Q_3$.
+3. Calculate the IQR.
+4. Write the five number summary.
+5. Interpret the IQR in context.
+
+\newpage
+
+### Question 8
+
+The commute times, in minutes, for $12$ workers are
+
+$$
+18\quad 20\quad 22\quad 24\quad 25\quad 27\quad 29\quad 31\quad 33\quad 35\quad 38\quad 44
+$$
+
+1. Find the median.
+2. Find $Q_1$ and $Q_3$ using the median-of-halves method.
+3. Calculate the IQR and write the five number summary.
+4. Approximately what percentage of observations lie between $Q_1$ and $Q_3$?
+5. Does the IQR describe the full spread of the commute times? Explain.
+
+
+### Question 9
+
+A greenhouse compared the weekly growth of seedlings receiving three nutrient treatments. The boxplots summarize the illustrative results.
+
+```{r seedling-boxplots, fig.width=7.2, fig.height=4.4}
+treatment_a <- c(12, 14, 15, 16, 17, 18, 19, 20, 21, 22)
+treatment_b <- c(10, 13, 16, 20, 24, 28, 31, 35, 40, 45)
+treatment_c <- c(15, 16, 16, 17, 17, 18, 18, 19, 20, 33)
+
+old_par <- par(mar = c(4.5, 4.5, 2.8, 1), las = 1, bty = "l")
+boxplot(
+  list("Treatment A" = treatment_a,
+       "Treatment B" = treatment_b,
+       "Treatment C" = treatment_c),
+  col = c("#6F92B3", "#D1A353", "#72A184"),
+  border = course_blue,
+  ylab = "Weekly growth (mm)",
+  main = "Seedling Growth under Three Nutrient Treatments",
+  ylim = c(8, 47)
+)
+abline(h = seq(10, 45, by = 5), col = soft_grid, lty = 3)
+boxplot(
+  list("Treatment A" = treatment_a,
+       "Treatment B" = treatment_b,
+       "Treatment C" = treatment_c),
+  col = adjustcolor(c("#6F92B3", "#D1A353", "#72A184"), alpha.f = 0.85),
+  border = course_blue,
+  add = TRUE,
+  axes = FALSE
+)
+par(old_par)
+```
+
+1. Which treatment has the largest median weekly growth?
+2. Which treatment has the largest IQR?
+3. Which treatment has the smallest IQR, and what does that indicate?
+4. Identify the suspected outlier and describe it in context.
+5. Why would comparing only the full ranges give an incomplete picture of consistency?
+
+\newpage
+
+### Question 10
+
+The processing times, in days, for $12$ permit applications were
+
+$$
+2\quad 3\quad 4\quad 4\quad 5\quad 6\quad 6\quad 7\quad 8\quad 9\quad 10\quad 18
+$$
+
+1. Calculate the five number summary.
+2. Calculate the IQR.
+3. Calculate the lower and upper outlier fences using the $1.5\times IQR$ rule.
+4. Is any observation a suspected outlier?
+5. Describe the boxplot that should be drawn, including the locations of the box, median, whiskers and any separate point.
+
+
+### Question 11
+
+A county monitors nitrate concentrations in groundwater. For one set of readings, the first and third quartiles are $Q_1=2.4$ mg/L and $Q_3=3.2$ mg/L. The observed concentrations are
+
+$$
+1.9\quad 2.1\quad 2.4\quad 2.6\quad 2.8\quad 3.0\quad 3.2\quad 3.5\quad 4.6\quad 7.8
+$$
+
+1. Calculate the IQR.
+2. Calculate the lower and upper outlier fences.
+3. Which readings are identified as suspected outliers?
+4. Does the $1.5\times IQR$ rule prove that these values are errors? Explain.
+5. Give two reasonable actions the county should take before deciding whether to remove or correct either value.
+
+
+### Question 12
+
+Seven deliveries initially had the following travel times in minutes:
+
+$$
+20\quad 22\quad 23\quad 24\quad 26\quad 27\quad 28
+$$
+
+Suppose the final delivery instead takes $70$ minutes because of a major road closure.
+
+1. Calculate the mean and median for the original data.
+2. Calculate the mean and median after replacing $28$ with $70$.
+3. Calculate the IQR before and after the replacement.
+4. Which numerical summaries are resistant to this change?
+5. Without calculating first, would you expect the standard deviation to increase, decrease or remain unchanged? Explain. Then use the values in the solution to check your reasoning.
+
+\newpage
+
+### Question 13
+
+The operating times, in hours, of five prototype batteries are
+
+$$
+4\quad 6\quad 8\quad 10\quad 12
+$$
+
+1. Calculate the sample mean.
+2. Find each deviation $x_i-\bar{x}$ and verify that the deviations sum to $0$.
+3. Calculate the sum of squared deviations.
+4. Calculate the sample variance using
+   $$s^2=\frac{\sum (x_i-\bar{x})^2}{n-1}$$
+5. Calculate and interpret the sample standard deviation.
+6. Why is the standard deviation easier to interpret than the variance in this example?
+
+
+### Question 14
+
+Two prototype battery models have the following operating times.
+
+$$
+\begin{aligned}
+\text{Model A: }&8,\ 9,\ 10,\ 10,\ 11,\ 12\\
+\text{Model B: }&2,\ 6,\ 9,\ 11,\ 14,\ 18
+\end{aligned}
+$$
+
+```{r battery-dotplots, fig.width=7.2, fig.height=4.2}
+model_a <- c(8, 9, 10, 10, 11, 12)
+model_b <- c(2, 6, 9, 11, 14, 18)
+
+old_par <- par(mar = c(4.5, 4.5, 2.8, 1), las = 1, bty = "l")
+stripchart(
+  list("Model A" = model_a, "Model B" = model_b),
+  method = "stack",
+  vertical = TRUE,
+  pch = 19,
+  col = c(course_blue, course_gold),
+  cex = 1.35,
+  ylim = c(0, 20),
+  ylab = "Operating time (hours)",
+  main = "Operating Times for Two Battery Models"
+)
+abline(h = seq(0, 20, by = 2), col = soft_grid, lty = 3)
+stripchart(
+  list("Model A" = model_a, "Model B" = model_b),
+  method = "stack",
+  vertical = TRUE,
+  pch = 19,
+  col = c(course_blue, course_gold),
+  cex = 1.35,
+  add = TRUE
+)
+par(old_par)
+```
+
+1. Calculate the mean and median for each model.
+2. Which model has the larger range?
+3. Calculate the sample standard deviation for each model.
+4. Which model is more consistent in its operating time? Explain.
+5. Why would reporting only the means hide an important difference between the models?
+
+\newpage
+
+### Question 15
+
+The histograms below show three illustrative distributions. The units differ across the three settings, so compare their shapes rather than their numerical scales.
+
+```{r shape-histograms, fig.width=8.2, fig.height=3.5}
+symmetric_data <- c(42, 45, 47, 48, 49, 50, 51, 52, 53, 55, 58)
+right_skewed_data <- c(1, 1, 2, 2, 2, 3, 3, 4, 6, 9, 15)
+outlier_data <- c(20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 50)
+
+old_par <- par(mfrow = c(1, 3), mar = c(3.8, 3.6, 2.6, 0.8), las = 1, bty = "l")
+hist(
+  symmetric_data,
+  breaks = seq(40, 60, by = 4),
+  col = "#7E9DBA",
+  border = "white",
+  main = "A",
+  xlab = "Observed value",
+  ylab = "Frequency"
+)
+hist(
+  right_skewed_data,
+  breaks = seq(0, 16, by = 2),
+  col = "#D1A353",
+  border = "white",
+  main = "B",
+  xlab = "Observed value",
+  ylab = ""
+)
+hist(
+  outlier_data,
+  breaks = seq(18, 54, by = 6),
+  col = "#78A087",
+  border = "white",
+  main = "C",
+  xlab = "Observed value",
+  ylab = ""
+)
+par(old_par)
+```
+
+For each histogram:
+
+1. Describe the shape and identify any visible unusual feature.
+2. State whether the mean is likely to be less than, approximately equal to or greater than the median.
+3. Choose the mean and standard deviation or the median and IQR as the more appropriate summaries.
+4. Explain why the same pair of summaries is not automatically best for every distribution.
+
+
+### Question 16
+
+A news report describes the following sale prices, in thousands of dollars, for ten homes in a small neighbourhood:
+
+$$
+240\quad 250\quad 255\quad 260\quad 265\quad 270\quad 280\quad 295\quad 310\quad 1200
+$$
+
+1. Calculate the mean and median sale price.
+2. Calculate $Q_1$, $Q_3$ and the IQR using the hand-calculation method.
+3. Use the $1.5\times IQR$ rule to determine whether the $1200$ value is a suspected outlier.
+4. The report calls the mean of $\$362500$ the “typical home price”. Why could that statement be misleading?
+5. Give a more informative numerical summary for a prospective buyer.
+
+
+### Question 17
+
+A student enters the following lake-temperature measurements into R:
+
+```{r q17-lake-temperature-data, echo=TRUE}
+lake_temperature <- c(14.2, 14.8, 15.1, 15.4, 15.6, 16.0, 16.2, 16.5, 17.1, 21.8)
+```
+
+1. Write one-line R commands to calculate the mean, median, five-number summary, IQR and sample standard deviation.
+2. Use the output reported in the solution to compare the mean and median.
+3. What feature of the data explains the difference between these two measures?
+4. Which measures of centre and spread would you report?
+5. What should be investigated before deciding how to handle the largest measurement?
+
+\newpage
+
+### Question 18
+
+Two public service offices recorded the time required to complete the same type of appointment.
+
+```{r service-office-boxplots, fig.width=7.2, fig.height=4.4}
+office_a <- c(22, 24, 25, 26, 27, 28, 29, 30,
+              31, 32, 33, 34, 35, 36, 38, 40)
+office_b <- c(8, 10, 12, 14, 16, 18, 20, 22,
+              24, 26, 28, 32, 40, 52, 70, 100)
+
+old_par <- par(mar = c(4.5, 4.5, 2.8, 1), las = 1, bty = "l")
+boxplot(
+  list("Office A" = office_a, "Office B" = office_b),
+  col = c("#7899B8", "#D0A254"),
+  border = course_blue,
+  ylab = "Appointment time (minutes)",
+  main = "Appointment Times at Two Public Service Offices",
+  ylim = c(0, 105)
+)
+abline(h = seq(0, 100, by = 10), col = soft_grid, lty = 3)
+boxplot(
+  list("Office A" = office_a, "Office B" = office_b),
+  col = adjustcolor(c("#7899B8", "#D0A254"), alpha.f = 0.85),
+  border = course_blue,
+  add = TRUE,
+  axes = FALSE
+)
+par(old_par)
+```
+
+The numerical summaries are:
+
+| Office | Mean | Median | Standard deviation | IQR |
+|:--|--:|--:|--:|--:|
+| A | $30.63$ | $30.5$ | $5.19$ | $7.5$ |
+| B | $30.75$ | $23.0$ | $24.63$ | $18.5$ |
+
+1. The two means are nearly identical. Why do the distributions nevertheless describe very different service experiences?
+2. Which office has the larger typical appointment time if the median is used?
+3. Which office has more consistent appointment times? Support your answer with two numerical summaries.
+4. Which pair of centre and spread measures is more suitable for Office A? Which pair is more suitable for Office B?
+5. What do the boxplot and summaries suggest the manager of Office B should investigate?
+6. Write a short, neutral comparison of the two offices that reports both centre and variability without claiming that one office caused the differences.
+
+\newpage
+
+## Solutions
+
+### Solution to Question 1
+
+\begin{enumerate}
+\item The mean is
+  $$\bar{x}=\frac{7.8+8.1+7.6+8.3+8.0+7.9+7.5+8.0+7.7+7.8}{10}=\frac{78.7}{10}=7.87\text{ mg/L}$$
+\item Across the six mornings, the pond had an average dissolved oxygen concentration of $7.87$ mg/L.
+\item No. The mean is a balance point calculated from all the observations, so it does not have to equal any individual measurement. In this dataset, $7.87$ mg/L was not observed.
+\end{enumerate}
+
+The numerical calculations can be checked in R:
+
+```{r q1-mean-calculation, echo=TRUE}
+oxygen <- c(7.8, 8.1, 7.6, 8.3, 8.0, 7.9, 7.5, 8.0, 7.7, 7.8)
+mean(oxygen)
+```
+
+\newpage
+
+### Solution to Question 2
+
+\begin{enumerate}
+\item For $n=11$, the median is in position
+  $$\frac{n+1}{2}=\frac{12}{2}=6$$
+  The ordered data is
+  $$18,20,22,22,25,27,31,34,34,48,50$$
+  The sixth observation is $27$ so the median is $27$ minutes.
+\item The ordered data become $$18,20,22,22,25,27,29,31,34,34,48,50$$. For $n=12$, the median is the average of the $6$th and $7$th observations:
+  $$M=\frac{27+29}{2}=28\text{ minutes}$$
+\item With an odd number of observations, one observation lies at the exact centre. With an even number, the centre falls between the two middle observations, so their average is used.
+\end{enumerate}
+
+The numerical calculations can be checked in R.
+
+```{r q2-median-calculation, echo=TRUE}
+waiting_times <- c(18, 22, 25, 27, 31, 34, 50, 20, 22, 48, 34)
+median(waiting_times)
+
+new_waiting_times <- c(18, 22, 25, 27, 31, 34, 50, 20, 22, 48, 34, 29)
+median(new_waiting_times)
+```
+
+\newpage
+
+### Solution to Question 3
+
+\begin{enumerate}
+\item Before the error
+  $$\bar{x}=\frac{2+3+3+4+5}{5}=3.4\text{ minutes}$$
+  and the median is $3$ minutes.
+\item After the error
+  $$\bar{x}=\frac{2+3+3+4+35}{5}=9.4\text{ minutes}$$
+  while the median remains $3$ minutes.
+\item The median is more resistant. The extreme value increases the mean by $6$ minutes but does not change the middle observation.
+\item The mean of $9.4$ minutes could suggest that a typical bus was delayed by almost $10$ minutes even though four of the five recorded delays were between $2$ and $4$ minutes. The error should be checked before any summary is reported.
+\end{enumerate}
+
+The numerical calculations can be checked in R:
+
+```{r q3-resistant-centre, echo=TRUE}
+original_delays <- c(2, 3, 3, 4, 5)
+mean(original_delays)
+median(original_delays)
+delays_with_error <- c(2, 3, 3, 4, 35)
+mean(delays_with_error)
+median(delays_with_error)
+```
+
+\newpage
+
+### Solution to Question 4
+
+\begin{enumerate}
+\item Because $$\bar{x}=\frac{\sum_{i=1}^{n=8}x_{i}}{8}$$ the required total is
+  $$\sum_{i=1}^{n=8}x_{i} = \bar{x}\times 8 = (6.4)(8) = 51.2\text{ mg/L}$$
+\item The seven known values sum to 
+  $$\bar{x}=\frac{\sum_{i=1}^{n=7}x_{i}}{7} = 44.4 \text{ mg/L}$$ 
+  So the missing value is
+  $$51.2-44.4=6.8\text{ mg/L}$$
+\item Including the missing value gives
+  $$\frac{44.4+6.8}{8}=\frac{51.2}{8}=6.4\text{ mg/L}$$
+  which agrees with the reported mean.
+\item The reported mean describes eight samples. Multiplying by $7$ would reconstruct the total for the wrong number of observations and could not produce the correct missing value.
+\end{enumerate}
+
+The numerical calculations can be checked in R.
+
+```{r q4-missing-measurement, echo=TRUE}
+known_nitrate <- c(5.8, 6.1, 6.3, 6.5, 6.7, 6.8, 6.2)
+required_total <- 8 * 6.4
+missing_value <- required_total - sum(known_nitrate)
+print(missing_value)
+
+mean(c(known_nitrate, missing_value))
+```
+
+\newpage
+
+### Solution to Question 5
+
+\begin{enumerate}
+\item Repair costs are likely right skewed, so the mean is likely greater than the median. The median and IQR are preferable because they resist the influence of the few very large costs.
+\item For a reasonably symmetric distribution with no outliers, the mean and median should be approximately equal. The mean and standard deviation are appropriate because the centre and spread can be described without strong distortion from skewness or outliers.
+\item The examination scores are likely left skewed, so the mean is likely less than the median. The median and IQR are preferable because the lower tail can pull the mean downward and inflate the standard deviation.
+\end{enumerate}
+
+
+### Solution to Question 6
+
+\begin{enumerate}
+\item Wetland A contributed $(12)(18)=216$ calls and Wetland B contributed $(28)(11)=308$ calls.
+\item The combined mean is
+  $$\bar{x}_{\text{combined}}=\frac{216+308}{12+28}=\frac{524}{40}=13.1\text{ calls per survey}$$
+\item The value $14.5$ gives the two wetlands equal weight even though Wetland B supplied more than twice as many surveys. A combined mean must weight each group mean by its group size.
+\item A simple average of the group means would be correct if the two groups had equal sample sizes.
+\end{enumerate}
+
+The numerical calculations can be checked in R.
+
+```{r q6-combined-mean, echo=TRUE}
+calls_a <- 12 * 18
+calls_b <- 28 * 11
+
+calls_a
+calls_b
+(calls_a + calls_b) / (12 + 28)
+```
+
+\newpage
+
+### Solution to Question 7
+
+\begin{enumerate}
+\item The sixth observation is the median, so $M=52$ days.
+\item After excluding the median, the lower half is $42,45,47,48,50$, whose median is $47$. The upper half is $54,55,58,60,81$, whose median is $58$. Therefore, $Q_1=47$ and $Q_3=58$ days.
+\item $$IQR=Q_3-Q_1=58-47=11\text{ days}$$
+\item The five number summary is
+  $$(\min = 42,\ Q_{1} = 47,\ Q_{2} = 52,\ Q_{3} = 58,\ \max = 81)$$
+\item The middle $50\%$ of sensor lifetimes span $11$ days, from $47$ to $58$ days.
+\end{enumerate}
+
+The numerical calculations can be checked in R:
+
+```{r q7-quartile-calculation, echo=TRUE}
+sensor_life <- c(42, 45, 47, 48, 50, 52, 54, 55, 58, 60, 81)
+summary(sensor_life)
+```
+
+\newpage
+
+### Solution to Question 8
+
+\begin{enumerate}
+\item $$M=\frac{27+29}{2}=28\text{ minutes}$$
+\item The lower half is $18,20,22,24,25,27$ so
+  $$Q_1=\frac{22+24}{2}=23$$
+  The upper half is $29,31,33,35,38,44$ so
+  $$Q_3=\frac{33+35}{2}=34$$
+\item $$IQR=34-23=11\text{ minutes}$$
+  and the five-number summary is
+  $$(\min = 18,\ Q_{1} = 23,\ Q_{2} = 28,\ Q_{3} = 34,\ \max = 44)$$
+\item Approximately $50\%$ of the observations lie between $Q_1$ and $Q_3$.
+\item No. The IQR measures the spread of the middle $50\%$ and deliberately ignores the most extreme quarters of the data. The full range is $44-18=26$ minutes.
+\end{enumerate}
+
+The numerical calculations can be checked in R:
+
+```{r q8-quartile-calculation, echo=TRUE}
+commute_times <- c(18, 20, 22, 24, 25, 27,29, 31, 33, 35, 38, 44)
+summary(commute_times)
+```
+
+\newpage
+
+### Solution to Question 9
+
+\begin{enumerate}
+\item Treatment B has the largest median, approximately $26$ mm.
+\item Treatment B has the largest IQR, so its middle $50\%$ is the most spread out.
+\item Treatment C has the smallest IQR. Its central half of seedling growth values is the most tightly clustered, although the unusual high value must also be considered.
+\item The value of $33$ mm under Treatment C is shown as a suspected high outlier. One seedling grew substantially more than the others receiving that treatment.
+\item The range uses only the minimum and maximum and is highly sensitive to an outlier. Treatment C has a fairly large full range because of one unusual seedling even though its middle $50\%$ is tightly clustered. The IQR and the complete boxplot give a more informative comparison.
+\end{enumerate}
+
+\newpage
+
+### Solution to Question 10
+
+\begin{enumerate}
+\item The five-number summary is
+  $$(\min = 2,\ Q_{1} = 4,\ Q_{2} = 6,\ Q_{3} = 8.5,\ \max = 18)$$
+\item $$IQR=8.5-4=4.5\text{ days}$$
+\item The fences are
+  $$Q_1-1.5(IQR)=4-1.5(4.5)=-2.75$$
+  and
+  $$Q_3+1.5(IQR)=8.5+1.5(4.5)=15.25$$
+\item The observation of $18$ days lies above the upper fence so it is a suspected outlier.
+\item The box extends from $4$ to $8.5$ days with a median line at $6$. The lower whisker reaches $2$, the upper whisker reaches the largest value of $10$ and $18$ is plotted separately.
+\end{enumerate}
+
+The numerical calculations can be checked in R.
+
+```{r q10-outlier-calculation, echo=TRUE}
+permit_times <- c(2, 3, 4, 4, 5, 6, 6, 7, 8, 9, 10, 18)
+permit_times_summary <- summary(permit_times)
+print(permit_times_summary)
+
+q1 <- permit_times_summary[[2]]
+q3 <- permit_times_summary[[5]]
+iqr <- q3 - q1
+
+upper_limit <- q1 + 1.5 * iqr
+lower_limit <- q1 - 1.5 * iqr
+
+permit_times[permit_times < lower_limit | permit_times > upper_limit]
+```
+
+```{r permit-boxplot-solution, fig.width=6.8, fig.height=3}
+permit_times <- c(2, 3, 4, 4, 5, 6, 6, 7, 8, 9, 10, 18)
+
+old_par <- par(mar = c(4.5, 5, 3, 2), las = 1, bty = "l")
+boxplot(
+  permit_times,
+  horizontal = TRUE,
+  col = "#86A5C2",
+  border = course_blue,
+  xlab = "Processing time (days)",
+  main = "Permit Application Processing Times",
+  axes = FALSE
+)
+axis(1, at = seq(0, 20, by = 2))
+abline(v = seq(0, 20, by = 2), col = soft_grid, lty = 3)
+boxplot(
+  permit_times,
+  horizontal = TRUE,
+  col = adjustcolor("#86A5C2", alpha.f = 0.85),
+  border = course_blue,
+  add = TRUE,
+  axes = FALSE
+)
+par(old_par)
+```
+
+\newpage
+
+### Solution to Question 11
+
+\begin{enumerate}
+\item $$IQR=3.2-2.4=0.8\text{ mg/L}$$
+\item The lower fence is
+  $$2.4-1.5(0.8)=1.2\text{ mg/L}$$
+  and the upper fence is
+  $$3.2+1.5(0.8)=4.4\text{ mg/L}$$
+\item The readings $4.6$ mg/L and $7.8$ mg/L are above the upper fence and are therefore suspected outliers. No reading is below the lower fence.
+\item No. The rule identifies observations that deserve attention; it does not determine their cause. The values could be accurate evidence of local contamination, or they could result from sampling, recording or equipment problems.
+\item The county could verify the original records and instrument calibration and it could collect repeat samples from the same locations. Information about location, weather and nearby land use could also help explain the readings.
+\end{enumerate}
+
+The numerical calculations can be checked in R:
+
+```{r q11-groundwater-fences, echo=TRUE}
+readings <- c(1.9, 2.1, 2.4, 2.6, 2.8, 3.0, 3.2, 3.5, 4.6, 7.8)
+q1 <- 2.4
+q3 <- 3.2
+iqr <- q3 - q1
+fences <- c(lower = q1 - 1.5 * iqr, upper = q3 + 1.5 * iqr)
+
+iqr
+fences
+readings[readings < fences["lower"] | readings > fences["upper"]]
+```
+
+\newpage
+
+### Solution to Question 12
+
+\begin{enumerate}
+\item For the original data
+  $$\bar{x}=\frac{20+22+23+24+26+27+28}{7}\approx24.29\text{ minutes}$$
+  and the median is $24$ minutes.
+\item After the replacement
+  $$\bar{x}=\frac{20+22+23+24+26+27+70}{7}\approx30.29\text{ minutes}$$
+  while the median remains $24$ minutes.
+\item Originally, $Q_1=22$ and $Q_3=27$, so $IQR=5$ minutes. After the replacement, the lower and upper halves have the same middle values, so $Q_1=22$, $Q_3=27$ and $IQR=5$ minutes again.
+\item The median and IQR are resistant here. The mean is not resistant and increases by $6$ minutes.
+\item The standard deviation should increase because $70$ is much farther from the mean than the original value of $28$. The sample standard deviation increases from approximately $2.87$ minutes to $17.67$ minutes.
+\end{enumerate}
+
+\newpage
+
+### Solution to Question 13
+
+\begin{enumerate}
+\item The mean is
+  $$\bar{x}=\frac{4+6+8+10+12}{5}=8\text{ hours}$$
+\item The deviations are 
+  $$x_{1} - \bar{x} = 4 - 8 = -4$$
+  $$x_{2} - \bar{x} = 6 - 8 = -2$$
+  $$x_{3} - \bar{x} = 8 - 8 = 0$$
+  $$x_{4} - \bar{x} = 10 - 8 = 2$$
+  $$x_{5} - \bar{x} = 12 - 8 = 4$$
+  and their sum is
+  $$-4-2+0+2+4=0$$
+\item The squared deviations are 
+  $$(x_{1} - \bar{x}) = (4 - 8)^2 = (-4)^2 = 16$$
+  $$(x_{1} - \bar{x}) = (6 - 8)^2 = (-2)^2 = 4$$
+  $$(x_{1} - \bar{x}) = (8 - 8)^2 = (8)^2 = 0$$
+  $$(x_{1} - \bar{x}) = (10 - 8)^2 = (2)^2 = 4$$
+  $$(x_{1} - \bar{x}) = (12 - 8)^2 = (4)^2 = 16$$
+  
+  so their sum is $16 + 4 + 0 + 4 + 16 = 40$.
+\item $$s^2=\frac{40}{5-1}=10\text{ hours}^2$$
+\item $$s=\sqrt{10}\approx3.16\text{ hours}$$
+  A battery lifetime is typically about $3.16$ hours away from the sample mean of $8$ hours.
+\item The standard deviation is measured in hours, the same units as the data. The variance is measured in squared hours, which has a less direct practical interpretation.
+\end{enumerate}
+
+The numerical calculations can be checked in R.
+
+```{r q13-standard-deviation, echo=TRUE}
+battery_life <- c(4, 6, 8, 10, 12)
+mean(battery_life)
+
+deviations <- battery_life - mean(battery_life)
+
+deviations
+sum(deviations)
+
+deviations^2
+sum(deviations^2)
+
+var(battery_life)
+sd(battery_life)
+```
+
+\newpage
+
+### Solution to Question 14
+
+\begin{enumerate}
+\item Both models have a mean of $10$ hours and a median of $10$ hours.
+\item Model A has range $12-8=4$ hours. Model B has range $18-2=16$ hours, so Model B has the larger range.
+\item For Model A, $s\approx1.41$ hours. For Model B, $s\approx5.69$ hours.
+\item Model A is more consistent because its observations are much more tightly clustered. Both its range and standard deviation are smaller.
+\item The equal means describe the same centre but not the very different spreads. A user who values predictable operating time would need a measure of variation as well as the mean.
+\end{enumerate}
+
+The numerical calculations can be checked in R:
+
+```{r q14-battery-summaries, echo=TRUE}
+model_a <- c(8, 9, 10, 10, 11, 12)
+model_b <- c(2, 6, 9, 11, 14, 18)
+
+c(mean = mean(model_a), median = median(model_a),
+  range = diff(range(model_a)), sd = sd(model_a))
+
+c(mean = mean(model_b), median = median(model_b),
+  range = diff(range(model_b)), sd = sd(model_b))
+```
+
+\newpage
+
+### Solution to Question 15
+
+\begin{enumerate}
+\item Distribution A is approximately symmetric with no clear outlier. Distribution B is right-skewed with a long upper tail. Distribution C has a compact main group and one unusually large observation.
+\item For A, the mean and median should be approximately equal. For B, the right tail should pull the mean above the median. For C, the large observation should also pull the mean above the median.
+\item The mean and standard deviation are reasonable for A. The median and IQR are preferable for B and C because they are resistant to skewness and the unusually large observations.
+\item The usefulness of a summary depends on distribution shape. The mean and standard deviation use every value and can be strongly affected by a long tail or outlier, while the median and IQR give a more stable description in those settings.
+\end{enumerate}
+
+### Solution to Question 16
+
+\begin{enumerate}
+\item The values sum to $3625$ thousand dollars, so
+  $$\bar{x}=\frac{3625}{10}=362.5\text{ thousand dollars}$$
+  The median is
+  $$M=\frac{265+270}{2}=267.5\text{ thousand dollars}$$
+\item The lower half is $240,250,255,260,265$, giving $Q_1=255$. The upper half is $270,280,295,310,1200$, giving $Q_3=295$. Therefore,
+  $$IQR=295-255=40\text{ thousand dollars}$$
+\item The upper fence is
+  $$295+1.5(40)=355\text{ thousand dollars}.$$
+  Since $1200>355$, the $\$1200000$ sale is a suspected high outlier.
+\item The unusually expensive home pulls the mean far above nine of the ten prices. The mean therefore does not represent the centre of the main group very well.
+\item A more informative report would give the median price of $\$267500$ together with $Q_1=\$255000$, $Q_3=\$295000$ and an IQR of $\$40000$. It should also mention the unusually expensive sale rather than silently discarding it.
+\end{enumerate}
+
+\newpage
+
+### Solution to Question 17
+
+\begin{enumerate}
+\item The requested commands are shown below.
+\end{enumerate}
+
+```{r q17-lake-temperature-calculations, echo=TRUE}
+mean(lake_temperature)
+median(lake_temperature)
+summary(lake_temperature)
+IQR(lake_temperature)
+sd(lake_temperature)
+```
+
+\begin{enumerate}
+\setcounter{enumi}{1}
+\item R gives a mean of $16.27^\circ$C and a median of $15.80^\circ$C. The mean is higher.
+\item The measurement of $21.8^\circ$C lies well above the other observations and pulls the mean upward. The distribution is right-skewed because of this large value.
+\item The median and IQR are the more resistant summaries. Using R's default quartile calculation, $Q_1=15.175^\circ$C, $Q_3=16.425^\circ$C and $IQR=1.25^\circ$C.
+\item The student should check the original record, time and location of measurement, instrument operation and field conditions. The value may be an error but it may also describe a real local event.
+\end{enumerate}
+
+\newpage
+
+### Solution to Question 18
+
+\begin{enumerate}
+\item Office A has a compact, roughly symmetric distribution. Office B has many shorter appointments and a small number of very long appointments. Those long appointments raise Office B's mean until it is close to Office A's mean, even though its median and spread are quite different.
+\item Office A has the larger median: $30.5$ minutes compared with $23.0$ minutes for Office B.
+\item Office A is more consistent. Its standard deviation is $5.19$ minutes rather than $24.63$ minutes, and its IQR is $7.5$ minutes rather than $18.5$ minutes.
+\item For Office A, the mean and standard deviation are reasonable because the distribution is fairly symmetric and has no clear extreme observation. For Office B, the median and IQR are more suitable because the distribution is strongly right-skewed and contains very long appointment times.
+\item The manager should investigate the unusually long appointments, including whether certain appointment types, staffing conditions, system interruptions or data-recording issues explain them. The values should not be deleted merely because they are unusual.
+\item A neutral comparison could state: The offices had similar mean appointment times, about $31$ minutes. Office A had a higher median time but substantially less variation. Office B had a lower median of $23$ minutes, together with a right-skewed distribution and several much longer appointments.
+\end{enumerate}
+
+The numerical calculations can be checked in R:
+
+```{r q18-office-summaries, echo=TRUE}
+c(mean = mean(office_a), median = median(office_a), sd = sd(office_a), IQR = IQR(office_a))
+
+c(mean = mean(office_b), median = median(office_b), sd = sd(office_b), IQR = IQR(office_b))
+```
+

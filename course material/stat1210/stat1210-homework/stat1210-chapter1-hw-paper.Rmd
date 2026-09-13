@@ -52,8 +52,6 @@ A greenhouse researcher recorded the following information for six seedlings.
 2. Which four variables were recorded about each individual?
 3. What is the purpose of the Plant ID column? Why should it not be treated as a quantitative measurement?
 
-\newpage
-
 ### Question 2
 
 A bird monitoring project records the following information for each nest:
@@ -69,8 +67,6 @@ A bird monitoring project records the following information for each nest:
 3. For each quantitative variable, state whether it is discrete or continuous.
 4. Why is the nest identification code different from an ordinary categorical variable of scientific interest?
 
-\newpage
-
 ### Question 3
 
 For each situation, select the most appropriate graph from the following list: **bar graph, pie chart, dotplot, histogram or time plot**. Briefly justify each choice.
@@ -80,8 +76,6 @@ For each situation, select the most appropriate graph from the following list: *
 3. The body temperature of one animal is measured every hour for $48$ hours.
 4. The shell lengths of $5000$ mussels are measured.
 5. A laboratory reports the percentage of samples in four outcome categories that together account for every sample.
-
-\newpage
 
 ### Question 4
 
@@ -527,16 +521,12 @@ par(old_par)
 2. The four variables are species, treatment, number of leaves and height. Plant ID labels the individuals rather than measuring a characteristic of interest.
 3. Plant ID allows each seedling to be identified. Although the labels contain numbers, their numerical values do not represent amounts. So arithmetic with them would have no useful meaning.
 
-\newpage
-
 ### Solution to Question 2
 
 1. Bird species and nesting stage are categorical. Number of eggs and average egg mass are quantitative. The nest code is an identifier.
 2. Bird species is nominal because its categories have no natural order. Nesting stage is ordinal because the stages follow a meaningful biological order.
 3. Number of eggs is discrete because it is a count. Average egg mass is continuous because it is measured and can, in principle, take any value in an interval.
 4. The nest code is used to distinguish records. Its labels are not outcomes whose distribution would normally answer the scientific question.
-
-\newpage
 
 ### Solution to Question 3
 
@@ -545,8 +535,6 @@ par(old_par)
 3. A time plot is appropriate because the order of the hourly measurements is essential for detecting trends or cycles.
 4. A histogram is appropriate because shell length is quantitative and the sample is large.
 5. A pie chart is permissible because the four percentages are parts of the same whole and sum to $100\%$. A bar graph would also be appropriate and would usually make comparisons easier.
-
-\newpage
 
 ### Solution to Question 4
 
@@ -584,16 +572,12 @@ pie(butterfly_counts, labels = pie_labels, col = plot_colours,
 par(old_par)
 ```
 
-\newpage
-
 ### Solution to Question 5
 
 1. The vertical axis begins at $70\%$ rather than $0\%$. Because the visible bar lengths are severely shortened, the graph exaggerates the differences among the three rates.
 2. The difference is $84\% - 76\% = 8$ percentage points.
 3. A corrected bar graph should begin its vertical axis at $0\%$. The title and axis labels should remain clear, and the group sample sizes should be reported.
 4. No. A percentage does not reveal a count unless the denominator is known. For example, $84\%$ could represent $84$ of $100$ seeds or $420$ of $500$ seeds.
-
-\newpage
 
 ### Solution to Question 6
 
@@ -614,7 +598,6 @@ text(bar_positions,wetland_percentages + 4,labels = paste0(wetland_percentages, 
 
 ```
 
-\newpage
 
 ### Solution to Question 7
 
@@ -622,7 +605,6 @@ text(bar_positions,wetland_percentages + 4,labels = paste0(wetland_percentages, 
 2. The distribution is unimodal and right-skewed. A possible outlier occurs at $16$ days. The centre is approximately $7$ days and the observations range from $4$ to $16$ days. Most observations lie between $5$ and $10$ days.
 3. No. The original record should first be checked for a data entry or measurement error. If the value is correct, it may represent meaningful biological variation and should not be removed without a defensible reason.
 
-\newpage
 
 ### Solution to Question 8
 
@@ -630,7 +612,6 @@ text(bar_positions,wetland_percentages + 4,labels = paste0(wetland_percentages, 
 2. A histogram groups observations into intervals. Different interval boundaries and widths change which measurements are combined, so peaks, gaps, and apparent skewness can become more or less visible.
 3. The sample size, individual measurements, overall minimum and maximum and underlying dataset do not change. Only the grouping used for the display changes.
 
-\newpage
 
 ### Solution to Question 9
 
@@ -687,7 +668,6 @@ text(bar_positions,rates + 3,labels = rates,cex = 0.9)
 4. The interval from $15$ to under $30$ minutes would be tallest because it has the greatest frequency density, $2.4$ patients per minute.
 5. The horizontal axis should be a continuous waiting time scale from $0$ to $120$ minutes so the four rectangles have widths of $15$, $15$, $30$ and $60$ minutes. The vertical axis should show frequency density. Each rectangle's area will then correspond to the number of patients in its interval.
 
-\newpage
 
 ### Solution to Question 13
 
@@ -697,7 +677,6 @@ text(bar_positions,rates + 3,labels = rates,cex = 0.9)
 4. The measurements should be plotted against actual calendar dates on a continuous date axis. For example, the horizontal distance between July $1$ and August $1$ should be much larger than the distance between June $1$ and June $2$.
 5. A line between two observations does not show what happened on the unmeasured days. Sudden changes or temporary recoveries could have occurred between sampling dates particularly across the longer gaps.
 
-\newpage
 
 ### Solution to Question 14
 
