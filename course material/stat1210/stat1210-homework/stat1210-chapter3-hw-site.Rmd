@@ -1,0 +1,959 @@
+---
+title: "STAT 1210"
+subtitle: "Chapter 3 Homework"
+author: "Fall $2026$"
+date: ""
+output:
+  html_document:
+    self_contained: true
+    toc: false
+    number_sections: false
+    theme: flatly
+    highlight: tango
+---
+
+<style>
+:root {
+  --ink: #263746;
+  --muted: #667786;
+  --blue: #294d73;
+  --blue-dark: #183a5c;
+  --blue-soft: #edf3f8;
+  --line: #d8e1e8;
+  --paper: #ffffff;
+  --page: #eef2f5;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+
+.main-container {
+  max-width: 980px !important;
+  width: calc(100% - 40px) !important;
+  margin: 28px auto 42px !important;
+  padding: 42px 58px 56px;
+  box-sizing: border-box;
+  background: var(--paper);
+  border: 1px solid #dde5eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(31, 50, 67, 0.10);
+}
+
+h1, h2, h3 { color: var(--blue-dark); }
+
+h1.title {
+  margin-bottom: 4px;
+  font-weight: 750;
+}
+
+h3.subtitle {
+  margin-top: 0;
+  color: var(--blue);
+  font-weight: 500;
+}
+
+h2 {
+  margin-top: 2.1em;
+  padding-bottom: 0.3em;
+  border-bottom: 3px solid var(--blue);
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 1.28em;
+  line-height: 1.35;
+}
+
+.question-card {
+  margin: 1.55em 0 2em;
+  padding: 1.3em 1.45em 1.1em;
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--blue);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(35, 54, 74, 0.07);
+}
+
+table {
+  width: 100%;
+  margin: 1.1em 0 1.3em;
+  border-collapse: collapse;
+  border: 1px solid var(--line);
+}
+
+thead th {
+  padding: 0.65em 0.75em !important;
+  background: var(--blue);
+  color: white;
+  border: 0 !important;
+}
+
+tbody td {
+  padding: 0.58em 0.75em !important;
+  border-bottom: 1px solid #e5ebf0 !important;
+}
+
+tbody tr:nth-child(even) td { background: #f7f9fb; }
+
+.figure-note {
+  margin-top: -0.5em;
+  color: var(--muted);
+  font-size: 0.9em;
+  text-align: center;
+}
+
+details.solution {
+  margin-top: 1.15em;
+  border: 1px solid #bfd1df;
+  border-radius: 7px;
+  background: #f8fbfd;
+  overflow: hidden;
+}
+
+details.solution summary {
+  padding: 0.72em 0.95em;
+  color: var(--blue-dark);
+  background: var(--blue-soft);
+  cursor: pointer;
+  font-weight: 700;
+  user-select: none;
+}
+
+details.solution summary:hover { background: #e2edf5; }
+
+.solution-body {
+  padding: 0.95em 1.1em 0.75em;
+}
+
+.solution-body ol { margin-bottom: 0.25em; }
+.solution-body li { margin-bottom: 0.6em; }
+
+@media (max-width: 768px) {
+  .main-container {
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 24px 20px 38px;
+    border-radius: 0;
+  }
+}
+
+@media print {
+  body { background: white; font-size: 11pt; }
+  .main-container {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+  .question-card { break-inside: avoid; box-shadow: none; }
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  fig.retina = 2,
+  out.width = "88%"
+)
+
+course_blue <- "#294D73"
+course_green <- "#3F7D58"
+course_gold <- "#C6923A"
+course_red <- "#A5524A"
+soft_grid <- "#D9E1E7"
+```
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("details.solution").forEach(function(item) {
+    item.removeAttribute("open");
+  });
+});
+</script>
+
+::: {.question-card}
+### Question 1
+
+An urban forestry team studies $18$ newly planted maple trees. For each tree, the team records the average number of hours of direct sunlight received per day and the increase in height after one growing season.
+
+1. Who are the individuals in this study?
+2. Why are these data described as bivariate?
+3. Which variable is the explanatory variable, and which is the response variable?
+4. Which variable should appear on each axis of a scatterplot?
+5. What would a point at $(6.5,14)$ represent?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The individuals are the $18$ newly planted maple trees.</li>
+  <li>The data are bivariate because two quantitative variables are recorded for each tree: **daily sunlight** and **height increase**.</li>
+  <li>Average daily sunlight is the explanatory variable because the researchers are studying whether it helps explain growth. Height increase is the response variable.</li>
+  <li>Average daily sunlight belongs on the horizontal or $x$ axis. Height increase belongs on the vertical or $y$ axis.</li>
+  <li>The point represents one tree that received an average of $6.5$ hours of direct sunlight per day and increased in height by $14$ cm during the growing season.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 2
+
+A city survey records annual household income and the number of public transit trips taken during a typical week for $200$ households.
+
+1. Are both recorded variables quantitative?
+2. If the city is **only describing how the two variables are related**, must one variable be labelled explanatory and the other response?
+3. If the city wants to predict weekly transit use from household income, which variable should be explanatory and which should be response?
+4. If the axes of the scatterplot were reversed, would the collection of paired observations change?
+5. Would reversing the axes change the value of the correlation? Explain.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Yes. Annual income is a numerical amount and weekly transit use is a numerical count.</li>
+  <li>No. When the purpose is only to describe an association, it may not be necessary to assign explanatory and response roles.</li>
+  <li>Household income would be the explanatory variable and the number of weekly transit trips would be the response variable.</li>
+  <li>No. Each point would still represent the same household and the same pair of measurements. Only the coordinates' order and the graph's orientation would change.</li>
+  <li>No. Pearson's correlation treats the two variables symmetrically so $r(x,y)=r(y,x)$.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 3
+
+Researchers sampled $10$ coastal sites. At each site, they measured dissolved nitrogen concentration and the percentage of the nearby water surface covered by algae. The table and scatterplots shows the sampled data.
+
+| Site | Dissolved nitrogen (mg/L) | Algae cover (%) |
+|:--|--:|--:|
+| A | $0.8$ | $11$ |
+| B | $1.5$ | $19$ |
+| C | $2.2$ | $16$ |
+| D | $3.4$ | $31$ |
+| E | $4.1$ | $24$ |
+| F | $5.0$ | $36$ |
+| G | $6.3$ | $33$ |
+| H | $7.1$ | $47$ |
+| I | $8.6$ | $42$ |
+| J | $9.4$ | $55$ |
+
+```{r nitrogen-algae-scatterplot, fig.width=7, fig.height=4.3}
+nitrogen <- c(0.8, 1.5, 2.2, 3.4, 4.1, 5.0, 6.3, 7.1, 8.6, 9.4)
+algae_cover <- c(11, 19, 16, 31, 24, 36, 33, 47, 42, 55)
+
+old_par <- par(mar = c(4.5, 4.7, 2.8, 1), las = 1, bty = "l")
+plot(
+  nitrogen,
+  algae_cover,
+  type = "n",
+  xlim = c(0, 10),
+  ylim = c(5, 60),
+  xlab = "Dissolved nitrogen concentration (mg/L)",
+  ylab = "Algae cover (%)",
+  main = "Nitrogen Concentration and Algae Cover"
+)
+grid(col = soft_grid, lty = 3)
+points(nitrogen, algae_cover, pch = 19, cex = 1.25, col = course_green)
+par(old_par)
+```
+
+1. Which variable is explanatory and which is response?
+2. What does the observation at $(3.4,31)$ mean in context?
+3. Describe the association using direction, form and strength.
+4. Are any clear outliers visible?
+5. Does every increase in nitrogen correspond to an increase in algae cover? How can there still be a positive association?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Dissolved nitrogen concentration is the explanatory variable, and algae cover is the response variable.</li>
+  <li>At Site D, the dissolved nitrogen concentration was $3.4$ mg/L and algae covered $31\%$ of the nearby water surface.</li>
+  <li>The association is positive, approximately linear and strong. Sites with higher nitrogen concentrations generally have greater algae cover and the points remain fairly close to an increasing straight line pattern.</li>
+  <li>No clear outlier is visible.</li>
+  <li>No. For example, algae cover decreases between some neighbouring nitrogen values. A positive association describes the overall tendency not a rule that every consecutive pair must increase.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 4
+
+The four scatterplots below represent small observational datasets from different settings. The values are illustrative.
+
+- **Plot A:** volunteer restoration hours and native plant cover at wetland sites
+- **Plot B:** distance from the city centre and weekly public transit trips among households
+- **Plot C:** fertilizer dose and crop yield in experimental plots
+- **Plot D:** tree trunk diameter and soil pH at forest sites
+
+```{r four-association-patterns, fig.width=8.4, fig.height=7.2, out.width="100%"}
+restoration_hours <- c(3, 5, 8, 11, 14, 18, 21, 25, 29, 34)
+native_cover <- c(11, 18, 15, 25, 27, 33, 31, 42, 39, 50)
+
+distance_centre <- c(1, 2.5, 4, 5, 7, 9, 11, 13, 15, 18)
+transit_trips <- c(13, 11, 12, 9, 10, 6, 8, 5, 3, 4)
+
+fertilizer_dose <- c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90)
+crop_yield <- c(14, 22, 28, 37, 42, 45, 40, 34, 23, 15)
+
+trunk_diameter <- c(12, 18, 21, 27, 32, 38, 43, 49, 56, 63)
+soil_ph <- c(6.1, 5.4, 6.7, 5.8, 6.3, 5.2, 6.5, 5.9, 6.8, 5.5)
+
+draw_panel <- function(x, y, panel_title, x_label, y_label) {
+  x_padding <- diff(range(x)) * 0.08
+  y_padding <- diff(range(y)) * 0.12
+  plot(
+    x, y,
+    type = "n",
+    xlim = range(x) + c(-x_padding, x_padding),
+    ylim = range(y) + c(-y_padding, y_padding),
+    xlab = x_label,
+    ylab = y_label,
+    main = panel_title
+  )
+  grid(col = soft_grid, lty = 3)
+  points(x, y, pch = 19, cex = 1.05, col = course_blue)
+}
+
+old_par <- par(mfrow = c(2, 2), mar = c(4.2, 4.4, 2.5, 1), las = 1, bty = "l", cex.lab = 0.88)
+draw_panel(restoration_hours, native_cover, "A. Wetland restoration", "Volunteer hours", "Native cover (%)")
+draw_panel(distance_centre, transit_trips, "B. Household transit use", "Distance (km)", "Weekly transit trips")
+draw_panel(fertilizer_dose, crop_yield, "C. Crop production", "Fertilizer dose", "Crop yield")
+draw_panel(trunk_diameter, soil_ph, "D. Forest soil survey", "Trunk diameter (cm)", "Soil pH")
+par(old_par)
+```
+
+1. Describe the direction, form and strength of each relationship.
+2. Which plots show a positive or negative linear association?
+3. Which plot shows a strong relationship that is not linear?
+4. For which plots would Pearson's correlation give a useful summary of the visible relationship?
+5. In which two plots would correlation be close to $0$ and why would the same value have different meanings?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Plot A shows a strong, positive and linear relationship. Plot B shows a strong, negative and approximately linear relationship. Plot C shows a strong curved relationship with an inverted-U form and no single direction over the full range. Plot D shows no clear form or direction and association is very weak.</li>
+  <li>Plot A has a positive linear association and Plot B has a negative linear association.</li>
+  <li>Plot C shows a strong nonlinear relationship.</li>
+  <li>Correlation is useful for A and B because their overall forms are approximately linear. It would not adequately describe the curved pattern in C and D has little visible relationship to summarize.</li>
+  <li>Plots C and D both have correlations close to $0$. In C, the increasing and decreasing portions balance even though a strong curve is present. In D, $r$ is near $0$ because there is no clear relationship. Therefore, a correlation near $0$ means weak linear association not necessarily no association.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 5
+
+An ecologist examines annual rainfall and the number of native plant species found at several grassland sites. The measurements show natural site to site variation. The open point represents Site K.
+
+```{r bivariate-outlier-plot, fig.width=7, fig.height=4.4}
+rainfall <- c(10, 12, 15, 17, 19, 21, 23, 25, 27, 29, 28)
+species_count <- c(13, 19, 17, 25, 24, 31, 29, 39, 36, 46, 20)
+
+old_par <- par(mar = c(4.5, 4.7, 2.8, 1), las = 1, bty = "l")
+plot(
+  rainfall,
+  species_count,
+  type = "n",
+  xlim = c(8, 31),
+  ylim = c(8, 50),
+  xlab = "Annual rainfall (cm)",
+  ylab = "Number of native plant species",
+  main = "Rainfall and Native Plant Diversity"
+)
+grid(col = soft_grid, lty = 3)
+points(rainfall[-11], species_count[-11], pch = 19, cex = 1.15, col = course_green)
+points(rainfall[11], species_count[11], pch = 1, cex = 1.6, lwd = 2, col = course_red)
+text(rainfall[11] - 0.8, species_count[11] - 2.5, "Site K", col = course_red)
+par(old_par)
+```
+
+1. Describe the overall relationship if Site K is temporarily set aside.
+2. Why is Site K an outlier of the bivariate relationship?
+3. Explain why neither $28$ cm of rainfall nor $20$ species must be unusual when considered separately.
+4. Give two plausible explanations that the researchers should investigate.
+5. Should Site K automatically be removed before calculating correlation? Explain.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Without Site K, the data show a very strong, positive, approximately linear association. Sites with more rainfall tend to contain more native plant species.</li>
+  <li>At $28$ cm of rainfall, the main pattern would suggest a species count near the upper end of the graph. Site K has only $20$ species, so its combination of $x$ and $y$ values falls far from the overall pattern.</li>
+  <li>Rainfall values close to $28$ cm occur at other sites, and species counts close to $20$ occur among sites with lower rainfall. The individual values are plausible; their pairing is what is unusual.</li>
+  <li>The researchers might investigate whether Site K experienced grazing, fire, invasive species, unusual soil conditions or a recording error.</li>
+  <li>No. The observation should first be checked and explained. It may be an error, but it may also contain important ecological information. Any analysis that excludes it should report and justify that decision.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 6
+
+A laboratory studies the activity of an enzyme at nine temperatures. The enzyme performs best near an intermediate temperature and becomes less active when conditions are either too cold or too warm.
+
+| Temperature (degrees Celsius) | $5$ | $10$ | $15$ | $20$ | $25$ | $30$ | $35$ | $40$ | $45$ |
+|:--|--:|--:|--:|--:|--:|--:|--:|--:|--:|
+| Relative enzyme activity (%) | $12$ | $29$ | $47$ | $79$ | $93$ | $71$ | $54$ | $32$ | $9$ |
+
+```{r enzyme-temperature-curve, fig.width=7, fig.height=4.4}
+temperature <- seq(5, 45, by = 5)
+enzyme_activity <- c(12, 29, 47, 79, 93, 71, 54, 32, 9)
+
+old_par <- par(mar = c(4.5, 4.7, 2.8, 1), las = 1, bty = "l")
+plot(
+  temperature,
+  enzyme_activity,
+  type = "n",
+  xlim = c(3, 47),
+  ylim = c(0, 100),
+  xlab = "Temperature (degrees Celsius)",
+  ylab = "Relative enzyme activity (%)",
+  main = "Temperature and Enzyme Activity"
+)
+grid(col = soft_grid, lty = 3)
+lines(temperature, enzyme_activity, col = course_green, lwd = 1.5)
+points(temperature, enzyme_activity, pch = 19, cex = 1.15, col = course_green)
+par(old_par)
+```
+
+1. Describe the direction, form and strength of this relationship.
+2. Why is it misleading to describe the relationship as simply positive or negative?
+3. Using the formula below, manually calculate Pearson's correlation coefficient. Show the values of $\bar{x}$, $\bar{y}$ and the three required sums.
+
+$$
+r=
+\frac{\sum (x_i-\bar{x})(y_i-\bar{y})}
+{\sqrt{\sum (x_i-\bar{x})^2\sum (y_i-\bar{y})^2}}.
+$$
+
+4. The Pearson correlation is approximately $r=0.005$, which is essentially $0$. Does this mean temperature and enzyme activity are unrelated?
+5. Why is the correlation close to $0$ despite the clear pattern?
+6. What should be reported along with, or instead of, the correlation?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The relationship is strong and curved, with an inverted-U form. Activity increases up to about $25$ degrees Celsius and then decreases.</li>
+
+  <li>The direction changes across the graph. The association is positive below the optimum and negative above it, so no single direction describes the entire relationship.</li>
+
+  <li>The sample means are
+
+  $$
+  \bar{x}=\frac{5+10+15+20+25+30+35+40+45}{9}=25
+  $$
+
+  and
+
+  $$
+  \bar{y}=\frac{12+29+47+79+93+71+54+32+9}{9}=\frac{426}{9}\approx47.333
+  $$
+
+  Using the deviations from these means gives
+
+  $$
+  \sum (x_i-\bar{x})^2=1500
+  $$
+
+  $$
+  \sum (y_i-\bar{y})^2=6982
+  $$
+
+  and
+
+  $$
+  \sum (x_i-\bar{x})(y_i-\bar{y})=15
+  $$
+
+  Therefore,
+
+  $$
+  r=\frac{15}{\sqrt{(1500)(6982)}}\approx0.00464\approx0.005
+  $$
+
+  The manually calculated correlation is therefore extremely close to $0$.</li>
+
+  <li>No. Temperature and enzyme activity have a strong relationship but it is nonlinear. Pearson's $r$ measures only linear association.</li>
+
+  <li>The increasing portion and decreasing portion contribute opposite linear tendencies that nearly cancel, producing a correlation close to $0$.</li>
+
+  <li>The scatterplot and a description of the curved form should be reported. A model designed for curved relationships could be considered later, but a linear correlation alone is inadequate.</li>
+</ol>
+
+The correlation can be checked with one line of R code.
+
+```{r q6-curved-correlation, echo=TRUE}
+temperature <- seq(5, 45, by = 5)
+enzyme_activity <- c(12, 29, 47, 79, 93, 71, 54, 32, 9)
+
+cor(temperature, enzyme_activity)
+```
+
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 7
+
+An environmental team measures the percentage of stream surface covered by tree shade and the afternoon water temperature at eight locations.
+
+| Tree shade (%) | $5$ | $15$ | $25$ | $35$ | $45$ | $55$ | $65$ | $75$ |
+|:--|--:|--:|--:|--:|--:|--:|--:|--:|
+| Water temperature (degrees Celsius) | $24.1$ | $22.9$ | $23.4$ | $21.8$ | $22.2$ | $20.5$ | $21.0$ | $19.6$ |
+
+```{r shade-temperature-plot, fig.width=7, fig.height=4.4}
+tree_shade <- c(5, 15, 25, 35, 45, 55, 65, 75)
+water_temperature <- c(24.1, 22.9, 23.4, 21.8, 22.2, 20.5, 21.0, 19.6)
+
+old_par <- par(mar = c(4.5, 4.7, 2.8, 1), las = 1, bty = "l")
+plot(
+  tree_shade,
+  water_temperature,
+  type = "n",
+  xlim = c(0, 80),
+  ylim = c(19, 25),
+  xlab = "Tree shade (%)",
+  ylab = "Afternoon water temperature (degrees Celsius)",
+  main = "Stream Shade and Water Temperature"
+)
+grid(col = soft_grid, lty = 3)
+points(tree_shade, water_temperature, pch = 19, cex = 1.2, col = course_blue)
+par(old_par)
+```
+
+1. Which variable should be treated as explanatory?
+2. Use <code>cor(x, y)</code> in R to calculate Pearson's correlation.
+3. Interpret the direction and strength of the linear association in context.
+4. Does the correlation imply that adding shade would necessarily cause the same temperature change at every stream? Explain.
+5. Identify one plausible lurking variable.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Tree shade is the explanatory variable, and afternoon water temperature is the response variable.</li>
+  <li>
+```{r q7-stream-correlation, echo=TRUE}
+tree_shade <- c(5, 15, 25, 35, 45, 55, 65, 75)
+water_temperature <- c(24.1, 22.9, 23.4, 21.8, 22.2, 20.5, 21.0, 19.6)
+
+cor(tree_shade, water_temperature)
+```
+  The correlation is approximately $r=-0.944$.</li>
+  <li>There is a strong, negative and approximately linear association. Locations with greater tree-shade coverage tend to have lower afternoon water temperatures.</li>
+  <li>No. These are observational data and correlation does not establish causation. The association also describes an overall tendency rather than a fixed temperature change at every location.</li>
+  <li>Plausible lurking variables include stream depth, water flow rate, elevation, channel width and the time at which each location was measured.</li>
+</ol>
+
+</div>
+</details>
+:::
+
+
+::: {.question-card}
+### Question 8
+
+A regional water utility reports a correlation of $r=0.88$ between the flow rate through a pumping station, measured in litres per second, and the station's hourly electricity use, measured in kilowatt-hours.
+
+1. Does $r=0.88$ indicate a positive or negative association? How strong is the linear association?
+2. What are the units of $r$?
+3. If flow rate is converted to litres per minute, what happens to $r$?
+4. If electricity use is converted from kilowatt-hours to joules, what happens to $r$?
+5. If electricity use is placed on the horizontal axis and flow rate on the vertical axis, what happens to $r$?
+6. Could a correlation of $1.08$ be valid?
+7. Would $r=0.03$ prove that two variables have no relationship? Explain.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The association is positive and strong because $r$ is positive and close to $1$.</li>
+  <li>Correlation has no units.</li>
+  <li>The correlation remains $0.88$. Multiplying all flow-rate values by the same positive conversion factor does not change $r$.</li>
+  <li>The correlation remains $0.88$ for the same reason.</li>
+  <li>The correlation remains $0.88$ because correlation is unchanged when the roles of $x$ and $y$ are exchanged.</li>
+  <li>No. A correlation must lie between $-1$ and $1$.</li>
+  <li>No. It would show only that the linear association is very weak. A strong curved relationship could still be present, so the scatterplot must be examined.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 9
+
+A renewable-energy team examines daily sunlight hours and electricity generated by a solar panel over ten days. The values vary naturally because cloud cover, temperature and other conditions also affect production. The right-hand graph includes one additional reading from a malfunctioning sensor.
+
+| Reading | Sunlight (hours) | Electricity generated (kWh) | Status |
+|:--|--:|--:|:--|
+| $1$ | $2.1$ | $4.6$ | Original |
+| $2$ | $2.8$ | $6.8$ | Original |
+| $3$ | $3.7$ | $6.3$ | Original |
+| $4$ | $4.3$ | $9.7$ | Original |
+| $5$ | $5.5$ | $10.1$ | Original |
+| $6$ | $6.2$ | $13.8$ | Original |
+| $7$ | $7.1$ | $12.7$ | Original |
+| $8$ | $8.4$ | $16.9$ | Original |
+| $9$ | $9.0$ | $15.8$ | Original |
+| $10$ | $10.2$ | $19.5$ | Original |
+| $11$ | $16.0$ | $1.0$ | Flagged sensor reading |
+
+```{r solar-outlier-comparison, fig.width=8.6, fig.height=4.2, out.width="100%"}
+sunlight_hours <- c(2.1, 2.8, 3.7, 4.3, 5.5, 6.2, 7.1, 8.4, 9.0, 10.2)
+energy_output <- c(4.6, 6.8, 6.3, 9.7, 10.1, 13.8, 12.7, 16.9, 15.8, 19.5)
+sunlight_with_error <- c(sunlight_hours, 16)
+energy_with_error <- c(energy_output, 1)
+
+draw_solar <- function(x, y, plot_title) {
+  plot(
+    x, y,
+    type = "n",
+    xlim = c(0, 17),
+    ylim = c(0, 22),
+    xlab = "Sunlight (hours)",
+    ylab = "Electricity generated (kWh)",
+    main = plot_title
+  )
+  grid(col = soft_grid, lty = 3)
+  points(x, y, pch = 19, cex = 1.05, col = course_gold)
+}
+
+old_par <- par(mfrow = c(1, 2), mar = c(4.2, 4.2, 2.8, 1), las = 1, bty = "l")
+draw_solar(sunlight_hours, energy_output, "A. Original readings")
+draw_solar(sunlight_with_error, energy_with_error, "B. Reading included")
+points(16, 1, pch = 1, cex = 1.6, lwd = 2, col = course_red)
+par(old_par)
+```
+
+1. Describe the relationship in Graph A.
+2. Identify the unusual observation in Graph B.
+3. Calculate the correlation for Graph A and then for Graph B.
+4. How does one observation alter the numerical description?
+5. What property of correlation does this example demonstrate?
+6. What should the team do before deciding whether to exclude the reading?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Graph A shows a strong, positive, approximately linear relationship between sunlight and electricity generation, with realistic day to day scatter.</li>
+  <li>The unusual observation is $(16,1)$. It reports very high sunlight but very low electricity generation.</li>
+  <li>
+```{r q10-outlier-correlations, echo=TRUE}
+sunlight_hours <- c(2.1, 2.8, 3.7, 4.3, 5.5, 6.2, 7.1, 8.4, 9.0, 10.2)
+energy_output <- c(4.6, 6.8, 6.3, 9.7, 10.1, 13.8, 12.7, 16.9, 15.8, 19.5)
+cor(sunlight_hours, energy_output)
+cor(sunlight_with_error, energy_with_error)
+```
+  The original correlation is approximately $0.976$. After the unusual reading is included, the correlation falls to approximately $0.096$.</li>
+  <li>A single observation changes the correlation from a very strong positive association to a value close to $0$ even though the original ten readings still follow the same pattern.</li>
+  <li>The example demonstrates that correlation is not resistant to outliers or influential observations.</li>
+  <li>The team should inspect the sensor record, calibration, units, time stamp and operating conditions. The value should be corrected or excluded only if there is a justified reason and the decision should be documented.</li>
+</ol>
+
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 11
+
+A municipal report compares the number of firefighters sent to a fire with the resulting property damage for twelve incidents. The data are illustrative and contain the variation expected among incidents involving different buildings and response conditions.
+
+```{r firefighters-damage-plot, fig.width=7, fig.height=4.4}
+firefighters <- c(3, 4, 5, 7, 8, 9, 11, 12, 14, 16, 18, 20)
+damage <- c(18, 42, 29, 71, 55, 96, 83, 145, 118, 186, 160, 235)
+
+old_par <- par(mar = c(4.5, 4.7, 2.8, 1), las = 1, bty = "l")
+plot(
+  firefighters,
+  damage,
+  type = "n",
+  xlim = c(2, 21),
+  ylim = c(0, 250),
+  xlab = "Number of firefighters sent",
+  ylab = "Property damage (thousands of dollars)",
+  main = "Firefighters Sent and Property Damage"
+)
+grid(col = soft_grid, lty = 3)
+points(firefighters, damage, pch = 19, cex = 1.2, col = course_red)
+par(old_par)
+```
+
+1. Describe the observed association.
+2. A commentator claims that sending more firefighters causes more property damage. Why is this conclusion not justified?
+3. Identify the most important plausible lurking variable.
+4. Explain how that lurking variable could produce the positive association.
+5. What additional information would help the municipality investigate the relationship more fairly?
+6. Write a neutral interpretation of the scatterplot.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The scatterplot shows a strong, positive, approximately linear association. Incidents receiving more firefighters also tend to have greater property damage.</li>
+  <li>The data are observational, so the association does not establish that firefighters cause the damage. The direction of explanation proposed by the commentator ignores why more firefighters were sent.</li>
+  <li>Fire severity is the most important plausible lurking variable.</li>
+  <li>More severe fires are likely to cause greater damage and also require more firefighters. Severity can therefore increase both variables and create a positive association between them.</li>
+  <li>Useful information would include fire size or severity at dispatch, building type, response time, duration, weather conditions and whether automatic suppression systems were present.</li>
+  <li>A neutral interpretation is: "Among these twelve incidents, fires to which more firefighters were sent tended to have greater property damage. The association may reflect differences in fire severity and does not show that the number of firefighters caused the damage."</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 12 - Bonus
+
+**Portfolio diversification** means combining different investments so that the portfolio (bundle of stocks/assets) does not depend entirely on the performance of one investment. Correlation can help evaluate diversification because it describes how the returns of two investments move together.
+
+- A correlation close to $1$ means the returns generally move in the same direction.
+- A correlation close to $-1$ means the returns generally move in opposite directions.
+- A correlation close to $0$ means there is little linear association between the returns.
+
+Investments with negative or weakly positive correlations may provide greater diversification because a loss in one investment may be partially offset by a gain in another. However, diversification does not guarantee a profit or eliminate financial risk.
+
+The following weekly percentage returns are illustrative and belong to four fictional companies.
+
+| Week | Northstar Technology | Harbour Utilities | Maple Retail | Cedar Bank |
+|:--|--:|--:|--:|--:|
+| $1$ | $1.8\%$ | $-1.0\%$ | $1.3\%$ | $0.8\%$ |
+| $2$ | $-0.7\%$ | $0.9\%$ | $-0.5\%$ | $-0.1\%$ |
+| $3$ | $2.4\%$ | $-1.4\%$ | $1.8\%$ | $1.2\%$ |
+| $4$ | $0.6\%$ | $0.2\%$ | $0.4\%$ | $0.7\%$ |
+| $5$ | $-1.2\%$ | $1.3\%$ | $-0.8\%$ | $-0.4\%$ |
+| $6$ | $1.1\%$ | $-0.8\%$ | $1.0\%$ | $0.5\%$ |
+| $7$ | $2.0\%$ | $-0.7\%$ | $1.5\%$ | $1.6\%$ |
+| $8$ | $-0.4\%$ | $0.6\%$ | $-0.2\%$ | $0.1\%$ |
+| $9$ | $0.9\%$ | $-0.3\%$ | $0.7\%$ | $0.3\%$ |
+| $10$ | $1.5\%$ | $-1.1\%$ | $1.2\%$ | $0.9\%$ |
+| $11$ | $-0.9\%$ | $0.8\%$ | $-0.4\%$ | $-0.2\%$ |
+| $12$ | $1.3\%$ | $-0.5\%$ | $0.9\%$ | $1.1\%$ |
+
+The price indices in the time plots begin at $100$ before Week $1$. Each index shows how a hypothetical initial value of $100$ would change according to the weekly returns.
+
+```{r stock-diversification-plots, fig.width=8.6, fig.height=7.4, out.width="100%"}
+week <- 1:12
+
+northstar_return <- c(
+  1.8, -0.7, 2.4, 0.6, -1.2, 1.1,
+  2.0, -0.4, 0.9, 1.5, -0.9, 1.3
+)
+
+harbour_return <- c(
+  -1.0, 0.9, -1.4, 0.2, 1.3, -0.8,
+  -0.7, 0.6, -0.3, -1.1, 0.8, -0.5
+)
+
+maple_return <- c(
+  1.3, -0.5, 1.8, 0.4, -0.8, 1.0,
+  1.5, -0.2, 0.7, 1.2, -0.4, 0.9
+)
+
+cedar_return <- c(
+  0.8, -0.1, 1.2, 0.7, -0.4, 0.5,
+  1.6, 0.1, 0.3, 0.9, -0.2, 1.1
+)
+
+create_price_index <- function(returns) {
+  c(100, 100 * cumprod(1 + returns / 100))
+}
+
+northstar_index <- create_price_index(northstar_return)
+harbour_index <- create_price_index(harbour_return)
+maple_index <- create_price_index(maple_return)
+cedar_index <- create_price_index(cedar_return)
+
+index_week <- 0:12
+
+draw_price_plot <- function(index_1, index_2,
+                            label_1, label_2,
+                            colours, plot_title) {
+  limits <- range(c(index_1, index_2))
+  padding <- diff(limits) * 0.10
+
+  plot(
+    index_week,
+    index_1,
+    type = "n",
+    xlim = c(0, 12),
+    ylim = limits + c(-padding, padding),
+    xaxt = "n",
+    xlab = "Week",
+    ylab = "Price index",
+    main = plot_title
+  )
+
+  grid(col = soft_grid, lty = 3)
+  axis(1, at = 0:12)
+
+  lines(index_week, index_1, col = colours[1], lwd = 2)
+  points(index_week, index_1, col = colours[1], pch = 16)
+
+  lines(index_week, index_2, col = colours[2], lwd = 2)
+  points(index_week, index_2, col = colours[2], pch = 17)
+
+  abline(h = 100, col = "grey55", lty = 2)
+
+  legend(
+    "topleft",
+    legend = c(label_1, label_2),
+    col = colours,
+    lty = 1,
+    lwd = 2,
+    pch = c(16, 17),
+    bty = "n",
+    cex = 0.78
+  )
+}
+
+draw_return_scatterplot <- function(x, y, x_label, y_label,
+                                    point_colour, plot_title) {
+  plot(
+    x,
+    y,
+    type = "n",
+    xlab = x_label,
+    ylab = y_label,
+    main = plot_title
+  )
+
+  grid(col = soft_grid, lty = 3)
+  abline(h = 0, v = 0, col = "grey55", lty = 2)
+  points(x, y, pch = 19, cex = 1.1, col = point_colour)
+}
+
+old_par <- par(
+  mfrow = c(2, 2),
+  mar = c(4.2, 4.3, 2.8, 1),
+  las = 1,
+  bty = "l",
+  cex.main = 0.95,
+  cex.lab = 0.9
+)
+
+draw_price_plot(
+  northstar_index,
+  harbour_index,
+  "Northstar Technology",
+  "Harbour Utilities",
+  c(course_blue, course_red),
+  "A. Pair 1: Opposing Price Trends"
+)
+
+draw_return_scatterplot(
+  northstar_return,
+  harbour_return,
+  "Northstar weekly return (%)",
+  "Harbour weekly return (%)",
+  course_red,
+  "B. Pair 1: Weekly Returns"
+)
+
+draw_price_plot(
+  maple_index,
+  cedar_index,
+  "Maple Retail",
+  "Cedar Bank",
+  c(course_green, course_gold),
+  "C. Pair 2: Positive Price Trends"
+)
+
+draw_return_scatterplot(
+  maple_return,
+  cedar_return,
+  "Maple weekly return (%)",
+  "Cedar weekly return (%)",
+  course_green,
+  "D. Pair 2: Weekly Returns"
+)
+
+par(old_par)
+```
+
+1. Which stocks have an overall positive price trend and which stock has an overall negative price trend?
+2. Calculate the correlation between the weekly returns of Northstar Technology and Harbour Utilities.
+3. Calculate the correlation between the weekly returns of Maple Retail and Cedar Bank.
+4. Describe the direction and strength of the relationship for each pair. How are these relationships visible in the two scatterplots?
+5. For a portfolio that invests equal amounts in two stocks, the weekly portfolio return is $$r_{\text{portfolio}}=\frac{r_1+r_2}{2}$$ In Week $3$, how do the returns of Northstar Technology and Harbour Utilities partially offset one another?
+6. Which pair would generally provide the greater diversification benefit if equal amounts were invested in the two stocks? Explain using the correlations.
+7. Calculate the weekly returns for both portfolios. Use R to calculate the sample standard deviation of each portfolio's weekly returns. Which portfolio was less variable during these $12$ weeks?
+8. Why should diversification be evaluated using the correlation between returns rather than only the correlation between the price indices?
+9. Does a negative correlation guarantee that a portfolio will earn a positive return or avoid all losses? Explain.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Northstar Technology, Maple Retail and Cedar Bank have overall positive price trends. Harbour Utilities has an overall negative price trend. The trends are not perfectly smooth because all four stocks experience weekly increases and decreases.</li>
+
+  <li>
+```{r, echo=TRUE}
+northstar_return <- c(1.8, -0.7, 2.4, 0.6, -1.2, 1.1, 2.0, -0.4, 0.9, 1.5, -0.9, 1.3)
+harbour_return <- c(-1.0, 0.9, -1.4, 0.2, 1.3, -0.8, -0.7, 0.6, -0.3, -1.1, 0.8, -0.5)
+cor(northstar_return, harbour_return)
+```  
+  The correlation between Northstar Technology and Harbour Utilities is approximately $-0.968$.</li>
+
+  <li>
+```{r, echo=TRUE}
+maple_return <- c(1.3, -0.5, 1.8, 0.4, -0.8, 1.0, 1.5, -0.2, 0.7, 1.2, -0.4, 0.9)
+cedar_return <- c(0.8, -0.1, 1.2, 0.7, -0.4, 0.5, 1.6, 0.1, 0.3, 0.9, -0.2, 1.1)
+cor(maple_return, cedar_return)
+```
+  The correlation between Maple Retail and Cedar Bank is approximately $0.913$.</li>
+
+  <li>Pair $1$ has a very strong negative linear association. When Northstar has a relatively high return, Harbour generally has a relatively low return. Pair $2$ has a strong positive linear association because Maple and Cedar generally increase and decrease during the same weeks. These patterns appear as a decreasing pattern in Scatterplot B and an increasing pattern in Scatterplot D.</li>
+
+  <li>In Week $3$, Northstar Technology returned $2.4\%$, while Harbour Utilities returned $-1.4\%$. For an equally weighted portfolio, the combined return was
+
+  $$
+  \frac{2.4\%+(-1.4\%)}{2}=0.5\%
+  $$
+
+  Harbour's loss therefore offset part of Northstar's gain. The same offsetting effect can operate in the opposite direction during weeks when Northstar decreases and Harbour increases.</li>
+
+  <li>Pair $1$ would generally provide the greater diversification benefit because its correlation is strongly negative. The returns tend to move in opposite directions, allowing changes in one stock to offset changes in the other. The strongly positive returns in Pair $2$ tend to reinforce one another, so the two stocks provide less protection from shared increases or decreases.</li>
+
+  <li>
+```{r, echo=TRUE}
+pair_1_portfolio <- (northstar_return + harbour_return) / 2
+sd(pair_1_portfolio)
+```
+  The sample standard deviation of the Pair $1$ portfolio returns is approximately $0.208$ percentage points. 
+```{r, echo=TRUE}
+pair_2_portfolio <- (maple_return + cedar_return) / 2
+sd(pair_2_portfolio)
+```  
+  The sample standard deviation of the Pair $2$ portfolio returns is approximately $0.725$ percentage points. 
+  
+In this illustrative dataset, the portfolio formed from the negatively correlated stocks had less variable weekly returns.</li>
+
+  <li>Price indices may share upward or downward trends simply because both are observed over time. This can produce a strong correlation between price levels even when the week-to-week movements are not closely related. Weekly returns measure whether the stocks gain or lose value during the same periods and are therefore more relevant for studying diversification.</li>
+
+  <li>No. Negative correlation describes how the returns moved together during the observed period. It does not guarantee positive returns, eliminate losses or ensure that the relationship will remain the same in the future. Correlations can change when market conditions change. Correlations can also change based on how many data points you have over time.</li>
+</ol>
+
+</div>
+</details>
+:::
