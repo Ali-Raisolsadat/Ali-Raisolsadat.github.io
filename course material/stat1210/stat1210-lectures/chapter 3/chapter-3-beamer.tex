@@ -17,101 +17,100 @@
 % PART I: BIVARIATE DATA & VARIABLES
 % =============================================================
 
-% SLIDE 1: Title
+% SLIDE 1
 \begin{frame}
   \titlepage
 \end{frame}
 
-% SLIDE 2: Bivariate Data
-\begin{frame}{Bivariate Data: Two Variables per Individual}
-  \begin{itemize}
-    \item In Chapters 1 and 2, we examined biological data one variable at a time (e.g., \emph{only} looking at a histogram of viral loads). We call this \textbf{univariate} data analysis.
-    \item However, modern biological research rarely isolates a single measurement. 
-    \item A physiologist doesn't just care about a patient's blood pressure; they want to know if a patient's \emph{blood pressure} changes in a predictable way based on their \emph{sodium intake}.
-    \item When we measure two different quantitative variables on the exact same individual, we are analyzing \textbf{bivariate} data.
-  \end{itemize}
+% SLIDE 2
+\begin{frame}{Bivariate Data}
+\begin{itemize}
+	\item In Chapters 1 and 2, we examined one variable at a time. For example, we might study the distribution of test scores or household incomes. This is called \textbf{univariate data analysis}.
+	\item Many statistical questions involve studying how two variables are related.
+	\item For example, we might ask whether study time is related to exam score or whether temperature is related to electricity use.
+	\item When two quantitative variables are measured on the same individual or observational unit, we have \textbf{bivariate data}.
+\end{itemize}
 \end{frame}
 
-% SLIDE 3: Explanatory vs Response Variables
+% SLIDE 3
 \begin{frame}{Explanatory vs. Response Variables}
-  Before we can mathematically map the relationship between two variables, we must determine their scientific roles:
-  \vspace{0.3cm}
-  \begin{itemize}
-    \item \textbf{Response Variable ($y$):} The outcome variable that measures the biological result of the study. It is the variable we are trying to predict or explain.
-    \item \textbf{Explanatory Variable ($x$):} The variable that we suspect \emph{explains} or \emph{causes} changes in the response variable.
-  \end{itemize}
-  \vspace{0.3cm}
-  \begin{block}{Note on Terminology}
-    You will often hear researchers call $x$ the \emph{independent variable} or \emph{features}, and $y$ the \emph{dependent variable} or \emph{target variable}.
-  \end{block}
+When studying the relationship between two variables, it is useful to identify the role of each variable.
+\vspace{0.3cm}
+\begin{itemize}
+	\item \textbf{Response Variable ($y$):} The outcome variable that we want to explain or predict.
+	\item \textbf{Explanatory Variable ($x$):} The variable that may help explain or predict changes in the response variable.
+\end{itemize}
+\vspace{0.3cm}
+\begin{block}{Note on Terminology}
+The explanatory variable is sometimes called the \emph{predictor} or \emph{independent variable}. The response variable is sometimes called the \emph{dependent variable} or \emph{target variable}.
+\end{block}
 \end{frame}
 
-% SLIDE 4: Examples 3.1 & 3.2
-\begin{frame}{Examples 3.1 \& 3.2: Assigning Variables}
-  \textbf{Ex 3.1: Enzyme Activity and Temperature} \\
-  Students run an enzyme reaction at different water bath temperatures and measure how much oxygen gas is produced.
-  \begin{table}
-    \centering
-    \scriptsize
-    \begin{tabular}{lll}
-      \toprule
-      \textbf{Variable} & \textbf{Measurement} & \textbf{Biological Role} \\
-      \midrule
-      Explanatory ($x$) & Temperature ($^\circ$C) & Students manipulate this to drive the reaction speed. \\
-      Response ($y$) & Oxygen Gas (mL) & The biological outcome being measured. \\
-      \bottomrule
-    \end{tabular}
-  \end{table}
-
-  \vspace{0.2cm}
-  \textbf{Ex 3.2: Forest Ecology and Plant Growth} \\
-  An ecologist measures the percentage of open sky (canopy cover) and the height of the tallest fern in 50 forest plots.
-  \begin{table}
-    \centering
-    \scriptsize
-    \begin{tabular}{lll}
-      \toprule
-      \textbf{Variable} & \textbf{Measurement} & \textbf{Biological Role} \\
-      \midrule
-      Explanatory ($x$) & Canopy Open Sky (\%) & The physical environment is the underlying cause. \\
-      Response ($y$) & Fern Height (cm) & The biological growth response. \\
-      \bottomrule
-    \end{tabular}
-  \end{table}
+% SLIDE 4
+\begin{frame}{Assigning Variables}
+ \textbf{Ex 3.1: Enzyme Activity and Temperature} \\
+ Students run an enzyme reaction at different water bath temperatures and measure how much oxygen gas is produced.
+ \begin{table}
+ \centering
+\scriptsize
+\begin{tabular}{lll}
+\toprule
+\textbf{Variable} & \textbf{Measurement} & \textbf{Biological Role} \\
+\midrule
+Explanatory ($x$) & Temperature ($^\circ$C) & Students manipulate this to drive the reaction speed. \\
+Response ($y$) & Oxygen Gas (mL) & The biological outcome being measured. \\
+\bottomrule
+\end{tabular}
+\end{table}
+\vspace{0.2cm}
+\textbf{Ex 3.2: Forest Ecology and Plant Growth} \\
+An ecologist measures the percentage of open sky (canopy cover) and the height of the tallest fern in 50 forest plots.
+\begin{table}
+ \centering
+\scriptsize
+\begin{tabular}{lll}
+\toprule
+\textbf{Variable} & \textbf{Measurement} & \textbf{Biological Role} \\
+\midrule
+Explanatory ($x$) & Canopy Open Sky (\%) & The physical environment is the underlying cause. \\
+Response ($y$) & Fern Height (cm) & The biological growth response. \\
+\bottomrule
+ \end{tabular}
+ \end{table}
 \end{frame}
 
-% SLIDE 5: Examples 3.3 & 3.4
-\begin{frame}{Examples 3.3 \& 3.4: Context Matters!}
+% SLIDE 5
+\begin{frame}{Context Matters}
   \textbf{Ex 3.3: Beer and Blood Alcohol} \\
-  Student volunteers drank different amounts of beer, and a police officer measured their BAC. 
+  Student volunteers drank different amounts of beer and a police officer measured their blood alcohol concentration (BAC). 
   \begin{itemize}
-      \item Explanatory ($x$): Number of beers consumed.
-      \item Response ($y$): Percent alcohol in blood.
+      \item Explanatory ($x$): Number of beers consumed
+      \item Response ($y$): Percent alcohol in blood
   \end{itemize}
   \vspace{0.3cm}
   \textbf{Ex 3.4: Height} \\
-  The NCHS surveys Americans to document height, age, and sex. Here, there are no explanatory/response variables—just observation. \\
-  \emph{However}, a pediatrician looking at the exact same data to assess a child's growth trajectory would use Age and Sex as \textbf{Explanatory} ($x$) variables and Height as the \textbf{Response} ($y$) variable.
+	Statistics Canada's Canadian Health Measures Survey (CHMS) collects health information and physical measurements from Canadians, including height, age and sex. When the goal is simply to describe these measurements, there may be no explanatory or response variable. \\
+	\emph{However}, if a researcher uses the data to study how height changes with age, then Age would be the \textbf{Explanatory} variable ($x$) and Height would be the \textbf{Response} variable ($y$).
 \end{frame}
 
 % =============================================================
 % PART II: SCATTERPLOTS
 % =============================================================
 
-% SLIDE 6: Scatterplots Intro
+% SLIDE 6
 \begin{frame}{Scatterplots}
   Once we have identified our explanatory ($x$) and response ($y$) variables, the most effective way to display their relationship is a \textbf{scatterplot}.
   \vspace{0.3cm}
   
   \textbf{Rules for Building a Scatterplot:}
   \begin{enumerate}
-    \item Always plot the \textbf{Explanatory Variable on the horizontal ($x$) axis}.
-    \item Always plot the \textbf{Response Variable on the vertical ($y$) axis}.
+    \item Plot the \textbf{Explanatory Variable on the horizontal ($x$) axis}.
+    \item Plot the \textbf{Response Variable on the vertical ($y$) axis}.
     \item Each individual appears as exactly \textbf{one dot} on the graph, located at the intersection of their $x$ and $y$ values.
   \end{enumerate}
 \end{frame}
 
-% SLIDE 7: Examining a Scatterplot
+% SLIDE 7
 \begin{frame}{Examining a Scatterplot}
   \begin{block}{What to look for}
     In any graph of data, look for the overall pattern and for striking deviations from that pattern.
@@ -121,143 +120,153 @@
   \begin{itemize}
     \item \textbf{Form:} Is the relationship \emph{Linear} (straight line) or \emph{Non-Linear} (curved, U-shaped)?
     \item \textbf{Direction:} \emph{Positive association} (slopes upward) or \emph{Negative association} (slopes downward).
-    \item \textbf{Strength:} How tightly do the points cluster around the underlying form? (\emph{Strong, moderate, or weak}).
+    \item \textbf{Strength:} How tightly do the points cluster around the underlying form? (\emph{Strong, moderate or weak}).
     \item \textbf{Outliers:} Are there points that fall far outside the overall cloud?
   \end{itemize}
 \end{frame}
 
-% SLIDE 8: Ex 3.5 - Linear
+% SLIDE 8
 \begin{frame}{Example 3.5: Linear Relationships}
-  \begin{columns}[c]
-    \begin{column}{0.48\textwidth}
-      \textbf{Context:} Pharmacologists testing if Lipid Nanoparticle (LNP) surface charge drives drug delivery efficiency.
-      \vspace{0.2cm}
-      \begin{itemize}
-        \item \textbf{Form:} Linear
-        \item \textbf{Direction:} Positive
-        \item \textbf{Strength:} Moderate-to-Strong
-        \item \textbf{Outliers:} None apparent
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-      \includegraphics[width=\textwidth]{fig_ch3_scatterplot.png}
-    \end{column}
-  \end{columns}
+\footnotesize
+\begin{columns}[c]
+\begin{column}{0.48\textwidth}
+\textbf{Context:} Researchers are studying whether the surface charge of a Lipid Nanoparticle (LNP) is related to how efficiently it enters cells. They prepare several LNP formulations with different surface charges and measure the percentage of particles taken up by cells. Each point represents one LNP formulation.
+\begin{itemize}
+	\item \textbf{Explanatory variable ($x$):} LNP surface charge
+	\item \textbf{Response variable ($y$):} Cellular uptake efficiency
+	\item \textbf{Form:} Linear
+	 \item \textbf{Direction:} Positive
+	\item \textbf{Strength:} Moderate-to-Strong
+	\item \textbf{Outliers:} None apparent
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+	\includegraphics[width=\textwidth]{fig_ch3_scatterplot.png}
+\end{column}
+\end{columns}
 \end{frame}
 
-% SLIDE 9: Ex 3.6 - Non-Linear
-\begin{frame}{Example 3.6: Non-Linear Biological Forms}
-  \begin{columns}[c]
-    \begin{column}{0.5\textwidth}
-      \includegraphics[width=\textwidth]{fig_ch3_nonlinear.png}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \textbf{Context:} Measuring how a neurotransmitter drug binds to cellular receptors over time.
-      \vspace{0.2cm}
-      \begin{itemize}
-        \item \textbf{Form:} Strong, Non-Linear (asymptotic/hyperbolic).
-      \end{itemize}
-      \vspace{0.2cm}
-      \begin{alertblock}{Warning}
-        Standard linear statistical models cannot accurately summarize this data! The curve eventually flattens out near 100\% because all receptors are full.
-      \end{alertblock}
-    \end{column}
-  \end{columns}
+% SLIDE 9
+\begin{frame}{Example 3.6: Non-Linear Relationships}
+\footnotesize
+ \begin{columns}[c]
+ \begin{column}{0.5\textwidth}
+	 \includegraphics[width=\textwidth]{fig_ch3_nonlinear.png}
+ \end{column}
+ \begin{column}{0.48\textwidth}
+ \textbf{Context:} Researchers expose cells to different concentrations of a molecule that binds to receptors on the cell surface. For each concentration, they measure the percentage of receptors that become occupied. Each point represents one concentration and its corresponding receptor saturation.
+ \begin{itemize}
+	 \item \textbf{Explanatory variable ($x$):} Ligand concentration
+	 \item \textbf{Response variable ($y$):} Receptor saturation
+	\item \textbf{Form:} Strong and non-linear
+\end{itemize}
+
+ \begin{alertblock}{Why does the curve flatten?}
+\footnotesize
+At low concentrations, increasing the ligand concentration produces a large increase in receptor saturation. As more receptors become occupied fewer remain available. The response therefore begins to level off as saturation approaches its upper limit.
+ \end{alertblock}
+\end{column}
+\end{columns}
 \end{frame}
 
-% SLIDE 10: Ex 3.7 - Outliers
-\begin{frame}{Example 3.7: Severe Bivariate Outliers}
-  \begin{columns}[c]
-    \begin{column}{0.48\textwidth}
-      \textbf{Context:} High Tumor Mutational Burden (TMB) should logically trigger high Neoantigen presentation.
-      \vspace{0.2cm}
-      \begin{itemize}
-        \item \textbf{Overall Pattern:} Linear, positive, and moderately strong.
-        \item \textbf{Outlier:} Notice the severe bivariate outlier at roughly (35, 0).
-      \end{itemize}
-      \vspace{0.2cm}
-      \emph{Why? Biologically, this specific tumor has mutated to delete its surface presentation machinery (HLA-loss), hiding from the immune system.}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-      \includegraphics[width=\textwidth]{fig_ch3_outliers.png}
-    \end{column}
-  \end{columns}
+% SLIDE 10
+\begin{frame}{Example 3.7: Outliers}
+\footnotesize
+\begin{columns}[c]
+ \begin{column}{0.48\textwidth}
+\textbf{Context:} Researchers are studying whether tumours with more genetic mutations also produce more neoantigens. Neoantigens are abnormal proteins created by tumour mutations that may be recognized by the immune system. Each point represents one tumour sample.
+\begin{itemize}
+	\item \textbf{Explanatory variable ($x$):} Tumour Mutational Burden (TMB), which measures the number of mutations in the tumour
+	\item \textbf{Response variable ($y$):} Number of neoantigens presented by the tumour
+	\item \textbf{Overall Pattern:} Positive, approximately linear and moderately strong
+	\item \textbf{Outlier:} One tumour near $(35,0)$ has a high TMB but almost no observed neoantigen presentation
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+	\includegraphics[width=\textwidth]{fig_ch3_outliers.png}
+	\emph{Possible explanation:} A tumour may contain many mutations but still fail to present the resulting neoantigens effectively. For example, changes affecting the HLA antigen-presentation system could reduce what is displayed to the immune system.
+\end{column}
+\end{columns}
 \end{frame}
 
 % =============================================================
 % PART III: EXPLORING ASSOCIATIONS
 % =============================================================
 
-% SLIDE 11: Associations
+% SLIDE 11
 \begin{frame}{Exploring Associations}
   \begin{block}{Positive vs. Negative Association}
     \begin{itemize}
-      \item Two variables are \textbf{positively associated} when above-average values of one variable tend to accompany above-average values of the other. (The cloud slopes UP).
-      \item Two variables are \textbf{negatively associated} when above-average values of one variable tend to accompany below-average values of the other. (The cloud slopes DOWN).
+      \item Two variables are \textbf{positively associated} when above average values of one variable tend to accompany above average values of the other. 
+      \item Two variables are \textbf{negatively associated} when above average values of one variable tend to accompany below average values of the other.
     \end{itemize}
   \end{block}
 \end{frame}
 
-% SLIDE 12: Ex 3.8 - Manatees (Positive)
-\begin{frame}{Example 3.8: An Endangered Species (The Manatee)}
-  \begin{columns}[c]
-    \begin{column}{0.5\textwidth}
-      \includegraphics[width=\textwidth]{fig_ch3_manatees.png}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \textbf{Context:} Does the number of registered powerboats ($x$) explain the number of manatee deaths ($y$) in Florida?
-      \vspace{0.2cm}
-      \begin{itemize}
-        \item \textbf{Direction:} Positive. Higher powerboat registrations accompany higher manatee deaths.
-        \item \textbf{Form:} Linear.
-        \item \textbf{Strength:} Strong. 
-      \end{itemize}
-      \emph{Note: The plot is properly scaled, avoiding extra blank space on the edges.}
-    \end{column}
-  \end{columns}
+% SLIDE 12
+\begin{frame}{Example 3.8: Manatees and Powerboats}
+\footnotesize
+\begin{columns}[c]
+\begin{column}{0.5\textwidth}
+	\includegraphics[width=\textwidth]{fig_ch3_manatees.png}
+ \end{column}
+\begin{column}{0.48\textwidth}
+ \textbf{Context:} Researchers are studying whether increased boating activity is associated with the number of manatee deaths caused by collisions with watercraft in Florida. Each point represents one year of observations.
+\begin{itemize}
+	\item \textbf{Explanatory variable ($x$):} Number of registered powerboats in Florida
+	\item \textbf{Response variable ($y$):} Number of manatee deaths caused by watercraft collisions
+	 \item \textbf{Direction:} Positive. Years with more registered powerboats tend to have more manatee deaths.
+	 \item \textbf{Form:} Approximately linear
+	 \item \textbf{Strength:} Strong. The points follow the overall increasing pattern fairly closely.
+\end{itemize}
+\end{column}
+\end{columns}
 \end{frame}
 
-% SLIDE 13: Ex 3.9 - Fidgeting (Negative)
+% SLIDE 13:
 \begin{frame}{Example 3.9: Does Fidgeting Keep You Slim?}
-  \begin{columns}[c]
-    \begin{column}{0.48\textwidth}
-      \textbf{Context:} Researchers overfed volunteers and measured their Nonexercise Activity (NEA) change ($x$) vs. Fat Gain ($y$).
-      \vspace{0.2cm}
-      \begin{itemize}
-        \item \textbf{Direction:} Negative. People with larger increases in NEA tend to gain \emph{less} fat.
-        \item \textbf{Form:} Linear.
-        \item \textbf{Strength:} Moderately strong. The points make up a linear pattern but deviate quite a lot from the line.
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-      \includegraphics[width=\textwidth]{fig_ch3_nea_fat.png}
-    \end{column}
-  \end{columns}
+\footnotesize
+\begin{columns}[c]
+\begin{column}{0.48\textwidth}
+\textbf{Context:} Researchers deliberately increased the food intake of a group of volunteers and measured how much body fat each person gained. They also measured changes in \textbf{Nonexercise Activity (NEA)}, which includes everyday movement such as walking, standing and fidgeting rather than planned exercise. Each point represents one volunteer.
+\begin{itemize}
+\item \textbf{Explanatory variable ($x$):} Change in Nonexercise Activity (NEA)
+\item \textbf{Response variable ($y$):} Fat gain in kilograms
+\item \textbf{Direction:} Negative. Volunteers with larger increases in NEA tended to gain less fat.
+\item \textbf{Form:} Approximately linear\item \textbf{Strength:} Moderately strong. The points follow a decreasing pattern but show noticeable variation around that pattern.
+ \end{itemize}
+\end{column} 
+ \begin{column}{0.5\textwidth}
+	\includegraphics[width=\textwidth]{fig_ch3_nea_fat.png}
+\end{column}
+\end{columns}
 \end{frame}
 
-% SLIDE 14: Ex 3.10 - Penguins (Outliers)
+% SLIDE 14
 \begin{frame}{Example 3.10: Magellanic Penguins}
-  \begin{columns}[c]
-    \begin{column}{0.5\textwidth}
-      \includegraphics[width=\textwidth]{fig_ch3_penguins.png}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \textbf{Context:} Penguin chicks fledged ($y$) vs. chicks dying of starvation ($x$).
-      \vspace{0.2cm}
-      \begin{itemize}
-        \item \textbf{Trend:} Clear negative, linear pattern.
-        \item \textbf{Outliers:} Two points (1991 and 1999) sit far below the pattern. 
-      \end{itemize}
-      \emph{Why? Torrential, unusual rain killed over 40\% of chicks in those specific years, breaking the normal starvation/fledging trend.}
-    \end{column}
-  \end{columns}
+\footnotesize
+\begin{columns}[c]
+\begin{column}{0.5\textwidth}
+	\includegraphics[width=\textwidth]{fig_ch3_penguins.png}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Context:} Researchers followed a colony of Magellanic penguins over many breeding seasons. For each year, they recorded the percentage of chicks that died from starvation and the percentage that successfully fledged, meaning that they survived long enough to leave the nest. Each point represents one breeding year.
+\begin{itemize}
+\item \textbf{Explanatory variable ($x$):} Percentage of chicks that died from starvation
+\item \textbf{Response variable ($y$):} Percentage of chicks that successfully fledged
+\item \textbf{Direction:} Negative. Years with more starvation generally had fewer chicks successfully fledging.
+\item \textbf{Form:} Approximately linear
+\item \textbf{Outliers:} The years 1991 and 1999 fall well below the overall pattern.
+\end{itemize}
+\end{column}
+\end{columns}
 \end{frame}
 
 % =============================================================
 % PART IV: CORRELATION (r)
 % =============================================================
 
-% SLIDE 15: Correlation Intro
+% SLIDE 15
 \begin{frame}{Correlation ($r$)}
   Scatterplots rely on subjective visual judgment. To make reproducible claims, we need a mathematical summary. 
   \vspace{0.3cm}
@@ -265,11 +274,11 @@
   \textbf{Pearson's Correlation Coefficient ($r$)} measures the direction and exact strength of the \emph{linear} relationship between two quantitative variables.
 
   \vspace{0.2cm}
-  The formula standardizes both variables (converting them into $z$-scores), multiplies them together, and averages them:
+  The formula standardizes both variables (converting them into $z$-scores), multiplies them together and averages them:
   $$ r = \frac{1}{n-1} \sum \left( \frac{x_i - \bar{x}}{s_x} \right) \left( \frac{y_i - \bar{y}}{s_y} \right) $$
 \end{frame}
 
-% SLIDE 16: Properties of r
+% SLIDE 16
 \begin{frame}{Crucial Properties of $r$}
   \begin{enumerate}
     \item $r$ is always a number strictly between $-1$ and $+1$.
@@ -279,149 +288,207 @@
   \end{enumerate}
 \end{frame}
 
-% SLIDE 17: Ex 3.11 - Frog Setup
+% SLIDE 17
 \begin{frame}{Example 3.11: The Mechanics of Correlation (Frog Locomotion)}
-  To understand how the math works, let's look at a small dataset. A biologist measures the snout-vent length (cm) and maximum leap distance (cm) of 5 juvenile bullfrogs.
-  \vspace{0.3cm}
-  \begin{table}
-    \centering
-    \begin{tabular}{ccc}
-      \toprule
-      \textbf{Frog ID} & \textbf{Length $x$ (cm)} & \textbf{Leap Distance $y$ (cm)} \\
-      \midrule
-      1 & 4.0 & 32.0 \\
-      2 & 5.0 & 42.0 \\
-      3 & 6.0 & 48.0 \\
-      4 & 7.0 & 55.0 \\
-      5 & 8.0 & 65.0 \\
-      \bottomrule
-    \end{tabular}
-  \end{table}
+A biologist measures the snout-vent length (cm) and maximum leap distance (cm) of 5 juvenile bullfrogs.
+\vspace{0.3cm}
+\begin{table}
+\centering
+\begin{tabular}{ccc}
+\toprule
+\textbf{Frog ID} & \textbf{Length $x$ (cm)} & \textbf{Leap Distance $y$ (cm)} \\
+\midrule
+1 & 4.0 & 32.0 \\
+2 & 5.0 & 42.0 \\
+3 & 6.0 & 48.0 \\
+4 & 7.0 & 55.0 \\
+5 & 8.0 & 65.0 \\
+\bottomrule
+\end{tabular}
+ \end{table}
 \end{frame}
 
-% SLIDE 18: Ex 3.11 - R Code Part 1
-\begin{frame}[fragile]{Example 3.11: Correlation in R (Methods 1 \& 2)}
-  \begin{block}{Method 1: By Formula \& Method 2: Custom Function}
-  \scriptsize
-  \begin{verbatim}
+% SLIDE 18
+\begin{frame}{Example 3.11: Calculating Pearson Correlation}
+\scriptsize
+\textbf{Question:} What is Pearson's correlation coefficient between frog length and leap distance?
+\pause
+\textbf{Step 1: Calculate the means and standard deviations}
+\[
+	\bar{x}=6.0 \qquad \bar{y}=48.4
+\]
+\[
+	s_x \approx 1.581 \qquad s_y \approx 12.542
+\]
+
+\pause
+
+\textbf{Step 2: Standardize each observation}
+\scriptsize
+\begin{center}
+\begin{tabular}{ccccc}
+\toprule
+$x$ & $y$ & $z_x=\dfrac{x-\bar{x}}{s_x}$ &
+$z_y=\dfrac{y-\bar{y}}{s_y}$ & $z_xz_y$ \\
+\midrule
+4 & 32 & $-1.265$ & $-1.308$ & $1.654$ \\
+5 & 42 & $-0.632$ & $-0.510$ & $0.323$ \\
+6 & 48 & $0.000$  & $-0.032$ & $0.000$ \\
+7 & 55 & $0.632$  & $0.526$  & $0.333$ \\
+8 & 65 & $1.265$  & $1.324$  & $1.674$ \\
+\midrule
+ & & & \textbf{Sum} & $\mathbf{3.984}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\pause
+\footnotesize
+\textbf{Step 3: Substitute into the correlation formula}
+\[
+	r = \frac{1}{n-1} \sum z_xz_y = \frac{3.984}{5-1} \approx 0.996
+\]
+\pause
+The correlation is approximately $r=0.996$. The data show a very strong positive linear association: longer juvenile frogs tend to have greater leap distances.
+\end{frame}
+
+% SLIDE 19
+\begin{frame}[fragile]{Example 3.11: Correlation in R (Method 1)}
+\begin{block}{Method 1: Using the Formula}
+\scriptsize
+\begin{verbatim}
 length_x <- c(4, 5, 6, 7, 8)
 leap_y <- c(32, 42, 48, 55, 65)
 
-# Method 1: Using mean() and sd() manually
+# Store the number of observations
 n <- length(length_x)
-z_x <- (length_x - mean(length_x)) / sd(length_x)
-z_y <- (leap_y - mean(leap_y)) / sd(leap_y)
-r_manual <- sum(z_x * z_y) / (n - 1)
-r_manual
-#> [1] 0.9931758
 
-# Method 2: Wrapping into a custom function
-calculate_r <- function(x, y) {
-  n <- length(x)
-  top <- (x - mean(x)) / sd(x)
-  bottom <- (y - mean(y)) / sd(y)
-  return(sum(top * bottom) / (n - 1))
-}
-calculate_r(length_x, leap_y)
-#> [1] 0.9931758
-  \end{verbatim}
-  \end{block}
+# Convert the x-values to z-scores
+z_x <- (length_x - mean(length_x)) / sd(length_x)
+
+# Convert the y-values to z-scores.
+z_y <- (leap_y - mean(leap_y)) / sd(leap_y)
+
+# Calculate Pearson's correlation coefficient
+r_manual <- sum(z_x * z_y) / (n - 1)
+
+r_manual
+
+ [1] 0.995939
+\end{verbatim}
+\end{block}
 \end{frame}
 
-% SLIDE 19: Ex 3.11 - R Code Part 2
+% SLIDE 20
+\begin{frame}[fragile]{Example 3.11: Correlation in R (Method 2)}
+\begin{block}{Method 2: Creating a Custom Function}
+\scriptsize
+\begin{verbatim}
+calculate_r <- function(x, y) {
+
+  # Store the number of paired observations
+  n <- length(x)
+
+  # Standardize both variables.
+  z_x <- (x - mean(x)) / sd(x)
+  z_y <- (y - mean(y)) / sd(y)
+
+  # Calculate and return Pearson's correlation
+  return(sum(z_x * z_y) / (n - 1))
+}
+
+calculate_r(length_x, leap_y)
+
+[1] 0.995939
+\end{verbatim}
+\end{block}
+\end{frame}
+
+% SLIDE 21
 \begin{frame}[fragile]{Example 3.11: Correlation in R (Method 3)}
-  While it's important to understand the math, R has a built-in shortcut for calculating Pearson's correlation coefficient.
-  \vspace{0.3cm}
-  \begin{block}{Method 3: The fast way}
-  \begin{verbatim}
+While it's important to understand the math, R has a built-in shortcut for calculating Pearson's correlation coefficient.
+\vspace{0.3cm}
+\begin{block}{Method 3: The fast way}
+\begin{verbatim}
 # In practice, you will simply use the cor() function:
 cor(length_x, leap_y)
-  \end{verbatim}
-  \end{block}
-  \textbf{Output:}
-  \texttt{[1] 0.9931758}
-  \vspace{0.3cm}
-  
-  \textbf{Interpretation:} An $r$ of roughly $0.993$ tells us there is a nearly perfect, positive linear relationship between a juvenile frog's length and how far it can leap.
+ [1] 0.9931758
+\end{verbatim}
+\end{block}
+
+\textbf{Interpretation:} An $r$ of roughly $0.993$ tells us there is a nearly perfect, positive linear relationship between a juvenile frog's length and how far it can leap.
 \end{frame}
 
-% SLIDE 20: Ex 3.12 - Spatial Arrays
+% SLIDE 22
 \begin{frame}{Example 3.12: Calculating $r$ (Spatial Reproducibility)}
-  \begin{columns}[c]
-    \begin{column}{0.48\textwidth}
-      \textbf{Context:} A lab runs a spatial transcriptomics chip twice. They calculate the correlation of gene expression levels (log-counts) across 500 genes between Replicate 1 and 2.
-      \vspace{0.3cm}
-      
-      \textbf{Interpretation:} \\
-      An $r$ of \textbf{0.9696} confirms a remarkably strong, positive linear relationship, proving the assay performs almost identically between independent runs.
-    \end{column}
-    \begin{column}{0.5\textwidth}
-      \includegraphics[width=\textwidth]{fig_ch3_reproducibility.png}
-    \end{column}
-  \end{columns}
+\scriptsize
+\begin{columns}[c]
+\begin{column}{0.48\textwidth}
+\textbf{Context:} A research lab uses a spatial transcriptomics assay to measure gene activity in a tissue sample. To check whether the laboratory procedure gives consistent results, the same type of experiment is performed twice under similar conditions. For each of 500 genes, the researchers compare the measured expression level from Replicate 1 with the corresponding expression level from Replicate 2. Each point represents one gene.
+\vspace{0.3cm}
+\begin{itemize}
+\item \textbf{Explanatory variable ($x$):} Gene expression measured in Replicate 1
+ \item \textbf{Response variable ($y$):} Gene expression measured in Replicate 2
+\item \textbf{Correlation:} $r=0.9696$
+ \item \textbf{Direction:} Positive
+\item \textbf{Strength:} Very strong linear association
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+	\includegraphics[width=\textwidth]{fig_ch3_reproducibility.png}
+	\textbf{Interpretation:} Genes with higher expression in the first replicate also tend to have higher expression in the second replicate. The large value of $r$ suggests strong reproducibility of the relative gene-expression pattern.
+\end{column}
+\end{columns}
 \end{frame}
 
-% SLIDE 21: Ex 3.13 - Unit Independence
+% SLIDE 23
 \begin{frame}{Example 3.13: The Unit-Independence of $r$}
-  Because the formula divides by standard deviations ($s_x$ and $s_y$), it entirely strips away the physical units of measurement. 
+Because the formula divides by standard deviations ($s_x$ and $s_y$), it entirely strips away the physical units of measurement. 
+\vspace{0.3cm}
+\begin{alertblock}{Rule}
+Correlation has no units and changing the units of measurement does not change $r$.
+\end{alertblock}
+\vspace{0.3cm}
   
-  \vspace{0.3cm}
-  \begin{alertblock}{Rule}
-    Correlation has no units, and changing the units of measurement does not change $r$.
-  \end{alertblock}
-  \vspace{0.3cm}
+If you calculate correlation between swimming speed (\textbf{km/h}) and energy expenditure (\textbf{Kcal}), you get $r = 0.9424$. 
   
-  If you calculate correlation between swimming speed (\textbf{km/h}) and energy expenditure (\textbf{Kcal}), you get $r = 0.9424$. 
-  
-  If a colleague converts the data to meters per second (\textbf{m/s}) and Joules (\textbf{J}), the correlation remains \textbf{identically 0.9424}. 
+If a colleague converts the data to meters per second (\textbf{m/s}) and Joules (\textbf{J}), the correlation remains \textbf{identically 0.9424}. 
 \end{frame}
 
-% SLIDE 22: Ex 3.14 - Non-Resistance
+% SLIDE 24
 \begin{frame}{Example 3.14: The Non-Resistance of Correlation}
-  Remember that the mean ($\bar{x}$) and standard deviation ($s$) are non-resistant to outliers. 
-  \vspace{0.3cm}
-  
-  Because the formula for $r$ relies entirely on $\bar{x}$ and $s$, \textbf{correlation is strongly non-resistant to outliers.} 
-  
-  \vspace{0.3cm}
-  A single extreme point can completely destroy a strong correlation or artificially create one out of thin air! Let's look at a soil toxicology study...
+Remember that the mean ($\bar{x}$) and standard deviation ($s$) are non-resistant to outliers. 
+
+\vspace{0.3cm}
+
+Because the formula for $r$ relies entirely on $\bar{x}$ and $s$, \textbf{correlation is strongly non-resistant to outliers.} 
+
+\vspace{0.3cm}
+
+A single extreme point can completely destroy a strong correlation or artificially create one out of thin air! Let's look at a soil toxicology study.
 \end{frame}
 
-% SLIDE 23: Ex 3.14 - Visualizing Outlier Impact
-\begin{frame}{Example 3.14: Heavy Metal vs. Root Length}
-  \begin{columns}[c]
-    \begin{column}{0.5\textwidth}
-      \includegraphics[width=\textwidth]{fig_ch3_toxic_outlier.png}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      29 normal samples show a moderate negative relationship ($r = -0.77$). 
-      \vspace{0.2cm}
-      
-      One single corrupted industrial sample was accidentally included.
-      \vspace{0.2cm}
-      
-      By including just \textbf{one} anomalous data point out of 30, the correlation incorrectly jumps to $\mathbf{-0.95}$, making it look nearly perfect!
-    \end{column}
-  \end{columns}
+% SLIDE 25
+\begin{frame}{Example 3.14: Heavy Metal and Root Length}
+\footnotesize
+\begin{columns}[c]
+ \begin{column}{0.5\textwidth}
+	\includegraphics[width=\textwidth]{fig_ch3_toxic_outlier.png}
+	One unusually extreme industrial sample was then included. Its metal concentration was far outside the range of the other observations and its root length was very small. After adding this one point, the correlation changes to approximately $r=-0.95$.
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Context:} Researchers are studying whether higher concentrations of a heavy metal in soil are associated with reduced plant root growth. For each soil sample, they record the heavy metal concentration and the root length of a plant grown in that soil. Each point represents one soil sample.
+ \vspace{0.2cm}
+\begin{itemize}
+	\item \textbf{Explanatory variable ($x$):} Heavy metal concentration in the soil
+	\item \textbf{Response variable ($y$):} Plant root length
+	 \item \textbf{Original pattern:} The 29 regular samples show a moderately strong negative linear association with $r=-0.77$
+\end{itemize}
+\end{column}
+\end{columns}
 \end{frame}
 
-% SLIDE 24: Golden Rule
-\begin{frame}{The Golden Rule}
-  \vspace{1cm}
-  \begin{center}
-    \Large
-    \textbf{The Golden Rule of Bivariate Data:}
-    \vspace{0.5cm}
-    
-    \textcolor{blue}{Never calculate a correlation coefficient without looking at the scatterplot first!}
-    
-    \vspace{0.5cm}
-    \normalsize
-    $r$ cannot detect curves, and $r$ is easily fooled by outliers.
-  \end{center}
-\end{frame}
-
-% SLIDE 25: Summary of R Commands
+% SLIDE 26
 \begin{frame}[fragile]{Summary of R Commands (Chapter 3)}
   Here are the key functions introduced in this chapter for bivariate analysis:
   \vspace{0.3cm}
@@ -441,45 +508,6 @@ cor(length_x, leap_y)
       \bottomrule
     \end{tabular}
   \end{table}
-\end{frame}
-
-% SLIDE 26: Homework Question 1 - Explanatory and Response Variables
-\begin{frame}{Homework Questions}
- Problem 1: A greenhouse study records the amount of fertilizer applied to each plant and the plant's height after four weeks.
-
-  \begin{enumerate}
-    \item Identify the \textbf{explanatory variable} and the \textbf{response variable}.
-    \item Which variable should be placed on the horizontal axis of a scatterplot?
-    \item Which variable should be placed on the vertical axis?
-  \end{enumerate}
-
-  \vspace{0.25cm}
-
-  \begin{block}{Variables}
-    Fertilizer amount is measured in grams and plant height is measured in centimetres.
-  \end{block}
-\end{frame}
-
-
-% SLIDE 28: Homework Question 3 - Calculating and Interpreting Correlation
-\begin{frame}{Homework Questions}
- Problem 2: A researcher records an explanatory variable $x$ and a response variable $y$ for six observations.
-
-  \begin{center}
-    \begin{tabular}{c|rrrrrr}
-      \toprule
-      $x$ & 1 & 2 & 3 & 4 & 5 & 6 \\
-      $y$ & 7.1 & 8.9 & 8.0 & 10.5 & 9.8 & 12.1 \\
-      \bottomrule
-    \end{tabular}
-  \end{center}
-
-  \begin{enumerate}
-    \item Enter the two variables as vectors in R.
-    \item Use \texttt{cor(x, y)} to calculate Pearson's correlation coefficient.
-    \item Interpret the \textbf{direction} and \textbf{strength} of the linear association in context.
-    \item Explain why a scatterplot should still be examined even after $r$ has been calculated.
-  \end{enumerate}
 \end{frame}
 
 
