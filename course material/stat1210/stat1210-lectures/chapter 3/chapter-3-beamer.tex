@@ -306,13 +306,43 @@ A biologist measures the snout-vent length (cm) and maximum leap distance (cm) o
 \bottomrule
 \end{tabular}
  \end{table}
+
+\textbf{Question:} What is Pearson's correlation coefficient between frog length and leap distance?
 \end{frame}
 
 % SLIDE 18
 \begin{frame}{Example 3.11: Calculating Pearson Correlation}
+
+\end{frame}
+
+% SLIDE 19
+\begin{frame}{Example 3.11: Calculating Pearson Correlation}
+
+\end{frame}
+
+% SLIDE 20
+\begin{frame}{Example 3.11: Calculating Pearson Correlation}
+
+\end{frame}
+
+% SLIDE 21
+\begin{frame}{Example 3.11: Calculating Pearson Correlation}
+
+\end{frame}
+
+% SLIDE 22
+\begin{frame}{Example 3.11: Calculating Pearson Correlation}
+
+\end{frame}
+
+% SLIDE 23
+\begin{frame}{Example 3.11: Calculating Pearson Correlation}
+
+\end{frame}
+
+% SLIDE 24
+\begin{frame}{Example 3.11: Calculating Pearson Correlation}
 \scriptsize
-\textbf{Question:} What is Pearson's correlation coefficient between frog length and leap distance?
-\pause
 \textbf{Step 1: Calculate the means and standard deviations}
 \[
 	\bar{x}=6.0 \qquad \bar{y}=48.4
@@ -320,8 +350,6 @@ A biologist measures the snout-vent length (cm) and maximum leap distance (cm) o
 \[
 	s_x \approx 1.581 \qquad s_y \approx 12.542
 \]
-
-\pause
 
 \textbf{Step 2: Standardize each observation}
 \scriptsize
@@ -342,17 +370,58 @@ $z_y=\dfrac{y-\bar{y}}{s_y}$ & $z_xz_y$ \\
 \end{tabular}
 \end{center}
 
-\pause
-\footnotesize
 \textbf{Step 3: Substitute into the correlation formula}
 \[
 	r = \frac{1}{n-1} \sum z_xz_y = \frac{3.984}{5-1} \approx 0.996
 \]
-\pause
+
 The correlation is approximately $r=0.996$. The data show a very strong positive linear association: longer juvenile frogs tend to have greater leap distances.
 \end{frame}
 
-% SLIDE 19
+% SLIDE 25
+\begin{frame}{Example 3.11: Correlation Using Sums}
+\scriptsize
+This equivalent formula calculates correlation directly from the deviations from the two means:
+\[
+	r_{xy} =\frac{\displaystyle\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\displaystyle\sum_{i=1}^{n}(x_i-\bar{x})^2}\sqrt{\displaystyle\sum_{i=1}^{n}(y_i-\bar{y})^2}}
+\]
+
+For the frog data
+\[
+	\bar{x}=6.0 \qquad\text{and}\qquad \bar{y}=48.4
+\]
+\begin{center}
+\setlength{\tabcolsep}{4.5pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{rrrrrrr}
+\toprule
+$x_i$ & $y_i$
+& $x_i-\bar{x}$
+& $y_i-\bar{y}$
+& $(x_i-\bar{x})^2$
+& $(y_i-\bar{y})^2$
+& $(x_i-\bar{x})(y_i-\bar{y})$ \\
+\midrule
+$4$ & $32$ & $-2$ & $-16.4$ & $4$ & $268.96$ & $32.8$ \\
+$5$ & $42$ & $-1$ & $-6.4$  & $1$ & $40.96$  & $6.4$ \\
+$6$ & $48$ & $0$  & $-0.4$  & $0$ & $0.16$   & $0.0$ \\
+$7$ & $55$ & $1$  & $6.6$   & $1$ & $43.56$  & $6.6$ \\
+$8$ & $65$ & $2$  & $16.6$  & $4$ & $275.56$ & $33.2$ \\
+\midrule
+\textbf{Sum} & & $0$ & $0$
+& $\mathbf{10}$
+& $\mathbf{629.20}$
+& $\mathbf{79.0}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\[
+r = \frac{79.0}{\sqrt{(10)(629.20)}} = \frac{79.0}{79.322} \approx 0.996
+\]
+
+\end{frame}
+
+% SLIDE 26
 \begin{frame}[fragile]{Example 3.11: Correlation in R (Method 1)}
 \begin{block}{Method 1: Using the Formula}
 \scriptsize
@@ -369,7 +438,7 @@ z_x <- (length_x - mean(length_x)) / sd(length_x)
 # Convert the y-values to z-scores.
 z_y <- (leap_y - mean(leap_y)) / sd(leap_y)
 
-# Calculate Pearson's correlation coefficient
+# Calculate Pearson correlation coefficient
 r_manual <- sum(z_x * z_y) / (n - 1)
 
 r_manual
@@ -379,7 +448,36 @@ r_manual
 \end{block}
 \end{frame}
 
-% SLIDE 20
+% SLIDE 27
+\begin{frame}[fragile]{Example 3.11: Correlation in R Using Sums}
+\begin{block}{Using the sum-of-deviations formula}
+\scriptsize
+\begin{verbatim}
+length_x <- c(4, 5, 6, 7, 8)
+leap_y <- c(32, 42, 48, 55, 65)
+
+# Calculate deviations from the means
+x_deviation <- length_x - mean(length_x)
+y_deviation <- leap_y - mean(leap_y)
+
+# Calculate the numerator
+numerator <- sum(x_deviation * y_deviation)
+
+# Calculate the two sums in the denominator
+sum_x_squared <- sum(x_deviation^2)
+sum_y_squared <- sum(y_deviation^2)
+
+# Calculate Pearsons correlation coefficient
+denominator <- sqrt(sum_x_squared * sum_y_squared)
+r_sums <- numerator / denominator
+
+r_sums
+[1] 0.995939
+\end{verbatim}
+\end{block}
+\end{frame}
+
+% SLIDE 28
 \begin{frame}[fragile]{Example 3.11: Correlation in R (Method 2)}
 \begin{block}{Method 2: Creating a Custom Function}
 \scriptsize
@@ -404,7 +502,7 @@ calculate_r(length_x, leap_y)
 \end{block}
 \end{frame}
 
-% SLIDE 21
+% SLIDE 29
 \begin{frame}[fragile]{Example 3.11: Correlation in R (Method 3)}
 While it's important to understand the math, R has a built-in shortcut for calculating Pearson's correlation coefficient.
 \vspace{0.3cm}
@@ -412,14 +510,14 @@ While it's important to understand the math, R has a built-in shortcut for calcu
 \begin{verbatim}
 # In practice, you will simply use the cor() function:
 cor(length_x, leap_y)
- [1] 0.9931758
+ [1] 0.995939
 \end{verbatim}
 \end{block}
 
-\textbf{Interpretation:} An $r$ of roughly $0.993$ tells us there is a nearly perfect, positive linear relationship between a juvenile frog's length and how far it can leap.
+\textbf{Interpretation:} An $r$ of roughly $0.996$ tells us there is a nearly perfect, positive linear relationship between a juvenile frog's length and how far it can leap.
 \end{frame}
 
-% SLIDE 22
+% SLIDE 30
 \begin{frame}{Example 3.12: Calculating $r$ (Spatial Reproducibility)}
 \scriptsize
 \begin{columns}[c]
@@ -441,7 +539,7 @@ cor(length_x, leap_y)
 \end{columns}
 \end{frame}
 
-% SLIDE 23
+% SLIDE 31
 \begin{frame}{Example 3.13: The Unit-Independence of $r$}
 Because the formula divides by standard deviations ($s_x$ and $s_y$), it entirely strips away the physical units of measurement. 
 \vspace{0.3cm}
@@ -455,7 +553,7 @@ If you calculate correlation between swimming speed (\textbf{km/h}) and energy e
 If a colleague converts the data to meters per second (\textbf{m/s}) and Joules (\textbf{J}), the correlation remains \textbf{identically 0.9424}. 
 \end{frame}
 
-% SLIDE 24
+% SLIDE 32
 \begin{frame}{Example 3.14: The Non-Resistance of Correlation}
 Remember that the mean ($\bar{x}$) and standard deviation ($s$) are non-resistant to outliers. 
 
@@ -468,7 +566,7 @@ Because the formula for $r$ relies entirely on $\bar{x}$ and $s$, \textbf{correl
 A single extreme point can completely destroy a strong correlation or artificially create one out of thin air! Let's look at a soil toxicology study.
 \end{frame}
 
-% SLIDE 25
+% SLIDE 33
 \begin{frame}{Example 3.14: Heavy Metal and Root Length}
 \footnotesize
 \begin{columns}[c]
@@ -488,7 +586,7 @@ A single extreme point can completely destroy a strong correlation or artificial
 \end{columns}
 \end{frame}
 
-% SLIDE 26
+% SLIDE 34
 \begin{frame}[fragile]{Summary of R Commands (Chapter 3)}
   Here are the key functions introduced in this chapter for bivariate analysis:
   \vspace{0.3cm}
