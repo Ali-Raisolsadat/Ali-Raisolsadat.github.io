@@ -312,47 +312,150 @@ A biologist measures the snout-vent length (cm) and maximum leap distance (cm) o
 
 % SLIDE 18
 \begin{frame}{Example 3.11: Calculating Pearson Correlation}
+\footnotesize
+\textbf{Step 1: Calculate the means and Deviations}
+There are $n=5$ paired observations.
+$$
+	\bar{x}=\frac{\sum x_i}{n} =\frac{4+5+6+7+8}{5} =\frac{30}{5} =6.0
+$$
 
+$$
+	\bar{y}=\frac{\sum y_i}{n} =\frac{32+42+48+55+65}{5}=\frac{242}{5} =48.4
+$$
+
+\begin{center}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{rrr|rrr}
+\toprule
+$x_i$ & $x_i-\bar{x}$ & $(x_i-\bar{x})^2$ & $y_i$ & $y_i-\bar{y}$ & $(y_i-\bar{y})^2$ \\
+\midrule
+$4$ & $-2$ & $4$ & $32$ & $-16.4$ & $268.96$ \\
+$5$ & $-1$ & $1$ & $42$ & $-6.4$ & $40.96$ \\
+$6$ & $0$ & $0$ & $48$ & $-0.4$ & $0.16$ \\
+$7$ & $1$ & $1$ & $55$ & $6.6$ & $43.56$ \\
+$8$ & $2$ & $4$ & $65$ & $16.6$ & $275.56$ \\
+\midrule
+\textbf{Sum}& $\mathbf{0}$& $\mathbf{10}$& {}& $\mathbf{0}$& $\mathbf{629.20}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
 \end{frame}
 
 % SLIDE 19
 \begin{frame}{Example 3.11: Calculating Pearson Correlation}
+\footnotesize
+\textbf{Step 2a: Calculate the sample standard deviation of $x$}
+\[
+s_x=\sqrt{\frac{\sum_{i=1}^{n}(x_i-\bar{x})^2}{n-1}}
+\]
+From table above we have
+\[
+\sum (x_i-\bar{x})^2 = 10 
+\]
+Therefore
+\[
+s_x=\sqrt{\frac{10}{5-1}} =\sqrt{2.5}\approx 1.581
+\]
+
+\textbf{Step 2b: Calculate the sample standard deviation of $y$}
+\[
+s_y=\sqrt{\frac{\sum_{i=1}^{n}(y_i-\bar{y})^2}{n-1}}
+\]
+From table above we have
+\[
+\sum (y_i-\bar{y})^2 = 629.20
+\]
+Therefore
+\[
+s_y=\sqrt{\frac{629.20}{5-1}} =\sqrt{\frac{629.20}{4}} \approx 12.542
+\]
+
 
 \end{frame}
 
 % SLIDE 20
 \begin{frame}{Example 3.11: Calculating Pearson Correlation}
+\footnotesize
+\textbf{Step 3a: Standardize the frog-length values}
 
+The standardized value of $x_i$ is
+\[
+z_{x_{i}}=\frac{x_i-\bar{x}}{s_x}
+\]
+
+Using $\bar{x}=6$ and $s_x\approx1.581139$
+\[
+\begin{aligned}
+z_{x_1}
+&=\frac{4-6}{1.581139} =\frac{-2}{1.581139} =-1.264911 \approx -1.265 \\[1mm]
+z_{x_2}
+&=\frac{5-6}{1.581139} =\frac{-1}{1.581139} =-0.632456 \approx -0.632 \\[1mm]
+z_{x_3}
+&=\frac{6-6}{1.581139} =0\\[1mm] 
+z_{x_4}
+&=\frac{7-6}{1.581139} =\frac{1}{1.581139} =0.632456 \approx 0.632 \\[1mm]
+z_{x_5}
+&=\frac{8-6}{1.581139} =\frac{2}{1.581139} =1.264911 \approx 1.265
+\end{aligned}
+\]
 \end{frame}
 
 % SLIDE 21
 \begin{frame}{Example 3.11: Calculating Pearson Correlation}
+\footnotesize
+\textbf{Step 3b: Standardize the leap-distance values}
+
+The standardized value of $y_i$ is
+\[
+	z_{y,i}=\frac{y_i-\bar{y}}{s_y}
+\]
+
+Using $\bar{y}=48.4$ and $s_y\approx12.541930$
+\[
+\begin{aligned}
+z_{y_1}
+&=\frac{32-48.4}{12.541930} =\frac{-16.4}{12.541930} =-1.307614 \approx -1.308 \\[1mm]
+z_{y_2}
+&=\frac{42-48.4}{12.541930} =\frac{-6.4}{12.541930} =-0.510288 \approx -0.510\\[1mm]
+z_{y_3}
+&=\frac{48-48.4}{12.541930} =\frac{-0.4}{12.541930} =-0.031893 \approx -0.032 \\[1mm]
+z_{y_4}
+&=\frac{55-48.4}{12.541930} =\frac{6.6}{12.541930} =0.526235 \approx 0.526 \\[1mm]
+z_{y_5}
+&=\frac{65-48.4}{12.541930} =\frac{16.6}{12.541930} =1.323560 \approx 1.324
+\end{aligned}
+\]
 
 \end{frame}
 
 % SLIDE 22
 \begin{frame}{Example 3.11: Calculating Pearson Correlation}
-
+\small
+\textbf{Step 4: Multiply the paired $z$-scores}
+\vspace{0.2cm}
+The products use the unrounded $z$-scores:
+\[
+\begin{aligned}
+z_{x_1}z_{y_1}
+&=(-1.264911)(-1.307614) =1.654015 \approx1.654 \\[1mm] 
+z_{x_2}z_{y_2}
+&=(-0.632456)(-0.510288) =0.322735 \approx0.323 \\[1mm]
+z_{x_3}z_{y_3}
+&=(0)(-0.031893) =0 \\[1mm]
+z_{x_4}z_{y_4}
+&=(0.632456)(0.526235) =0.332820 \approx0.333\\[1mm]
+z_{x_5}z_{y_5}
+&=(1.264911)(1.323560) =1.674186 \approx1.674
+\end{aligned}
+\]
 \end{frame}
+
 
 % SLIDE 23
 \begin{frame}{Example 3.11: Calculating Pearson Correlation}
-
-\end{frame}
-
-% SLIDE 24
-\begin{frame}{Example 3.11: Calculating Pearson Correlation}
 \scriptsize
-\textbf{Step 1: Calculate the means and standard deviations}
-\[
-	\bar{x}=6.0 \qquad \bar{y}=48.4
-\]
-\[
-	s_x \approx 1.581 \qquad s_y \approx 12.542
-\]
-
-\textbf{Step 2: Standardize each observation}
-\scriptsize
+\textbf{Step 5: Summarize the calculations}
 \begin{center}
 \begin{tabular}{ccccc}
 \toprule
@@ -370,7 +473,7 @@ $z_y=\dfrac{y-\bar{y}}{s_y}$ & $z_xz_y$ \\
 \end{tabular}
 \end{center}
 
-\textbf{Step 3: Substitute into the correlation formula}
+\textbf{Step 6: Substitute into the correlation formula}
 \[
 	r = \frac{1}{n-1} \sum z_xz_y = \frac{3.984}{5-1} \approx 0.996
 \]
@@ -378,7 +481,7 @@ $z_y=\dfrac{y-\bar{y}}{s_y}$ & $z_xz_y$ \\
 The correlation is approximately $r=0.996$. The data show a very strong positive linear association: longer juvenile frogs tend to have greater leap distances.
 \end{frame}
 
-% SLIDE 25
+% SLIDE 24
 \begin{frame}{Example 3.11: Correlation Using Sums}
 \scriptsize
 This equivalent formula calculates correlation directly from the deviations from the two means:
@@ -421,7 +524,7 @@ r = \frac{79.0}{\sqrt{(10)(629.20)}} = \frac{79.0}{79.322} \approx 0.996
 
 \end{frame}
 
-% SLIDE 26
+% SLIDE 25
 \begin{frame}[fragile]{Example 3.11: Correlation in R (Method 1)}
 \begin{block}{Method 1: Using the Formula}
 \scriptsize
@@ -448,7 +551,7 @@ r_manual
 \end{block}
 \end{frame}
 
-% SLIDE 27
+% SLIDE 26
 \begin{frame}[fragile]{Example 3.11: Correlation in R Using Sums (Method 2)}
 \begin{block}{Using the sum-of-deviations formula}
 \scriptsize
@@ -477,7 +580,7 @@ r_sums
 \end{block}
 \end{frame}
 
-% SLIDE 28
+% SLIDE 27
 \begin{frame}[fragile]{Example 3.11: Correlation in R (Method 3)}
 \begin{block}{Method 2: Creating a Custom Function}
 \scriptsize
@@ -502,7 +605,7 @@ calculate_r(length_x, leap_y)
 \end{block}
 \end{frame}
 
-% SLIDE 29
+% SLIDE 28
 \begin{frame}[fragile]{Example 3.11: Correlation in R (Method 4)}
 While it's important to understand the math, R has a built-in shortcut for calculating Pearson's correlation coefficient.
 \vspace{0.3cm}
@@ -517,7 +620,7 @@ cor(length_x, leap_y)
 \textbf{Interpretation:} An $r$ of roughly $0.996$ tells us there is a nearly perfect, positive linear relationship between a juvenile frog's length and how far it can leap.
 \end{frame}
 
-% SLIDE 30
+% SLIDE 29
 \begin{frame}{Example 3.12: Calculating $r$ (Spatial Reproducibility)}
 \scriptsize
 \begin{columns}[c]
@@ -539,7 +642,7 @@ cor(length_x, leap_y)
 \end{columns}
 \end{frame}
 
-% SLIDE 31
+% SLIDE 30
 \begin{frame}{Example 3.13: The Unit-Independence of $r$}
 Because the formula divides by standard deviations ($s_x$ and $s_y$), it entirely strips away the physical units of measurement. 
 \vspace{0.3cm}
@@ -553,7 +656,7 @@ If you calculate correlation between swimming speed (\textbf{km/h}) and energy e
 If a colleague converts the data to meters per second (\textbf{m/s}) and Joules (\textbf{J}), the correlation remains \textbf{identically 0.9424}. 
 \end{frame}
 
-% SLIDE 32
+% SLIDE 31
 \begin{frame}{Example 3.14: The Non-Resistance of Correlation}
 Remember that the mean ($\bar{x}$) and standard deviation ($s$) are non-resistant to outliers. 
 
@@ -566,7 +669,7 @@ Because the formula for $r$ relies entirely on $\bar{x}$ and $s$, \textbf{correl
 A single extreme point can completely destroy a strong correlation or artificially create one out of thin air! Let's look at a soil toxicology study.
 \end{frame}
 
-% SLIDE 33
+% SLIDE 32
 \begin{frame}{Example 3.14: Heavy Metal and Root Length}
 \footnotesize
 \begin{columns}[c]
@@ -586,7 +689,7 @@ A single extreme point can completely destroy a strong correlation or artificial
 \end{columns}
 \end{frame}
 
-% SLIDE 34
+% SLIDE 33
 \begin{frame}[fragile]{Summary of R Commands (Chapter 3)}
   Here are the key functions introduced in this chapter for bivariate analysis:
   \vspace{0.3cm}
