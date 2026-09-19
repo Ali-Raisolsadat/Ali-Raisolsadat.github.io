@@ -1,0 +1,482 @@
+---
+title: "STAT 1210"
+subtitle: "Chapter 4 Homework"
+author: "Fall 2026"
+date: ""
+output:
+  html_document:
+    self_contained: true
+    toc: false
+    number_sections: false
+    theme: flatly
+    highlight: tango
+---
+
+<style>
+:root {
+  --ink: #263746;
+  --muted: #667786;
+  --blue: #294d73;
+  --blue-dark: #183a5c;
+  --blue-soft: #edf3f8;
+  --line: #d8e1e8;
+  --paper: #ffffff;
+  --page: #eef2f5;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+
+.main-container {
+  max-width: 980px !important;
+  width: calc(100% - 40px) !important;
+  margin: 28px auto 42px !important;
+  padding: 42px 58px 56px;
+  box-sizing: border-box;
+  background: var(--paper);
+  border: 1px solid #dde5eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(31, 50, 67, 0.10);
+}
+
+h1, h2, h3 { color: var(--blue-dark); }
+
+h1.title {
+  margin-bottom: 4px;
+  font-weight: 750;
+}
+
+h3.subtitle {
+  margin-top: 0;
+  color: var(--blue);
+  font-weight: 500;
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 1.28em;
+  line-height: 1.35;
+}
+
+.question-card {
+  margin: 1.55em 0 2em;
+  padding: 1.3em 1.45em 1.1em;
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--blue);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(35, 54, 74, 0.07);
+}
+
+table {
+  width: 100%;
+  margin: 1.1em 0 1.3em;
+  border-collapse: collapse;
+  border: 1px solid var(--line);
+}
+
+thead th {
+  padding: 0.65em 0.75em !important;
+  background: var(--blue);
+  color: white;
+  border: 0 !important;
+}
+
+tbody td {
+  padding: 0.58em 0.75em !important;
+  border-bottom: 1px solid #e5ebf0 !important;
+}
+
+tbody tr:nth-child(even) td { background: #f7f9fb; }
+
+.figure-note {
+  margin-top: -0.5em;
+  color: var(--muted);
+  font-size: 0.9em;
+  text-align: center;
+}
+
+details.solution {
+  margin-top: 1.15em;
+  border: 1px solid #bfd1df;
+  border-radius: 7px;
+  background: #f8fbfd;
+  overflow: hidden;
+}
+
+details.solution summary {
+  padding: 0.72em 0.95em;
+  color: var(--blue-dark);
+  background: var(--blue-soft);
+  cursor: pointer;
+  font-weight: 700;
+  user-select: none;
+}
+
+details.solution summary:hover { background: #e2edf5; }
+
+.solution-body {
+  padding: 0.95em 1.1em 0.75em;
+}
+
+.solution-body ol { margin-bottom: 0.25em; }
+.solution-body li { margin-bottom: 0.6em; }
+
+@media (max-width: 768px) {
+  .main-container {
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 24px 20px 38px;
+    border-radius: 0;
+  }
+}
+
+@media print {
+  body { background: white; font-size: 11pt; }
+  .main-container {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+  .question-card { break-inside: avoid; box-shadow: none; }
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  fig.retina = 2,
+  out.width = "88%"
+)
+
+course_blue <- "#294D73"
+course_green <- "#3F7D58"
+course_gold <- "#C6923A"
+course_red <- "#A5524A"
+soft_grid <- "#D9E1E7"
+```
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("details.solution").forEach(function(item) {
+    item.removeAttribute("open");
+  });
+});
+</script>
+
+
+::: {.question-card}
+### Question 1
+
+An urban climate and wildfire-planning team is studying how vegetation may influence temperatures in residential areas. A **tree canopy** is the layer formed by the leaves and branches of trees. Tree-canopy cover is the percentage of the ground that would be covered by this layer when viewed from above.
+
+Tree canopies provide shade and can help lower local surface temperatures. This relationship may also be relevant to fire-risk planning because prolonged hot conditions can dry grasses, fallen leaves and other vegetation, making them easier to ignite. However, canopy cover alone does not determine fire risk. Vegetation moisture, tree species, dead plant material, wind, rainfall and the spacing between trees and buildings are also important.
+
+Let $x$ represent tree canopy cover, measured as a percentage and let $y$ represent afternoon surface temperature, measured in degrees Celsius. The fitted regression line is
+
+$$
+\hat y=33.8-0.12x
+$$
+
+The observed canopy values ranged from $5%$ to $65%$.
+
+
+1. Identify the explanatory variable and the response variable.
+2. Interpret the slope in context and include its units.
+3. Interpret the intercept. Why should this interpretation be treated cautiously?
+4. Predict the afternoon surface temperature for an area with $40\%$ tree-canopy cover.
+5. The observed temperature for this area was $30.4$ degrees Celsius. Calculate its residual and interpret the sign of the residual.
+6. A prediction is requested for an area with $55\%$ canopy cover and for another area with $90\%$ canopy cover. Which prediction is interpolation and which is extrapolation? Which should be treated more cautiously?
+7. Does this fitted line establish that increasing tree canopy cover will cause surface temperature to decrease? Identify one plausible lurking variable.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Tree canopy cover is the explanatory variable and afternoon surface temperature is the response variable.</li>
+  <li>The slope is $-0.12$ degrees Celsius per percentage point of canopy cover. For each additional percentage point of tree canopy cover, the predicted afternoon surface temperature, on average, decreases by $0.12$ degrees Celsius.</li>
+  <li>The intercept predicts a surface temperature of $33.8$ degrees Celsius when canopy cover is $0\%$. This value should be treated cautiously because no areas with $0\%$ canopy cover were observed, so the interpretation extends beyond the data.</li>
+  <li>The predicted temperature is $$\hat y=33.8-0.12(40)=29.0$$ degrees Celsius.</li>
+  <li>The residual is $$e=y-\hat y=30.4-29.0=1.4$$ degrees Celsius. The positive residual means the observed area was $1.4$ degrees warmer than the fitted line predicted.</li>
+  <li>The prediction at $55\%$ canopy cover is interpolation because $55\%$ is within the observed range. The prediction at $90\%$ is extrapolation because $90\%$ is outside the observed range. The $90\%$ prediction should be treated more cautiously.</li>
+  <li>No. A regression line based on observational data describes an association but does not establish causation. Plausible lurking variables include pavement coverage, building density, distance from water, elevation or shade from buildings.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 2
+
+A veterinary team at an animal shelter investigates whether the amount of shade available in outdoor exercise areas is associated with the resting respiratory rate of dogs. During warm weather, dogs may breathe more rapidly as they regulate their body temperature. Shade may help keep the exercise areas cooler, although factors such as activity level, age, breed, health and humidity may also affect respiratory rate.
+
+At each of $10$ outdoor exercise areas, the team recorded the percentage of the area covered by shade and the average respiratory rate of dogs after a standardized resting period. The data are illustrative.
+
+| Site | Shade cover $x$ (%) | Water temperature $y$ (degrees Celsius) |
+|:--|--:|--:|
+| A | $6$ | $25$ |
+| B | $14$ | $23$ |
+| C | $23$ | $26$ |
+| D | $31$ | $22$ |
+| E | $38$ | $24$ |
+| F | $47$ | $20$ |
+| G | $55$ | $22$ |
+| H | $63$ | $19$ |
+| I | $71$ | $20$ |
+| J | $80$ | $18$ |
+
+The following summary statistics were calculated from the data:
+
+$$
+\bar x=42.8 \qquad s_x=24.7018 \qquad \bar y=21.9 \qquad s_y=2.6437 \qquad r=-0.8545
+$$
+
+1. Use $$b=r\frac{s_y}{s_x}$$ to calculate the slope of the least-squares regression line.
+2. Use $a=\bar y-b\bar x$ to calculate the intercept.
+3. Write the fitted regression equation in the form $\hat y=a+bx$.
+4. Interpret the slope in context.
+5. Predict the afternoon water temperature at a site with $60\%$ stream shade. Is this prediction interpolation or extrapolation?
+6. Verify numerically that the fitted line passes through $(\bar x,\bar y)$.
+7. Use the short R code in the solution to check the fitted coefficients and the prediction.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The slope is $$b=(-0.9891)\left(\frac{2.4784}{24.7018}\right)\approx-0.0914.$$</li>
+  <li>The intercept is $$a=21.9-(-0.0914)(42.8)\approx25.814$$</li>
+  <li>The fitted equation is $$\hat y=25.814-0.0914x$$</li>
+  <li>For each additional percentage point of stream shade, the predicted afternoon water temperature decreases by approximately $0.099$ degrees Celsius, on average. Equivalently, an increase of $10$ percentage points in shade corresponds to a decrease of about $0.99$ degrees Celsius in predicted temperature.</li>
+  <li>At $x=60$, $$\hat y=25.814-0.0914(60) \approx 20.33$$ degrees Celsius. This is interpolation because $60\%$ lies within the observed range from $6\%$ to $80\%$.</li>
+  <li>Substituting $x=42.8$ gives $$\hat y=25.814-0.0914(42.8) = 21.89294 \approx 21.9=\bar y.$$ Small differences may occur because the displayed coefficients have been rounded.</li>
+  <li>
+```{r q2-regression-check, echo=TRUE}
+shade <- c(6, 14, 23, 31, 38, 47, 55, 63, 71, 80)
+temperature <- c(25, 23, 26, 22, 24, 20, 22, 19, 20, 18)
+
+model <- lm(temperature ~ shade)
+coef(model)
+predict(model, newdata = data.frame(shade = 60))
+```
+  The R output gives coefficients of approximately $25.814$ and $-0.0914$ and a prediction of approximately $20.33$ degrees Celsius.</li>
+</ol>
+
+
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 3
+
+A freshwater monitoring team is evaluating the quality of stream habitats used by fish and other aquatic organisms. One important measure of water quality is dissolved oxygen, which is the amount of oxygen gas dissolved in the water and available for aquatic organisms to breathe. Water temperature can affect dissolved oxygen concentration because colder water can generally have higher concentration of oxygen than warmer water. 
+
+The team visited $8$ stream sites during similar afternoon conditions. At each site, the researchers used a calibrated water quality probe to measure water temperature and dissolved oxygen. 
+
+| Site | Water temperature $x$ (degrees Celsius) | Dissolved oxygen $y$ (mg/L) |
+|:--|--:|--:|
+| A | $11.8$ | $11.3$ |
+| B | $13.2$ | $10.5$ |
+| C | $15.5$ | $10.1$ |
+| D | $17.1$ | $9.2$ |
+| E | $18.7$ | $9.5$ |
+| F | $20.4$ | $8.2$ |
+| G | $22.6$ | $7.6$ |
+| H | $24.1$ | $7.1$ |
+
+```{r q3-water-oxygen-plot, fig.width=7, fig.height=4.5}
+water_temperature <- c(11.8, 13.2, 15.5, 17.1, 18.7, 20.4, 22.6, 24.1)
+dissolved_oxygen <- c(11.3, 10.5, 10.1, 9.2, 9.5, 8.2, 7.6, 7.1)
+oxygen_model <- lm(dissolved_oxygen ~ water_temperature)
+
+old_par <- par(mar = c(4.5, 4.7, 2.8, 1), las = 1, bty = "l")
+plot(
+  water_temperature,
+  dissolved_oxygen,
+  type = "n",
+  xlim = c(11, 25),
+  ylim = c(6.5, 11.8),
+  xlab = "Water temperature (degrees Celsius)",
+  ylab = "Dissolved oxygen (mg/L)",
+  main = "Water Temperature and Dissolved Oxygen"
+)
+grid(col = soft_grid, lty = 3)
+points(water_temperature, dissolved_oxygen, pch = 19, cex = 1.15, col = course_blue)
+abline(oxygen_model, col = course_red, lwd = 2)
+par(old_par)
+```
+
+1. Use `lm()` in R to fit a least-squares regression line that predicts dissolved oxygen from water temperature. Write the fitted equation.
+2. Interpret the slope. Interpret the intercept and explain why the intercept has limited practical meaning here.
+3. Calculate the predicted dissolved oxygen concentration for Site E, where $x=18.7$ degrees Celsius.
+4. Calculate the residual for Site E and interpret its sign.
+5. Use the residuals from all $8$ sites to identify the observation with the largest absolute residual. What does this residual tell you?
+6. Add the residuals. Why might the result not be exactly $0$ on a computer, and what least-squares property does it illustrate?
+7. Would predicting dissolved oxygen at $18$ degrees Celsius be interpolation or extrapolation? What about a prediction at $30$ degrees Celsius?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>
+```{r echo=TRUE}
+water_temperature <- c(11.8, 13.2, 15.5, 17.1, 18.7, 20.4, 22.6, 24.1)
+dissolved_oxygen <- c(11.3, 10.5, 10.1, 9.2, 9.5, 8.2, 7.6, 7.1)
+oxygen_model <- lm(dissolved_oxygen ~ water_temperature)
+coef(oxygen_model)
+```
+  The fitted equation is $$\widehat{\text{oxygen}}=15.096-0.3296(\text{temperature}).$$</li>
+  <li>The slope indicates that each additional degree Celsius is associated with a decrease of about $0.330$ mg/L in predicted dissolved oxygen, on average. The intercept predicts about $15.096$ mg/L at $0$ degrees Celsius. Because $0$ degrees Celsius lies well outside the observed range of $11.8$ to $24.1$ degrees Celsius, the intercept has limited practical meaning for these data.</li>
+  <li>For Site E, $$\hat y=15.096-0.3296(18.7)\approx8.932\text{ mg/L}.$$</li>
+  <li>
+```{r echo=TRUE}
+fitted(oxygen_model)
+```  
+  The residual is $$e=y-\hat y=9.5-8.932\approx0.568\text{ mg/L}.$$ The positive residual means Site E had more dissolved oxygen than the fitted line predicted.</li>
+  <li>
+```{r echo=TRUE}
+abs(residuals(oxygen_model))
+```    
+  Site E has the largest absolute residual, approximately $0.568$ mg/L. Its observed dissolved oxygen concentration lies about $0.568$ mg/L above the fitted line.</li>
+  <li>
+```{r echo=TRUE}
+sum(residuals(oxygen_model))
+```     
+  The residuals add to a value extremely close to $0$. A computer may display a tiny nonzero value because of floating point rounding. For a least-squares line with an intercept, the residuals sum to $0$ apart from numerical rounding.</li>
+  <li>A prediction at $18$ degrees Celsius is interpolation because $18$ is within the observed range. A prediction at $30$ degrees Celsius is extrapolation and should be treated cautiously because it extends beyond the observed range.</li>
+</ol>
+
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 4
+
+A conservation biologist is studying whether larger wetlands support a greater variety of frog species. Species richness is the number of different species observed in a particular habitat. Larger wetlands may provide a wider range of breeding sites, food sources and shelter. However, frog species richness may also be affected by water quality, surrounding vegetation, predators and nearby human activity.
+
+The biologist surveyed five wetlands. For each wetland, $x$ represents its surface area in hectares and $y$ represents the number of frog species detected during standardized surveys.
+
+| Neighbourhood | Outreach time $x$ (hours) | Registrations $y$ (tens) |
+|:--|--:|--:|
+| A | $1$ | $2$ |
+| B | $2$ | $4$ |
+| C | $3$ | $5$ |
+| D | $4$ | $4$ |
+| E | $5$ | $7$ |
+
+The least-squares regression line is
+$$\hat y=1.4+1.0x$$
+
+1. Calculate the fitted value $\hat y$, residual $e=y-\hat y$ and squared residual $e^2$ for each neighbourhood.
+2. Calculate the mean response $\bar y$.
+3. Calculate
+$$\text{SST}=\sum(y_i-\bar y)^2$$
+$$\text{SSR}=\sum(\hat y_i-\bar y)^2$$
+and
+$$\text{SSE}=\sum(y_i-\hat y_i)^2$$
+
+4. Verify that $\text{SST}=\text{SSR}+\text{SSE}$.
+5. Calculate $R^2$ in two ways: 
+$$R^2=\frac{\text{SSR}}{\text{SST}}$$
+and
+$$R^2=1-\frac{\text{SSE}}{\text{SST}}$$
+6. Interpret $R^2$ in the context of wetland area and frog species richness.
+
+<details class="solution"> <summary>Show solution</summary> <div class="solution-body">
+
+<ol>
+  <li>The completed calculations are shown below.
+  
+  For Wetland A
+  $$\hat y=1.4+1.0(1)=2.4$$
+  $$e=y-\hat y=2-2.4=-0.4$$
+  $$e^2=(-0.4)^2=0.16$$
+  For Wetland B
+  $$\hat y=1.4+1.0(2)=3.4$$
+  $$e=y-\hat y=4-3.4=0.6$$
+  $$e^2=(0.6)^2=0.36$$
+  For Wetland C
+  $$\hat y=1.4+1.0(3)=4.4$$
+  $$e=y-\hat y=5-4.4=0.6$$
+  $$e^2=(0.6)^2=0.36$$
+  For Wetland D
+  $$\hat y=1.4+1.0(4)=5.4$$
+  $$e=y-\hat y=4-5.4=-1.4$$
+  $$e^2=(-1.4)^2=1.96$$
+  For Wetland E
+  $$\hat y=1.4+1.0(5)=6.4$$
+  $$e=y-\hat y=7-6.4=0.6$$
+  $$e^2=(0.6)^2=0.36$$
+
+
+The completed calculations are summarized below.
+</li>
+| Neighbourhood | $x$ | $y$ | $\hat y=1.4+x$ | $e=y-\hat y$ | $e^2$ |
+|:--|--:|--:|--:|--:|--:|
+| A | $1$ | $2$ | $2.4$ | $-0.4$ | $0.16$ |
+| B | $2$ | $4$ | $3.4$ | $0.6$ | $0.36$ |
+| C | $3$ | $5$ | $4.4$ | $0.6$ | $0.36$ |
+| D | $4$ | $4$ | $5.4$ | $-1.4$ | $1.96$ |
+| E | $5$ | $7$ | $6.4$ | $0.6$ | $0.36$ |
+
+A positive residual means that more frog species were observed than the regression line predicted. A negative residual means that fewer frog species were observed than predicted.
+</ol>
+
+
+<ol start="2">
+  <li>The mean number of frog species is
+  $$\bar y=\frac{2+4+5+4+7}{5}=\frac{22}{5}=4.4$$
+</li>
+  <li>The total sum of squares measures the total variation in the observed numbers of frog species around their mean.
+  $$
+  \begin{aligned}
+  \text{SST} &=\sum(y_i-\bar y)^2\\
+             &=(2-4.4)^2+(4-4.4)^2+(5-4.4)^2 +(4-4.4)^2+(7-4.4)^2\\
+             &=(-2.4)^2+(-0.4)^2+(0.6)^2+(-0.4)^2+(2.6)^2\\
+             &=5.76+0.16+0.36+0.16+6.76\\
+             &=13.20
+  \end{aligned}
+  $$
+
+   Therefore
+   $$\boxed{\text{SST}=13.2}$$
+  </li>
+  <li>The regression sum of squares measures the variation explained by the fitted regression line.
+
+$$
+\begin{aligned}
+\text{SSR}
+&=\sum(\hat y_i-\bar y)^2\\
+&=(2.4-4.4)^2+(3.4-4.4)^2+(4.4-4.4)^2 +(5.4-4.4)^2+(6.4-4.4)^2\\
+&=(-2)^2+(-1)^2+(0)^2+(1)^2+(2)^2\\
+&=4+1+0+1+4\\
+&=10
+\end{aligned}
+$$
+
+Therefore
+$$
+\boxed{\text{SSR}=10.0}
+$$
+</li>
+  <li>Using the explained variation, $$R^2=\frac{\text{SSR}}{\text{SST}}=\frac{10.0}{13.2}\approx0.758$$ Using the unexplained variation, $$R^2=1-\frac{\text{SSE}}{\text{SST}}=1-\frac{3.2}{13.2}\approx0.758$$</li>
+  <li>Approximately $75.8\%$ of the variation in new compost-program registrations among these five neighbourhoods is explained by the fitted linear relationship with outreach time. This interpretation describes the fitted model and does not by itself establish causation.</li>
+</ol>
+
+</div>
+</details>
+:::
+
