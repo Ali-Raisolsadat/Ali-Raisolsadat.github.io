@@ -56,59 +56,18 @@ body {
 
 
 /* ============================================================
-   HIDE DUMMY CHAPTER CONTENT
+   CHAPTER 1 ROOT HEADING
    ============================================================ */
 
 /*
-   Chapter 9 is used as the numbering root.
-
-   Hide the visible "Chapter 9" H1 because the document title
-   already says Chapter 9, but KEEP the section itself so that
-   H2 headings are numbered 9.1, 9.2, 9.3, ...
+   The document title already identifies Chapter 1. Keep the H1
+   as the numbering root for section numbers, but hide the repeated
+   visible chapter heading. The {.unlisted} class keeps the chapter
+   root itself out of the table of contents while leaving H2
+   subsections available in the TOC.
 */
 .section.chapter-root > h1 {
   display: none !important;
-}
-
-
-/* ============================================================
-   HIDE CHAPTERS 1–8 FROM THE TABLE OF CONTENTS
-   ============================================================ */
-
-/*
-   R Markdown/tocify does not reliably expose the chapter names
-   through data-unique, so select them through their generated
-   href values instead.
-*/
-
-#TOC li:has(a[href="#chapter-1-dummy"]),
-#TOC li:has(a[href="#chapter-2-dummy"]),
-#TOC li:has(a[href="#chapter-3-dummy"]),
-#TOC li:has(a[href="#chapter-4-dummy"]),
-#TOC li:has(a[href="#chapter-5-dummy"]),
-#TOC li:has(a[href="#chapter-6-dummy"]),
-#TOC li:has(a[href="#chapter-7-dummy"]),
-#TOC li:has(a[href="#chapter-8-dummy"]) {
-  display: none !important;
-}
-
-
-/*
-   Also hide the Chapter 9 parent entry itself.
-
-   Its children — 9.1, 9.2, 9.3, ... — remain visible.
-*/
-#TOC li:has(> a[href="#chapter-9"]) > a[href="#chapter-9"] {
-  display: none !important;
-}
-
-
-/*
-   tocify may place the Chapter 9 subsections inside the same
-   list item. Remove spacing belonging to the hidden parent.
-*/
-#TOC li:has(> a[href="#chapter-9"]) {
-  margin-top: 0 !important;
 }
 
 
@@ -1428,54 +1387,74 @@ save_plot("fig_timeplot_anatomy.png", p_time_anatomy, width = 7, height = 4.2)
 
 # Chapter 1: Picturing Distributions with Graphs {.chapter-root .unlisted}
 
-## What Is Statistics, and Why Should We Study It?
+## The Course Roadmap
 
-Statistics is the science of **learning from data**. It gives us a systematic way to collect information, organize it, display it, summarize it, and use it to answer questions.
+STAT 1210 begins by learning how to **explore and describe data**, then develops probability and sampling ideas, and finally uses those ideas for statistical inference.
 
-Statistics is not only a collection of formulas. It is a way of thinking:
+| **Part** | **Topics** |
+|:---|:---|
+| **I: Exploring Data** | Chapters 1–2: distributions and numerical summaries; Chapter 3: scatterplots and correlation; Chapter 4: regression |
+| **II: Probability and Distributions** | Chapters 9–10: probability rules; Chapter 11: Normal distributions; Chapter 12: Binomial and Poisson distributions |
+| **III: Foundations of Inference** | Chapter 6: samples and observational studies; Chapter 13: sampling distributions; Chapter 14: confidence intervals and $p$-values; Chapter 15: inference in practice |
+| **IV: Specific Inference Procedures** | Chapter 17: inference about a population mean; Chapter 19: inference about a population proportion |
+
+Chapter 1 focuses on a foundational skill that will be used throughout the course: **choosing, reading, and evaluating graphical displays of data**.
+
+---
+
+## What Is Statistics?
+
+> **Statistics is the science of learning from data.**
+
+Statistics gives us tools to:
+
+- collect information;
+- organize and display data;
+- summarize patterns;
+- compare groups; and
+- use data to answer questions.
+
+The lecture slide also includes a remark attributed to Ernest Rutherford:
+
+> **“All science is either physics or stamp collecting.”**
+
+Whether a scientific question concerns biology, chemistry, psychology, economics, or another field, data become useful only when they are collected and interpreted carefully. Statistics provides the tools needed to move from observations to evidence-based conclusions.
+
+Statistics is therefore more than a collection of formulas. A statistical thinker asks:
 
 > **What does the data show, what does it not show, and how confident should we be in the conclusion?**
-
-This way of thinking is important in the life sciences, but it also appears in chemistry, psychology, economics, business, sports, and modern artificial intelligence.
 
 ### Statistics Is Everywhere
 
 Consider a few ordinary questions:
 
-- **Biology:** Do plants given a fertilizer grow taller than plants that do not receive it?
-- **Chemistry:** Does changing the catalyst increase the percentage yield of a reaction?
+- **Biology:** Do plants given fertilizer grow taller than plants that do not receive it?
+- **Chemistry:** Does changing the catalyst increase reaction yield?
 - **Psychology:** Do students who sleep longer tend to report better concentration?
-- **Economics:** Are grocery prices increasing over time, or did one unusually expensive month distort our impression?
-- **Artificial Intelligence:** If an AI system is trained on a large dataset, does that dataset fairly represent the population where the system will be used?
+- **Economics:** Are grocery prices increasing over time, or did the COVID-19 period temporarily distort our impression?
+- **Artificial Intelligence:** Does the training dataset fairly represent the population where the AI system will be used?
 
-In every case, the first step is the same: **look carefully at the data before trying to make a conclusion.**
+These questions come from different disciplines, but they all require the same basic process: collect relevant data, display and summarize the data appropriately, and decide what conclusions the data can reasonably support.
+
+For example, the economics question is fundamentally a **time-order question**. Looking at prices over time can help distinguish a temporary shock from a persistent trend. Later in this chapter, time plots will show why chronological order can contain information that a histogram cannot display.
 
 ### Why Statistics Still Matters in the Age of AI
 
-Modern AI systems can process enormous amounts of data and generate tables and graphs almost instantly. But speed does not guarantee that a graph is appropriate or that a conclusion is reasonable.
+Large language models and other AI tools can help us:
 
-Statistics helps us ask:
+- organize data quickly;
+- calculate summaries;
+- generate visualizations; and
+- identify possible patterns.
 
-- Was the right type of graph used?
-- Are there unusual observations or possible recording errors?
-- Is an apparent difference actually large or small?
-- Could the way a graph is drawn exaggerate a pattern?
-- Does the graph answer the scientific question we care about?
+However, software does not remove the need for statistical reasoning. We still need to ask:
 
-An AI tool can create a histogram in seconds. **You still need statistical reasoning to know whether a histogram is the right graph and how to interpret it.**
+- Is this the right graph for the variable and question?
+- Is the scale fair?
+- Are there errors or unusual observations?
+- Does the conclusion actually follow from the data?
 
-### A First Lesson: Averages Do Not Tell the Whole Story
-
-<img src="fig_same_mean_different_data.png" alt="Two dotplots with the same mean but very different spreads" />
-
-Both samples have an average plant height of **20 cm**. If we reported only the mean, they would appear identical.
-
-The graphs reveal something the average hides:
-
-- **Sample A** is tightly clustered around 20 cm.
-- **Sample B** has much more variation, with observations farther from 20 cm.
-
-> **Numerical summaries are useful, but graphs often reveal structure that a single number cannot.**
+A computer can generate a polished graph very quickly. The important statistical task is deciding whether the graph is appropriate and interpreting it correctly.
 
 ---
 
@@ -1483,14 +1462,14 @@ The graphs reveal something the average hides:
 
 ### Anatomy of a Dataset
 
-Most datasets can be pictured as a table:
+In a typical rectangular dataset:
 
-- **Rows** represent the individuals or cases being studied.
-- **Columns** represent the variables recorded for those individuals.
+- **rows** represent individuals or cases; and
+- **columns** represent variables.
 
 Consider a simple plant-growth experiment:
 
-| **Plant ID** | **Fertilizer Group** | **Germinated?** | **Number of Leaves** | **Height (cm)** |
+| **Plant ID** | **Fertilizer** | **Germinated?** | **Leaves** | **Height (cm)** |
 |:---|:---|:---:|---:|---:|
 | P01 | None | Yes | 5 | 12.4 |
 | P02 | None | Yes | 6 | 13.1 |
@@ -1500,76 +1479,88 @@ Consider a simple plant-growth experiment:
 
 In this table:
 
-- the **individuals** are the plants;
-- `Fertilizer Group`, `Germinated?`, `Number of Leaves`, and `Height` are variables;
+- the **individuals** are the individual plants;
+- `Fertilizer`, `Germinated?`, `Leaves`, and `Height` are variables; and
 - `Plant ID` is mainly an **identifier** used to keep track of each plant.
 
 > **First question to ask about any dataset:** What does one row represent?
 
+### Individuals, Variables, and Identifiers
+
+A **variable** is a characteristic recorded for each individual that can take different values.
+
+An identifier is different from an ordinary variable used for analysis. For example, `Plant ID` distinguishes P01 from P02, but averaging plant identification codes would not answer a scientific question.
+
 ### Two Fundamental Types of Variables
 
-Once we know the individuals, we classify the variables. The most important distinction is between **categorical** and **quantitative** variables.
+The first important classification is whether a variable is **categorical** or **quantitative**.
 
 #### Categorical Variables
 
 A **categorical variable** places an individual into a group or category.
 
-Examples include blood type, fertilizer group, reaction outcome, and university program.
+Examples include:
 
-Categorical variables can be:
+- blood type: A, B, AB, or O;
+- fertilizer group: None, A, or B;
+- reaction outcome: Complete, Partial, or None; and
+- university program.
 
-- **Nominal:** categories have no natural order, such as blood type or treatment group.
-- **Ordinal:** categories have a meaningful order, such as low, medium, high.
+Categorical variables can also be divided into two common types:
+
+- **Nominal:** the categories have no natural order. Examples include blood type, treatment group, reaction outcome type, and academic program.
+- **Ordinal:** the categories have a meaningful order. Examples include Low/Medium/High, Poor/Fair/Good/Excellent, and Mild/Moderate/Severe.
+
+The important idea is that **category labels describe groups; they are not measurements**.
 
 #### Quantitative Variables
 
 A **quantitative variable** records a numerical amount for which arithmetic is meaningful.
 
-Examples include plant height, reaction time, temperature, mass, concentration, and price.
+Examples include:
 
-A useful check is:
+- plant height in centimetres;
+- reaction time in milliseconds;
+- temperature in degrees Celsius;
+- mass in grams; and
+- price in dollars.
 
-> **Would taking an average of these numbers have a meaningful interpretation?**
+A useful diagnostic question is:
 
-If yes, the variable is usually quantitative. If the numbers are only labels, the variable is categorical.
+> **Would taking an average of the recorded numbers have a meaningful interpretation?**
 
-### The Coding Trap: Numbers Can Still Be Categories
-
-Suppose a spreadsheet uses `1 = Control`, `2 = Fertilizer A`, and `3 = Fertilizer B`. The variable is still **categorical**. The numbers are only codes.
-
-An average treatment code of 1.8 would not have a useful scientific meaning.
+If the answer is yes, the variable is usually quantitative. If numbers are being used only as labels, the variable is still categorical.
 
 ### Quantitative Variables: Discrete vs. Continuous
 
 #### Discrete Quantitative Variables
 
-A **discrete** variable usually comes from **counting**.
+A **discrete** quantitative variable usually results from **counting**.
 
-Examples:
+Examples include:
 
-- number of leaves on a plant;
-- number of bacterial colonies on a plate;
-- number of customers entering a store;
-- number of incorrect answers on a quiz.
+- number of leaves;
+- number of bacterial colonies;
+- number of customers; and
+- number of incorrect answers.
 
 There are gaps between possible values. A plant can have 7 or 8 leaves, but not 7.42 leaves.
 
 #### Continuous Quantitative Variables
 
-A **continuous** variable usually comes from **measuring**.
+A **continuous** quantitative variable usually results from **measuring**.
 
-Examples:
+Examples include:
 
 - plant height;
 - body mass;
 - reaction time;
-- temperature;
-- pH;
+- temperature; and
 - concentration.
 
-A measurement can, in principle, take many values between two recorded values.
+A measurement can, in principle, take many possible values between two recorded values. The number of decimal places shown often reflects the precision of the measuring instrument rather than a truly discrete process.
 
-### Count, Measure, or Category?
+### Count or Measure?
 
 | **Question** | **Usually Produces** | **Example** |
 |:---|:---|:---|
@@ -1578,37 +1569,87 @@ A measurement can, in principle, take many values between two recorded values.
 | Which group? | Categorical | Fertilizer type |
 | What level or rating? | Ordinal categorical | Low / Medium / High |
 
----
+This is a useful introductory rule rather than a universal rule for every advanced application.
 
-## Meet the Main Graph Types
+### From Variable Type to Graph Type
 
-Before studying each graph in detail, it helps to see the overall map.
-
-| **Graph** | **Data Situation** | **Main Purpose** |
+| **Situation** | **Good Starting Graph** | **Main Question** |
 |:---|:---|:---|
-| **Bar graph** | Categorical variable | Compare category sizes |
-| **Pie chart** | Categories forming one whole | Emphasize parts of 100% |
-| **Histogram** | Quantitative variable | Show the shape of a distribution |
-| **Dotplot** | Small or moderate quantitative sample | Show individual observations |
-| **Time plot** | Measurements recorded over time | Show change, trends, or cycles |
+| One categorical variable | Bar graph | Which categories are most or least common? |
+| Parts of one whole | Pie chart | How is one whole divided? |
+| Small quantitative sample | Dotplot | What are the individual values and overall pattern? |
+| Larger quantitative sample | Histogram | What is the shape of the distribution? |
+| Measurements over time | Time plot | Is there a trend, cycle, or sudden change? |
 
-We will now study each graph using the same sequence:
-
-1. **What does the graph show?**
-2. **What are its important parts?**
-3. **How should we read it?**
-4. **When should we use it?**
-5. **How can it go wrong?**
+> **The best graph depends on both the variable type and the question being asked.**
 
 ---
 
-## Bar Graphs: Comparing Categories
+## Categorical Data
+
+### The Distribution of a Categorical Variable
+
+The **distribution** of a variable tells us what values the variable takes and how often those values occur.
+
+For a categorical variable, we commonly summarize the distribution using:
+
+- **Frequency (count):** the number of observations in each category.
+- **Relative frequency (proportion):**
+
+$$
+\text{Proportion}=\frac{\text{Count}}{n}.
+$$
+
+- **Percentage:**
+
+$$
+\text{Percentage}=\text{Proportion}\times 100\%.
+$$
+
+For example, if 18 of 40 students choose biology as their preferred science elective, then
+
+$$
+\frac{18}{40}=0.45=45\%.
+$$
+
+The count is 18, the relative frequency is 0.45, and the percentage is 45%.
+
+### Example 1.1: Reaction Outcomes in a Chemistry Lab
+
+Suppose 50 reaction trials are classified as follows:
+
+| **Reaction Outcome** | **Count** | **Percentage** |
+|:---|---:|---:|
+| Complete reaction | 28 | 56% |
+| Partial reaction | 15 | 30% |
+| No visible reaction | 7 | 14% |
+| **Total** | **50** | **100%** |
+
+The percentages can be checked from the counts. For example,
+
+$$
+\frac{28}{50}\times 100\%=56\%.
+$$
+
+A **table** is useful when exact values matter. A **graph** is useful when we want the overall pattern to be visible quickly.
+
+---
+
+## Bar Graphs: The Default Choice for Categorical Data
 
 ### What Is a Bar Graph?
 
-A **bar graph** displays a categorical variable using one separate bar for each category. The bar height represents a **count, proportion, or percentage**.
+A **bar graph** displays a categorical variable using a separate bar for each category.
 
-Bar graphs are usually the best starting point when the goal is to compare categories.
+The height of each bar can represent a:
+
+- count;
+- proportion; or
+- percentage.
+
+Bars are separated because the categories are distinct.
+
+For a **nominal** variable, categories can often be rearranged to make comparison easier. For an **ordinal** variable, the natural category order should usually be preserved.
 
 ### Anatomy of a Bar Graph
 
@@ -1630,132 +1671,127 @@ Ask:
 1. Which category is largest?
 2. Which category is smallest?
 3. Which categories are similar?
-4. Are the values counts or percentages?
-5. What population or sample do the percentages refer to?
+4. Are the values counts, proportions, or percentages?
+5. What sample or population do the values describe?
+6. Does the vertical axis begin at zero?
 
-### Frequency Tables Before Bar Graphs
-
-For categorical data, we often begin with a frequency table.
-
-Suppose 50 chemistry reaction trials are classified as follows:
-
-| **Reaction Outcome** | **Count** | **Percentage** |
-|:---|---:|---:|
-| Complete reaction | 28 | 56% |
-| Partial reaction | 15 | 30% |
-| No visible reaction | 7 | 14% |
-| **Total** | **50** | **100%** |
-
-The frequency table gives exact numbers. A bar graph makes the differences visible immediately.
-
-If a category has frequency $f$ in a sample of size $n$, then
-
-$$
-\text{Relative Frequency}=\frac{f}{n}
-$$
-
-and
-
-$$
-\text{Percentage}=\frac{f}{n}\times 100\%.
-$$
-
-### When Should You Use a Bar Graph?
-
-Use a bar graph when:
-
-- the variable is categorical;
-- you want to compare category sizes;
-- you want to compare rates or percentages across groups;
-- you want small differences to be easy to see.
-
-For a **nominal** variable, categories can often be rearranged to improve comparison. For an **ordinal** variable, preserve the natural order.
-
-### How Bar Graphs Can Go Wrong: Connecting Categories
+### Using a Line Graph for Nominal Categories
 
 <img src="fig_wrong_line_categorical.png" alt="Correct bar graph and poor line graph for blood-type categories" />
 
-Blood type is nominal categorical. There is no meaningful continuous path from O to A to B to AB.
+Blood type is a **nominal categorical variable**. There is no meaningful continuous path from O to A to B to AB.
 
-The line graph suggests a progression between categories that does not exist.
+Connecting the categories with a line suggests a progression or relationship that does not exist.
 
-> **Rule:** Do not connect nominal categories with a line simply because software allows it.
+> **Rule:** Use connecting lines when order or continuity matters, especially when the horizontal axis represents time. Do not connect nominal categories simply because software allows it.
 
-### How Bar Graphs Can Go Wrong: Truncated Axes
+### Truncating the Axis of a Bar Graph
 
 <img src="fig_truncated_bar_axis.png" alt="Bar charts of reaction yield with a zero and truncated vertical axis" />
 
-Catalyst A has an average reaction yield of 78%, while Catalyst B has an average yield of 82%. The real difference is **4 percentage points**.
+Catalyst A has a reaction yield of 78%, while Catalyst B has a reaction yield of 82%.
 
-When the bar-chart axis starts near 75%, the difference looks much larger because the visible bar lengths are compared from a false baseline.
+The actual difference is
 
-> **For ordinary bar graphs, the vertical axis should usually begin at zero.**
+$$
+82\%-78\%=4 \text{ percentage points}.
+$$
+
+When the vertical axis begins near 75%, the visible bar lengths make the difference appear much larger than it really is.
+
+> **For ordinary bar graphs, the vertical axis should usually begin at zero because bar length represents magnitude.**
 
 ---
 
-## Pie Charts: Showing Parts of One Whole
+## Pie Charts: Parts of One Whole
 
 ### What Is a Pie Chart?
 
-A **pie chart** divides a single whole into slices. Each slice represents the proportion or percentage belonging to one category.
+A **pie chart** divides one whole into categorical slices. Each slice represents the proportion or percentage belonging to one category.
 
-The entire circle represents **100%**.
+The entire circle represents 100%.
 
 ### Anatomy of a Pie Chart
 
 <img src="fig_pie_anatomy.png" alt="Pie chart annotated with category percentages that form one whole" />
 
-A valid pie chart requires:
+A pie chart is appropriate only when:
 
-- one population or sample forming the whole;
-- mutually exclusive categories;
-- categories that collectively account for the whole;
-- percentages that therefore total approximately 100%.
+1. all categories belong to the same group;
+2. the categories are mutually exclusive;
+3. the categories collectively represent the entire sample or population being divided; and
+4. there are only a few categories.
 
-### When Should You Use a Pie Chart?
-
-A pie chart can be useful when:
-
-- the number of categories is small;
-- the categories form one complete whole;
-- the main message is about **part-to-whole composition**.
-
-It is usually not the best choice when exact comparisons between categories are important.
-
-### Bar Graph or Pie Chart?
+### Bar Graph vs. Pie Chart
 
 <img src="fig_bar_vs_pie.png" alt="Bar graph and pie chart comparing blood-type percentages" />
 
-Both graphs show the same blood-type distribution.
+Both displays show the same blood-type percentages.
 
-- The **pie chart** makes the part-to-whole relationship visually obvious.
-- The **bar graph** makes it easier to compare category sizes precisely.
+- The **pie chart** emphasizes the part-to-whole structure.
+- The **bar graph** makes small differences easier to compare because lengths on a common scale are easier to judge than angles and areas.
 
-For most scientific displays, a **bar graph is the safer default** because lengths on a common scale are easier to compare than angles or areas.
+> **Practical recommendation:** Use a pie chart when the part-to-whole relationship is the main message. A bar graph is usually the safer default for comparison.
 
-### How Pie Charts Can Go Wrong: Different Denominators
+### A Pie Chart with Different Denominators
 
 <img src="fig_wrong_pie_denominators.png" alt="Correct bar graph and invalid pie chart from separate group percentages" />
 
-Suppose 72% of first-year students, 65% of second-year students, 61% of third-year students, and 58% of fourth-year students report sleeping at least seven hours per night.
+Suppose the percentages of students reporting at least seven hours of sleep are:
 
-These percentages come from **four different groups**. They are not four pieces of one whole.
+- Year 1: 72%;
+- Year 2: 65%;
+- Year 3: 61%; and
+- Year 4: 58%.
 
-A pie chart would create an artificial total with no meaningful interpretation.
+Each percentage is calculated from a **different group of students**. These four percentages are not four parts of one common whole.
 
-> **Before making a pie chart, always ask: “Percent of what?”**
+A pie chart would therefore create an artificial whole with no meaningful interpretation.
 
-When percentages come from different denominators, compare them using a **bar graph**.
+> **Before making a pie chart, ask: “Percent of what?”**
+
+When percentages come from different denominators, compare the rates using a **bar graph**, not a pie chart.
+
+---
+
+## A Quick Fair-Graph Checklist
+
+Before trusting a graph, ask:
+
+- Does the graph type match the **variable type**?
+- Are the **axes** clearly labeled?
+- Are the **units** shown?
+- Does a bar graph begin at **zero**?
+- Is anything important hidden by the **scale, bin width, or ordering**?
+- Does the title describe the data without exaggerating the conclusion?
+
+> A graph communicates an argument about the data. Design choices can make that argument clearer and fairer, or they can exaggerate and hide important features.
 
 ---
 
 ## Histograms: Seeing the Shape of Quantitative Data
 
-### What Is a Histogram?
+### From Numerical Measurements to a Distribution
 
-A **histogram** displays the distribution of a quantitative variable by grouping nearby numerical values into intervals called **bins** or **classes**.
+A quantitative dataset can contain many distinct measurements, for example,
 
-It is especially useful when there are too many observations to inspect one at a time.
+$$
+17.8,\;18.1,\;18.3,\;18.4,\;18.7,\ldots
+$$
+
+A separate bar for every exact value would quickly become difficult to read.
+
+A **histogram** solves this problem by grouping nearby numerical values into intervals called **bins** or **classes** and counting how many observations fall in each interval.
+
+### How a Histogram Works
+
+A histogram:
+
+1. divides the numerical scale into intervals;
+2. counts how many observations fall in each interval; and
+3. draws bars whose heights show those frequencies.
+
+Histogram bars are adjacent because the horizontal axis represents a continuous, ordered numerical scale.
 
 ### Anatomy of a Histogram
 
@@ -1766,7 +1802,7 @@ A histogram has several important features:
 - **Horizontal axis:** a numerical measurement scale.
 - **Bins:** intervals containing nearby values.
 - **Vertical axis:** frequency, relative frequency, or percentage.
-- **Touching bars:** adjacent bins touch because the horizontal axis is continuous and ordered.
+- **Adjacent bars:** neighboring bins touch because the numerical scale is continuous and ordered.
 - **Fixed numerical order:** bins cannot be rearranged like nominal categories.
 
 ### Bar Graph vs. Histogram
@@ -1774,10 +1810,12 @@ A histogram has several important features:
 | **Feature** | **Bar Graph** | **Histogram** |
 |:---|:---|:---|
 | Variable type | Categorical | Quantitative |
-| Horizontal axis | Categories | Numerical intervals |
-| Bars | Separated | Touching |
-| Order | Can sometimes be rearranged | Must remain numerical |
+| Horizontal axis | Category labels | Numerical intervals |
+| Bars | Separated | Adjacent |
+| Order | May sometimes be rearranged | Must follow numerical order |
 | Main purpose | Compare categories | Show distribution shape |
+
+Do not choose between a bar graph and a histogram only by how the graph looks. **Start with the variable type.**
 
 ### How to Read a Histogram
 
@@ -1787,16 +1825,30 @@ At first, ask simple visual questions:
 2. Is there one main peak or several?
 3. Does one side have a longer tail?
 4. Are there gaps?
-5. Are there observations far from the rest?
+5. Are any observations far from the rest?
 6. How widely spread are the values?
 
-We will formalize these questions shortly using **SOCS**.
+We will formalize these questions using **SOCS**.
 
-### Example: Body Lengths of 44 Great White Sharks
+### Example 1.2: Body Lengths of 44 Great White Sharks
 
-Marine biologists measured the body lengths of 44 great white sharks, in feet.
+Marine biologists measured the body lengths of $n=44$ great white sharks, in feet.
 
-A possible frequency table using 2-foot classes is:
+The first several measurements are
+
+$$
+18.7,\;12.3,\;18.6,\;16.4,\;15.7,\;18.3,\;14.6,\;15.8,\;14.9,\;17.6,\ldots
+$$
+
+Rather than draw a separate bar for each of the 44 exact measurements, nearby lengths can be grouped into classes.
+
+For example, the class from 13.1 ft to 15.0 ft contains 12 sharks. Its approximate percentage is
+
+$$
+\frac{12}{44}\times 100\%\approx 27\%.
+$$
+
+The complete frequency table is:
 
 | **Length Class (feet)** | **Count** | **Approx. Percentage** |
 |:---|---:|---:|
@@ -1813,114 +1865,43 @@ A possible frequency table using 2-foot classes is:
 
 <img src="fig_sharks_hist.png" alt="Two histograms of shark body lengths using different class widths" />
 
-Both histograms contain the same 44 observations. Their overall message is similar, but the amount of detail changes with the bins.
+Both histograms contain the same 44 observations.
 
-### How Histograms Can Go Wrong: Poor Bin Width
+- The main cluster remains around the middle lengths.
+- Changing the bin width changes the amount of visible detail.
+- The smallest and largest observations may become more or less visually obvious.
+
+### The Bin Width Problem
 
 <img src="fig_hist_binwidth.png" alt="Three histograms showing too few, reasonable, and too many bins" />
 
 - **Too few bins:** important structure can be smoothed away.
 - **Too many bins:** random sampling noise can look important.
-- **Reasonable bin width:** shows the overall structure without hiding or exaggerating detail.
+- **Reasonable bin width:** the overall structure is visible without manufacturing a story.
 
-There is no single perfect number of bins for every dataset. Inspect more than one reasonable choice.
+There is no single perfect number of bins for every dataset. Inspect several reasonable choices and check whether the main interpretation remains similar.
 
-> **A histogram should help reveal the data—not manufacture a story.**
-
----
-
-## Dotplots: Showing Every Observation
-
-### What Is a Dotplot?
-
-A **dotplot** displays individual quantitative observations directly above a numerical scale.
-
-Dotplots are especially useful when the sample is small enough that individual values remain readable.
-
-### Anatomy of a Dotplot
-
-<img src="fig_dotplot_anatomy.png" alt="Annotated dotplot showing individual observations and stacked repeated values" />
-
-Important parts include:
-
-- **Horizontal axis:** the numerical variable.
-- **One dot per observation:** individual values remain visible.
-- **Vertical stacking:** repeated values are stacked so they do not hide each other.
-- **No meaningful vertical measurement:** the vertical position usually exists only to separate repeated observations.
-
-### How to Read a Dotplot
-
-Look for the same distribution features as in a histogram:
-
-- clusters;
-- gaps;
-- center;
-- spread;
-- unusual observations.
-
-Because the raw values are visible, you can often count the sample size directly.
-
-### When Should You Use a Dotplot?
-
-Use a dotplot when:
-
-- the sample is small or moderate;
-- individual observations matter;
-- repeated values are useful to see;
-- you want a simple side-by-side comparison of small groups.
-
-### Example: Plant Height With and Without Fertilizer
-
-<img src="fig_plant_dotplot.png" alt="Dotplot comparing plant heights with and without fertilizer" />
-
-Each dot represents one plant.
-
-From the graph:
-
-- the fertilizer group tends to have larger observed heights;
-- the groups still overlap;
-- the fertilizer group appears shifted to the right;
-- no observation is extremely separated from the rest.
-
-### Dotplot vs. Histogram
-
-| **Dotplot** | **Histogram** |
-|:---|:---|
-| Shows individual observations | Groups observations into bins |
-| Excellent for small samples | Excellent when data are dense |
-| Repeated values are visible | Overall shape is compact |
-| Exact values can be read | Exact values are hidden |
-
-### How Dotplots Can Go Wrong
-
-Dotplots become difficult to read when there are hundreds or thousands of observations. Points can overlap and produce a dense wall of ink.
-
-In that situation, a histogram is usually more useful because the goal has changed from seeing **every observation** to seeing the **overall distribution**.
-
-> The graph choice depends not only on variable type, but also on how much detail the reader needs to see.
+> **A histogram should help reveal the data, not manufacture a story.**
 
 ---
-
 
 ## Describing Quantitative Distributions: SOCS
 
-Once we have a quantitative graph such as a histogram or dotplot, we need a consistent language for describing it.
-
-Use **SOCS**:
+When asked to describe a histogram or another quantitative distribution, use **SOCS**:
 
 - **S — Shape**
 - **O — Outliers**
 - **C — Center**
 - **S — Spread**
 
-### Shape
+### Shape: Symmetry, Skewness, and Peaks
 
-Common shapes include:
+Common descriptions of shape include:
 
-- **symmetric:** both sides are roughly mirror images;
+- **symmetric:** the two sides are roughly mirror images;
 - **skewed right:** the longer tail extends toward larger values;
 - **skewed left:** the longer tail extends toward smaller values;
-- **unimodal:** one main peak;
+- **unimodal:** one main peak; and
 - **bimodal:** two main peaks.
 
 <img src="fig_hist_socs.png" alt="Right-skewed histogram of seed germination time" />
@@ -1933,121 +1914,165 @@ The seed-germination distribution is **right-skewed**: many seeds germinate rela
 
 An **outlier** is an observation that falls far from the overall pattern.
 
-An unusual value could be:
+An unusual value might be:
 
 - a genuine extreme observation;
 - a data-entry mistake;
-- a measurement problem;
+- a measurement problem; or
 - an observation from a different population.
 
-Do not remove an observation simply because it looks unusual. Investigate it first.
+An outlier is not automatically an error. Investigate the observation, its units, and how it was recorded before deciding what to do with it.
 
 ### Center
 
 The **center** describes a typical or middle value in the distribution.
 
-In this chapter, estimate the center visually. In Chapter 2, we will calculate measures such as the **mean** and **median**.
+In Chapter 1, the center is estimated visually. Chapter 2 introduces numerical measures such as the **mean** and **median**.
 
 ### Spread
 
-The **spread** describes how variable the data are.
+The **spread** describes how variable the observations are.
 
-A tightly packed distribution has small spread. A distribution extending over a wider range has larger spread.
+A tightly packed distribution has less spread than a distribution extending over a much wider range. At this stage, the approximate range is often useful for describing spread visually.
 
 ### Writing a Good SOCS Description
 
-A strong description uses the variable and units.
+A good SOCS description uses the **variable name and units** rather than giving only labels.
 
-Instead of:
+Instead of writing:
 
 > Right-skewed with one outlier.
 
-write:
+write something like:
 
 > The distribution of seed germination times is unimodal and right-skewed. Most seeds germinated within the first several days, while a smaller number took much longer. The distribution is centered around a few days and has a long right tail.
 
-### Example: SOCS for Shark Lengths
+### Example 1.3: SOCS for Shark Lengths
 
 Using the shark histogram:
 
-- **Shape:** roughly unimodal and fairly symmetric through the center;
-- **Outliers:** the smallest shark at 9.4 ft and largest at 22.8 ft appear separated from much of the data;
-- **Center:** approximately 15–16 ft;
-- **Spread:** from 9.4 ft to 22.8 ft.
+- **Shape:** roughly unimodal and fairly symmetric through the center.
+- **Outliers:** 9.4 ft and 22.8 ft appear separated from much of the data.
+- **Center:** approximately 15–16 ft.
+- **Spread:** approximately 9.4 ft to 22.8 ft.
+
+At this stage, the goal is to **read the distribution**. Exact numerical summaries are introduced in Chapter 2.
 
 ---
 
+## Dotplots: Showing Individual Values
 
-## Time Plots: Showing Change in Order
+A histogram groups observations into bins. For a smaller dataset, we may instead want to see every observed value.
 
-### What Is a Time Plot?
+A **dotplot** places one dot for each observation above a numerical scale.
 
-A **time plot** displays a quantitative variable in chronological order.
+Dotplots are useful because:
 
-Time appears on the horizontal axis, and the measured variable appears on the vertical axis.
+- individual values remain visible;
+- repeated values can be stacked;
+- clusters, gaps, center, spread, and outliers are easy to inspect; and
+- small groups can be compared directly.
+
+They work best when the sample is small or moderate and individual observations remain readable.
+
+### Anatomy of a Dotplot
+
+<img src="fig_dotplot_anatomy.png" alt="Annotated dotplot showing individual observations and stacked repeated values" />
+
+Important parts include:
+
+- **Horizontal axis:** the numerical variable.
+- **One dot per observation:** individual values remain visible.
+- **Vertical stacking:** repeated values are stacked so that they do not hide one another.
+- **No substantive vertical measurement:** the vertical position usually exists only to separate repeated observations.
+
+### Example 1.4: Plant Height With and Without Fertilizer
+
+<img src="fig_plant_dotplot.png" alt="Dotplot comparing plant heights with and without fertilizer" />
+
+Each dot represents one plant.
+
+From the observed samples:
+
+- plants in the fertilizer group tend to be taller;
+- the two groups still overlap;
+- the fertilizer group appears shifted to the right; and
+- no single point is extremely separated from the rest.
+
+The wording **“from the observed samples”** is important. The dotplot describes the data that were collected. By itself, it does not prove what will happen for every future plant or establish a population-level causal conclusion. Later chapters develop the tools needed to make broader statistical inferences.
+
+### Dotplot vs. Histogram
+
+| **Dotplot** | **Histogram** |
+|:---|:---|
+| Shows individual observations | Groups observations into bins |
+| Excellent for smaller samples | Excellent for larger or denser samples |
+| Repeated values remain visible | Overall shape is easier to see with dense data |
+| Sample size can often be counted | Exact individual values are not visible |
+
+There is no universal rule such as “use a histogram whenever $n\ge 30$.” Choose the display that communicates the data most clearly for the question being asked.
+
+A dotplot can become difficult to read when there are hundreds or thousands of observations. In that situation, a histogram is often more useful because the goal shifts from seeing every observation to seeing the overall distribution.
+
+---
+
+## Time Plots: When Order Matters
+
+A histogram or dotplot tells us **what values occurred**, but it does not tell us **when they occurred**.
+
+When chronological order matters, use a **time plot**:
+
+- the horizontal axis shows time;
+- the vertical axis shows the measured variable; and
+- observations are commonly connected in chronological order.
 
 ### Anatomy of a Time Plot
 
 <img src="fig_timeplot_anatomy.png" alt="Annotated time plot showing time on the horizontal axis and connected chronological observations" />
 
-Important parts include:
-
-- **Horizontal axis:** time.
-- **Vertical axis:** the variable being measured.
-- **Points:** observations taken at particular times.
-- **Connecting lines:** emphasize chronological order and change between neighboring observations.
-
-### What to Look for in a Time Plot
-
 Look for:
 
 - **trend:** long-term upward or downward movement;
 - **cycle:** a repeating pattern;
-- **sudden change:** abrupt jump or drop;
+- **sudden change:** an abrupt jump or drop; and
 - **unusual observation:** a point that does not fit nearby values.
-
-### When Should You Use a Time Plot?
 
 Use a time plot whenever **when the observation occurred is important to the question**.
 
-Examples include:
+Examples include hourly temperature, bacterial growth measured every 30 minutes, monthly unemployment rates, daily calibration measurements, and annual rainfall.
 
-- temperature measured every hour;
-- bacterial growth recorded every 30 minutes;
-- monthly unemployment rates;
-- daily chemical calibration measurements;
-- annual rainfall.
-
-### Example: A Repeating Daily Pattern
+### Example 1.5: A Repeating Daily Pattern
 
 <img src="fig_timeplot.png" alt="Time plot showing a repeating daily temperature pattern" />
 
 The measurements rise and fall in a repeating pattern over approximately 24 hours.
 
-A histogram could show the range and distribution of temperatures, but it would hide the repeating order.
+A histogram could summarize the temperatures and show their overall distribution. However, it would hide **when** the high and low values occurred.
 
-### How Time Plots Can Go Wrong: Ignoring Time Order
+Time order makes cycles and trends visible.
+
+### Example 1.6: A Histogram Can Hide Instrument Drift
 
 <img src="fig_time_order_drift.png" alt="Histogram and time plot of the same calibration measurements" />
 
 The two panels contain the **same measurements**.
 
-- The histogram answers: **What values occurred most often?**
-- The time plot answers: **How did the measurement change over the 60 days?**
+- The histogram answers: **What concentration values occurred?**
+- The time plot answers: **When did they occur, and how did they change?**
 
-If a 100 mg/L calibration standard is supposed to remain constant, the time plot reveals gradual drift that the histogram hides.
+Suppose a calibration standard is intended to remain at 100 mg/L. The histogram may look like a compact distribution around 100 mg/L, but the time plot reveals a gradual upward drift across the 60 days.
 
 > **When time order is meaningful, plot against time before ignoring the order.**
 
 ---
 
-## Data Quality and Outliers
+## Outliers and Data Quality
 
-Graphs are not only presentation tools. They are also tools for checking whether the data make sense.
+Graphs are not only presentation tools. They also help us check whether the data make sense.
 
 ### Always Investigate Unusual Values
 
-When you see an outlier or sudden spike, ask:
+When you see an unusual value, ask:
 
 1. Was the value entered correctly?
 2. Are the units correct?
@@ -2055,29 +2080,31 @@ When you see an outlier or sudden spike, ask:
 4. Is the value scientifically plausible?
 5. Could it be a genuine but unusual observation?
 
-### Example: A Data-Entry Error
+> **An outlier is not automatically an error. Do not remove data simply because it looks unusual.**
+
+### Example 1.7: A Data-Entry Error
 
 <img src="fig_data_entry.png" alt="Plot containing an obvious data-entry error" />
 
-Most recorded temperatures are near 37°C, but one value is 370°C. The graph makes the problem obvious immediately.
+Most recorded body temperatures are near 37°C, but one value is recorded as 370°C.
 
-Without plotting first, that value could strongly distort later numerical summaries.
+The graph makes the likely data-entry problem immediately visible. Without plotting first, the typo could strongly distort later numerical summaries such as the mean and standard deviation.
 
 ### Common Data Problems That Graphs Can Reveal
 
-| **Problem** | **Example** | **What You Might See** |
+| **Problem** | **Example** | **Possible Visual Signature** |
 |:---|:---|:---|
 | Typing error | 19.4 entered as 194 | One extreme observation |
-| Wrong unit | Some masses entered in mg instead of g | Two separated groups or an extreme gap |
-| Missing-value code | Missing recorded as -99 | A strange stack at -99 |
-| Instrument drift | Calibration slowly changes | Gradual trend in a time plot |
-| Duplicated record | Same row copied twice | Repeated or unusually stacked points |
+| Wrong unit | Some masses entered in mg instead of g | Two separated groups or a very large gap |
+| Missing-value code | Missing recorded as $-99$ | A strange stack at $-99$ |
+| Instrument drift | Calibration changes over days | Gradual trend in a time plot |
+| Duplicated record | Same row copied twice | Unusually repeated points |
 
-> **Do not automatically delete unusual observations. First determine why they are unusual.**
+Graphs are therefore tools for **checking data quality**, not only for presenting finished results.
 
 ---
 
-## Practice: Matching Questions to Graphs
+## Apply Your Knowledge
 
 ### Apply Your Knowledge 1.1: Breakfast Cereals
 
@@ -2104,93 +2131,99 @@ Consider a dataset describing 77 breakfast cereals:
 1. The individuals are the 77 cereal brands.
 2. `Manufacturer` and `Type` are categorical.
 3. `Calories` and `Sugar` are quantitative.
-4. Use a bar graph for `Manufacturer`.
+4. A bar graph is appropriate for `Manufacturer`.
 5. A histogram is a good starting graph for `Sugar`.
 
-### Apply Your Knowledge 1.2: Choosing the Graph
+The important sequence is:
+
+> **Identify the individual $\rightarrow$ identify the variable $\rightarrow$ classify the variable $\rightarrow$ choose the graph based on the question.**
+
+### Apply Your Knowledge 1.2: Choose the Graph
 
 | **Question** | **Structure** | **Best Starting Graph** |
 |:---|:---|:---|
 | Which blood type is most common? | Categorical | Bar graph |
-| How is one group divided into four categories? | Part-to-whole | Pie chart or bar graph |
+| How are four categories divided within one whole? | Categorical, part-to-whole | Pie chart or bar graph |
 | What is the distribution of 150 plant heights? | Quantitative | Histogram |
-| What are the exact reaction times of 12 participants? | Small quantitative sample | Dotplot |
+| What are the exact reaction times of 12 participants? | Quantitative, small sample | Dotplot |
 | Is river temperature changing throughout the day? | Quantitative over time | Time plot |
-
-### Find the Problem: Easy
-
-<img src="fig_practice_easy_wrong_line.png" alt="Practice line graph incorrectly used for nominal categories" />
-
-**Question:** What is wrong with this display, and what graph should replace it?
-
-**Answer:** Favourite drink is a nominal categorical variable. Connecting the categories with a line suggests an order or continuous progression. A **bar graph** is more appropriate.
-
-### Find the Problem: Medium
-
-<img src="fig_practice_medium_truncated_bar.png" alt="Practice bar graph with a truncated vertical axis" />
-
-**Question:** Why does the difference between the treatments look much larger than it really is?
-
-**Answer:** The bar-chart axis begins at 75% rather than zero. Because bar length represents magnitude, the truncated baseline exaggerates the 4-percentage-point difference.
-
-### Find the Problem: Hard
-
-<img src="fig_practice_hard_histogram_time.png" alt="Practice histogram that ignores chronological order" />
-
-**Question:** The histogram itself is not mathematically incorrect. Why might it still be the wrong first graph?
-
-**Answer:** The measurements were collected every hour. The histogram removes chronological order, so it cannot reveal whether temperature increased, decreased, cycled, or suddenly changed. A **time plot** should be examined first.
 
 ---
 
 ## Master Guide: Which Graph Should You Use?
 
-| **Data Situation** | **Recommended Graph** | **What to Describe** | **Common Mistake** |
+| **Data Situation** | **Graph** | **What to Describe** | **Common Mistake** |
 |:---|:---|:---|:---|
-| Categorical counts or percentages | Bar graph | Largest/smallest categories, comparisons | Connecting categories with a line; truncated baseline |
-| Parts of one whole | Pie chart | Dominant slices, part-to-whole structure | Using percentages with different denominators |
-| Small quantitative sample | Dotplot | Individual values, clusters, gaps, SOCS | Using so many points that the graph becomes unreadable |
-| Larger quantitative sample | Histogram | SOCS and overall shape | Choosing bins that hide or exaggerate patterns |
-| Data recorded over time | Time plot | Trend, cycles, sudden changes | Ignoring chronological order |
+| Categorical counts or percentages | Bar graph | Largest/smallest categories; comparisons | Connecting nominal categories with a line |
+| Parts of one whole | Pie chart | Dominant slices; part-to-whole structure | Using separate group rates as slices |
+| Small quantitative sample | Dotplot | Individual values; SOCS | Hiding a small sample unnecessarily in bins |
+| Larger quantitative sample | Histogram | SOCS; overall shape | Choosing bins that hide or exaggerate patterns |
+| Data recorded over time | Time plot | Trend; cycles; sudden changes | Ignoring chronological order |
 
-### A Five-Step Approach for Exam Questions
+### A Five-Step Approach for Graph-Selection Questions
 
 1. **Identify the individual:** What does one row represent?
 2. **Identify the variable:** What characteristic was recorded?
-3. **Classify the variable:** Categorical or quantitative? If quantitative, discrete or continuous?
+3. **Classify the variable:** Is it categorical or quantitative? If quantitative, is it discrete or continuous?
 4. **Ask whether time order matters.**
 5. **Choose the graph that answers the question most clearly.**
 
-### A Fair-Graph Checklist
+---
 
-Before trusting a graph, ask:
+## Practice: Find the Problem
 
-- Does the graph type match the variable type?
-- Are the axes clearly labeled?
-- Are units shown?
-- Does a bar graph use a sensible zero baseline?
-- If it is a pie chart, do all slices come from the same whole?
-- Could bin width hide or exaggerate a pattern?
-- If time matters, has chronological order been preserved?
-- Does the title describe the data without exaggerating the conclusion?
+### Practice 1 (Easy): What Is Wrong with This Graph?
+
+<img src="fig_practice_easy_wrong_line.png" alt="Practice line graph incorrectly used for nominal categories" />
+
+The graph shows students' favourite study drink.
+
+**Question:** What is wrong with this display, and what graph should replace it?
+
+**Answer:** Favourite drink is a nominal categorical variable. Connecting the categories suggests an order or continuous progression that does not exist. A **bar graph** is more appropriate.
+
+### Practice 2 (Medium): Is the Difference Really That Large?
+
+<img src="fig_practice_medium_truncated_bar.png" alt="Practice bar graph with a truncated vertical axis" />
+
+Treatment A has a success rate of 78%, and Treatment B has a success rate of 82%.
+
+**Question:** Why does the visual difference look much larger than the numerical difference?
+
+**Answer:** The vertical axis begins near 75% rather than zero. Because bar length represents magnitude, the truncated baseline exaggerates the 4-percentage-point difference. Ordinary bar graphs should generally begin at zero.
+
+### Practice 3 (Hard): What Important Information Is Missing?
+
+<img src="fig_practice_hard_histogram_time.png" alt="Practice histogram that ignores chronological order" />
+
+A temperature was recorded every hour for 24 hours. The researcher wants to know whether the reaction-vessel temperature drifted during the experiment.
+
+**Question:** What important information has the histogram discarded?
+
+**Answer:** The histogram shows the distribution of temperatures but removes chronological order. It cannot reveal drift, cycles, or sudden changes. A **time plot** of temperature against time should be examined first.
 
 ---
 
 ## Key Terminology Review
 
 - **Statistics:** The science of learning from data.
-- **Individual (Case):** The object or person represented by one observational unit.
-- **Variable:** A characteristic recorded for an individual.
-- **Categorical Variable:** Places observations into groups or categories.
-- **Quantitative Variable:** Records a numerical amount.
-- **Discrete Variable:** A quantitative variable that usually results from counting.
-- **Continuous Variable:** A quantitative variable that usually results from measuring.
+- **Individual (case):** The object, person, organism, or other observational unit represented by one row.
+- **Identifier:** A label used to distinguish individuals, such as a plant ID.
+- **Variable:** A characteristic recorded for each individual that can take different values.
+- **Categorical variable:** Places observations into groups or categories.
+- **Nominal variable:** A categorical variable whose categories have no natural order.
+- **Ordinal variable:** A categorical variable whose categories have a meaningful order.
+- **Quantitative variable:** Records a numerical amount for which arithmetic is meaningful.
+- **Discrete variable:** A quantitative variable that usually results from counting.
+- **Continuous variable:** A quantitative variable that usually results from measuring.
 - **Distribution:** The values a variable takes and how often they occur.
-- **Bar Graph:** A graph for categorical data with separated bars.
-- **Pie Chart:** A part-to-whole display for one categorical variable.
-- **Histogram:** A graph for quantitative data using touching bins.
-- **Dotplot:** A graph showing individual quantitative observations as dots.
-- **Time Plot:** A graph of a variable against chronological time.
+- **Frequency:** The number of observations in a category or class.
+- **Relative frequency:** The proportion of observations in a category or class.
+- **Bar graph:** A graph for categorical data with separated bars.
+- **Pie chart:** A part-to-whole display for categories that form one whole.
+- **Histogram:** A graph for quantitative data using adjacent numerical bins.
+- **Dotplot:** A graph that displays individual quantitative observations as dots.
+- **Time plot:** A graph of a quantitative variable against chronological time.
 - **SOCS:** Shape, Outliers, Center, Spread.
 - **Outlier:** An observation that lies far from the overall pattern.
 - **Trend:** Long-term upward or downward movement over time.
@@ -2200,20 +2233,20 @@ Before trusting a graph, ask:
 
 ## Chapter 1 Summary
 
-The main goal of this chapter is not to memorize graph names. It is to learn to **match the graph to the data and the question, understand how the graph works, and recognize when a display can mislead you.**
+The main goal of this chapter is not to memorize graph names. It is to learn to **match a graph to the data and the question, interpret the graph correctly, and recognize when a display can hide or exaggerate information**.
 
 ### The Core Rules
 
-1. **Know what one row represents.** Identify individuals before analyzing variables.
+1. **Know what one row represents.** Identify the individuals before analyzing variables.
 2. **Classify the variable.** Categorical and quantitative variables require different displays.
-3. **Understand the anatomy of the graph before interpreting it.** Know what each axis, bar, bin, slice, dot, or line represents.
-4. **Use bar graphs for categorical comparisons.** Use pie charts only for simple parts of one whole.
-5. **Use histograms to see the shape of quantitative distributions.** Check whether bin width changes the story.
+3. **Use bar graphs for categorical comparisons.** Use pie charts only when categories form parts of one whole.
+4. **Use histograms to see the overall shape of quantitative distributions.** Check whether bin width changes the story.
+5. **Describe quantitative distributions using SOCS.**
 6. **Use dotplots when individual values remain readable.**
-7. **Use time plots when order matters.** A histogram can hide a trend or cycle.
-8. **Describe quantitative distributions using SOCS.**
-9. **Do not trust a graph automatically.** Check axes, scales, denominators, labels, ordering, and design choices.
-10. **Plot before calculating.** Graphs can reveal errors and unusual observations immediately.
+7. **Use time plots when order matters.** A histogram can hide a trend, cycle, or drift.
+8. **Investigate unusual observations rather than automatically deleting them.**
+9. **Check axes, scales, labels, units, binning, and ordering before trusting a graph.**
+10. **Plot before relying only on numerical summaries.** Graphs can reveal errors and patterns that a single number may hide.
 
 ### Final Graph Checklist
 
@@ -2222,6 +2255,8 @@ Before interpreting or presenting a graph, ask:
 - What are the individuals?
 - What variable is being displayed?
 - Is the variable categorical or quantitative?
+- If it is categorical, are the categories nominal or ordinal?
+- If it is quantitative, is it discrete or continuous?
 - Does time order matter?
 - Is this the right graph for the question?
 - What does each visual element represent?
@@ -2229,11 +2264,11 @@ Before interpreting or presenting a graph, ask:
 - Could the scale, binning, or ordering exaggerate or hide a pattern?
 - What is the main pattern visible in the data?
 
-### What’s Next? Chapter 2 — Describing Distributions with Numbers
+### Looking Ahead: Chapter 2
 
 In Chapter 1, we learned to **see** center and spread. In Chapter 2, we will learn to calculate them.
 
-We will introduce numerical summaries such as
+We will introduce numerical measures of center such as
 
 $$
 \text{Mean} \qquad \text{Median}
@@ -2245,4 +2280,6 @@ $$
 \text{Range} \qquad \text{Interquartile Range} \qquad \text{Standard Deviation}.
 $$
 
-The key idea will remain the same: **numbers and graphs should support each other.**
+The key idea remains the same:
+
+> **Numbers and graphs should support each other.**

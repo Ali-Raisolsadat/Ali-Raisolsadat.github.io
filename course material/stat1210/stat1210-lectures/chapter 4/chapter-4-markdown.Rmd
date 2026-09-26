@@ -689,9 +689,6 @@ knitr::opts_chunk$set(
 )
 
 library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(gridExtra)
 
 set.seed(123)
 
@@ -833,68 +830,6 @@ p_outliers <- ggplot(df_empathy, aes(x = Empathy, y = Brain)) +
 
 save_plot("fig_ch4_outliers.png", p_outliers, width = 7, height = 4)
 
-# =============================================================
-# Chapter 4: Visualizing the Logarithm Transformation
-# =============================================================
-# gridExtra is already loaded above and is used to combine plots
-
-# Illustrative mammal subset used only for the transformation figure
-species <- c("Mouse", "Rat", "Rabbit", "Cat", "Chimpanzee", "Human", "Dolphin", "Cow", "Elephant")
-body_kg <- c(0.02, 0.28, 2.5, 3.3, 52, 62, 160, 465, 4603)
-brain_g <- c(0.4, 1.9, 12.1, 25.6, 440, 1320, 1735, 423, 5712)
-
-df_mammals <- data.frame(Species = species, Body_kg = body_kg, Brain_g = brain_g)
-
-# Base-10 logarithms are used on both variables
-df_mammals$log_Body <- log10(df_mammals$Body_kg)
-df_mammals$log_Brain <- log10(df_mammals$Brain_g)
-
-# -------------------------------------------------------------
-# Plot A: raw measurements
-# -------------------------------------------------------------
-p_raw <- ggplot(df_mammals, aes(x = Body_kg, y = Brain_g)) +
-  geom_point(colour = "#2c3e50", size = 3, alpha = 0.8) +
-  geom_smooth(method = "lm", se = FALSE, colour = "#C44E52", linewidth = 1.2) +
-  # The elephant is labelled to show the scale of the largest observation
-  annotate("text", x = 4603, y = 5200, label = "Elephant", fontface = "italic", hjust = 1) +
-  labs(
-    title = "A. Raw Data",
-    x = "Body Weight (kg)",
-    y = "Brain Weight (g)"
-  ) +
-  theme_classic() +
-  theme(
-    plot.title = element_text(face = "bold", size = 14),
-    axis.title = element_text(face = "bold", size = 11),
-    axis.text = element_text(colour = "black", size = 10)
-  )
-
-# -------------------------------------------------------------
-# Plot B: log-transformed measurements
-# -------------------------------------------------------------
-p_log <- ggplot(df_mammals, aes(x = log_Body, y = log_Brain)) +
-  geom_point(colour = "#2c3e50", size = 3, alpha = 0.8) +
-  geom_smooth(method = "lm", se = FALSE, colour = "#C44E52", linewidth = 1.2) +
-  labs(
-    title = "B. Log-Transformed Data",
-    x = "Log10(Body Weight)",
-    y = "Log10(Brain Weight)"
-  ) +
-  theme_classic() +
-  theme(
-    plot.title = element_text(face = "bold", size = 14),
-    axis.title = element_text(face = "bold", size = 11),
-    axis.text = element_text(colour = "black", size = 10)
-  )
-
-# -------------------------------------------------------------
-# Combine and Save
-# -------------------------------------------------------------
-# The two plots are arranged side by side for direct comparison
-combined_plot <- gridExtra::arrangeGrob(p_raw, p_log, ncol = 2)
-
-# The wider output keeps both panels readable
-ggsave("fig_ch4_log_comparison.png", combined_plot, width = 10, height = 4.5)
 
 ```
 
@@ -906,7 +841,7 @@ Chapter 3 introduced scatterplots and correlation as tools for describing the di
 
 In this chapter, the explanatory variable is denoted by $x$ and is plotted on the horizontal axis. The response variable is denoted by $y$ and is plotted on the vertical axis. The regression line is used when a linear model is a reasonable summary of how the response tends to change as the explanatory variable changes.
 
-The chapter begins with the structure of a straight line, then develops the least-squares regression line and its interpretation. Residuals, the coefficient of determination, influential observations and logarithm transformations are introduced next. The chapter ends with cautions about extrapolation, lurking variables and causal conclusions.
+The chapter begins with the structure of a straight line, then develops the least-squares regression line and its interpretation. Residuals, the coefficient of determination and influential observations are introduced next. The chapter ends with cautions about extrapolation, lurking variables and causal conclusions.
 
 > **Regression is a model**
 >
@@ -934,18 +869,83 @@ The fitted line should also be understood as describing an average pattern. If t
 A straight line relating an explanatory variable $x$ to a response variable $y$ has the general form
 
 $$
-y=a+bx
-$$
+y=a+bx$$
 
 The slope $b$ describes the change in the line's predicted response for a one-unit increase in $x$. The intercept $a$ is the value of the line when $x=0$.
 
 The units of the slope are the units of the response variable divided by the units of the explanatory variable. The units of the intercept are the units of the response variable. These units are important because the numerical size of a slope depends on the measurement scales being used.
 
+For example, consider the straight line
+
+$$
+y=3+2x$$
+
+The intercept is $a=3$ and the slope is $b=2$. The line crosses the $y$-axis at $(0,3)$ and increases by 2 units in $y$ whenever $x$ increases by 1 unit.
+
+The values in the line can be calculated one at a time.
+
+For $x=0$,
+
+$$
+y=3+2(0)$$
+
+$$
+y=3+0$$
+
+$$
+y=3$$
+
+For $x=1$,
+
+$$
+y=3+2(1)$$
+
+$$
+y=3+2$$
+
+$$
+y=5$$
+
+For $x=2$,
+
+$$
+y=3+2(2)$$
+
+$$
+y=3+4$$
+
+$$
+y=7$$
+
+For $x=3$,
+
+$$
+y=3+2(3)$$
+
+$$
+y=3+6$$
+
+$$
+y=9$$
+
+| $x$ | $0$ | $1$ | $2$ | $3$ |
+|:--:|:--:|:--:|:--:|:--:|
+| $y=3+2x$ | $3$ | $5$ | $7$ | $9$ |
+
+The slope can also be read as
+
+$$
+b=\frac{\text{change in }y}{\text{change in }x}$$
+
+$$
+b=\frac{\Delta y}{\Delta x}$$
+
+A positive slope rises from left to right, a negative slope falls from left to right and a zero slope produces a horizontal line.
+
 A regression line uses the same algebraic form, but the response on the line is written as $\hat{y}$ to emphasize that it is a prediction rather than an observed value.
 
 $$
-\hat{y}=a+bx
-$$
+\hat{y}=a+bx$$
 
 The distinction between $y$ and $\hat{y}$ will become especially important when residuals are introduced.
 
@@ -958,8 +958,7 @@ A useful way to read a regression equation is to separate the two jobs performed
 A greenhouse study uses the fitted equation below to predict final plant height in centimetres from daily light exposure in hours.
 
 $$
-\widehat{\text{height}}=4.5+1.8(\text{hours of light})
-$$
+\widehat{\text{height}}=4.5+1.8(\text{hours of light})$$
 
 What does the slope mean? What height does the model predict for a plant receiving 6 hours of light per day?
 
@@ -971,15 +970,23 @@ The intercept is 4.5 centimetres. It is the predicted height when the explanator
 
 **Solution**
 
-For 6 hours of light, the predicted height is
+For 6 hours of light, substitute $6$ for the explanatory variable.
 
 $$
-\widehat{\text{height}}=4.5+1.8(6)
-$$
+\widehat{\text{height}}=4.5+1.8(6)$$
+
+First multiply the slope by the number of hours.
 
 $$
-\widehat{\text{height}}=15.3\text{ cm}
+1.8(6)=10.8$$
+
+Then add the intercept.
+
 $$
+\widehat{\text{height}}=4.5+10.8$$
+
+$$
+\widehat{\text{height}}=15.3\text{ cm}$$
 
 The fitted model predicts a final height of 15.3 cm for a plant receiving 6 hours of light per day. This result is a model-based prediction rather than a statement that every such plant will be exactly 15.3 cm tall.
 
@@ -1017,22 +1024,34 @@ The observed data are shown below.
 The fitted least-squares regression line for these data is
 
 $$
-\widehat{\text{fat gain}}=3.505-0.00344(\text{NEA change})
-$$
+\widehat{\text{fat gain}}=3.505-0.00344(\text{NEA change})$$
 
 A prediction at an NEA change of 400 Calories is obtained by substituting $x=400$ into the fitted equation. The value 400 lies within the observed range of NEA changes, so this prediction is an interpolation rather than an extrapolation.
 
 **Solution**
 
-The predicted fat gain is
+The predicted fat gain is found by substituting $x=400$ into the fitted line.
 
 $$
-\widehat{\text{fat gain}}=3.505-0.00344(400)
-$$
+\widehat{\text{fat gain}}=3.505-0.00344(400)$$
+
+First calculate the product.
 
 $$
-\widehat{\text{fat gain}}\approx2.13\text{ kg}
+0.00344(400)=1.376$$
+
+Then subtract this amount from the intercept.
+
 $$
+\widehat{\text{fat gain}}=3.505-1.376$$
+
+$$
+\widehat{\text{fat gain}}=2.129\text{ kg}$$
+
+Rounding to two decimal places gives
+
+$$
+\widehat{\text{fat gain}}\approx2.13\text{ kg}$$
 
 <img src="fig_ch4_regression.png" alt="Scatterplot of fat gain versus NEA change with the least-squares regression line and a prediction at an NEA change of 400 Calories" />
 
@@ -1040,15 +1059,32 @@ The value 2.13 kg is the response predicted by the fitted line for $x=400$. An i
 
 #### Reading the Biological Context
 
-The slope is $-0.00344$ kg per Calorie. Within the range of NEA values represented by the data, the fitted model predicts that fat gain decreases by about 0.00344 kg for each additional Calorie of NEA change. A 100-Calorie increase in NEA corresponds to a predicted decrease of about 0.344 kg in fat gain according to the fitted line.
+The slope is $-0.00344$ kg per Calorie. Within the range of NEA values represented by the data, the fitted model predicts that fat gain decreases by about 0.00344 kg for each additional Calorie of NEA change.
+
+For a 100-Calorie increase in NEA, multiply the slope by 100.
+
+$$
+(-0.00344)(100)=-0.344$$
+
+Therefore, a 100-Calorie increase in NEA corresponds to a predicted decrease of about 0.344 kg in fat gain according to the fitted line.
+
+For example, the predicted response at an NEA change of 100 Calories is
+
+$$
+\widehat{\text{fat gain}}=3.505-0.00344(100)$$
+
+$$
+\widehat{\text{fat gain}}=3.505-0.344$$
+
+$$
+\widehat{\text{fat gain}}=3.161\text{ kg}$$
 
 The negative slope describes an association in these data. The slope alone does not establish that increasing NEA causes a particular reduction in fat gain.
 
 The intercept is 3.505 kg. It represents the predicted fat gain when NEA change is zero.
 
 $$
-\widehat{\text{fat gain}}=3.505\text{ kg when NEA change}=0
-$$
+\widehat{\text{fat gain}}=3.505\text{ kg when NEA change}=0$$
 
 The value $x=0$ falls inside the observed range in this study, so the intercept has a meaningful interpretation here. In other applications, an intercept can be mathematically necessary while having little practical meaning if $x=0$ is impossible or far outside the observed range.
 
@@ -1065,8 +1101,7 @@ A line drawn by eye is subjective. Different people could draw slightly differen
 For an observation $(x_i,y_i)$, the fitted line gives a predicted response $\hat{y}_i$. The **residual** is the signed vertical difference between the observed response and the predicted response.
 
 $$
-e_i=y_i-\hat{y}_i
-$$
+e_i=y_i-\hat{y}_i$$
 
 A positive residual means the observed response lies above the fitted line. A negative residual means the observed response lies below the fitted line.
 
@@ -1076,45 +1111,76 @@ A residual measures the prediction error for one observation. The observed value
 
 A residual close to zero means the fitted line predicted that observation closely. A large positive residual means the observation is well above the fitted line. A large negative residual means the observation is well below the fitted line. Residuals are measured in the same units as the response variable.
 
-**Additional Example: Calculating a Residual**
+**Example: Residual for Volunteer 8**
 
 **Question**
 
-Volunteer 9 in the NEA study had an NEA change of 392 Calories and an observed fat gain of 3.8 kg. What value does the regression line predict for this volunteer and what is the residual?
+Volunteer 8 in the NEA study had an NEA change of 355 Calories and an observed fat gain of 1.3 kg. What value does the fitted line predict for this volunteer and what is the residual?
 
 **Explanation**
 
-The fitted equation predicts fat gain from NEA change. The predicted value is found by substituting $x=392$. The residual is then the observed value minus the predicted value. A positive result will indicate that the observed fat gain was greater than the value predicted by the line.
+The fitted equation is
+
+$$
+\widehat{\text{fat gain}}=3.505-0.00344(\text{NEA change})$$
+
+The fitted value is found by substituting $x=355$. The residual is then calculated using
+
+$$
+e=y-\hat{y}$$
 
 **Solution**
 
-The predicted fat gain is
+Substitute $x=355$ into the fitted line.
 
 $$
-\hat{y}=3.505-0.00344(392)
-$$
+\hat{y}=3.505-0.00344(355)$$
+
+First calculate the product.
 
 $$
-\hat{y}\approx2.16\text{ kg}
-$$
+0.00344(355)=1.2212$$
 
-The residual is
-
-$$
-e=3.8-2.16
-$$
+Then subtract from the intercept.
 
 $$
-e\approx1.64\text{ kg}
-$$
+\hat{y}=3.505-1.2212$$
 
-The residual is positive because the observed point lies above the fitted line. The model underpredicts this volunteer's fat gain by about 1.64 kg.
+$$
+\hat{y}=2.2838\text{ kg}$$
+
+Rounding to two decimal places gives
+
+$$
+\hat{y}\approx2.28\text{ kg}$$
+
+The observed response is
+
+$$
+y=1.3\text{ kg}$$
+
+Now calculate the residual.
+
+$$
+e=y-\hat{y}$$
+
+$$
+e=1.3-2.2838$$
+
+$$
+e=-0.9838\text{ kg}$$
+
+Rounding to two decimal places gives
+
+$$
+e\approx-0.98\text{ kg}$$
+
+The residual is negative because the observed response lies below the fitted line. The fitted model overpredicts this volunteer's fat gain by about 0.98 kg.
 
 The least-squares regression line is the line that makes the sum of the squared residuals as small as possible.
 
 $$
-\sum_{i=1}^{n}e_i^2
-$$
+\sum_{i=1}^{n}e_i^2$$
 
 The squaring step prevents positive and negative residuals from cancelling. For example, residuals of 2 and $-2$ would add to zero even though both predictions miss the observed responses by two units. Their squared residuals instead contribute 4 and 4 to the total.
 
@@ -1129,20 +1195,17 @@ The method focuses on vertical distances because the regression problem is defin
 For simple linear regression, the fitted line has the form
 
 $$
-\hat{y}=a+bx
-$$
+\hat{y}=a+bx$$
 
 The slope can be calculated from the correlation and sample standard deviations.
 
 $$
-b=r\frac{s_y}{s_x}
-$$
+b=r\frac{s_y}{s_x}$$
 
 The intercept is then calculated from the sample means.
 
 $$
-a=\bar{y}-b\bar{x}
-$$
+a=\bar{y}-b\bar{x}$$
 
 These formulas show that the fitted line depends on the centre, spread and linear association of the two variables.
 
@@ -1151,28 +1214,23 @@ These formulas show that the fitted line depends on the centre, spread and linea
 The sample means describe the centres of the two variables.
 
 $$
-\bar{x}=\frac{\sum x_i}{n}
-$$
+\bar{x}=\frac{\sum x_i}{n}$$
 
 $$
-\bar{y}=\frac{\sum y_i}{n}
-$$
+\bar{y}=\frac{\sum y_i}{n}$$
 
 The sample standard deviations describe the spread of the two variables.
 
 $$
-s_x=\sqrt{\frac{\sum(x_i-\bar{x})^2}{n-1}}
-$$
+s_x=\sqrt{\frac{\sum(x_i-\bar{x})^2}{n-1}}$$
 
 $$
-s_y=\sqrt{\frac{\sum(y_i-\bar{y})^2}{n-1}}
-$$
+s_y=\sqrt{\frac{\sum(y_i-\bar{y})^2}{n-1}}$$
 
 The sample correlation measures the direction and strength of the linear association.
 
 $$
-r=\frac{1}{n-1}\sum\left(\frac{x_i-\bar{x}}{s_x}\right)\left(\frac{y_i-\bar{y}}{s_y}\right)
-$$
+r=\frac{1}{n-1}\sum\left(\frac{x_i-\bar{x}}{s_x}\right)\left(\frac{y_i-\bar{y}}{s_y}\right)$$
 
 ---
 
@@ -1180,43 +1238,197 @@ $$
 
 **Question**
 
-For the NEA and fat-gain data, the summary statistics are $\bar{x}=324.75$, $s_x=257.66$, $\bar{y}=2.388$, $s_y=1.139$ and $r=-0.779$. What are the slope and intercept of the least-squares regression line?
+The lecture slides provide the following summary statistics for the NEA and fat-gain example.
+
+$$
+\bar{x}=324.75$$
+
+$$
+\bar{y}=2.3875$$
+
+$$
+s_x=261.46$$
+
+$$
+s_y=1.1207$$
+
+$$
+r=-0.8021$$
+
+Use these values to calculate the least-squares regression line.
 
 **Explanation**
 
-The slope formula combines the correlation with the ratio of the response standard deviation to the explanatory-variable standard deviation. Once the slope is known, the intercept is found from the sample means.
+The calculation has two main parts. First calculate the slope using
 
-The calculations should retain several decimal places until the final answer. Early rounding can noticeably change later predictions.
+$$
+b=r\frac{s_y}{s_x}$$
+
+Then calculate the intercept using
+
+$$
+a=\bar{y}-b\bar{x}$$
+
+Several decimal places should be retained during the intermediate calculations.
 
 **Solution**
 
-The slope is
+**Step 1: Calculate the ratio of the standard deviations**
 
 $$
-b=-0.779\left(\frac{1.139}{257.66}\right)
-$$
+\frac{s_y}{s_x}=\frac{1.1207}{261.46}$$
 
 $$
-b\approx-0.00344
-$$
+\frac{s_y}{s_x}\approx0.0042863$$
 
-The intercept is
-
-$$
-a=2.388-(-0.00344)(324.75)
-$$
+**Step 2: Multiply by the correlation to obtain the slope**
 
 $$
-a\approx3.505
-$$
-
-The fitted equation is therefore
+b=r\frac{s_y}{s_x}$$
 
 $$
-\hat{y}=3.505-0.00344x
-$$
+b=(-0.8021)(0.0042863)$$
 
-The small differences between these rounded calculations and software output arise from rounding the summary statistics.
+$$
+b\approx-0.0034381$$
+
+Rounding the slope to five decimal places gives
+
+$$
+b\approx-0.00344$$
+
+The negative sign agrees with the negative association in the scatterplot.
+
+**Step 3: Substitute the slope and the sample means into the intercept formula**
+
+Using the unrounded slope from Step 2,
+
+$$
+a=\bar{y}-b\bar{x}$$
+
+$$
+a=2.3875-(-0.0034381)(324.75)$$
+
+**Step 4: Multiply the slope by the mean of \(x\)**
+
+$$
+(-0.0034381)(324.75)\approx-1.1165$$
+
+**Step 5: Calculate the intercept**
+
+$$
+a=2.3875-(-1.1165)$$
+
+$$
+a=2.3875+1.1165$$
+
+$$
+a\approx3.5040$$
+
+At the precision used in the lecture, the fitted line is written approximately as
+
+$$
+\widehat{\text{fat gain}}=3.505-0.00344(\text{NEA change})$$
+
+> **Software note**
+>
+> If the summary statistics are recalculated directly from the 16 raw observations shown earlier, R gives approximately \(s_x=257.657\), \(s_y=1.139\) and \(r=-0.7786\). Those raw-data summaries give \(b=-0.0034415\) and \(a=3.5051\), which agree with the fitted line produced by `lm()`. The lecture-slide summary statistics are retained above so the worked example follows the slides exactly.
+
+
+**Example 4.2: Residual Calculations for All 16 Volunteers**
+
+For each observation, the fitted value is calculated from the least-squares line and the residual is calculated as observed minus predicted.
+
+$$
+\hat{y}_i=3.505123-0.003441487x_i$$
+
+$$
+e_i=y_i-\hat{y}_i$$
+
+For Volunteer 1, \(x_1=-94\) and \(y_1=4.2\).
+
+**Step 1: Calculate the fitted value**
+
+$$
+\hat{y}_1=3.505123-0.003441487(-94)$$
+
+$$
+-0.003441487(-94)=0.323500$$
+
+$$
+\hat{y}_1=3.505123+0.323500$$
+
+$$
+\hat{y}_1=3.828623$$
+
+**Step 2: Calculate the residual**
+
+$$
+e_1=y_1-\hat{y}_1$$
+
+$$
+e_1=4.2-3.828623$$
+
+$$
+e_1=0.371377$$
+
+**Step 3: Calculate the squared residual**
+
+$$
+e_1^2=(0.371377)^2$$
+
+$$
+e_1^2\approx0.137921$$
+
+Volunteer 8 gives the negative-residual example developed earlier.
+
+$$
+\hat{y}_8=3.505123-0.003441487(355)$$
+
+$$
+\hat{y}_8\approx2.283395$$
+
+$$
+e_8=1.3-2.283395$$
+
+$$
+e_8\approx-0.983395$$
+
+The same calculations are repeated for every volunteer.
+
+| $i$ | $x_i$ | $y_i$ | $\hat{y}_i$ | $e_i$ | $e_i^2$ |
+|:--:|--:|--:|--:|--:|--:|
+| 1 | -94 | 4.2 | 3.829 | 0.371 | 0.138 |
+| 2 | -57 | 3.0 | 3.701 | -0.701 | 0.492 |
+| 3 | -29 | 3.7 | 3.605 | 0.095 | 0.009 |
+| 4 | 135 | 2.7 | 3.041 | -0.341 | 0.116 |
+| 5 | 143 | 3.2 | 3.013 | 0.187 | 0.035 |
+| 6 | 151 | 3.6 | 2.985 | 0.615 | 0.378 |
+| 7 | 245 | 2.4 | 2.662 | -0.262 | 0.069 |
+| 8 | 355 | 1.3 | 2.283 | -0.983 | 0.967 |
+| 9 | 392 | 3.8 | 2.156 | 1.644 | 2.703 |
+| 10 | 473 | 1.7 | 1.877 | -0.177 | 0.031 |
+| 11 | 486 | 1.6 | 1.833 | -0.233 | 0.054 |
+| 12 | 535 | 2.2 | 1.664 | 0.536 | 0.287 |
+| 13 | 571 | 1.0 | 1.540 | -0.540 | 0.292 |
+| 14 | 580 | 0.4 | 1.509 | -1.109 | 1.230 |
+| 15 | 620 | 2.3 | 1.371 | 0.929 | 0.862 |
+| 16 | 690 | 1.1 | 1.130 | -0.030 | 0.001 |
+
+A defining property of a least-squares line with an intercept is that the **unrounded residuals sum to zero**, apart from tiny computer-rounding error.
+
+$$
+\sum_{i=1}^{16}e_i\approx0$$
+
+If the residuals in the table are first rounded to three decimal places and then added, their sum is approximately \(0.001\). That small nonzero value is caused by rounding.
+
+The sum of squared residuals for these data is
+
+$$
+\text{SSE}=\sum_{i=1}^{16}e_i^2$$
+
+$$
+\text{SSE}\approx7.66335$$
 
 ### Calculating the Least-Squares Line in R
 
@@ -1243,23 +1455,39 @@ y <- c(
 The first method uses R as a calculator for the formulas developed above.
 
 ```{r regression_manual}
-# Summary statistics
+# Step 1: Calculate the sample means
 x_bar <- mean(x)
 y_bar <- mean(y)
+
+# Step 2: Calculate the sample standard deviations
 s_x <- sd(x)
 s_y <- sd(y)
+
+# Step 3: Calculate Pearson correlation
 r <- cor(x, y)
 
-# Least-squares coefficients
-b <- r * (s_y / s_x)
-a <- y_bar - b * x_bar
+# Step 4: Calculate the standard-deviation ratio
+sd_ratio <- s_y / s_x
 
-# Results
-cat("Mean of x:", x_bar, "\n")
-cat("Mean of y:", y_bar, "\n")
-cat("Correlation:", r, "\n")
-cat("Slope:", b, "\n")
-cat("Intercept:", a, "\n")
+# Step 5: Calculate the slope
+b <- r * sd_ratio
+
+# Step 6: Calculate b times x-bar
+b_xbar <- b * x_bar
+
+# Step 7: Calculate the intercept
+a <- y_bar - b_xbar
+
+# Display every intermediate result
+cat("Mean of x =", x_bar, "\n")
+cat("Mean of y =", y_bar, "\n")
+cat("SD of x =", s_x, "\n")
+cat("SD of y =", s_y, "\n")
+cat("Correlation =", r, "\n")
+cat("s_y / s_x =", sd_ratio, "\n")
+cat("Slope =", b, "\n")
+cat("b * x_bar =", b_xbar, "\n")
+cat("Intercept =", a, "\n")
 ```
 
 The calculations produced by R match the hand calculations apart from rounding.
@@ -1351,8 +1579,7 @@ The explanatory and response variables should therefore be chosen from the scien
 The slope and correlation are closely connected through
 
 $$
-b=r\frac{s_y}{s_x}
-$$
+b=r\frac{s_y}{s_x}$$
 
 Standard deviations are positive whenever the variables have nonzero variation. The slope and correlation therefore have the same sign.
 
@@ -1363,12 +1590,10 @@ The two statistics still have different meanings. Correlation is unitless and de
 The slope formula also gives a useful standard-deviation interpretation. If $x$ increases by one standard deviation $s_x$, the fitted response changes by $r$ standard deviations of $y$. This follows from multiplying the slope by $s_x$.
 
 $$
-bs_x=r\frac{s_y}{s_x}s_x
-$$
+bs_x=r\frac{s_y}{s_x}s_x$$
 
 $$
-bs_x=rs_y
-$$
+bs_x=rs_y$$
 
 For the NEA example, an increase of one standard deviation in NEA change is about 257.66 Calories. The fitted line predicts a decrease of about 0.89 kg in fat gain over that change in $x$. This interpretation connects the unitless correlation to the slope measured in the original units.
 
@@ -1377,20 +1602,17 @@ For the NEA example, an increase of one standard deviation in NEA change is abou
 The least-squares regression line always passes through the point formed by the sample means.
 
 $$
-(\bar{x},\bar{y})
-$$
+(\bar{x},\bar{y})$$
 
 This property follows immediately from the intercept formula.
 
 $$
-a=\bar{y}-b\bar{x}
-$$
+a=\bar{y}-b\bar{x}$$
 
 The substitution $x=\bar{x}$ in the regression equation gives
 
 $$
-\hat{y}=\bar{y}
-$$
+\hat{y}=\bar{y}$$
 
 The point $(\bar{x},\bar{y})$ is sometimes described informally as the centre of the scatterplot.
 
@@ -1399,8 +1621,7 @@ The point $(\bar{x},\bar{y})$ is sometimes described informally as the centre of
 For simple linear regression with an intercept, the square of the correlation is the **coefficient of determination**.
 
 $$
-R^2=r^2
-$$
+R^2=r^2$$
 
 The value $R^2$ is the proportion of the observed variation in the response variable that is accounted for by the fitted linear relationship with the explanatory variable.
 
@@ -1411,52 +1632,76 @@ The unexplained variation should not automatically be assigned to specific cause
 A useful mathematical expression is
 
 $$
-R^2=\frac{\text{variation in }y\text{ accounted for by the fitted line}}{\text{total observed variation in }y}
-$$
+R^2=\frac{\text{variation in }y\text{ accounted for by the fitted line}}{\text{total observed variation in }y}$$
 
 Another way to understand $R^2$ is to compare the regression model with a simple baseline prediction that uses $\bar{y}$ for every observation. The total variation around the mean is
 
 $$
-\text{SST}=\sum(y_i-\bar{y})^2
+\text{SST}=\sum(y_i-\bar{y})^2$$
+
+The variation accounted for by the fitted regression line is
+
 $$
+\text{SSR}=\sum(\hat{y}_i-\bar{y})^2$$
 
 The unexplained variation remaining after the regression line is fitted is
 
 $$
-\text{SSE}=\sum(y_i-\hat{y}_i)^2
-$$
+\text{SSE}=\sum(y_i-\hat{y}_i)^2$$
 
-For a least-squares model with an intercept, the coefficient of determination can be written as
+For a least-squares regression line with an intercept, these quantities satisfy
 
 $$
-R^2=1-\frac{\text{SSE}}{\text{SST}}
+\text{SST}=\text{SSR}+\text{SSE}$$
+
+For the NEA data,
+
 $$
+\text{SST}\approx19.4575$$
+
+$$
+\text{SSR}\approx11.7941$$
+
+$$
+\text{SSE}\approx7.66335$$
+
+Check the decomposition.
+
+$$
+11.7941+7.66335\approx19.45745$$
+
+which agrees with the total variation apart from rounding.
+
+For a least-squares model with an intercept, the coefficient of determination can be written in two equivalent ways.
+
+$$
+R^2=\frac{\text{SSR}}{\text{SST}}$$
+
+$$
+R^2=1-\frac{\text{SSE}}{\text{SST}}$$
+
+Using the NEA data and the first form,
+
+$$
+R^2=\frac{11.7941}{19.4575}$$
+
+$$
+R^2\approx0.6061$$
+
+Using the second form,
+
+$$
+R^2=1-\frac{7.66335}{19.4575}$$
+
+$$
+R^2=1-0.3939$$
+
+$$
+R^2\approx0.6061$$
+
+Both methods give the same result.
 
 This form makes the interpretation concrete. A regression model with a small residual sum of squares relative to the original variation in $y$ has a large $R^2$.
-
-**Additional Example: Understanding $R^2$ from Variation**
-
-**Question**
-
-A dataset has total response variation $\text{SST}=200$. After fitting a regression line, the residual variation is $\text{SSE}=50$. What is $R^2$ and how should it be interpreted?
-
-**Explanation**
-
-The total variation measures how spread out the responses are around their mean. The residual variation is the part that remains after the fitted line is used. The ratio $\text{SSE}/\text{SST}$ is therefore the fraction of variation that remains unexplained by the fitted linear model.
-
-**Solution**
-
-The coefficient of determination is
-
-$$
-R^2=1-\frac{50}{200}
-$$
-
-$$
-R^2=0.75
-$$
-
-The fitted line accounts for 75% of the observed variation in the response. The remaining 25% is not accounted for by this linear model. The result does not imply that 75% of the response is caused by the explanatory variable.
 
 ---
 
@@ -1464,39 +1709,40 @@ The fitted line accounts for 75% of the observed variation in the response. The 
 
 **Question**
 
-How should the coefficient of determination be interpreted for the NEA study where $r=-0.779$ and for the manatee example from Chapter 3 where $r=0.945$?
+Suppose a fitted linear model has
+
+$$
+R^2=0.75$$
+
+How should this value be interpreted?
 
 **Explanation**
 
-In simple linear regression with an intercept, $R^2=r^2$. Squaring removes the sign because $R^2$ measures the proportion of variation accounted for by the fitted linear model rather than the direction of the association.
+The coefficient of determination is a proportion. Convert the decimal to a percentage.
+
+$$
+0.75(100\%)=75\%$$
+
+The proportion not accounted for by the fitted line is
+
+$$
+1-R^2=1-0.75$$
+
+$$
+1-R^2=0.25$$
+
+Convert this remaining proportion to a percentage.
+
+$$
+0.25(100\%)=25\%$$
 
 **Solution**
 
-For the NEA study,
+An $R^2$ value of 0.75 means that 75% of the observed variation in the response variable is accounted for by the fitted linear relationship with the explanatory variable.
 
-$$
-R^2=(-0.779)^2
-$$
+The remaining 25% is not accounted for by the fitted line and remains in the residual variation.
 
-$$
-R^2\approx0.607
-$$
-
-Approximately 60.7% of the observed variation in fat gain is accounted for by the fitted linear relationship with NEA change. Approximately 39.3% remains unexplained by this one-predictor linear model.
-
-For the manatee example,
-
-$$
-R^2=(0.945)^2
-$$
-
-$$
-R^2\approx0.893
-$$
-
-Approximately 89.3% of the observed year-to-year variation in manatee deaths is accounted for by the fitted linear relationship with the number of registered powerboats in that dataset.
-
-This interpretation is descriptive. A large $R^2$ does not establish that one variable causes the other.
+This interpretation describes goodness of fit. It does not imply that the explanatory variable causes 75% of the response.
 
 > **Correlation and the coefficient of determination answer different questions**
 >
@@ -1561,6 +1807,158 @@ The observed data are shown below.
 | 15 | 32 | 0.358 |
 | **16** | **105** | **0.779** |
 
+The calculations can be compared with and without Subject 16.
+
+**With all 16 subjects**
+
+The summary statistics are
+
+$$
+\bar{x}=52.625$$
+
+$$
+\bar{y}=0.342875$$
+
+$$
+s_x\approx18.6257$$
+
+$$
+s_y\approx0.275261$$
+
+$$
+r\approx0.515127$$
+
+**Step 1: Calculate the standard-deviation ratio**
+
+$$
+\frac{s_y}{s_x}=\frac{0.275261}{18.6257}$$
+
+$$
+\frac{s_y}{s_x}\approx0.0147785$$
+
+**Step 2: Calculate the slope**
+
+$$
+b=r\frac{s_y}{s_x}$$
+
+$$
+b=(0.515127)(0.0147785)$$
+
+$$
+b\approx0.00761283$$
+
+**Step 3: Calculate the intercept**
+
+$$
+a=\bar{y}-b\bar{x}$$
+
+$$
+a=0.342875-(0.00761283)(52.625)$$
+
+$$
+(0.00761283)(52.625)\approx0.400625$$
+
+$$
+a=0.342875-0.400625$$
+
+$$
+a\approx-0.0577500$$
+
+Therefore,
+
+$$
+\hat{y}\approx-0.0578+0.00761x$$
+
+**Without Subject 16**
+
+The remaining 15 observations have
+
+$$
+\bar{x}\approx49.1333$$
+
+$$
+\bar{y}=0.3138$$
+
+$$
+s_x\approx12.7552$$
+
+$$
+s_y\approx0.258242$$
+
+$$
+r\approx0.330704$$
+
+**Step 1: Calculate the standard-deviation ratio**
+
+$$
+\frac{s_y}{s_x}=\frac{0.258242}{12.7552}$$
+
+$$
+\frac{s_y}{s_x}\approx0.0202460$$
+
+**Step 2: Calculate the slope**
+
+$$
+b=(0.330704)(0.0202460)$$
+
+$$
+b\approx0.00669543$$
+
+**Step 3: Calculate the intercept**
+
+$$
+a=0.3138-(0.00669543)(49.1333)$$
+
+$$
+(0.00669543)(49.1333)\approx0.328969$$
+
+$$
+a=0.3138-0.328969$$
+
+$$
+a\approx-0.0151687$$
+
+Therefore,
+
+$$
+\hat{y}\approx-0.0152+0.00670x$$
+
+The same calculations can be checked directly in R.
+
+```{r empathy_influence_calculations}
+empathy_all <- c(
+  38, 53, 41, 55, 56, 61, 62, 48,
+  43, 47, 56, 65, 19, 61, 32, 105
+)
+
+brain_all <- c(
+  -0.120, 0.392, 0.005, 0.369,
+   0.016, 0.415, 0.107, 0.506,
+   0.153, 0.745, 0.255, 0.574,
+   0.210, 0.722, 0.358, 0.779
+)
+
+# With Subject 16
+r_all <- cor(empathy_all, brain_all)
+b_all <- r_all * (sd(brain_all) / sd(empathy_all))
+a_all <- mean(brain_all) - b_all * mean(empathy_all)
+
+# Without Subject 16
+empathy_no16 <- empathy_all[-16]
+brain_no16 <- brain_all[-16]
+
+r_no16 <- cor(empathy_no16, brain_no16)
+b_no16 <- r_no16 * (sd(brain_no16) / sd(empathy_no16))
+a_no16 <- mean(brain_no16) - b_no16 * mean(empathy_no16)
+
+data.frame(
+  Dataset = c("All 16 subjects", "Without Subject 16"),
+  Correlation = c(r_all, r_no16),
+  Slope = c(b_all, b_no16),
+  Intercept = c(a_all, a_no16)
+)
+```
+
 **Explanation**
 
 Subject 16 is far to the right of the remaining observations, so the point has high leverage. The point also lies reasonably close to the positive trend formed by the other observations. High leverage means that the point has the potential to affect the fitted line, but the size of the actual effect must be checked numerically.
@@ -1568,26 +1966,22 @@ Subject 16 is far to the right of the remaining observations, so the point has h
 With all 16 subjects, the fitted line is
 
 $$
-\hat{y}=-0.0578+0.00761x
-$$
+\hat{y}=-0.0578+0.00761x$$
 
 The correlation is approximately
 
 $$
-r=0.515
-$$
+r=0.515$$
 
 Without Subject 16, the fitted line is approximately
 
 $$
-\hat{y}=-0.0152+0.00670x
-$$
+\hat{y}=-0.0152+0.00670x$$
 
 The correlation becomes approximately
 
 $$
-r=0.331
-$$
+r=0.331$$
 
 <img src="fig_ch4_outliers.png" alt="Scatterplot of brain activity versus empathy score with regression lines fitted with and without Subject 16" />
 
@@ -1605,96 +1999,7 @@ The role of leverage becomes clearer if the same empathy score of 105 is paired 
 
 For that hypothetical dataset, the high-leverage point would pull the fitted line much more strongly because it would no longer agree with the pattern formed by the other observations. This comparison shows why leverage and residual size must be considered together when influence is assessed.
 
-The empathy example leads naturally to a broader problem. Some datasets are difficult to model linearly not because of one unusual observation, but because the variables span very different scales. A transformation can sometimes reveal a simpler relationship.
-
----
-
-## Working with Logarithm Transformations
-
-Biological measurements can span several orders of magnitude. Body mass provides a clear example because mammals range from a few grams to several thousand kilograms. On the original measurement scale, a few very large values can compress the smaller values into a small part of a scatterplot and can make a curved or multiplicative relationship difficult to see.
-
-A logarithm transformation changes the scale rather than changing the underlying observations. Large values are compressed more strongly than small values. When both variables are positive, a log transformation can sometimes make a nonlinear relationship approximately linear and can reduce the visual dominance of extreme values.
-
-The transformation should be chosen for a reason. A log transformation is not a general repair for every poorly fitting regression model. The transformed scatterplot should still be examined to determine whether a linear model is appropriate.
-
-A base-10 logarithm is especially easy to interpret for powers of 10. The values 10, 100 and 1000 become 1, 2 and 3 after transformation. The original values differ by hundreds or thousands of units, while their logarithms differ by only one unit at each tenfold increase. This compression is why logarithms are useful when measurements span several orders of magnitude.
-
-| Original value | Base-10 logarithm |
-|:--:|:--:|
-| 10 | 1 |
-| 100 | 2 |
-| 1000 | 3 |
-| 10000 | 4 |
-
-The transformation does not discard the ordering of the positive values. Larger original values still have larger transformed values. The scale is changed so that multiplicative differences are easier to compare.
-
-**Example 4.6: Mammal Brains and Body Weight**
-
-**Question**
-
-A larger mammal dataset discussed in the original notes contains 96 species. On the raw scale, body weight and brain weight span very large ranges. The original analysis reports a raw-scale correlation of about 0.86 with the elephant included, about 0.50 after removing the elephant and a log-log correlation of about 0.96. How can a base-10 logarithm transformation be used to model brain weight from body weight and how can the model predict brain weight for a 100 kg mammal?
-
-**Explanation**
-
-The original example uses base-10 logarithms of both body weight and brain weight. The fitted model is
-
-$$
-\log_{10}(\text{brain weight})=1.01+0.72\log_{10}(\text{body weight})
-$$
-
-Because both variables are transformed, the prediction process has three parts. The body weight must first be transformed. The regression equation then predicts the logarithm of brain weight. The final predicted logarithm must be back-transformed to grams.
-
-The figure generated by these notes uses a smaller illustrative set of mammal species so that the effect of the transformation can be seen directly. Its purpose is visual. The regression coefficients quoted above belong to the larger example described in the text.
-
-**Solution**
-
-For a body weight of 100 kg, the transformed explanatory value is
-
-$$
-\log_{10}(100)=2
-$$
-
-The fitted model predicts
-
-$$
-\log_{10}(\text{brain weight})=1.01+0.72(2)
-$$
-
-$$
-\log_{10}(\text{brain weight})=2.45
-$$
-
-The prediction is still on the logarithmic scale. The back-transformation is
-
-$$
-\text{brain weight}=10^{2.45}
-$$
-
-$$
-\text{brain weight}\approx281.8\text{ g}
-$$
-
-According to the fitted log-log model, the predicted brain weight for a 100 kg mammal is approximately 282 g.
-
-<img src="fig_ch4_log_comparison.png" alt="Two scatterplots comparing raw mammal body and brain weights with the same measurements after base-10 logarithm transformation" />
-
-On the raw scale, the largest animals dominate the axes and the smaller mammals are compressed near the origin. On the log-log scale, the observations are spread more evenly across the graph. The transformed plot makes the approximately linear pattern easier to assess.
-
-The log-log slope also has a useful multiplicative interpretation. Because the model is
-
-$$
-\log_{10}(y)=1.01+0.72\log_{10}(x)
-$$
-
-it can be rewritten as a power relationship.
-
-$$
-y=10^{1.01}x^{0.72}
-$$
-
-This form shows that a multiplicative relationship on the original scale becomes linear after taking logarithms.
-
-Regression can summarize useful patterns, but a fitted line must still be interpreted with care. The final sections collect the most important cautions.
+The empathy example shows why unusual observations should be examined before a fitted line is interpreted.
 
 ---
 
@@ -1791,40 +2096,33 @@ Regression extends scatterplots and correlation by providing an equation for pre
 The least-squares regression line has the form
 
 $$
-\hat{y}=a+bx
-$$
+\hat{y}=a+bx$$
 
 The slope is
 
 $$
-b=r\frac{s_y}{s_x}
-$$
+b=r\frac{s_y}{s_x}$$
 
 The intercept is
 
 $$
-a=\bar{y}-b\bar{x}
-$$
+a=\bar{y}-b\bar{x}$$
 
 A residual is the observed response minus the predicted response.
 
 $$
-e_i=y_i-\hat{y}_i
-$$
+e_i=y_i-\hat{y}_i$$
 
 The least-squares line minimizes the sum of squared residuals. It always passes through $(\bar{x},\bar{y})$.
 
 For simple linear regression with an intercept, the coefficient of determination satisfies
 
 $$
-R^2=r^2
-$$
+R^2=r^2$$
 
 The value $R^2$ describes the proportion of observed response variation accounted for by the fitted linear relationship.
 
 Unusual observations can affect correlation and regression in different ways. High leverage, residual size and actual influence should be distinguished.
-
-Logarithm transformations can be useful when positive variables span several orders of magnitude or when a multiplicative relationship becomes more nearly linear on a logarithmic scale.
 
 Regression should be used cautiously when the relationship is nonlinear, when influential observations dominate the fit or when prediction requires extrapolation. Association should not be interpreted as causation without an appropriate study design.
 
@@ -1834,7 +2132,7 @@ A regression analysis begins with the scientific question and a scatterplot. The
 
 The least-squares line can then be fitted and its slope, intercept and $R^2$ interpreted in context. Predictions should be kept within a reasonable range of the observed explanatory values unless there is a strong scientific reason to extrapolate.
 
-Residuals and influential observations should be examined before the model is treated as an adequate summary. A transformation can be considered when the original scale obscures the relationship.
+Residuals and influential observations should be examined before the model is treated as an adequate summary.
 
 The final interpretation should describe association separately from causation. The strength of a fitted line cannot replace careful attention to study design.
 

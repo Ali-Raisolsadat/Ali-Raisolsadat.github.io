@@ -862,7 +862,125 @@ save_plot(
 )
 
 # =============================================================
-# Figure 3: Anatomy of a modified boxplot
+# Figure 3: Suspected outliers under different distribution shapes
+# =============================================================
+
+# These figures support the discussion that skewness and outliers are different ideas.
+# A long tail does not automatically make an observation an outlier; the 1.5 x IQR
+# rule is used to flag suspected outliers.
+
+flag_iqr_outliers <- function(x) {
+  q1 <- unname(quantile(x, 0.25))
+  q3 <- unname(quantile(x, 0.75))
+  iqr_value <- q3 - q1
+  lower <- q1 - 1.5 * iqr_value
+  upper <- q3 + 1.5 * iqr_value
+
+  data.frame(
+    value = x,
+    suspected_outlier = x < lower | x > upper
+  )
+}
+
+set.seed(2026)
+
+bell_values <- c(rnorm(140, mean = 50, sd = 7), 24, 80)
+bell_outlier_df <- flag_iqr_outliers(bell_values)
+
+p_bell_outliers <- ggplot(bell_outlier_df, aes(x = value)) +
+  geom_histogram(
+    bins = 16,
+    fill = "#caced3",
+    colour = "white"
+  ) +
+  geom_rug(
+    data = subset(bell_outlier_df, suspected_outlier),
+    aes(x = value),
+    colour = palette_main[3],
+    linewidth = 1.1,
+    sides = "b"
+  ) +
+  labs(
+    title = "Roughly Symmetric Distribution",
+    subtitle = "Extreme observations can still be flagged as suspected outliers",
+    x = "Observed Value",
+    y = "Frequency"
+  ) +
+  lecture_theme
+
+save_plot(
+  "fig_ch2_bell_outliers.png",
+  p_bell_outliers,
+  width = 6,
+  height = 3.6
+)
+
+right_values <- c(rexp(180, rate = 0.12), 45)
+right_outlier_df <- flag_iqr_outliers(right_values)
+
+p_right_outliers <- ggplot(right_outlier_df, aes(x = value)) +
+  geom_histogram(
+    bins = 18,
+    fill = palette_main[1],
+    colour = "white",
+    alpha = 0.8
+  ) +
+  geom_rug(
+    data = subset(right_outlier_df, suspected_outlier),
+    aes(x = value),
+    colour = palette_main[3],
+    linewidth = 1.1,
+    sides = "b"
+  ) +
+  labs(
+    title = "Right-Skewed Distribution",
+    subtitle = "The long right tail is not, by itself, an outlier rule",
+    x = "Observed Value",
+    y = "Frequency"
+  ) +
+  lecture_theme
+
+save_plot(
+  "fig_ch2_right_skew_outliers.png",
+  p_right_outliers,
+  width = 6,
+  height = 3.6
+)
+
+left_values <- 45 - c(rexp(180, rate = 0.12), 45)
+left_outlier_df <- flag_iqr_outliers(left_values)
+
+p_left_outliers <- ggplot(left_outlier_df, aes(x = value)) +
+  geom_histogram(
+    bins = 18,
+    fill = palette_main[2],
+    colour = "white",
+    alpha = 0.8
+  ) +
+  geom_rug(
+    data = subset(left_outlier_df, suspected_outlier),
+    aes(x = value),
+    colour = palette_main[3],
+    linewidth = 1.1,
+    sides = "b"
+  ) +
+  labs(
+    title = "Left-Skewed Distribution",
+    subtitle = "A long left tail can contain, but does not automatically imply, outliers",
+    x = "Observed Value",
+    y = "Frequency"
+  ) +
+  lecture_theme
+
+save_plot(
+  "fig_ch2_left_skew_outliers.png",
+  p_left_outliers,
+  width = 6,
+  height = 3.6
+)
+
+# =============================================================
+# Figure 4: Anatomy of a modified boxplot
 # =============================================================
 
 set.seed(321)
@@ -965,7 +1083,7 @@ save_plot(
 )
 
 # =============================================================
-# Figure 4: Side-by-side boxplots for illustrative CRISPR data
+# Figure 5: Side-by-side boxplots for illustrative CRISPR data
 # =============================================================
 
 set.seed(42)
@@ -1029,7 +1147,7 @@ save_plot(
 )
 
 # =============================================================
-# Figure 5: Understanding one standard deviation
+# Figure 6: Understanding one standard deviation
 # =============================================================
 
 x_val <- seq(-3.5, 3.5, length.out = 1000)
@@ -1091,23 +1209,32 @@ save_plot(
 
 ## Describing Distributions with Numbers
 
-Chapter 1 introduced graphs for describing the distribution of a variable. Histograms, dotplots and other displays help reveal shape, unusual observations, centre and spread. A graph should usually be the first step because a numerical summary alone can hide important features of the data.
+Chapter 1 established an important rule for data analysis: **plot the data before relying on numerical summaries**. Histograms, dotplots and other displays allow us to see shape, unusual observations, centre and spread.
 
-Numerical summaries provide a second description of the same distribution. They allow researchers to communicate the centre and variability of a dataset using values that can be reproduced exactly.
+### The Limits of Human Perception
 
-This chapter develops two pairs of summaries. The **mean and standard deviation** are commonly used for reasonably symmetric distributions without strong outliers. The **median and interquartile range** are more resistant and are often preferred for skewed distributions or distributions with extreme observations.
+Graphs are powerful, but visual judgments are not perfectly objective. Two people can look at the same skewed histogram and give slightly different estimates of its centre or spread. Scientific conclusions should therefore not depend only on where a person thinks the "middle" appears to be.
+
+Chapter 2 translates the visual ideas from **SOCS** into numerical summaries that can be calculated and reproduced.
+
+- **Shape** is still assessed primarily from a graph.
+- **Outliers** can be investigated visually and later flagged using a numerical rule.
+- **Centre** can be summarized using the mean or median.
+- **Spread** can be summarized using the standard deviation or interquartile range.
+
+Numerical summaries provide a second description of the same distribution. They do not replace the graph; they complement it.
+
+This chapter develops two main pairs of summaries. The **mean and standard deviation** are commonly used for reasonably symmetric distributions without strong outliers. The **median and interquartile range (IQR)** are resistant summaries and are often preferred for strongly skewed distributions or distributions containing extreme observations.
 
 > **A useful workflow**
 >
-> The graph comes first. The numerical summaries should then be chosen to match the shape and unusual features visible in the graph.
+> Plot the distribution first. Then choose numerical summaries that match the shape and unusual features visible in the graph.
 
 ### From a Graph to Numerical Summaries
 
-A visual description often follows the ideas of **shape, outliers, centre and spread**. Numerical summaries turn the last two ideas into quantities that can be calculated.
+A measure of **centre** describes where a distribution is located or what value might be considered typical. A measure of **spread** describes how much the observations vary around that centre.
 
-A measure of **centre** describes where the distribution is located. A measure of **spread** describes how much the observations vary around that centre.
-
-The choice of numerical summary should not be made before the distribution is examined. The mean can be strongly influenced by an extreme observation, while the median is much more resistant. The same distinction will later appear between standard deviation and the interquartile range.
+The choice of numerical summary should not be made before the distribution is examined. The mean can be strongly influenced by an extreme observation, while the median is much more resistant. A similar contrast exists between the standard deviation and the IQR.
 
 ---
 
@@ -1135,7 +1262,9 @@ $$
 \frac{1}{n}\sum_{i=1}^{n}x_i
 $$
 
-The symbol $\bar{x}$ is pronounced **x-bar**. It represents the mean of a sample. Later in the course, the Greek letter $\mu$ will be used for a population mean.
+The symbol $\bar{x}$ is pronounced **x-bar**. It represents the mean of a sample. Later in the course, the Greek letter $\mu$ (mu) will be used for a population mean.
+
+The subscript in $x_i$ simply labels an observation. For example, $x_1$ is the first listed observation and $x_{15}$ is the fifteenth. The subscript does **not** necessarily represent time or a ranking unless the context says that it does.
 
 #### Example 2.3: Mean of Pine Needle Lengths
 
@@ -1204,6 +1333,10 @@ $$
 For an even number of observations, there are two middle observations. The median is the average of the values in positions $n/2$ and $n/2+1$.
 
 The median is also the 50th percentile. With repeated values, it is more precise to say that at least half of the observations are no larger than the median and at least half are no smaller than the median.
+
+### Software Note: The Median in R
+
+In R, the median is calculated with `median(x)`. When calculating a median by hand, we must sort the observations and locate the middle position ourselves. R performs the sorting internally and, when $n$ is even, automatically averages the two middle values.
 
 #### Example 2.1: Aleppo Pine Needles with Odd $n$
 
@@ -1302,13 +1435,13 @@ The median is resistant because it depends mainly on the order of the observatio
 
 **Question**
 
-Consider the following two samples of recovery times.
+Suppose patients record the number of days required for heart-rate variability (HRV) to return to baseline after an illness. Consider the following two samples.
 
 Original sample:
 
 4, 6, 7, 8, 9
 
-Sample with one extreme recovery time:
+Sample containing one unusually long recovery time:
 
 4, 6, 7, 8, 45
 
@@ -1363,7 +1496,13 @@ The resistance of the median explains why the shape of a distribution matters wh
 
 A long right tail contains unusually large observations. These values tend to pull the mean upward. A long left tail contains unusually small observations, which tend to pull the mean downward.
 
-The relationship is a useful pattern rather than a universal mathematical rule for every possible distribution.
+| Distribution shape | Typical relationship |
+|:--|:--|
+| Roughly symmetric | Mean $\approx$ median |
+| Skewed right | Mean is often greater than the median |
+| Skewed left | Mean is often less than the median |
+
+These relationships are useful patterns, not universal mathematical rules for every possible dataset. The graph should always be examined.
 
 #### Illustrative Example: Viral Load and Skewness
 
@@ -1423,23 +1562,31 @@ mean(viral_load)
 median(viral_load)
 ```
 
-A useful summary is shown below.
+### Biological Application: Survival Times
 
-| Distribution shape | Typical relationship | Preferred centre when the pattern is strong |
-|:--|:--|:--|
-| Roughly symmetric | Mean and median are often similar | Mean or median may both be informative |
-| Strongly right-skewed | Mean is often above the median | Median |
-| Strongly left-skewed | Mean is often below the median | Median |
+Survival times and similar biological measurements are often right-skewed. Many patients may have outcomes within a relatively compact range, while a smaller number survive much longer and create a long right tail.
 
-The graph should still be examined before the summary is chosen.
+This is one reason the **median survival time** is commonly useful when describing the midpoint of an observed survival-time distribution. The median is resistant to a small number of very long survival times.
+
+The mean can still answer a different question because it incorporates every observed patient-day. For planning total resources, staffing or costs, a mean may therefore also be informative.
+
+The important point is not that one measure is always "better." The mean and median define centre differently, so the scientific question and the shape of the data determine which summary is most useful.
 
 ---
 
 ## Measuring Spread: Quartiles and the IQR
 
-A measure of centre does not describe how widely the observations vary. Two datasets can have the same median but very different amounts of spread.
+A measure of centre does not describe how widely the observations vary.
 
-Quartiles describe the positions that divide ordered data into lower and upper portions.
+For example, suppose the median body weight in a sample of penguins is **4.5 kg**. That tells us where the middle of the distribution lies, but it does not tell us whether most penguins weigh close to 4.5 kg or whether the observed weights range widely, perhaps from about 2 kg to 8 kg.
+
+Two datasets can therefore have the same median while having very different amounts of spread.
+
+> **Centre and spread belong together.**
+>
+> A numerical description of a distribution should usually report a measure of centre together with a measure of variability.
+
+Quartiles describe positions in the ordered data and provide a resistant way to measure spread.
 
 ### Quartiles
 
@@ -1531,6 +1678,14 @@ $$
 summary(torrey_needles)
 ```
 
+#### Software Note: Why Can R's Quartiles Differ from the Hand Calculation?
+
+There is more than one accepted convention for locating quartiles when the desired percentile falls between observed values. Our hand calculations use the **median-of-halves** rule because it is easy to apply manually.
+
+R's default calculation uses interpolation between ordered observations. As a result, R reports $Q_1=8.60$ and $Q_3=10.55$ for the Aleppo pine data, rather than the hand-calculated values $8.5$ and $10.9$.
+
+This difference is not a contradiction. It reflects a different quartile convention. In software-based analysis, use one method consistently and report the method when the distinction matters.
+
 ### The Interquartile Range
 
 The **interquartile range**, abbreviated IQR, measures the width of the middle 50% of the ordered data.
@@ -1543,11 +1698,44 @@ $$
 
 The IQR is resistant because the most extreme observations in the tails do not directly determine its value.
 
+### Distribution Shape and Suspected Outliers
+
+An observation can be unusual in a symmetric distribution or in a skewed distribution. **Skewness and outliers are different ideas.**
+
+<img src="fig_ch2_bell_outliers.png" alt="Roughly symmetric distribution with extreme observations highlighted as possible outliers" />
+
+In a roughly symmetric, bell-shaped distribution, most observations may cluster near the centre while one or more values lie far from the main group.
+
+<div style="display:flex; gap:1.2em; align-items:flex-start;">
+<div style="flex:1;">
+<img src="fig_ch2_right_skew_outliers.png" alt="Right-skewed distribution illustrating possible upper-tail outliers" />
+</div>
+<div style="flex:1;">
+<img src="fig_ch2_left_skew_outliers.png" alt="Left-skewed distribution illustrating possible lower-tail outliers" />
+</div>
+</div>
+
+A right-skewed distribution naturally has a long right tail, and a left-skewed distribution naturally has a long left tail. A point is **not** an outlier merely because it lies in a tail. Later in this chapter, the $1.5\times IQR$ rule will provide a numerical rule for flagging observations as **suspected outliers**.
+
+### Calculating the IQR in R
+
+R calculates the IQR directly with `IQR(x)`.
+
 ```{r iqr_examples, include=TRUE, echo=TRUE}
 # IQR() calculates the interquartile range using R's quartile convention.
 IQR(aleppo_needles)
 IQR(torrey_needles)
 ```
+
+For the Aleppo pine sample, R uses its own quartile convention:
+
+$$
+IQR
+=
+10.55-8.60
+=
+1.95\text{ cm}.
+$$
 
 ### The Five-Number Summary
 
@@ -1565,7 +1753,9 @@ Q_3
 \text{Maximum}
 $$
 
-These values describe the overall location and spread of the ordered data. A modified boxplot uses the quartiles together with the $1.5\times IQR$ rule to display suspected outliers separately.
+These five values provide a compact description of the location and spread of the ordered data. They do not show every feature of a distribution, so the graph should still be examined.
+
+A modified boxplot uses the quartiles together with the $1.5\times IQR$ rule to display suspected outliers separately.
 
 ---
 
@@ -1597,6 +1787,8 @@ The comparison should focus on several features.
 - The IQRs show differences in the spread of the middle 50%.
 - The whiskers and separately plotted points show the behaviour of the tails.
 - The amount of overlap helps describe how distinct or similar the group distributions appear.
+
+In this **illustrative simulated dataset**, the viral-vector group is centred at a higher editing efficiency than the other two groups. The electroporation group has a wider middle spread, while isolated points beyond whiskers—when present—should be treated as suspected outliers and investigated rather than automatically removed.
 
 The graph is descriptive. A difference between boxplots alone does not establish that one delivery method causes a better biological outcome.
 
@@ -1724,9 +1916,24 @@ s
 }
 $$
 
-The denominator $n-1$ reflects one degree of freedom used when the sample mean is estimated from the same data. Under the usual independent random-sampling model, dividing by $n-1$ makes the sample variance $s^2$ an unbiased estimator of the population variance $\sigma^2$.
+### Degrees of Freedom: Why Do We Divide by $n-1$?
 
-The sample standard deviation itself is not exactly unbiased for $\sigma$, so it is better to interpret $n-1$ through the variance calculation.
+The denominator in the sample variance is $n-1$ rather than $n$. This is connected to **degrees of freedom**.
+
+Once the sample mean has been calculated, the deviations
+
+$$
+x_1-\bar{x},\;
+x_2-\bar{x},\;
+\ldots,\;
+x_n-\bar{x}
+$$
+
+must add to zero. If the first $n-1$ deviations are known, the final deviation is forced to be whatever value makes the total equal zero. Only $n-1$ deviations can therefore vary independently.
+
+Under the usual independent random-sampling model, dividing the sum of squared deviations by $n-1$ also corrects the downward bias that would result from using $n$. More precisely, this makes the sample **variance** $s^2$ an unbiased estimator of the population variance $\sigma^2$.
+
+The sample standard deviation $s$ itself is not exactly unbiased for the population standard deviation $\sigma$, so the bias-correction statement should be attached to the variance rather than to the standard deviation.
 
 ### Example 2.7: Metabolic Rates
 
@@ -1831,6 +2038,24 @@ The graph should guide the choice of numerical summaries.
 This guideline does not replace scientific judgment. The context of the variable matters. Both sets of summaries can sometimes be reported when a fuller description is useful.
 
 The important principle is that centre and spread should be reported as a pair. A centre without a measure of variability gives an incomplete description of a distribution.
+
+---
+
+## Summary of R Commands
+
+The following functions are the main R commands introduced in this chapter.
+
+| R command | What it does |
+|:--|:--|
+| `c(1, 2, 3)` | Combines values into a vector |
+| `mean(x)` | Calculates the sample mean |
+| `median(x)` | Calculates the median |
+| `summary(x)` | Reports the minimum, first quartile, median, mean, third quartile and maximum |
+| `IQR(x)` | Calculates the interquartile range using R's quartile convention |
+| `var(x)` | Calculates the sample variance $s^2$ |
+| `sd(x)` | Calculates the sample standard deviation $s$ |
+
+These commands calculate summaries; they do not decide whether a particular summary is scientifically appropriate. The graph and the context should guide that choice.
 
 ---
 

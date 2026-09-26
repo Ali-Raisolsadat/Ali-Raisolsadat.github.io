@@ -58,15 +58,16 @@ body {
 
 
 /* ============================================================
-   HIDE DUMMY CHAPTER CONTENT
+   HIDE THE CHAPTER 3 TITLE FROM THE MAIN CONTENT
    ============================================================ */
 
 /*
-   Chapter 9 is used as the numbering root.
+   Pandoc applies a section-number offset of 2 so that the
+   subsections begin at 3.1, 3.2, 3.3, ...
 
-   Hide the visible "Chapter 9" H1 because the document title
-   already says Chapter 9, but KEEP the section itself so that
-   H2 headings are numbered 9.1, 9.2, 9.3, ...
+   Hide the visible Chapter 3 H1 because the document title
+   already identifies the chapter, while keeping the section
+   itself for numbering.
 */
 .section.chapter-root > h1 {
   display: none !important;
@@ -74,42 +75,15 @@ body {
 
 
 /* ============================================================
-   HIDE CHAPTERS 1–8 FROM THE TABLE OF CONTENTS
+   HIDE THE CHAPTER 3 PARENT FROM THE TABLE OF CONTENTS
    ============================================================ */
 
-/*
-   R Markdown/tocify does not reliably expose the chapter names
-   through data-unique, so select them through their generated
-   href values instead.
-*/
-
-#TOC li:has(a[href="#chapter-1-dummy"]),
-#TOC li:has(a[href="#chapter-2-dummy"]),
-#TOC li:has(a[href="#chapter-3-dummy"]),
-#TOC li:has(a[href="#chapter-4-dummy"]),
-#TOC li:has(a[href="#chapter-5-dummy"]),
-#TOC li:has(a[href="#chapter-6-dummy"]),
-#TOC li:has(a[href="#chapter-7-dummy"]),
-#TOC li:has(a[href="#chapter-8-dummy"]) {
+#TOC li:has(> a[href="#chapter-3-scatterplots-and-correlation"]) >
+  a[href="#chapter-3-scatterplots-and-correlation"] {
   display: none !important;
 }
 
-
-/*
-   Also hide the Chapter 9 parent entry itself.
-
-   Its children — 9.1, 9.2, 9.3, ... — remain visible.
-*/
-#TOC li:has(> a[href="#chapter-9"]) > a[href="#chapter-9"] {
-  display: none !important;
-}
-
-
-/*
-   tocify may place the Chapter 9 subsections inside the same
-   list item. Remove spacing belonging to the hidden parent.
-*/
-#TOC li:has(> a[href="#chapter-9"]) {
+#TOC li:has(> a[href="#chapter-3-scatterplots-and-correlation"]) {
   margin-top: 0 !important;
 }
 
@@ -690,7 +664,7 @@ knitr::opts_chunk$set(
   error = FALSE
 )
 
-required_packages <- c("ggplot2", "gridExtra", "dplyr", "tidyr")
+required_packages <- c("ggplot2")
 missing_packages <- required_packages[
   !vapply(required_packages, requireNamespace, logical(1), quietly = TRUE)
 ]
@@ -704,9 +678,6 @@ if (length(missing_packages) > 0) {
 
 suppressPackageStartupMessages({
   library(ggplot2)
-  library(gridExtra)
-  library(dplyr)
-  library(tidyr)
 })
 
 set.seed(123) # Set seed for reproducible figures
@@ -721,7 +692,7 @@ lecture_theme <- theme_minimal(base_size = 11) +
     plot.background = element_rect(fill = "white", colour = NA),
     panel.background = element_rect(fill = "white", colour = NA),
     plot.margin = margin(8, 10, 8, 10),
-    panel.border = element_rect(colour = "black", fill = NA, size = 0.5)
+    panel.border = element_rect(colour = "black", fill = NA, linewidth = 0.5)
   )
 
 palette_main <- c("#4C72B0", "#55A868", "#C44E52", "#8172B2", "#CCB974")
@@ -892,312 +863,1349 @@ p_toxic <- ggplot(toxic_data, aes(x = Metal, y = Root, color = Type, size = Type
 save_plot("fig_ch3_toxic_outlier.png", p_toxic, width = 6, height = 4)
 ```
 
-
 # Chapter 3: Scatterplots and Correlation {.chapter-root .unlisted}
 
 ## Scatterplots and Correlation
 
+Chapters 1 and 2 focused mainly on **one variable at a time**. We learned how to display a distribution and how to summarize its center and spread. Chapter 3 changes the question:
+
+> Instead of asking, “What does one variable look like?”, we now ask, **“How are two quantitative variables related?”**
+
+This is the beginning of **bivariate data analysis**.
+
 ### Bivariate Data: Two Variables per Individual
 
-In Chapters 1 and 2, we examined biological data one variable at a time (e.g., *only* looking at a histogram of viral loads, or *only* looking at a boxplot of blood pressure). We call this **univariate** data analysis.
+Suppose we record two measurements on each observational unit. Examples include:
 
-However, modern biological research rarely isolates a single measurement. A physiologist doesn't just care about a patient's blood pressure; they want to know if a patient's *blood pressure* changes in a predictable way based on their *sodium intake*. When we measure two different quantitative variables on the exact same individual, we are analyzing **bivariate** data.
+- study time and exam score for each student;
+- temperature and electricity use for each day;
+- body length and leap distance for each frog;
+- heavy-metal concentration and root length for each soil sample.
 
-### Explanatory vs. Response Variables
+When **two quantitative variables are measured on the same individual or observational unit**, the observations naturally occur in pairs,
 
-Before we can mathematically map the relationship between two variables, we must determine their scientific roles. In study design, we categorize our two variables:
+$$
+(x_1,y_1),\ (x_2,y_2),\ldots,(x_n,y_n)
+$$
 
-*   **Response Variable ($y$):** The outcome variable that measures the biological result of the study. It is the variable we are trying to predict or explain. 
-*   **Explanatory Variable ($x$):** The variable that we suspect *explains* or *causes* changes in the response variable.
+The pairing matters. The value $x_i$ must remain connected to the corresponding value $y_i$ from the **same** individual.
 
-> **Note on Terminology:** You will often hear researchers call $x$ the *independent variable* or *features*, and $y$ the *dependent variable* or *target variable*.
+### Explanatory and Response Variables
 
-**Example 3.1: Enzyme Activity and Temperature**
+When the scientific question gives the two variables different roles, we often identify:
 
-**Study Design:** In a first-year biology lab, students investigate how environmental temperature affects the function of catalase, an enzyme that breaks down hydrogen peroxide. They run the enzyme reaction at 10 different water bath temperatures and measure how much oxygen gas is produced in one minute.
+- **Explanatory variable ($x$):** a variable that may help explain or predict changes in another variable.
+- **Response variable ($y$):** the outcome that we want to explain or predict.
 
-| Variable Type | Measurement | Biological Role |
-| :--- | :--- | :--- |
-| **Explanatory Variable ($x$)** | Water Bath Temperature (°C) | The students manipulate the temperature because they suspect it *drives* or *explains* the speed of the chemical reaction. |
-| **Response Variable ($y$)** | Oxygen Gas Produced (mL) | This is the biological outcome being predicted or measured. |
+Other common terminology includes **predictor** or **independent variable** for $x$, and **dependent variable** or **target variable** for $y$.
 
-**Example 3.2: Forest Ecology and Plant Growth**
+> **Important:** Calling a variable “explanatory” does **not** automatically mean that it causes the response. A causal interpretation depends on the study design and other scientific evidence. In a controlled experiment, causal reasoning may be justified. In an observational study, an association alone does not establish causation.
 
-**Study Design:** An ecologist is studying understory ferns in a dense forest. They hypothesize that the amount of sunlight reaching the forest floor determines how tall the ferns can grow. For 50 different small plots of land, they measure the percentage of open sky (canopy cover) and the height of the tallest fern.
+### Example 3.1: Enzyme Activity and Temperature
 
-| Variable Type | Measurement | Biological Role |
-| :--- | :--- | :--- |
-| **Explanatory Variable ($x$)** | Canopy Open Sky (%) | The physical environment (sunlight) is the underlying cause. |
-| **Response Variable ($y$)** | Fern Height (cm) | The biological growth response triggered by the environment. |
+Students run an enzyme reaction at several water-bath temperatures and measure the amount of oxygen gas produced.
 
-**Example 3.3: Beer and Blood Alcohol**
+| Variable | Measurement | Role |
+|:---|:---|:---|
+| **Explanatory ($x$)** | Temperature ($^\circ$C) | The temperature is deliberately varied by the students. |
+| **Response ($y$)** | Oxygen gas produced (mL) | The reaction outcome being measured. |
 
-**Study Design:** How does drinking beer affect the level of alcohol in a person’s blood? The legal blood alcohol content limit for driving is now 0.08% in all states. Student volunteers at Ohio State University drank different numbers of cans of beer. Thirty minutes later, a police officer measured their blood alcohol content. 
+Because temperature is deliberately manipulated, this setting is closer to an **experiment** than a purely observational study.
 
-| Variable Type | Measurement | Biological Role |
-| :--- | :--- | :--- |
-| **Explanatory Variable ($x$)** | Number of Beers Consumed | The suspected cause or driver of the subsequent change in blood alcohol levels. |
-| **Response Variable ($y$)** | Percent Alcohol in Blood | The physiological outcome measured in the student volunteers. |
+### Example 3.2: Forest Ecology and Plant Growth
 
-When we don’t set the values of either variable but simply observe both variables, there may or may not be explanatory and response variables, depending on how we plan to use the data.
+An ecologist measures the percentage of open sky above a forest plot and the height of the tallest fern in that plot.
 
-**Example 3.4: Height**
+| Variable | Measurement | Role |
+|:---|:---|:---|
+| **Explanatory ($x$)** | Canopy open sky (%) | The environmental variable used to help explain fern growth. |
+| **Response ($y$)** | Fern height (cm) | The biological outcome of interest. |
 
-**Study Design:** The National Center for Health Statistics (NCHS) surveys the American population and collects information about body height, age, sex, and a long list of other attributes for each individual in the survey. To document the characteristics of the population, there is no explanatory or response variable. However, a pediatrician can look at this same data with an eye toward using age and sex to discuss a child’s growth trajectory. 
+The ecologist did not necessarily assign canopy conditions at random. Therefore, a relationship between canopy openness and fern height would be an **association** unless the study design provides stronger causal evidence.
 
-| Variable Type | Measurement | Biological Role |
-| :--- | :--- | :--- |
-| **Explanatory Variables ($x$)** | Age and Sex | Demographic factors used by the pediatrician to predict or explain the child's growth. |
-| **Response Variable ($y$)** | Body Height | The physical outcome being tracked and assessed over time. |
+### Example 3.3: Beer and Blood Alcohol Concentration
+
+In the study described in the lecture, volunteers consumed different numbers of beers and their blood alcohol concentration (BAC) was measured later.
+
+- **Explanatory variable ($x$):** number of beers consumed.
+- **Response variable ($y$):** percent alcohol in the blood.
+
+The scientific question determines which variable is explanatory and which is the response.
+
+### Example 3.4: Height — Context Determines the Roles
+
+Statistics Canada's Canadian Health Measures Survey records variables such as height, age and sex.
+
+If the goal is simply to **describe** these measurements, there may be no need to label one variable explanatory and another response.
+
+If the research question becomes
+
+> How does height change with age?
+
+then a natural assignment is:
+
+- **Explanatory variable ($x$):** age;
+- **Response variable ($y$):** height.
+
+This illustrates a general rule:
+
+> **The roles of $x$ and $y$ come from the research question, not merely from the names of the variables.**
 
 ---
 
 ## Scatterplots
 
-Once we have identified our explanatory ($x$) and response ($y$) variables, the most effective way to display the relationship between two quantitative variables is a **scatterplot**.
+A **scatterplot** is the standard graph for displaying the relationship between two quantitative variables measured on the same observational units.
 
-**Rules for Building a Scatterplot:**
+### Rules for Building a Scatterplot
 
-1. Always plot the **Explanatory Variable on the horizontal ($x$) axis**.
-2. Always plot the **Response Variable on the vertical ($y$) axis**.
-3. Each individual in the dataset appears as exactly **one dot** on the graph, located at the intersection of their $x$ and $y$ values.
+When explanatory and response roles are meaningful:
 
-To interpret a scatterplot, apply the strategies of data analysis learned in Chapters 1 and 2. 
+1. place the **explanatory variable** on the horizontal ($x$) axis;
+2. place the **response variable** on the vertical ($y$) axis;
+3. plot each observational unit as **one point** at its paired coordinates $(x_i,y_i)$.
 
-> **EXAMINING A SCATTERPLOT**  
-> In any graph of data, look for the overall pattern and for striking deviations from that pattern.  
-> You can describe the overall pattern of a scatterplot by the **direction**, **form**, and **strength** of the relationship.  
-> An important kind of deviation is an **outlier**, an individual value that falls outside the overall pattern of the relationship.
+For example, if a frog has length $6$ cm and leap distance $48$ cm, that frog appears at the point
 
-**Example 3.5: Constructing a Scatterplot (Pharmacokinetics)**
+$$
+(6,48)
+$$
 
-**Study Context:** Pharmacologists are developing a new Lipid Nanoparticle (LNP) to deliver mRNA therapeutics into cells. A key physical property of LNPs is their surface charge, measured as *Zeta Potential (mV)*. They formulate 25 different LNPs. For each, they measure the Zeta Potential and the resulting *Cellular Uptake Efficiency (%)* to see if surface charge drives drug delivery.
+### Examining a Scatterplot
 
-| Variable Type | Measurement | Biological Role |
-| :--- | :--- | :--- |
-| **Explanatory Variable ($x$)** | LNP Zeta Potential (mV) | The physical property manipulated by researchers to test drug delivery capabilities. |
-| **Response Variable ($y$)** | Uptake Efficiency (%) | The biological outcome measured in the cells. |
+As in Chapters 1 and 2, first look for the **overall pattern**, then look for important departures from that pattern.
 
-<img src="fig_ch3_scatterplot.png" alt="Scatterplot showing a positive linear relationship between LNP Surface Charge and Cellular Uptake." />
+For a scatterplot, describe four features:
 
-**Interpretation:**
+- **Form:** Is the pattern roughly linear, curved, U-shaped, or something else?
+- **Direction:** Is the association positive or negative?
+- **Strength:** How tightly do the points follow the underlying form?
+- **Outliers:** Are there observations that fall far from the overall bivariate pattern?
 
-* **Form:** Linear.
-* **Direction:** Positive (as surface charge increases/becomes less negative, uptake increases).
-* **Strength:** Moderate-to-Strong (the points cluster tightly around an invisible line).
-* **Outliers:** None readily apparent.
+A useful description should include the **variables and context**, not only labels such as “positive” or “strong.”
 
-**Example 3.6: Identifying Non-Linear Biological Forms (Receptor Kinetics)**
+### Example 3.5: Linear Relationship — LNP Surface Charge and Cellular Uptake
 
-**Study Context:** A biochemist is studying how a new neurotransmitter drug binds to cellular receptors. They test 40 different concentrations of the drug (*Ligand Concentration, nM*) and measure the percentage of cell receptors that successfully capture the drug (*Receptor Saturation, %*).
+Researchers study whether the surface charge of a lipid nanoparticle (LNP) is related to how efficiently it enters cells. Each point represents one LNP formulation.
 
-<img src="fig_ch3_nonlinear.png" alt="Scatterplot showing an asymptotic, non-linear relationship between Ligand Concentration and Receptor Saturation." />
+- **Explanatory variable ($x$):** LNP surface charge (zeta potential).
+- **Response variable ($y$):** cellular uptake efficiency.
+- **Form:** approximately linear.
+- **Direction:** positive.
+- **Strength:** moderate to strong.
+- **Outliers:** none apparent.
 
-**Interpretation:**
-This scatterplot reveals a **strong, non-linear (asymptotic/hyperbolic) relationship**. Initially, increasing the drug causes a rapid positive spike in saturation. However, the curve eventually flattens out near 100% (because all physical receptors are full). *Warning:* Standard linear statistical models cannot accurately summarize this data!
+<img src="fig_ch3_scatterplot.png" alt="Scatterplot showing a positive approximately linear relationship between LNP surface charge and cellular uptake." />
 
-**Example 3.7: Spotting Severe Bivariate Outliers (Immune Evasion)**
+A complete interpretation is:
 
-**Study Context:** In cancer immunotherapy, a tumor with high mutational burden (TMB) should logically present a high number of mutated proteins (neoantigens) on its surface, triggering immune attack. Researchers sequence 30 tumors, measuring TMB and Neoantigen Count.
+> LNP formulations with higher surface charge tend to have higher cellular uptake efficiency. The relationship is approximately linear and moderately strong, with no obvious outliers.
 
-<img src="fig_ch3_outliers.png" alt="Scatterplot of TMB vs Neoantigen Presentation with one severe outlier flagged in the bottom right corner." />
+This is an **association** in the displayed data. Whether surface charge itself causes the change in uptake depends on the experimental design.
 
-**Interpretation:**
-The overall pattern is **linear, positive, and moderately strong**. However, there is a severe **bivariate outlier** at roughly (35 mut/Mb, 0 Neoantigens). 
+### Example 3.6: Non-Linear Relationship — Receptor Saturation
 
-*Why is this an outlier?* A TMB of 35 is not uniquely abnormal on its own. A neoantigen count of 0 is not abnormal on its own. It is the *combination* that breaks the pattern! Biologically, this tumor has mutated to delete its surface presentation machinery (HLA-loss), hiding its mutations from the immune system.
+Researchers expose cells to different ligand concentrations and measure receptor saturation.
+
+- **Explanatory variable ($x$):** ligand concentration.
+- **Response variable ($y$):** receptor saturation.
+- **Form:** strong and non-linear.
+
+<img src="fig_ch3_nonlinear.png" alt="Scatterplot showing a strong nonlinear saturating relationship between ligand concentration and receptor saturation." />
+
+At low concentrations, increasing the ligand concentration produces a large increase in receptor saturation. As more receptors become occupied, fewer remain available, so the response begins to level off.
+
+This example is especially important because a relationship can be **very strong without being linear**.
+
+> Pearson's correlation coefficient, introduced later in this chapter, summarizes **linear association**. It should not be used as a complete description of this curved pattern.
+
+### Example 3.7: Bivariate Outlier — Tumour Mutational Burden
+
+Researchers study whether tumours with more genetic mutations also produce more neoantigens. Each point represents one tumour sample.
+
+- **Explanatory variable ($x$):** tumour mutational burden (TMB).
+- **Response variable ($y$):** number of neoantigens.
+- **Overall pattern:** positive, approximately linear and moderately strong.
+- **Possible outlier:** one tumour near $(35,0)$ has high TMB but almost no observed neoantigen presentation.
+
+<img src="fig_ch3_outliers.png" alt="Scatterplot of tumour mutational burden and neoantigen count with one bivariate outlier." />
+
+The important idea is that an observation can be unusual because of its **combination of $x$ and $y$ values**, even if neither coordinate is extraordinarily unusual when considered alone.
+
+One biological possibility is that a tumour with many mutations may still present relatively few neoantigens if antigen-presentation mechanisms are disrupted. This is a possible scientific explanation, not something the scatterplot alone can establish.
 
 ---
 
 ## Exploring Associations
 
-> **POSITIVE ASSOCIATION, NEGATIVE ASSOCIATION**  
-> Two variables are **positively associated** when above-average values of one variable tend to accompany above-average values of the other, and below-average values also tend to occur together.  
-> Two variables are **negatively associated** when above-average values of one variable tend to accompany below-average values of the other, and vice versa.
+### Positive and Negative Association
 
-**Example 3.8: An Endangered Species: The Manatee**
+Two quantitative variables are **positively associated** when larger-than-average values of one variable tend to occur with larger-than-average values of the other, and smaller values tend to occur together.
 
-Manatees are large, herbivorous, aquatic mammals found primarily in the rivers and estuaries of Florida. This endangered species suffers from cohabitation with human populations, and many manatees die each year from collisions with powerboats. We examine the relationship between the number of manatee deaths from powerboat collisions and the number of powerboats registered in any given year between 1977 and 2016, based on the data reported in Table 3.1.
+Two variables are **negatively associated** when larger values of one variable tend to occur with smaller values of the other.
 
-**Table 3.1: Powerboat registrations (in thousands) and manatee deaths in Florida**
+These definitions describe a **tendency**, not a rule that every observation must follow.
 
-| Year | Powerboats | Deaths | &nbsp; | Year | Powerboats | Deaths | &nbsp; | Year | Powerboats | Deaths |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **1977** | 447 | 13 | | **1987** | 645 | 39 | | **1997** | 755 | 54 |
-| **1978** | 460 | 21 | | **1988** | 675 | 43 | | **1998** | 809 | 66 |
-| **1979** | 481 | 24 | | **1989** | 711 | 50 | | **1999** | 830 | 82 |
-| **1980** | 498 | 16 | | **1990** | 719 | 47 | | **2000** | 880 | 78 |
-| **1981** | 513 | 24 | | **1991** | 681 | 55 | | **2001** | 944 | 81 |
-| **1982** | 512 | 20 | | **1992** | 679 | 38 | | **2002** | 962 | 95 |
-| **1983** | 526 | 15 | | **1993** | 678 | 35 | | **2003** | 978 | 73 |
-| **1984** | 559 | 34 | | **1994** | 696 | 49 | | **2004** | 983 | 69 |
-| **1985** | 585 | 33 | | **1995** | 713 | 42 | | **2005** | 1010 | 79 |
-| **1986** | 614 | 33 | | **1996** | 732 | 60 | | **2006** | 1024 | 92 |
+### Example 3.8: Manatees and Powerboats
 
-Following our four-step process, let’s look at the influence of the number of powerboats registered on manatee deaths from collisions with powerboats. 
+Researchers examine yearly powerboat registrations in Florida and yearly manatee deaths caused by watercraft collisions. Each point represents one year.
 
-*   **STATE:** The number of powerboats registered in Florida varies from year to year. Does this variable help explain the differences from year to year in the number of manatee deaths from collisions with powerboats?
-*   **PLAN:** Examine the relationship between powerboats registered and manatee deaths from collision. Choose the explanatory and response variables (if any). Make a scatterplot to display the relationship between the variables. Interpret the plot to understand the relationship.
-*   **SOLVE (FIRST STEPS):** We suspect that “powerboats registered” will help explain “manatee deaths from collisions.” So “powerboats registered” is the explanatory variable, and “manatee deaths from collisions” is the response variable. Time (the year in which the data were gathered) is not a variable of interest here. Instead, we want to see how the variable manatee deaths changes when the variable powerboat registrations changes, so we put powerboat registrations (expressed in thousands) on the horizontal axis.
+- **Explanatory variable ($x$):** number of registered powerboats.
+- **Response variable ($y$):** number of manatee deaths caused by watercraft collisions.
+- **Direction:** positive.
+- **Form:** approximately linear.
+- **Strength:** strong.
 
-| Variable Type | Measurement | Biological Role |
-| :--- | :--- | :--- |
-| **Explanatory Variable ($x$)** | Powerboats Registered (thousands) | The human factor hypothesized to drive the accident rate. |
-| **Response Variable ($y$)** | Manatee Deaths from Collisions | The resulting ecological outcome being observed. |
+<img src="fig_ch3_manatees.png" alt="Scatterplot of manatee deaths against registered powerboats showing a strong positive association." />
 
-Each point represents a single year. In 1997, for example, there were 755,000 powerboats registered and 54 manatee deaths due to powerboat collisions. 
+For example, the point $(755,54)$ represents 1997: approximately $755{,}000$ registered powerboats and $54$ manatee deaths from collisions.
 
-<img src="fig_ch3_manatees.png" alt="Scatterplot of manatee deaths vs. powerboats registered showing a strong positive association. The point (755, 54) is highlighted." />
+A suitable interpretation is:
 
-*   **SOLVE (INTERPRET THE PLOT):** The figure shows a clear direction: The overall pattern moves up, from lower left to upper right. That is, years in which powerboat registrations were higher tend to have higher counts of manatee deaths from collisions. We call this sort of pattern a **positive association** between the two variables. The form of the relationship is **linear**. The strength of a relationship in a scatterplot is determined by how closely the points follow a clear form. The overall relationship is **strong** because the points are fairly close to forming a straight line.
-*   **CONCLUDE:** The number of powerboat registrations explains much of the variation in the number of manatee deaths from collisions. Years that had fewer powerboats registered also tended to have fewer accidental manatee deaths. To preserve this endangered species, restricting the number of powerboats registered might be helpful. However, the scatterplot does not take into consideration other factors, such as speed limits, fines, or driver education, that might also influence the number of manatee deaths.
+> Years with more registered powerboats tended to have more recorded manatee deaths from watercraft collisions.
 
-*Note: A scatterplot is meant to examine a bivariate relationship. To achieve that purpose, the graph should zoom in on the pattern of the relationship, avoiding extra blank space on the edges, and give equal emphasis to both axes, resizing the plot to be roughly square rather than rectangular in shape.*
+The graph shows an **association**, not by itself a causal effect. Both variables also change across calendar time, and other factors could influence the relationship. Therefore, the scatterplot alone cannot tell us how much the number of boats directly causes the number of deaths.
 
-**Example 3.9: Does Fidgeting Keep You Slim?**
+### Example 3.9: Does Fidgeting Keep You Slim?
 
-Obesity is a growing problem around the world. Surprisingly, some people don’t gain weight even when they overeat. Perhaps fidgeting and other “nonexercise activity” (NEA) explains why—some people may spontaneously increase their nonexercise activity when fed more. 
+Researchers deliberately increased food intake for volunteers and measured both fat gain and the change in **nonexercise activity (NEA)**, which includes ordinary movement such as walking, standing and fidgeting.
 
-Researchers deliberately overfed 16 healthy young adult volunteers for 8 weeks. They measured fat gain (in kilograms) and, as an explanatory variable, change in energy use (in kilocalories, Cal) from activity other than deliberate exercise—fidgeting, daily living, and the like. 
+- **Explanatory variable ($x$):** change in NEA.
+- **Response variable ($y$):** fat gain (kg).
+- **Direction:** negative.
+- **Form:** approximately linear.
+- **Strength:** moderately strong.
 
-| Variable Type | Measurement | Biological Role |
-| :--- | :--- | :--- |
-| **Explanatory Variable ($x$)** | NEA Change (Cal) | The unconscious physical activity suspected of burning off excess calories. |
-| **Response Variable ($y$)** | Fat Gain (kg) | The resulting physiological change in body mass. |
+<img src="fig_ch3_nea_fat.png" alt="Scatterplot showing a negative association between change in nonexercise activity and fat gain." />
 
-Do people with larger increases in NEA tend to gain less fat? To see the pattern in the data, we make a scatterplot with NEA on the horizontal axis.
+Volunteers with larger increases in NEA tended to gain less fat. The relationship is not perfect: individuals still vary around the overall decreasing pattern.
 
-<img src="fig_ch3_nea_fat.png" alt="Scatterplot of fat gain vs. nonexercise activity showing a negative association." />
+### Example 3.10: Magellanic Penguins
 
-The plot shows a **negative association**: People with larger increases in NEA tend to gain less fat. The form of the association between NEA and fat gain is **linear**. The association is **moderately strong** because the points make up a linear pattern but deviate quite a lot from the line.
+Researchers followed a colony of Magellanic penguins over multiple breeding seasons. For each year they recorded the percentage of chicks that died from starvation and the percentage that successfully fledged.
 
-**Example 3.10: Magellanic Penguins**
+- **Explanatory variable ($x$):** percentage of chicks that died from starvation.
+- **Response variable ($y$):** percentage of chicks that successfully fledged.
+- **Direction:** negative.
+- **Form:** approximately linear.
+- **Outliers:** the years 1991 and 1999 fall well below the main pattern.
 
-When examining the relationship between two quantitative variables, we need to consider outliers in the context of this relationship. That is, we need to look for points on the scatterplot that do not fit the overall pattern, regardless of whether they would be identified as outliers in a dotplot or histogram of each distribution separately.
+<img src="fig_ch3_penguins.png" alt="Scatterplot of fledging percentage against starvation percentage with 1991 and 1999 marked as unusual years." />
 
-Punta Tombo, Argentina, is home to the world’s largest breeding colony of Magellanic penguins (*Spheniscus magellanicus*). Researchers have studied this colony since 1983, recording each year how many eggs were laid, how many chicks hatched, how many died of various causes, and how many successfully left the nest (fledged). 
+The key lesson is that **outliers in a relationship are identified from the scatterplot**. A point can fail to follow the bivariate pattern even if its individual $x$- or $y$-value is not an outlier in a one-variable graph.
 
-| Variable Type | Measurement | Biological Role |
-| :--- | :--- | :--- |
-| **Explanatory Variable ($x$)** | Chicks Died of Starvation (%) | Environmental nutritional stress placed on the breeding colony. |
-| **Response Variable ($y$)** | Chicks Successfully Fledged (%) | The biological survival outcome of the colony. |
-
-<img src="fig_ch3_penguins.png" alt="Scatterplot of fledging vs starvation in penguins. The years 1991 and 1999 are highlighted as distinct outliers plotted below the main trend." />
-
-The scatterplot shows a clear **negative, linear pattern**: Not surprisingly, years in which a higher percent of chicks died of starvation had a lower percent of chicks successfully fledging. 
-
-However, two points (displayed with open symbols) stand noticeably apart from the overall pattern. These **outliers** of the relationship correspond to the years 1991 and 1999, when torrential rain killed more than 40% of the chicks each year. The climate in Punta Tombo is arid, with low annual precipitation, so the years 1991 and 1999 were very unusual in this respect. For this reason, the researchers decided not to include these two data points when computing numerical summaries of the relationship between starvation and fledging.
+Before excluding an unusual year from a numerical analysis, researchers should investigate the scientific reason for its unusual behavior and document any exclusion decision.
 
 ---
 
 ## Correlation ($r$)
 
-Scatterplots rely on subjective visual judgment. To make reproducible scientific claims about *linear* relationships, we need a mathematical summary. 
+Visual descriptions such as “moderately strong positive linear association” are useful, but they involve judgment. **Pearson's correlation coefficient**, denoted by $r$, provides a numerical summary of the direction and strength of a **linear** relationship between two quantitative variables.
 
-**Pearson’s Correlation Coefficient ($r$)** measures the direction and exact strength of the *linear* relationship between two quantitative variables.
+For paired observations $(x_i,y_i)$,
 
-The mathematical formula standardizes both variables (converting them into $z$-scores), multiplies them together, and averages them:
+$$
+r
+=
+\frac{1}{n-1}
+\sum_{i=1}^{n}
+\left(\frac{x_i-\bar{x}}{s_x}\right)
+\left(\frac{y_i-\bar{y}}{s_y}\right)
+$$
 
-$$r = \frac{1}{n-1} \sum \left( \frac{x_i - \bar{x}}{s_x} \right) \left( \frac{y_i - \bar{y}}{s_y} \right)$$
+The quantities
 
-**Crucial Properties of $r$:**
+$$
+z_{x_i}=\frac{x_i-\bar{x}}{s_x}
+\qquad\text{and}\qquad
+z_{y_i}=\frac{y_i-\bar{y}}{s_y}
+$$
 
-* $r$ is always a number strictly between -1 and +1.
-* $r > 0$ indicates a positive linear association; $r < 0$ indicates a negative linear association.
-* Values near 0 indicate a very weak linear relationship. Values near -1 or +1 indicate points that lie nearly exactly on a straight line.
-* **$r$ only measures linear strength.** It is completely blind to curved/non-linear relationships.
+are the $z$-scores of the paired observations.
+
+The formula therefore:
+
+1. standardizes both variables;
+2. multiplies the paired standardized values;
+3. adds those products;
+4. divides by $n-1$.
+
+### How the Sign of $r$ Arises
+
+If an observation has:
+
+- both $z_x>0$ and $z_y>0$, their product is positive;
+- both $z_x<0$ and $z_y<0$, their product is also positive;
+- one positive and one negative $z$-score, their product is negative.
+
+Therefore:
+
+- pairs that move together contribute **positive** products;
+- pairs that move in opposite directions contribute **negative** products.
+
+This is why positive association produces positive $r$, while negative association produces negative $r$.
+
+### Crucial Properties of $r$
+
+1. The correlation coefficient always satisfies
+
+$$
+-1\le r\le 1
+$$
+
+The endpoint values $r=-1$ and $r=1$ are possible when all observations lie exactly on a straight line with negative or positive slope, respectively.
+
+2. If $r>0$, the linear association is positive. If $r<0$, the linear association is negative.
+
+3. Values of $|r|$ closer to $1$ indicate a stronger **linear** association. Values of $r$ near $0$ indicate little **linear** association.
+
+4. A value near $0$ does **not** prove that the variables are unrelated. A strong curved relationship can have a small correlation.
+
+5. Correlation has no physical units.
+
+6. Correlation is symmetric:
+
+$$
+r_{xy}=r_{yx}
+$$
+
+Swapping $x$ and $y$ does not change the correlation.
+
+7. Correlation is **not resistant** to outliers.
+
+8. A large value of $|r|$ does not establish causation.
+
+> **Always inspect the scatterplot before interpreting $r$.**
 
 ---
 
-**Example 3.11: The Mechanics of Correlation in R (Frog Locomotion)**
+## Example 3.11: The Mechanics of Correlation — Frog Locomotion
 
-To understand how the math of correlation actually works, let's look at a very small dataset. A biologist measures the snout-vent length (cm) and the maximum leap distance (cm) of 5 juvenile bullfrogs. 
+A biologist measures snout-vent length and maximum leap distance for five juvenile bullfrogs
 
-| Frog ID | Length ($x$) | Leap Distance ($y$) |
-| :---: | :---: | :---: |
-| **1** | 4.0 | 32.0 |
-| **2** | 5.0 | 42.0 |
-| **3** | 6.0 | 48.0 |
-| **4** | 7.0 | 55.0 |
-| **5** | 8.0 | 65.0 |
+| Frog ID | Length $x$ (cm) | Leap distance $y$ (cm) |
+|:---:|---:|---:|
+| 1 | 4.0 | 32.0 |
+| 2 | 5.0 | 42.0 |
+| 3 | 6.0 | 48.0 |
+| 4 | 7.0 | 55.0 |
+| 5 | 8.0 | 65.0 |
 
-Because we are learning R, we can calculate Pearson's $r$ in three ways: first by explicitly writing out the mathematical formula step-by-step, second by packaging those steps into our own reusable custom function, and finally by using R's built-in shortcut.
+We will calculate Pearson's correlation completely by hand before using R
 
-```{r ex11_correlation_calc, echo=TRUE}
-# Step 0: Load the data into R
+### Step 1: Calculate the Mean of $x$
+
+There are $n=5$ paired observations
+
+First add the frog-length values
+
+$$
+\sum x_i
+=
+4+5+6+7+8
+=
+30
+$$
+
+Then divide by $n=5$
+
+$$
+\bar{x}
+=
+\frac{\sum x_i}{n}
+=
+\frac{30}{5}
+=
+6.0
+$$
+
+### Step 2: Calculate the Mean of $y$
+
+First add the leap-distance values
+
+$$
+\sum y_i
+=
+32+42+48+55+65
+=
+242
+$$
+
+Then divide by $n=5$
+
+$$
+\bar{y}
+=
+\frac{\sum y_i}{n}
+=
+\frac{242}{5}
+=
+48.4
+$$
+
+### Step 3: Calculate the Deviations from the Means
+
+For each frog, subtract the appropriate sample mean
+
+For the $x$-values
+
+$$
+x_1-\bar{x}=4-6=-2
+$$
+
+$$
+x_2-\bar{x}=5-6=-1
+$$
+
+$$
+x_3-\bar{x}=6-6=0
+$$
+
+$$
+x_4-\bar{x}=7-6=1
+$$
+
+$$
+x_5-\bar{x}=8-6=2
+$$
+
+The $x$-deviations add to zero
+
+$$
+-2+(-1)+0+1+2=0
+$$
+
+For the $y$-values
+
+$$
+y_1-\bar{y}=32-48.4=-16.4
+$$
+
+$$
+y_2-\bar{y}=42-48.4=-6.4
+$$
+
+$$
+y_3-\bar{y}=48-48.4=-0.4
+$$
+
+$$
+y_4-\bar{y}=55-48.4=6.6
+$$
+
+$$
+y_5-\bar{y}=65-48.4=16.6
+$$
+
+The $y$-deviations also add to zero
+
+$$
+-16.4+(-6.4)+(-0.4)+6.6+16.6=0
+$$
+
+### Step 4: Square the Deviations
+
+For $x$
+
+$$
+(-2)^2=4
+$$
+
+$$
+(-1)^2=1
+$$
+
+$$
+0^2=0
+$$
+
+$$
+1^2=1
+$$
+
+$$
+2^2=4
+$$
+
+Therefore
+
+$$
+\sum (x_i-\bar{x})^2
+=
+4+1+0+1+4
+=
+10
+$$
+
+For $y$
+
+$$
+(-16.4)^2=268.96
+$$
+
+$$
+(-6.4)^2=40.96
+$$
+
+$$
+(-0.4)^2=0.16
+$$
+
+$$
+(6.6)^2=43.56
+$$
+
+$$
+(16.6)^2=275.56
+$$
+
+Therefore
+
+$$
+\sum (y_i-\bar{y})^2
+=
+268.96+40.96+0.16+43.56+275.56
+=
+629.20
+$$
+
+The calculations so far can be summarized as follows
+
+| $x_i$ | $x_i-\bar{x}$ | $(x_i-\bar{x})^2$ | $y_i$ | $y_i-\bar{y}$ | $(y_i-\bar{y})^2$ |
+|---:|---:|---:|---:|---:|---:|
+| 4 | -2 | 4 | 32 | -16.4 | 268.96 |
+| 5 | -1 | 1 | 42 | -6.4 | 40.96 |
+| 6 | 0 | 0 | 48 | -0.4 | 0.16 |
+| 7 | 1 | 1 | 55 | 6.6 | 43.56 |
+| 8 | 2 | 4 | 65 | 16.6 | 275.56 |
+| **Sum** | **0** | **10** |  | **0** | **629.20** |
+
+### Step 5: Calculate the Sample Standard Deviation of $x$
+
+The sample standard deviation is
+
+$$
+s_x
+=
+\sqrt{\frac{\sum (x_i-\bar{x})^2}{n-1}}
+$$
+
+Substitute the values from the table
+
+$$
+s_x
+=
+\sqrt{\frac{10}{5-1}}
+$$
+
+$$
+s_x
+=
+\sqrt{\frac{10}{4}}
+$$
+
+$$
+s_x
+=
+\sqrt{2.5}
+$$
+
+$$
+s_x
+\approx
+1.581139
+$$
+
+### Step 6: Calculate the Sample Standard Deviation of $y$
+
+The sample standard deviation is
+
+$$
+s_y
+=
+\sqrt{\frac{\sum (y_i-\bar{y})^2}{n-1}}
+$$
+
+Substitute the values from the table
+
+$$
+s_y
+=
+\sqrt{\frac{629.20}{5-1}}
+$$
+
+$$
+s_y
+=
+\sqrt{\frac{629.20}{4}}
+$$
+
+$$
+s_y
+=
+\sqrt{157.30}
+$$
+
+$$
+s_y
+\approx
+12.541930
+$$
+
+### Step 7: Standardize Every $x$-Value
+
+For each observation
+
+$$
+z_{x_i}
+=
+\frac{x_i-\bar{x}}{s_x}
+$$
+
+Using $\bar{x}=6$ and $s_x\approx1.581139$
+
+$$
+z_{x_1}
+=
+\frac{4-6}{1.581139}
+=
+\frac{-2}{1.581139}
+\approx
+-1.264911
+$$
+
+$$
+z_{x_2}
+=
+\frac{5-6}{1.581139}
+=
+\frac{-1}{1.581139}
+\approx
+-0.632456
+$$
+
+$$
+z_{x_3}
+=
+\frac{6-6}{1.581139}
+=
+0
+$$
+
+$$
+z_{x_4}
+=
+\frac{7-6}{1.581139}
+=
+\frac{1}{1.581139}
+\approx
+0.632456
+$$
+
+$$
+z_{x_5}
+=
+\frac{8-6}{1.581139}
+=
+\frac{2}{1.581139}
+\approx
+1.264911
+$$
+
+### Step 8: Standardize Every $y$-Value
+
+For each observation
+
+$$
+z_{y_i}
+=
+\frac{y_i-\bar{y}}{s_y}
+$$
+
+Using $\bar{y}=48.4$ and $s_y\approx12.541930$
+
+$$
+z_{y_1}
+=
+\frac{32-48.4}{12.541930}
+=
+\frac{-16.4}{12.541930}
+\approx
+-1.307614
+$$
+
+$$
+z_{y_2}
+=
+\frac{42-48.4}{12.541930}
+=
+\frac{-6.4}{12.541930}
+\approx
+-0.510288
+$$
+
+$$
+z_{y_3}
+=
+\frac{48-48.4}{12.541930}
+=
+\frac{-0.4}{12.541930}
+\approx
+-0.031893
+$$
+
+$$
+z_{y_4}
+=
+\frac{55-48.4}{12.541930}
+=
+\frac{6.6}{12.541930}
+\approx
+0.526235
+$$
+
+$$
+z_{y_5}
+=
+\frac{65-48.4}{12.541930}
+=
+\frac{16.6}{12.541930}
+\approx
+1.323560
+$$
+
+### Step 9: Multiply Each Pair of $z$-Scores
+
+Use the unrounded $z$-scores in the products
+
+$$
+z_{x_1}z_{y_1}
+=
+(-1.264911)(-1.307614)
+\approx
+1.654015
+$$
+
+$$
+z_{x_2}z_{y_2}
+=
+(-0.632456)(-0.510288)
+\approx
+0.322735
+$$
+
+$$
+z_{x_3}z_{y_3}
+=
+(0)(-0.031893)
+=
+0
+$$
+
+$$
+z_{x_4}z_{y_4}
+=
+(0.632456)(0.526235)
+\approx
+0.332820
+$$
+
+$$
+z_{x_5}z_{y_5}
+=
+(1.264911)(1.323560)
+\approx
+1.674186
+$$
+
+### Step 10: Add the Products
+
+$$
+\sum z_xz_y
+=
+1.654015+0.322735+0+0.332820+1.674186
+$$
+
+$$
+\sum z_xz_y
+\approx
+3.983756
+$$
+
+The complete standardized table is
+
+| $x$ | $y$ | $z_x$ | $z_y$ | $z_xz_y$ |
+|---:|---:|---:|---:|---:|
+| 4 | 32 | -1.264911 | -1.307614 | 1.654015 |
+| 5 | 42 | -0.632456 | -0.510288 | 0.322735 |
+| 6 | 48 | 0.000000 | -0.031893 | 0.000000 |
+| 7 | 55 | 0.632456 | 0.526235 | 0.332820 |
+| 8 | 65 | 1.264911 | 1.323560 | 1.674186 |
+|  |  |  | **Sum** | **3.983756** |
+
+### Step 11: Calculate Pearson's Correlation Coefficient
+
+The formula is
+
+$$
+r
+=
+\frac{1}{n-1}\sum z_xz_y
+$$
+
+Substitute $n=5$ and the sum of the products
+
+$$
+r
+=
+\frac{1}{5-1}(3.983756)
+$$
+
+$$
+r
+=
+\frac{3.983756}{4}
+$$
+
+$$
+r
+\approx
+0.995939
+$$
+
+Rounded to three decimal places
+
+$$
+r
+\approx
+0.996
+$$
+
+The data show a **very strong positive linear association**: in this sample, longer juvenile frogs tend to have greater leap distances
+
+### Equivalent Calculation Using Deviations from the Means
+
+The same correlation can be calculated directly from deviations from the two means
+
+$$
+r
+=
+\frac{
+\sum (x_i-\bar{x})(y_i-\bar{y})
+}{
+\sqrt{\sum (x_i-\bar{x})^2}
+\sqrt{\sum (y_i-\bar{y})^2}
+}
+$$
+
+First calculate each cross-product
+
+$$
+(x_1-\bar{x})(y_1-\bar{y})
+=
+(-2)(-16.4)
+=
+32.8
+$$
+
+$$
+(x_2-\bar{x})(y_2-\bar{y})
+=
+(-1)(-6.4)
+=
+6.4
+$$
+
+$$
+(x_3-\bar{x})(y_3-\bar{y})
+=
+(0)(-0.4)
+=
+0
+$$
+
+$$
+(x_4-\bar{x})(y_4-\bar{y})
+=
+(1)(6.6)
+=
+6.6
+$$
+
+$$
+(x_5-\bar{x})(y_5-\bar{y})
+=
+(2)(16.6)
+=
+33.2
+$$
+
+Add the cross-products
+
+$$
+\sum (x_i-\bar{x})(y_i-\bar{y})
+=
+32.8+6.4+0+6.6+33.2
+=
+79.0
+$$
+
+From the earlier calculations
+
+$$
+\sum (x_i-\bar{x})^2=10
+$$
+
+$$
+\sum (y_i-\bar{y})^2=629.20
+$$
+
+Substitute all three quantities
+
+$$
+r
+=
+\frac{79.0}{\sqrt{10}\sqrt{629.20}}
+$$
+
+$$
+r
+=
+\frac{79.0}{\sqrt{6292}}
+$$
+
+$$
+r
+\approx
+\frac{79.0}{79.322128}
+$$
+
+$$
+r
+\approx
+0.995939
+$$
+
+The two formulas are mathematically equivalent
+
+---
+
+## Example 3.11: Correlation in R
+
+The lecture shows four useful ways to reproduce the frog calculation in R.
+
+### Method 1: Use the $z$-Score Formula
+
+```{r ex11_method1, echo=TRUE}
 length_x <- c(4, 5, 6, 7, 8)
 leap_y <- c(32, 42, 48, 55, 65)
 
-# ---------------------------------------------------------
-# METHOD 1: Calculating step-by-step using the formula
-# ---------------------------------------------------------
+# Store the number of paired observations
 n <- length(length_x)
 
-# 1. Standardize x (calculate z-scores for Length)
+# Standardize x and y
 z_x <- (length_x - mean(length_x)) / sd(length_x)
-
-# 2. Standardize y (calculate z-scores for Leap Distance)
 z_y <- (leap_y - mean(leap_y)) / sd(leap_y)
 
-# 3. Multiply the z-scores together, sum them up and divide by (n-1)
+# Calculate Pearson's correlation coefficient
 r_manual <- sum(z_x * z_y) / (n - 1)
-
 r_manual
+```
 
+The code follows exactly the same steps as the hand calculation
 
-# ---------------------------------------------------------
-# METHOD 2: Wrapping the math into a custom function
-# ---------------------------------------------------------
-# We can package Method 1 into a reusable tool for future datasets
+First, R finds the sample size
+
+$$
+n=5
+$$
+
+Then it calculates the two standardized vectors
+
+$$
+z_x
+\approx
+(-1.264911,-0.632456,0,0.632456,1.264911)
+$$
+
+$$
+z_y
+\approx
+(-1.307614,-0.510288,-0.031893,0.526235,1.323560)
+$$
+
+Next, R multiplies corresponding entries and adds the products
+
+$$
+\sum z_xz_y
+\approx
+3.983756
+$$
+
+Finally
+
+$$
+r
+=
+\frac{3.983756}{5-1}
+\approx
+0.995939
+$$
+
+### Method 2: Use the Sum-of-Deviations Formula
+
+```{r ex11_method2, echo=TRUE}
+length_x <- c(4, 5, 6, 7, 8)
+leap_y <- c(32, 42, 48, 55, 65)
+
+# Deviations from the means
+x_deviation <- length_x - mean(length_x)
+y_deviation <- leap_y - mean(leap_y)
+
+# Numerator
+numerator <- sum(x_deviation * y_deviation)
+
+# Two sums in the denominator
+sum_x_squared <- sum(x_deviation^2)
+sum_y_squared <- sum(y_deviation^2)
+
+# Correlation
+denominator <- sqrt(sum_x_squared * sum_y_squared)
+r_sums <- numerator / denominator
+r_sums
+```
+
+The quantities created by this code correspond to the hand calculation
+
+$$
+\text{numerator} = \sum (x_i-\bar{x})(y_i-\bar{y}) = 79.0
+$$
+
+$$
+\text{sum squared x} = \sum (x_i-\bar{x})^2 = 10
+$$
+
+$$
+\text{sum squared y} = \sum (y_i-\bar{y})^2 = 629.20
+$$
+
+Therefore
+
+$$
+\text{denominator} = \sqrt{(10)(629.20)} \approx 79.322128
+$$
+
+and
+
+$$
+r = \frac{79.0}{79.322128} \approx 0.995939
+$$
+
+### Method 3: Create a Reusable Function
+
+```{r ex11_method3, echo=TRUE}
 calculate_r <- function(x, y) {
   n <- length(x)
-  top <- (x - mean(x)) / sd(x)
-  bottom <- (y - mean(y)) / sd(y)
-  
-  return(sum(top * bottom) / (n - 1))
+
+  z_x <- (x - mean(x)) / sd(x)
+  z_y <- (y - mean(y)) / sd(y)
+
+  return(sum(z_x * z_y) / (n - 1))
 }
 
-# Let's test our custom function!
 calculate_r(length_x, leap_y)
+```
 
+The function repeats the same sequence for any paired vectors $x$ and $y$
 
-# ---------------------------------------------------------
-# METHOD 3: The fast way using R's built-in function
-# ---------------------------------------------------------
-# In practice, you will simply use the cor() function:
+1. It calculates $n$
+2. It converts every $x$-value to a $z$-score
+3. It converts every $y$-value to a $z$-score
+4. It multiplies each paired set of $z$-scores
+5. It adds the products
+6. It divides the sum by $n-1$
+
+For the frog data, the function returns
+
+$$
+r \approx 0.995939
+$$
+
+A custom function is useful for understanding how the calculation is assembled, but in ordinary data analysis there is already a built-in R function for correlation
+
+### Method 4: Use `cor()`
+
+```{r ex11_method4, echo=TRUE}
 cor(length_x, leap_y)
 ```
 
----
+By default, `cor(x, y)` computes Pearson's correlation coefficient using the same paired observations
 
-**Example 3.12: Calculating $r$ (Spatial Array Reproducibility)**
+For these data
 
-**Study Context:** A bioinformatics lab runs a spatial transcriptomics chip twice on adjacent slices of brain tissue. To prove their assay is reproducible, they calculate the correlation of gene expression levels (log-counts) between Replicate 1 ($x$) and Replicate 2 ($y$) across 500 genes.
+$$
+\operatorname{cor}(x,y) \approx 0.995939
+$$
 
-<img src="fig_ch3_reproducibility.png" alt="Scatterplot showing a very tight, near-perfect positive linear relationship between two replicates." />
+The built-in function is the preferred method for routine analysis, while the earlier methods show how the statistic is constructed
 
-**Interpretation:** An $r$ of `0.9696` confirms a remarkably strong, positive linear relationship, proving that the transcriptomics assay performs almost identically between independent runs.
-
----
-
-**Example 3.13: The Unit-Independence of $r$**
-
-A brilliant mathematical property of Pearson's $r$ is that because the formula divides by the standard deviations ($s_x$ and $s_y$), it entirely strips away the physical units of measurement. **Correlation has no units, and changing the units of measurement does not change $r$.**
-
-Suppose an ecologist tracking apex predators calculates the correlation between average swimming speed (measured in **km/h**) and daily energy expenditure (measured in **Kilocalories**). A European colleague translates the dataset into meters per second (**m/s**) and Joules (**J**).
-
-**Interpretation:** The correlation remains exactly identically `0.9424`. You can plot inches vs. pounds, or centimeters vs. kilograms; the fundamental linear strength ($r$) will never change!
+> **Interpretation:** $r\approx0.996$ indicates a nearly perfect positive **linear association** between frog length and leap distance in this sample
 
 ---
 
-**Example 3.14: The Non-Resistance of Correlation**
+## Example 3.12: Spatial Transcriptomics Reproducibility
 
-Remember from Chapter 2 that the mean ($\bar{x}$) and standard deviation ($s$) are non-resistant to outliers. Because the formula for $r$ relies entirely on $\bar{x}$ and $s$, **correlation is strongly non-resistant to outliers.** A single extreme point can completely destroy a strong correlation or artificially create one out of thin air.
+A research lab performs a spatial transcriptomics assay twice under similar conditions. For each of $500$ genes, expression measured in Replicate 1 is compared with expression measured in Replicate 2.
 
-Let's look at an eco-toxicology study evaluating heavy metal concentration in soil (ppm) vs. plant root length (cm). 29 samples are gathered from a consistent zone. 1 sample accidentally included an entirely different, highly toxic industrial soil matrix.
+<img src="fig_ch3_reproducibility.png" alt="Scatterplot showing a very strong positive linear relationship between expression in two spatial transcriptomics replicates." />
 
-<img src="fig_ch3_toxic_outlier.png" alt="Scatterplot of root length vs soil metal concentration. A distinct cluster is on the left, and one extreme outlier sits far to the right." />
+For plotting convenience, we can place:
 
-**Interpretation:** By including just **one** anomalous data point out of 30, the math is completely overwhelmed. The correlation coefficient incorrectly jumps from `-0.7719` to `-0.9575`, making the relationship appear artificially near-perfect. 
+- Replicate 1 on the $x$-axis;
+- Replicate 2 on the $y$-axis.
 
-> **The Golden Rule of Bivariate Data:** Never calculate a correlation coefficient without looking at the scatterplot first! $r$ cannot detect curves, and $r$ is easily fooled by outliers.
+The dataset contains $n=500$ paired gene-expression measurements, so writing all $500$ hand calculations would not be useful. R can carry out the same steps used in Example 3.11
+
+```{r ex12_correlation_steps, echo=TRUE}
+# Step 1: store the number of paired observations
+n_repro <- nrow(repro_data)
+
+# Step 2: standardize Replicate 1
+z_rep1 <- (repro_data$Rep1 - mean(repro_data$Rep1)) / sd(repro_data$Rep1)
+
+# Step 3: standardize Replicate 2
+z_rep2 <- (repro_data$Rep2 - mean(repro_data$Rep2)) / sd(repro_data$Rep2)
+
+# Step 4: multiply paired z-scores
+z_products_repro <- z_rep1 * z_rep2
+
+# Step 5: add the products
+sum_z_products_repro <- sum(z_products_repro)
+
+# Step 6: divide by n - 1
+r_repro_manual <- sum_z_products_repro / (n_repro - 1)
+r_repro_manual
+
+# Check with R's built-in function
+cor(repro_data$Rep1, repro_data$Rep2)
+```
+
+The calculation has the same structure as the frog example
+
+$$
+r = \frac{1}{500-1}\sum_{i=1}^{500}z_{x_i}z_{y_i}
+$$
+
+The correlation is approximately
+
+$$
+r=0.9696
+$$
+
+This indicates a **very strong positive linear association** between the two replicate measurements. Genes with higher expression in Replicate 1 also tend to have higher expression in Replicate 2.
+
+Because correlation is symmetric, switching the two replicates between the axes would not change $r$.
+
+> A high correlation supports strong reproducibility of the **relative expression pattern**, but correlation alone does not establish that the two replicates agree perfectly in their absolute values. Two measurements can be highly correlated while still differing systematically in scale or level.
+
+---
+
+## Example 3.13: Correlation Does Not Depend on Measurement Units
+
+Because correlation is calculated from standardized values, $r$ has **no units**.
+
+For example, suppose the correlation between swimming speed measured in km/h and energy expenditure measured in kilocalories is
+
+$$
+r=0.9424
+$$
+
+A positive linear unit conversion has the form
+
+$$
+x_i^*=a+bx_i \qquad b>0
+$$
+
+The converted mean and standard deviation are
+
+$$
+\bar{x}^*=a+b\bar{x}
+$$
+
+$$
+s_x^*=bs_x
+$$
+
+Therefore the standardized converted value is
+
+$$
+z_{x_i^*}
+=
+\frac{x_i^*-\bar{x}^*}{s_x^*}
+$$
+
+Substitute the converted quantities
+
+$$
+z_{x_i^*} = \frac{(a+bx_i)-(a+b\bar{x})}{bs_x}
+$$
+
+Simplify
+
+$$
+z_{x_i^*} = \frac{b(x_i-\bar{x})}{bs_x}
+$$
+
+$$
+z_{x_i^*}
+=
+\frac{x_i-\bar{x}}{s_x}
+=
+z_{x_i}
+$$
+
+The same argument applies to $y$. Because the paired $z$-scores do not change, neither their products nor their average change
+
+If the same values are converted to m/s and joules using ordinary positive linear unit conversions, the correlation therefore remains
+
+$$
+r=0.9424
+$$
+
+Changing measurement units changes the numerical values and their standard deviations, but the corresponding standardized positions remain the same
+
+---
+
+## Example 3.14: Correlation Is Not Resistant
+
+The mean and standard deviation are not resistant to extreme observations. Correlation is also **not resistant**.
+
+A single influential point can:
+
+- make an existing linear association appear much stronger;
+- make it appear weaker;
+- reverse the apparent direction in some datasets;
+- create a large correlation where the main cloud of points shows little linear association.
+
+### Heavy Metal Concentration and Root Length
+
+Researchers examine heavy-metal concentration in soil and plant root length.
+
+- **Explanatory variable ($x$):** heavy-metal concentration.
+- **Response variable ($y$):** plant root length.
+- **Original pattern:** the $29$ regular observations show a moderately strong negative linear association, approximately $r=-0.77$.
+
+One extremely unusual industrial-soil sample is then included.
+
+<img src="fig_ch3_toxic_outlier.png" alt="Scatterplot of soil heavy-metal concentration and root length with one extreme influential observation." />
+
+We can calculate the correlation first for the $29$ regular observations and then repeat the same calculation after adding the unusual observation
+
+```{r ex14_correlation_steps, echo=TRUE}
+# ---------- Original 29 observations ----------
+
+# Step 1: number of paired observations
+n_original <- length(metal_ppm)
+
+# Step 2: standardize metal concentration
+z_metal_original <- (metal_ppm - mean(metal_ppm)) / sd(metal_ppm)
+
+# Step 3: standardize root length
+z_root_original <- (root_cm - mean(root_cm)) / sd(root_cm)
+
+# Step 4: multiply paired z-scores
+products_original <- z_metal_original * z_root_original
+
+# Step 5: add the products
+sum_products_original <- sum(products_original)
+
+# Step 6: divide by n - 1
+r_original <- sum_products_original / (n_original - 1)
+r_original
+
+# ---------- Add the extreme observation ----------
+
+# Step 1: number of paired observations
+n_with_outlier <- length(metal_ppm_corrupted)
+
+# Step 2: standardize metal concentration
+z_metal_outlier <- (metal_ppm_corrupted - mean(metal_ppm_corrupted)) /
+  sd(metal_ppm_corrupted)
+
+# Step 3: standardize root length
+z_root_outlier <- (root_cm_corrupted - mean(root_cm_corrupted)) /
+  sd(root_cm_corrupted)
+
+# Step 4: multiply paired z-scores
+products_outlier <- z_metal_outlier * z_root_outlier
+
+# Step 5: add the products
+sum_products_outlier <- sum(products_outlier)
+
+# Step 6: divide by n - 1
+r_with_outlier <- sum_products_outlier / (n_with_outlier - 1)
+r_with_outlier
+```
+
+For the original observations, the calculation has the form
+
+$$
+r_{\text{original}}
+=
+\frac{1}{29-1}\sum_{i=1}^{29}z_{x_i}z_{y_i}
+$$
+
+and gives approximately
+
+$$
+r_{\text{original}}\approx-0.77
+$$
+
+After the unusual observation is added, the calculation becomes
+
+$$
+r_{\text{with outlier}}
+=
+\frac{1}{30-1}\sum_{i=1}^{30}z_{x_i}z_{y_i}
+$$
+
+and gives approximately
+
+$$
+r_{\text{with outlier}}\approx-0.95
+$$
+
+The numerical value is now closer to $-1$, making the relationship appear much more strongly linear than the main cluster alone suggests
+
+This does **not** mean that the formula is wrong. The unusual observation is genuinely part of the calculation. The lesson is that a numerical summary can be dominated by an influential point.
+
+> **Golden rule:** Never interpret a correlation coefficient without first examining the scatterplot.
+
+---
+
+## Summary of R Commands
+
+The main R commands introduced in this chapter are:
+
+| R command | Purpose |
+|:---|:---|
+| `length(x)` | Returns the number of observations in a vector. |
+| `mean(x)` | Calculates the mean of a vector. |
+| `sd(x)` | Calculates the sample standard deviation. |
+| `sum(x * y)` | Multiplies paired vector entries element-by-element and adds the products. |
+| `function(x, y) { ... }` | Defines a reusable function. |
+| `cor(x, y)` | Calculates Pearson's correlation coefficient by default. |
+
+### Chapter 3 Checklist
+
+When examining two quantitative variables:
+
+1. Identify the observational units and make sure the $x$- and $y$-values are correctly paired.
+2. Decide whether explanatory and response roles are meaningful in the context.
+3. Make a scatterplot before calculating a correlation.
+4. Describe **form, direction, strength and outliers**.
+5. Use Pearson's $r$ only as a summary of **linear** association.
+6. Remember that $-1\le r\le 1$.
+7. Remember that correlation has no units and is unchanged by swapping $x$ and $y$.
+8. Investigate influential observations rather than automatically deleting them.
+9. Do not interpret correlation as proof of causation.
