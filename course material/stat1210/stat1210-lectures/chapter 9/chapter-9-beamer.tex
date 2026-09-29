@@ -31,176 +31,134 @@
 
 \begin{document}
 
-% =============================================================
-% SLIDE 1: Title
-% =============================================================
 
+% SLIDE 1
 \begin{frame}
   \titlepage
 \end{frame}
 
-%\begin{frame}{Learning Objectives}
-%By the end of this chapter, you should be able to:
-%\begin{itemize}
-%  \item explain randomness and probability using long-run relative frequency;
-%  \item distinguish theoretical, empirical, and personal probability;
-%  \item identify sample spaces, events, and probability models;
-%  \item apply the four fundamental probability rules;
-%  \item distinguish discrete and continuous probability models;
-%  \item calculate the mean and standard deviation of a discrete random variable;
-%  \item convert between probability, risk, and odds.
-%\end{itemize}
-%\end{frame}
-
-% =============================================================
-% PART I: THE IDEA OF PROBABILITY
-% =============================================================
-
+% SLIDE 2
 \begin{frame}{Randomness and Probability}
 \small
-When people hear the word ``random,'' they often think of something completely
-haphazard or patternless. In statistics, randomness has a more precise meaning.
+When people hear the word ``random'' they often think of something completely haphazard or patternless. In statistics, randomness has a more precise meaning.
 
 \vspace{0.2cm}
 \begin{block}{Random phenomenon}
-A phenomenon is \textbf{random} when individual outcomes are uncertain, but a
-regular and predictable distribution emerges over many repetitions.
+A phenomenon is \textbf{random} when individual outcomes are uncertain but a regular and predictable distribution emerges over many repetitions.
 \end{block}
 
-\begin{block}{Probability}
-The probability of an outcome is the proportion of times that outcome would
-occur in a very long series of repetitions.
+\begin{block}{Empirical Probability}
+The probability of an outcome is the proportion of times that outcome would occur in a very long series of repetitions.
 \end{block}
 
-\begin{exampleblock}{Example: Births}
-We cannot predict the sex of the next baby with certainty. However, when we
-look across a very large number of births, the proportions become remarkably
-stable. Probability describes this \emph{long-run regularity}.
+\begin{exampleblock}{Example: Radioactive Tracers}
+A medical scan uses a radioactive tracer. We cannot predict which individual atom will decay next. Yet among millions of atoms, the fraction that decays over a fixed period is remarkably predictable. Probability describes this \emph{long-run regularity}.
 \end{exampleblock}
 \end{frame}
 
+% SLIDE 3
 \begin{frame}{Two Ways to Determine Probability}
-How do we decide what probability to assign to an event? In practice, we
-usually rely on one of two approaches.
+How do we decide what probability to assign to an event? In practice, we usually rely on one of two approaches.
 
-\vspace{0.2cm}
 \begin{columns}[T,onlytextwidth]
 \column{0.48\textwidth}
 \begin{block}{Theoretical probability}
-Derived from an underlying mathematical, physical, or biological model.
+Derived from an underlying mathematical or physical model.
 
-\medskip
-\textbf{Example:} A simplified genetic model suggests
-\[
-\prob{\text{boy}}=0.50.
-\]
-
+\textbf{Example:} A model of radioactive decay tells us that, during one half-life $$\prob{\text{atom decays}}=0.50$$
 The probability comes from the \textbf{model}, not from counting observations.
 \end{block}
 
 \column{0.48\textwidth}
 \begin{block}{Empirical probability}
-Estimated from the long-run frequency observed in real data.
+Estimated from the frequency observed in data.
 
-\medskip
-\textbf{Example:} Historical birth records may give
-\[
-\widehat{\prob{\text{boy}}}\approx 0.512.
-\]
-
+\textbf{Example:} If $498$ of $1000$ tracer atoms decay during one half-life, then $$\widehat{\prob{\text{atom decays}}} =\frac{498}{1000}=0.498 $$
 The probability is estimated from \textbf{data}.
 \end{block}
 \end{columns}
 
 \vspace{0.2cm}
-Both approaches can be used to construct a \textbf{probability model}, and
-both must obey the same mathematical probability rules.
+Both approaches can be used to construct a \textbf{probability model} and both must obey the same mathematical probability rules.
 \end{frame}
 
+% SLIDE 4
 \begin{frame}{The Frequentist Interpretation}
 \begin{block}{Core idea}
-In the frequentist interpretation, probability is the \textbf{long-run relative
-frequency} of an outcome over many repeated trials under similar conditions.
+In the \textbf{frequentist interpretation}, probability describes the proportion of times an outcome occurs when a trial is repeated many times under the same conditions. Any single outcome is uncertain, but the \textbf{relative frequency} tends to settle near its actual probability as the number of trials grows.
 \end{block}
 
-\begin{itemize}
-  \item Individual trials remain uncertain.
-  \item Small samples can vary substantially from one repetition to another.
-  \item As the number of repetitions grows, relative frequencies tend to stabilize.
-  \item A probability of $0.5$ does \alert{not} mean exactly half of the next ten trials must be successes.
-\end{itemize}
-
-\begin{exampleblock}{Common cold example}
-Suppose a survey of $14{,}169$ adults finds that $11.2\%$ had a cold yesterday.
-A second random sample would not be expected to give exactly $11.2\%$, but
-many repeated samples would reveal a stable population pattern.
+\begin{exampleblock}{Radioactive tracer example}
+Suppose $498$ of $1000$ tracer atoms decay during one half-life: a proportion of $49.8\%$. A fresh group of $1000$ atoms would probably give a slightly different result. Across many groups, the proportions would tend to cluster around the model's prediction of $50\%$.
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Long-Run Regularity: Coin Toss Simulation}
+% SLIDE 5
+\begin{frame}{Coin Toss Simulation}
 \begin{columns}[c,onlytextwidth]
-\column{0.66\textwidth}
+\column{0.65\textwidth}
 \centering
-\lecturefigure[0.62\textheight]{fig_ch9_cointoss.png}
+\lecturefigure[0.65\textheight]{fig_ch9_cointoss.png}
 
-\column{0.32\textwidth}
-\small
+\column{0.35\textwidth}
+\scriptsize
 \begin{itemize}
-  \item Each line is a separate sequence of $5{,}000$ coin tosses.
-  \item Early proportions can swing sharply because only a few tosses have occurred.
-  \item As the number of tosses grows, both proportions move toward $0.5$.
-  \item The horizontal axis is logarithmic so the early variation is easier to see.
+	\item The \textbf{cumulative proportion of heads} after $n$ tosses is
+	$$\frac{\text{number of heads in the first }n\text{ tosses}}{n}$$
+ 	 \item Each line tracks this proportion through a separate sequence of $5000$ tosses.
+  	\item Early proportions can swing sharply because only a few tosses have occurred.
+ 	\item As the number of tosses grows, both proportions tend toward $0.5$.
+  	\item The horizontal axis is logarithmic so the early variation is easier to see.
 \end{itemize}
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{R Example: Simulating Coin Tosses}
-The simulation behind the previous figure uses a vector of $0$s and $1$s,
-where $1$ represents heads.
+%\begin{frame}[fragile]{R Example: Simulating Coin Tosses}
+%The simulation behind the previous figure uses a vector of $0$s and $1$s,
+%where $1$ represents heads.
+%
+%\vspace{0.2cm}
+%\scriptsize
+%\begin{verbatim}
+%set.seed(42)
+%n_tosses <- 5000
+%
+%# Simulate two independent trials
+%tosses_A <- sample(c(0, 1), n_tosses, replace = TRUE)
+%tosses_B <- sample(c(0, 1), n_tosses, replace = TRUE)
+%
+%# Running proportion of heads after each toss
+%prop_A <- cumsum(tosses_A) / (1:n_tosses)
+%prop_B <- cumsum(tosses_B) / (1:n_tosses)
+%\end{verbatim}
+%
+%\normalsize
+%\begin{block}{What the R functions do}
+%\texttt{sample()} generates the random tosses, while \texttt{cumsum()} keeps a
+%running total of the number of heads.
+%\end{block}
+%\end{frame}
 
-\vspace{0.2cm}
-\scriptsize
-\begin{verbatim}
-set.seed(42)
-n_tosses <- 5000
-
-# Simulate two independent trials
-tosses_A <- sample(c(0, 1), n_tosses, replace = TRUE)
-tosses_B <- sample(c(0, 1), n_tosses, replace = TRUE)
-
-# Running proportion of heads after each toss
-prop_A <- cumsum(tosses_A) / (1:n_tosses)
-prop_B <- cumsum(tosses_B) / (1:n_tosses)
-\end{verbatim}
-
-\normalsize
-\begin{block}{What the R functions do}
-\texttt{sample()} generates the random tosses, while \texttt{cumsum()} keeps a
-running total of the number of heads.
-\end{block}
-\end{frame}
-
+% SLIDE 6
 \begin{frame}{The Law of Large Numbers}
 \begin{block}{Law of Large Numbers}
-As the number of independent repetitions increases, the observed relative
-frequency tends to approach the underlying probability.
+As the number of independent repetitions increases, the observed relative frequency tends to approach the underlying probability.
 \end{block}
 
 \begin{itemize}
-  \item Early results may fluctuate dramatically because each new observation has a large effect.
-  \item With thousands of repetitions, one additional result has very little influence on the cumulative proportion.
-  \item This long-run stabilization is one reason large samples are generally more dependable than very small samples.
+	\item Early results may fluctuate dramatically because each new observation has a large effect.
+	\item With thousands of repetitions, one additional result has very little influence on the cumulative proportion.
+	\item This long-run stabilization is one reason large samples are generally more dependable than very small samples.
 \end{itemize}
 
 \begin{alertblock}{Important caution}
-The Law of Large Numbers describes \textbf{long-run behaviour}. It does not
-force a short sequence to ``balance out.'' A coin has no memory of previous tosses.
+The Law of Large Numbers describes \textbf{long-run behaviour}. It does not force a short sequence to ``balance out''. For example, a coin has no memory of previous tosses.
 \end{alertblock}
 \end{frame}
 
+% SLIDE 7
 \begin{frame}{The Illusion of Randomness}
 Which sequence is more likely when a fair coin is tossed six times?
-
 \vspace{0.4cm}
 \begin{columns}[T,onlytextwidth]
 \column{0.46\textwidth}
@@ -208,7 +166,6 @@ Which sequence is more likely when a fair coin is tossed six times?
 \centering
 \Large H T H T T H
 \end{block}
-
 \column{0.46\textwidth}
 \begin{block}{Sequence B}
 \centering
@@ -220,65 +177,56 @@ Which sequence is more likely when a fair coin is tossed six times?
 \vspace{0.4cm}
 \begin{alertblock}{Answer}
 Both specific sequences have probability
-\[
-\left(\frac12\right)^6=\frac1{64}.
-\]
+$$\left(\frac12\right)^6=\frac1{64}$$
 True randomness naturally produces streaks and clusters.
 \end{alertblock}
 \end{frame}
 
-\begin{frame}{Personal Probability}
+% SLIDE 8
+\begin{frame}{Probability}
 \begin{block}{Definition}
-A \textbf{personal probability} is a number between $0$ and $1$ that expresses an individual's scientifically informed judgement about how likely an outcome is.
+A \textbf{probability} is a number between $0$ and $1$ that expresses how likely an event can happen based on the available information.
 \end{block}
 
 \begin{exampleblock}{Example}
 What is the probability that humans discover extraterrestrial life during this century?
 \end{exampleblock}
 
-This event cannot be repeated thousands of times. The probability must therefore be based on evidence, scientific models, and expert judgement rather than direct long-run repetition.
+This event cannot be repeated thousands of times. The probability must therefore be based on evidence, scientific models and expert judgement rather than direct long run repetition.
 
 \vspace{0.25cm}
 Regardless of its interpretation, every valid probability must obey the mathematical rules introduced later in this chapter.
 \end{frame}
 
-% =============================================================
-% PART II: PROBABILITY MODELS
-% =============================================================
-
+% SLIDE 9
 \begin{frame}{Vocabulary of Probability Models}
 \small
-To use probability mathematically, we need to describe both the possible
-outcomes and how likely those outcomes are.
+To use probability mathematically, we need to describe both the possible outcomes and how likely those outcomes are.
 
 \begin{block}{Sample space}
-The \textbf{sample space} $S$ is the set of \emph{all} possible outcomes of a
-random phenomenon.
+The \textbf{sample space} $S$ is the set of \emph{all} possible outcomes of a random phenomenon.
 \end{block}
 
 \begin{block}{Event}
-An \textbf{event} is one outcome or a collection of outcomes; mathematically,
-an event is a subset of $S$.
+An \textbf{event} is one outcome or a collection of outcomes; an event is a subset of $S$.
 \end{block}
 
 \begin{block}{Probability model}
 A probability model specifies:
 \begin{enumerate}
-  \item a sample space $S$;
-  \item a rule for assigning probabilities to events.
+	\item a sample space $S$
+	\item a rule for assigning probabilities to events
 \end{enumerate}
 \end{block}
 
 \small
-For example, if we record only sex at birth, a simple sample space is
-$S=\{\text{Male},\text{Female}\}$.
+For example, if we are tossing a coin, the sample space is $S=\{\text{Heads},\text{Tails}\}$.
 \end{frame}
 
+% SLIDE 10
 \begin{frame}{Example 9.5: Blood Types}
-For the eight blood types,
-\[
-S=\{O+,O-,A+,A-,B+,B-,AB+,AB-\}.
-\]
+For the eight blood types
+$$S=\{O+,O-,A+,A-,B+,B-,AB+,AB-\}$$
 
 \begin{table}
 \centering
@@ -287,17 +235,19 @@ S=\{O+,O-,A+,A-,B+,B-,AB+,AB-\}.
 \toprule
 Type & $O+$ & $O-$ & $A+$ & $A-$ & $B+$ & $B-$ & $AB+$ & $AB-$\\
 \midrule
-Probability & .39 & .01 & .27 & .005 & .25 & .004 & .07 & .001\\
+Probability & 0.39 & 0.01 & 0.27 & 0.005 & 0.25 & 0.004 & 0.07 & 0.001\\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{itemize}
-  \item Each listed outcome is discrete.
-  \item The probabilities are nonnegative and sum to $1$.
+	\item Each listed outcome is discrete.
+	\item The probabilities are nonnegative and sum to $1$.
+	$$\sum_{i=1}^{n=8} \text{probability}(\text{blood type}_{i}) = 0.39 + 0.01 + 0.27 + 0.005 + 0.25 + 0.004 + 0.07 + 0.001 = 1$$
 \end{itemize}
 \end{frame}
 
+% SLIDE 11
 \begin{frame}{Blood-Type Probability Model}
 \begin{columns}[c,onlytextwidth]
 \column{0.66\textwidth}
@@ -310,44 +260,42 @@ The bars visualize the probability assigned to each discrete outcome.
 
 \vspace{0.2cm}
 \begin{itemize}
-  \item $O+$ has the largest probability in this model.
-  \item Rare outcomes such as $AB-$ still belong to the sample space.
-  \item Adding the eight probabilities gives exactly $1$.
+	\item $O+$ has the largest probability in this model.
+	\item Rare outcomes such as $AB-$ still belong to the sample space.
+\item Adding the eight probabilities gives exactly $1$.
 \end{itemize}
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{R Example: Representing a Discrete Probability Model}
-A probability model can be stored directly as vectors or as a data frame.
+%\begin{frame}[fragile]{R Example: Representing a Discrete Probability Model}
+%A probability model can be stored directly as vectors or as a data frame.
+%
+%\vspace{0.15cm}
+%\scriptsize
+%\begin{verbatim}
+%blood_data <- data.frame(
+%  Type = factor(
+%    c("O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"),
+%    levels = c("O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-")
+%  ),
+%  Probability = c(0.39, 0.01, 0.27, 0.005,
+%                  0.25, 0.004, 0.07, 0.001)
+%)
+%
+%sum(blood_data$Probability)
+%# 1
+%\end{verbatim}
+%
+%\normalsize
+%\begin{block}{Why check the sum?}
+%A valid discrete probability model must assign probabilities that sum to $1$.
+%\end{block}
+%\end{frame}
 
-\vspace{0.15cm}
-\scriptsize
-\begin{verbatim}
-blood_data <- data.frame(
-  Type = factor(
-    c("O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"),
-    levels = c("O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-")
-  ),
-  Probability = c(0.39, 0.01, 0.27, 0.005,
-                  0.25, 0.004, 0.07, 0.001)
-)
-
-sum(blood_data$Probability)
-# 1
-\end{verbatim}
-
-\normalsize
-\begin{block}{Why check the sum?}
-A valid discrete probability model must assign probabilities that sum to $1$.
-\end{block}
-\end{frame}
-
+% SLIDE 12
 \begin{frame}{Changing the Scope of a Model}
-Suppose we care only about the Rhesus factor.
-
-\[
-S=\{Rh+,Rh-\}.
-\]
+The Rhesus (Rh) factor describes whether red blood cells have a marker called the RhD antigen. If the marker is present, the blood type is $Rh+$ and if it is absent the blood type is $Rh-$. Suppose we record only the Rh factor, ignoring whether the blood type is A, B, AB, or O. Then our sample space is
+$$S=\{Rh+,Rh-\}$$
 
 \begin{table}
 \centering
@@ -355,7 +303,7 @@ S=\{Rh+,Rh-\}.
 \toprule
 Rh factor & $Rh+$ & $Rh-$\\
 \midrule
-Probability & $0.98$ & $0.02$\\
+Probability in a hypothetical population & $0.98$ & $0.02$\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -365,12 +313,10 @@ The sample space depends on how the random phenomenon is defined. A broader mode
 \end{block}
 \end{frame}
 
+% SLIDE 13
 \begin{frame}{Example 9.6: A Random Number from 0 to 1}
 Let $Y$ be a random number selected from the interval $[0,1]$.
-
-\[
-S=\{y:0\le y\le 1\}.
-\]
+$$S=\{y:0\le y\le 1\}$$
 
 \begin{columns}[c,onlytextwidth]
 \column{0.50\textwidth}
@@ -388,94 +334,80 @@ S=\{y:0\le y\le 1\}.
 \end{columns}
 \end{frame}
 
+% SLIDE 14
 \begin{frame}{Discrete vs. Continuous Sample Spaces}
 \begin{columns}[T,onlytextwidth]
 \column{0.48\textwidth}
 \begin{block}{Discrete}
 \begin{itemize}
-  \item Finite or countable outcomes
-  \item Individual outcomes may have positive probability
-  \item Probabilities can be listed in a table
-  \item Example: blood type
+	\item Finite or countable outcomes
+	\item Individual outcomes may have positive probability
+	\item Probabilities can be listed in a table
+	\item Example: blood type
 \end{itemize}
 \end{block}
 
 \column{0.48\textwidth}
 \begin{block}{Continuous}
 \begin{itemize}
-  \item An unbroken interval of values
-  \item Individual points have probability $0$
-  \item Probabilities are areas under a curve
-  \item Example: exact height
+	\item An unbroken interval of values
+  	\item Individual points have probability $0$
+  	\item Probabilities are areas under a curve
+  	\item Example: exact height
 \end{itemize}
 \end{block}
 \end{columns}
 \end{frame}
 
-% =============================================================
-% PART III: PROBABILITY RULES
-% =============================================================
-
-\begin{frame}{Four Fundamental Probability Rules}
+% SLIDE 15
+\begin{frame}{Probability Rules}
 These rules must hold for \textbf{every} valid probability model, whether the
 sample space is discrete or continuous.
 
 \small
 \begin{enumerate}
-  \item \textbf{Probabilities are proportions:}
-  \[
-  0\le \prob{A}\le 1.
-  \]
-  A probability can never be negative or exceed $1$.
+	\item \textbf{Sample space has probability 1} Given a sample space $S$
+	$$\prob{S}=1$$
 
-  \item \textbf{The entire sample space has probability 1:}
-  \[
-  \prob{S}=1.
-  \]
+	\item \textbf{Probabilities are proportions:} For an event $A \in S$ 
+	$$0\le \prob{A}\le 1$$
+  	A probability can never be negative or exceed $1$.
+	
+	\item \textbf{Disjoint events} Two events $A \in S$ and $B \in S$ are disjoint if 
+	$$\prob{A\text{ or }B}=\prob{A}+\prob{B}$$
 
-  \item \textbf{Add disjoint events:}
-  \[
-  \prob{A\text{ or }B}=\prob{A}+\prob{B}.
-  \]
-
-  \item \textbf{Use the complement:}
-  \[
-  \prob{A^c}=1-\prob{A}.
-  \]
+	\item \textbf{Complement of an event} For an event $A \in S$
+	$$\prob{A^c}=1-\prob{A}$$
 \end{enumerate}
 \end{frame}
 
-\begin{frame}{Disjoint Events and the Addition Rule}
+% SLIDE 16
+\begin{frame}{Probability Rules}
 Two events are \textbf{disjoint} when they have no outcomes in common.
+$$\prob{A\text{ and }B}=0$$
 
-\[
-\prob{A\text{ and }B}=0.
-\]
+Therefore
+$$\prob{A\text{ or }B}=\prob{A}+\prob{B}$$
 
-Therefore,
-\[
-\prob{A\text{ or }B}=\prob{A}+\prob{B}.
-\]
-
-For several pairwise disjoint events,
-\[
-\prob{A\text{ or }B\text{ or }C}
-=\prob{A}+\prob{B}+\prob{C}.
-\]
+For three disjoint events A, B and C
+$$\prob{A\text{ or }B\text{ or }C}=\prob{A}+\prob{B}+\prob{C}$$
+so 
+$$P(A \text{ and } B) = 0 \quad P(A \text{ a nd} C) = 0 \quad P(B \text{ and } C) = 0$$
 
 \begin{alertblock}{Do not double-count}
 This simple addition rule applies only when the events cannot occur together.
 \end{alertblock}
 \end{frame}
 
-\begin{frame}{The Meaning of ``OR'' and ``AND''}
+% SLIDE 17
+\begin{frame}{Probability}
 \begin{columns}[T,onlytextwidth]
 \column{0.48\textwidth}
 \begin{block}{OR}
 Inclusive: at least one event occurs.
 
 \medskip
-$A$ alone, $B$ alone, or both may occur.
+$A$ alone, $B$ alone or both may occur.
 \end{block}
 
 \column{0.48\textwidth}
@@ -488,24 +420,23 @@ This corresponds to the common outcomes of $A$ and $B$.
 \end{columns}
 
 \vspace{0.4cm}
-When events overlap, the general addition rule is needed to correct for double-counting. That rule is introduced in Chapter 10.
+When events overlap, the general addition rule is needed to correct for double counting. That rule is introduced in Chapter 10.
 \end{frame}
 
+% SLIDE 18
 \begin{frame}{Example 9.7: Positive Rhesus Factor}
-The positive blood-type outcomes are disjoint:
-\[
-O+,\quad A+,\quad B+,\quad AB+.
-\]
+The positive blood type outcomes are disjoint:
+$$O+\quad A+\quad B+\quad AB+$$
 
-Therefore,
+Therefore
 \begin{align*}
-\prob{Rh+}
-&=\prob{O+}+\prob{A+}+\prob{B+}+\prob{AB+}\\
-&=0.39+0.27+0.25+0.07\\
-&=\boxed{0.98}.
+\prob{Rh+} &=\prob{O+}+\prob{A+}+\prob{B+}+\prob{AB+}\\
+		&=0.39+0.27+0.25+0.07\\
+		&=\boxed{0.98}
 \end{align*}
 \end{frame}
 
+% SLIDE 19
 \begin{frame}{Example 9.7: Complement Rule}
 The complement of having a positive Rhesus factor is having a negative Rhesus factor.
 
@@ -513,7 +444,7 @@ The complement of having a positive Rhesus factor is having a negative Rhesus fa
 \prob{Rh-}
 &=1-\prob{Rh+}\\
 &=1-0.98\\
-&=\boxed{0.02}.
+&=\boxed{0.02}
 \end{align*}
 
 \begin{block}{Why complements are useful}
@@ -521,26 +452,67 @@ It is often easier to subtract one probability from $1$ than to add many separat
 \end{block}
 \end{frame}
 
-% =============================================================
-% PART IV: DISCRETE AND CONTINUOUS PROBABILITY MODELS
-% =============================================================
+% SLIDE  20
+\begin{frame}{Random Variables}
+Random phenomena often produce numerical outcomes. We use a random variable to give those outcomes a convenient mathematical name.
 
+\begin{block}{Definition}
+A \textbf{random variable} is a variable whose numerical value is determined by the outcome of a random phenomenon. We usually denote random variables by uppercase letters such as $X$ or $Y$.
+\end{block}
+
+\begin{block}{Probability distribution}
+The probability distribution of $X$ specifies:
+\begin{itemize}
+  \item which values $X$ can take;
+  \item how probabilities are assigned to those values.
+\end{itemize}
+\end{block}
+
+\begin{itemize}
+  \item $X=$ number of impaired ears in a Dalmatian: $X\in\{0,1,2\}$.
+  \item $Y=$ random number selected from $[0,1]$: any real value in the interval is possible.
+\end{itemize}
+\end{frame}
+
+% SLIDE 21
+\begin{frame}{Two Types of Random Variables}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Discrete random variable}
+Takes values from a finite or countable set.
+
+\medskip
+Example:
+$$X\in\{0,1,2\}$$
+\end{block}
+
+\column{0.48\textwidth}
+\begin{block}{Continuous random variable}
+Can take any value in an interval.
+
+\medskip
+Example:
+$$0\le Y\le 1$$
+\end{block}
+\end{columns}
+
+\vspace{0.35cm}
+A measured variable can be intrinsically continuous even when recorded in rounded units.
+\end{frame}
+
+% SLIDE 22
 \begin{frame}{Discrete Probability Models}
 \begin{block}{Definition}
 A discrete probability model has a finite or countable list of outcomes. The probability of an event is the sum of the probabilities of the outcomes belonging to that event.
 \end{block}
 
 A valid discrete probability model must satisfy:
-\[
-0\le p_i\le 1
-\qquad\text{and}\qquad
-\sum_i p_i=1.
-\]
+$$ 0\le p_i\le 1 \qquad\text{and}\qquad \sum_i p_i=1$$
 \end{frame}
 
+% SLIDE 23
 \begin{frame}{Example 9.8: Hearing Impairment in Dalmatians}
-A study of $5{,}333$ Dalmatians recorded the number of ears with hearing
-impairment. Let $X$ be the number of impaired ears for a randomly selected dog.
+A study of $5333$ Dalmatians recorded the number of ears with hearing impairment. Let $X$ be the number of impaired ears for a randomly selected dog.
 
 \begin{columns}[c,onlytextwidth]
 \column{0.42\textwidth}
@@ -556,11 +528,8 @@ $\prob{X=x}$ & $0.70$ & $0.22$ & $0.08$\\
 \end{table}
 
 \small
-The possible outcomes are the whole numbers $0$, $1$, and $2$, so $X$ is a
-\textbf{discrete random variable}. Notice that
-\[
-0.70+0.22+0.08=1.
-\]
+The possible outcomes are the whole numbers $0$, $1$, and $2$. So $X$ is a
+\textbf{discrete random variable}. Notice that $$0.70+0.22+0.08=1$$
 
 \column{0.56\textwidth}
 \centering
@@ -568,7 +537,34 @@ The possible outcomes are the whole numbers $0$, $1$, and $2$, so $X$ is a
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{R Example: A Discrete Probability Distribution}
+% SLIDE 24
+\begin{frame}{Example 9.8: Probability of Some Hearing Impairment}
+What is the probability that a randomly selected Dalmatian has hearing impairment in at least one ear?
+
+\pause
+
+For a randomly selected Dalmatian, ``some hearing impairment'' means \textbf{at least one} impaired ear. That is, $X=1$ or $X=2$.
+
+$$
+\begin{aligned}
+\prob{X\geq 1}
+  &= \prob{X=1}+\prob{X=2}\\
+  &= 0.22+0.08\\
+  &= \boxed{0.30}
+\end{aligned}
+$$
+
+About $30\%$ of Dalmatians have hearing impairment in at least one ear. We can check this using the complement:
+$$\prob{X\geq 1}=1-\prob{X=0}=1-0.70=0.30$$
+
+\begin{alertblock}{At least one versus more than one}
+$\prob{X\geq 1}=0.30$, while
+$\prob{X>1}=\prob{X=2}=0.08$.
+\end{alertblock}
+\end{frame}
+
+% SLIDE 25
+\begin{frame}[fragile]{Example 9.8: Probability of Some Hearing Impairment}
 The Dalmatian probability model can be represented with two short vectors.
 
 \vspace{0.2cm}
@@ -589,34 +585,21 @@ sum(p_x[x >= 1])
 # 0.30
 \end{verbatim}
 
-\normalsize
+\scriptsize
 \begin{block}{Connection to the mathematics}
-For a discrete model, the probability of an event is found by
-\textbf{adding the probabilities of the outcomes inside the event}.
+For a discrete model, the probability of an event is found by \textbf{adding the probabilities of the outcomes inside the event}.
 \end{block}
 \end{frame}
 
-\begin{frame}{Some Hearing Impairment}
-``Some hearing impairment'' means one or two impaired ears:
-\begin{align*}
-\prob{X\ge 1}
-&=\prob{X=1}+\prob{X=2}\\
-&=0.22+0.08\\
-&=\boxed{0.30}.
-\end{align*}
-
-\begin{alertblock}{Inequality signs matter}
-\[
-\prob{X\ge 1}=0.30,
-\qquad
-\prob{X>1}=\prob{X=2}=0.08.
-\]
-\end{alertblock}
+% SLIDE 26
+\begin{frame}{Break Time}
+  \centering
+  \lecturefigure[0.5\textheight]{meme_1.jpg}
 \end{frame}
 
-\begin{frame}{Continuous Probability Models and Density Curves}
-A continuous sample space contains an entire interval of possible values, so
-we cannot assign probability by listing individual points.
+% SLIDE 27
+\begin{frame}{Continuous Probability Models}
+A continuous sample space contains an entire interval of possible values, so we cannot assign probability by listing individual points.
 
 \begin{block}{Density curve}
 A density curve:
@@ -627,18 +610,18 @@ A density curve:
 \end{block}
 
 For a continuous random variable $Y$,
-\[
+$$
 \prob{a\le Y\le b}
 =\text{area under the density curve from }a\text{ to }b.
-\]
+$$
 
 \begin{alertblock}{Important}
-Probability is represented by \textbf{area}, not by the height of the curve at
-one particular value.
+Probability is represented by \textbf{area}, not by the height of the curve at one particular value.
 \end{alertblock}
 \end{frame}
 
-\begin{frame}{Example 9.9--9.10: Women's Heights}
+% SLIDE 28
+\begin{frame}{Example 9.9--9.10: Patients' Heights}
 \begin{columns}[c,onlytextwidth]
 \column{0.66\textwidth}
 \centering
@@ -646,26 +629,23 @@ one particular value.
 
 \column{0.32\textwidth}
 \small
-The histogram shows simulated heights of women aged 40--49, while the smooth
-curve provides a continuous probability model.
+The histogram shows simulated patient heights. The smooth curve is a continuous probability model for this patient population.
 
 \vspace{0.2cm}
 \begin{itemize}
-  \item The total area under the smooth curve is $1$.
-  \item The shaded region to the left of $62$ inches represents a probability.
-  \item In this model, that area is approximately $0.316$.
+	\item The total area under the curve is $1$.
+	\item The shaded area to the left of $62$ inches represents the probability that a randomly selected patient is shorter than $62$ inches.
+	\item In this model, that probability is approximately $0.316$.
 \end{itemize}
 \end{columns}
 \end{frame}
 
+% SLIDE 29
 \begin{frame}{Probability as Area}
-For the model of women's heights shown previously,
-\[
-\prob{Y\le 62}=0.316.
-\]
-
+For the model of patient's heights shown previously
+$$\prob{Y\le 62}=0.316$$
 \begin{itemize}
-  \item The probability is an \textbf{area}, not the height of the curve.
+  \item The probability is an \textbf{area} not the height of the curve.
   \item The total area under the curve is $1$.
   \item The shaded area represents $31.6\%$ of the modeled population.
 \end{itemize}
@@ -754,58 +734,8 @@ Consequently,
 % PART V: RANDOM VARIABLES
 % =============================================================
 
-\begin{frame}{Random Variables}
-Random phenomena often produce numerical outcomes. We use a random variable
-to give those outcomes a convenient mathematical name.
 
-\begin{block}{Definition}
-A \textbf{random variable} is a variable whose numerical value is determined by
-the outcome of a random phenomenon. We usually denote random variables by
-uppercase letters such as $X$ or $Y$.
-\end{block}
 
-\begin{block}{Probability distribution}
-The probability distribution of $X$ specifies:
-\begin{itemize}
-  \item which values $X$ can take;
-  \item how probabilities are assigned to those values.
-\end{itemize}
-\end{block}
-
-\begin{itemize}
-  \item $X=$ number of impaired ears in a Dalmatian: $X\in\{0,1,2\}$.
-  \item $Y=$ random number selected from $[0,1]$: any real value in the interval is possible.
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Two Types of Random Variables}
-\begin{columns}[T,onlytextwidth]
-\column{0.48\textwidth}
-\begin{block}{Discrete random variable}
-Takes values from a finite or countable set.
-
-\medskip
-Example:
-\[
-X\in\{0,1,2\}.
-\]
-\end{block}
-
-\column{0.48\textwidth}
-\begin{block}{Continuous random variable}
-Can take any value in an interval.
-
-\medskip
-Example:
-\[
-0\le Y\le 1.
-\]
-\end{block}
-\end{columns}
-
-\vspace{0.35cm}
-A measured variable can be intrinsically continuous even when recorded in rounded units.
-\end{frame}
 
 \begin{frame}{Parameters vs. Statistics}
 \begin{columns}[T,onlytextwidth]
