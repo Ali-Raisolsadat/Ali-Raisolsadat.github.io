@@ -651,6 +651,7 @@ $$\prob{Y\le 62}=0.316$$
 \end{itemize}
 \end{frame}
 
+% SLIDE 30
 \begin{frame}{Example 9.11: Uniform Density}
 For a uniform random number between $0$ and $1$, the density has constant
 height $1$. Therefore, probability is especially easy to compute:
@@ -667,7 +668,7 @@ height $1$. Therefore, probability is especially easy to compute:
 \begin{align*}
 \prob{0.3\le Y\le 0.7}
 &=(0.7-0.3)(1)\\
-&=\boxed{0.4}.
+&=\boxed{0.4}
 \end{align*}
 
 \small
@@ -676,43 +677,29 @@ $40\%$ of the total probability.
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{R Example: Drawing a Uniform Probability Area}
-The shaded region in the uniform-density figure is produced by drawing one
-rectangle for the full density and another for the probability interval.
-
-\vspace{0.15cm}
-\scriptsize
-\begin{verbatim}
-p_uniform_shaded <- ggplot() +
-  geom_rect(
-    aes(xmin = 0, xmax = 1, ymin = 0, ymax = 1),
-    fill = NA, color = "black"
-  ) +
-  geom_rect(
-    aes(xmin = 0.3, xmax = 0.7, ymin = 0, ymax = 1),
-    fill = "#4C72B0", alpha = 0.5
-  ) +
-  annotate("text", x = 0.5, y = 0.5,
-           label = "Area = 0.4")
-\end{verbatim}
-
-\normalsize
-The code visually connects the probability calculation $0.7-0.3=0.4$ with
-the corresponding area under the density curve.
-\end{frame}
-
+% SLIDE 31
 \begin{frame}{Adding Disjoint Continuous Intervals}
 For $Y\sim\operatorname{Uniform}(0,1)$,
 \begin{align*}
 \prob{Y\le 0.5\text{ or }Y>0.8}
 &=\prob{Y\le 0.5}+\prob{Y>0.8}\\
-&=0.5+0.2\\
-&=\boxed{0.7}.
+&=0.5+0.2
+=\boxed{0.7}
 \end{align*}
 
-The intervals are disjoint, so their areas can be added directly.
+Now suppose $X\sim\operatorname{Uniform}(2,10)$. The total interval
+has width $8$, so
+\begin{align*}
+\prob{X<4\text{ or }X\ge 7}
+&=\prob{X<4}+\prob{X\ge 7}\\
+&=\frac{4-2}{8}+\frac{10-7}{8}
+=\boxed{\frac{5}{8}}
+\end{align*}
+
+The intervals in each example are disjoint, so we add their areas.
 \end{frame}
 
+% SLIDE 32
 \begin{frame}{The Probability of an Exact Value}
 For a continuous random variable,
 \[
@@ -730,20 +717,14 @@ Consequently,
 \]
 \end{frame}
 
-% =============================================================
-% PART V: RANDOM VARIABLES
-% =============================================================
-
-
-
-
+% SLIDE 33
 \begin{frame}{Parameters vs. Statistics}
 \begin{columns}[T,onlytextwidth]
 \column{0.48\textwidth}
 \begin{block}{Sample statistics}
 Computed from observed sample data:
 \[
-\bar{x},\qquad s.
+\bar{x} \qquad s
 \]
 \end{block}
 
@@ -751,7 +732,7 @@ Computed from observed sample data:
 \begin{block}{Distribution parameters}
 Describe the theoretical probability distribution:
 \[
-\mu,\qquad \sigma.
+\mu \qquad \sigma 
 \]
 \end{block}
 \end{columns}
@@ -760,55 +741,66 @@ Describe the theoretical probability distribution:
 The mean of a random variable is also called its \textbf{expected value}.
 \end{frame}
 
-\begin{frame}{Mean of a Discrete Random Variable}
-Let $X$ have possible values $x_1,\ldots,x_k$ with probabilities
-$p_1,\ldots,p_k$.
-
+% SLIDE 34
+\begin{frame}{Mean of a Random Variable}
+Let $X$ have possible values $x_1,\ldots,x_k$ with probabilities $p_1,\ldots,p_k$.
 \begin{block}{Expected value}
-\[
-\mu=\E(X)=\sum_{i=1}^{k}x_i p_i.
-\]
+$$\mu=\E(X)=\sum_{i=1}^{k}x_i p_i$$
 \end{block}
-
 \begin{itemize}
-  \item The expected value is a \textbf{probability-weighted average}.
-  \item Outcomes with larger probabilities contribute more strongly to $\mu$.
-  \item The value of $\mu$ does not need to be one of the possible individual outcomes.
+	\item The expected value is a \textbf{probability-weighted average}.
+	\item Outcomes with larger probabilities contribute more to $\mu$.
+	\item The mean does not need to be a possible outcome.
 \end{itemize}
-
 \begin{block}{Long-run interpretation}
-If the random experiment were repeated many times, the average observed value
-of $X$ would tend toward $\mu$.
+If we repeat the experiment many times, the average observed value tends toward $\mu$.
 \end{block}
 \end{frame}
 
+% SLIDE 35
 \begin{frame}{Variance and Standard Deviation of a Random Variable}
-Once the mean $\mu$ is known, we can describe how much the random variable
-typically varies around that long-run average.
-
-\begin{align*}
-\sigma^2&=\sum_{i=1}^{k}(x_i-\mu)^2p_i,\\[0.35cm]
-\sigma&=\sqrt{\sigma^2}.
-\end{align*}
-
+The variance measures how far the possible values of $X$ lie from the mean $\mu$, accounting for their probabilities.
+$$\sigma^2=\sum_{i=1}^{k}(x_i-\mu)^2p_i \qquad \sigma=\sqrt{\sigma^2}$$
 \begin{itemize}
-  \item Each squared distance $(x_i-\mu)^2$ is weighted by its probability.
-  \item The variance $\sigma^2$ is measured in squared units.
-  \item Taking the square root gives $\sigma$, which is expressed in the same units as $X$.
+	 \item Each squared distance $(x_i-\mu)^2$ is weighted by its probability.
+	 \item Variance is measured in squared units.
+	 \item Standard deviation is measured in the same units as $X$.
 \end{itemize}
-
-\begin{alertblock}{Connection to sample statistics}
-This is the theoretical analogue of the sample standard deviation $s$, but
-here the calculation uses the entire probability distribution.
-\end{alertblock}
 \end{frame}
 
+% SLIDE 36
+\begin{frame}{Observed Data and a Probability Model}
+The calculations have the same goal: describe the centre and spread of a variable.
+
+\begin{table}
+\centering
+\small
+\begin{tabular}{lll}
+\toprule
+& \textbf{Observed sample} & \textbf{Probability model}\\
+\midrule
+Mean
+& $\displaystyle\bar{x}=\frac{1}{n}\sum_{j=1}^{n}x_j$
+& $\displaystyle\mu=\sum_{i=1}^{k}x_i p_i$\\[0.35cm]
+Standard deviation
+& $\displaystyle s=\sqrt{\frac{\sum_{j=1}^{n}(x_j-\bar{x})^2}{n-1}}$
+& $\displaystyle\sigma=\sqrt{\sum_{i=1}^{k}(x_i-\mu)^2p_i}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{block}{The connection}
+$\bar{x}$ and $s$ describe the values we observed. $\mu$ and $\sigma$ describe the probability model. With many independent observations from that model, $\bar{x}$ and $s$ tend to get close to $\mu$ and $\sigma$.
+\end{block}
+\end{frame}
+
+% SLIDE 37
 \begin{frame}{Example 9.13: Expected Hearing Impairment}
-For $X\in\{0,1,2\}$ with probabilities $0.70,0.22,0.08$,
+For $X\in\{0,1,2\}$ with probabilities $0.70,0.22,0.08$
 \begin{align*}
-\mu
+\mu =\E(X) &=\sum_{i=1}^{k}x_i p_i\\
 &=(0)(0.70)+(1)(0.22)+(2)(0.08)\\
-&=\boxed{0.38}.
+&=\boxed{0.38}
 \end{align*}
 
 \begin{alertblock}{Interpretation}
@@ -816,177 +808,138 @@ The expected value need not be a possible individual outcome. A dog cannot have 
 \end{alertblock}
 \end{frame}
 
+% SLIDE 38
 \begin{frame}{Example 9.13: Variance and Standard Deviation}
 \small
 \begin{align*}
-\sigma^2
-&=(0-0.38)^2(0.70)+(1-0.38)^2(0.22)\\
-&\quad +(2-0.38)^2(0.08)\\
+\sigma^2 &=\sum_{i=1}^{k}(x_i-\mu)^2p_i \\
+&=(0-0.38)^2(0.70)+(1-0.38)^2(0.22)+(2-0.38)^2(0.08)\\
 &=0.10108+0.084568+0.209952\\
-&=\boxed{0.3956},\\[0.2cm]
-\sigma&=\sqrt{0.3956}=\boxed{0.62897}\approx 0.63.
+&=\boxed{0.3956}\\[0.2cm]
+\sigma&=\sqrt{0.3956}=\boxed{0.62897}\approx 0.63
 \end{align*}
 \end{frame}
 
-\begin{frame}[fragile]{Example 9.13: Computing $\mu$ and $\sigma$ in R}
-The formulas translate directly into vectorized R operations.
-
-\vspace{0.15cm}
-\scriptsize
-\begin{verbatim}
-# Define the outcomes (x) and their probabilities (p_x)
-x <- c(0, 1, 2)
-p_x <- c(0.70, 0.22, 0.08)
-
-# 1. Calculate the Expected Value (mu)
-mu <- sum(x * p_x)
-print(mu)
-# [1] 0.38
-
-# 2. Calculate the Variance
-variance <- sum((x - mu)^2 * p_x)
-
-# 3. Calculate the Standard Deviation
-sigma <- sqrt(variance)
-print(sigma)
-# [1] 0.6289674
-\end{verbatim}
-
-\normalsize
-R performs the multiplication element-by-element, so \texttt{x * p\_x}
-corresponds directly to the terms $x_iP(X=x_i)$ in the expected-value formula.
-\end{frame}
-
-% =============================================================
-% PART VI: RISK AND ODDS
-% =============================================================
-
-\begin{frame}{Probability, Risk, and Odds}
-In the life sciences, the same uncertain event may be communicated using
-\textbf{probability}, \textbf{risk}, or \textbf{odds}. These quantities are
-related, but they are not numerically identical.
-
-If an event $A$ occurs with probability $p$, then:
+% SLIDE 39
+\begin{frame}{Probability, Risk and Odds}
+In the life sciences, the same uncertain event may be communicated using \textbf{probability}, \textbf{risk}, or \textbf{odds}. These quantities are related, but they are not numerically identical. If an event $A$ occurs with probability $p$, then:
 
 \begin{block}{Risk}
-\[
-\operatorname{Risk}(A)=p.
-\]
-In health applications, risk usually refers to the probability of an
-undesirable outcome.
+$$\operatorname{Risk}(A)=p$$
+In health applications, risk usually refers to the probability of an undesirable outcome.
 \end{block}
 
 \begin{block}{Odds}
-\[
-\operatorname{Odds}(A)=\frac{p}{1-p}.
-\]
-Odds compare the probability that the event occurs with the probability that
-it does \emph{not} occur.
+$$\operatorname{Odds}(A)=\frac{p}{1-p}$$
+Odds compare the probability that the event occurs with the probability that it does \emph{not} occur.
 \end{block}
 \end{frame}
 
-\begin{frame}{Example 9.14: DVT as a Rare Event}
+% SLIDE 40
+\begin{frame}{Example 9.14: Probability of DVT}
+Patients with severely restricted mobility are at risk of deep vein thrombosis (DVT), a blood clot in a deep vein. Fragmin may be given to reduce that risk. Among $1518$ patients receiving Fragmin, $42$experienced DVT.
+
+\begin{block}{Probability, or risk}
+$$p=\prob{\text{DVT}}=\frac{42}{1518}\approx 0.0277=2.77\%$$
+\end{block}
+
+So about $2.77\%$ of these patients experienced DVT. The number who did not was
+$$1518-42=1476$$
+\end{frame}
+
+% SLIDE 41
+\begin{frame}{Example 9.14: Odds of DVT}
+Odds compare the number who experience an event with the number who do not:
+$$\text{Odds of DVT}=42:1476$$
+
+Dividing both parts by $42$ gives
+$$42:1476=1:\frac{1476}{42}\approx \boxed{1:35}$$
+
 \small
-Patients who remain immobilized for long periods can develop deep vein
-thrombosis (DVT). In the study described in the notes, $42$ of $1{,}518$
-patients receiving Fragmin experienced DVT.
-
-\begin{align*}
-p&=\frac{42}{1518}=0.0277 \qquad (2.77\%),\\[0.15cm]
-\operatorname{Odds}
-&=\frac{0.0277}{1-0.0277}
- =\frac{42}{1476}=0.0285.
-\end{align*}
-
-The odds can also be written approximately as
-\[
-1:35.
-\]
-
 \begin{block}{How to read $1:35$}
-For approximately every one patient who experiences DVT, about $35$ do not.
+For approximately every one patient who experienced DVT, $35$ patients did not.
 \end{block}
 
-\begin{alertblock}{Rare-event rule of thumb}
-When $p$ is small, risk and odds are numerically similar because $1-p\approx 1$.
+\begin{alertblock}{Probability versus odds}
+The probability was $0.0277$; the numerical odds were $\dfrac{42}{1476}\approx 0.0285$. These are close because DVT was rare in this group.
 \end{alertblock}
 \end{frame}
 
-\begin{frame}{Example 9.15: Sickle-Cell Anemia}
-If both parents carry the sickle-cell trait, the probability described in the
-notes that a child inherits the disease is
-\[
-p=0.25.
-\]
+% SLIDE 42
+\begin{frame}{Example 9.15: Sickle-Cell Inheritance}
+Sickle-cell trait means a person carries one sickle-cell gene but does not have sickle-cell disease. If both parents have the trait, each can pass either their usual gene or their sickle cell gene to a child.
+\begin{block}{Possible outcomes for each child}
+\begin{itemize}
+  \item $25\%$: inherits neither sickle-cell gene
+  \item $50\%$: inherits one and has sickle-cell trait
+  \item $25\%$: inherits both and has sickle-cell disease
+\end{itemize}
+\end{block}
 
-The \textbf{risk} is therefore $25\%$. The corresponding odds are
-\begin{align*}
-\operatorname{Odds}
-&=\frac{0.25}{1-0.25}\\
-&=\frac{0.25}{0.75}\\
-&=\frac13\approx 0.333.
-\end{align*}
+So the probability, or \textbf{risk}, of sickle-cell disease for each child is
+$$p=0.25=25\%$$
+\end{frame}
 
-Thus the odds are $1:3$: one occurrence for every three non-occurrences.
+% SLIDE 43
+\begin{frame}{Example 9.15: Odds of Sickle-Cell Disease}
+The risk of disease is $p=0.25$. The probability that a child does \emph{not} have the disease is $1-p=0.75$.
+$$\operatorname{Odds}=\frac{p}{1-p}=\frac{0.25}{1-0.25}=\frac{0.25}{0.75} =\frac{1}{3}\approx 0.333$$
 
-\begin{alertblock}{Important}
-For more common events, risk and odds can differ substantially. Always check
-which quantity a medical or scientific report is presenting.
+\vspace{1cm}
+
+The odds are \textbf{$1:3$}: one child with the disease for every three without it, in the long-run ratio.
+\begin{alertblock}{Risk and odds are different}
+The risk is $25\%$ while the numerical odds are about $0.333$.
 \end{alertblock}
 \end{frame}
 
+% SLIDE 44
 \begin{frame}{Converting Odds Back to Probability}
 Starting from
-\[
-\text{odds}=\frac{p}{1-p},
-\]
+$$\text{odds}=\frac{p}{1-p}$$
 solve for $p$:
-\[
-\boxed{p=\frac{\text{odds}}{1+\text{odds}}}.
-\]
+$$\boxed{p=\frac{\text{odds}}{1+\text{odds}}}$$
 
-For odds of $1/3$,
+For odds of $1/3$
 \begin{align*}
 p
 &=\frac{1/3}{1+1/3}\\
 &=\frac{1/3}{4/3}\\
-&=\frac14=0.25.
+&=\frac14=0.25
 \end{align*}
 \end{frame}
 
-% =============================================================
-% PART VII: CHAPTER REVIEW
-% =============================================================
+%% SLIDE 45
+%\begin{frame}[fragile]{Summary of R Commands (Chapter 9)}
+%The chapter uses a small set of R tools to connect probability formulas with
+%simulation and computation.
+%
+%\begin{table}
+%\centering
+%\scriptsize
+%\begin{tabular}{lp{9.1cm}}
+%\toprule
+%\textbf{R command} & \textbf{Role in this chapter} \\
+%\midrule
+%\texttt{sample(..., replace = TRUE)} & Simulates repeated random outcomes, such as coin tosses. \\
+%\addlinespace
+%\texttt{cumsum(x)} & Creates a running total, useful for visualizing long-run relative frequency. \\
+%\addlinespace
+%\texttt{data.frame(...)} & Stores outcomes and their probabilities together in a probability-model table. \\
+%\addlinespace
+%\texttt{sum(x * p\_x)} & Computes the expected value of a discrete random variable. \\
+%\addlinespace
+%\texttt{sum((x - mu)\string^2 * p\_x)} & Computes the probability-weighted variance. \\
+%\addlinespace
+%\texttt{sqrt(variance)} & Converts variance into standard deviation. \\
+%\addlinespace
+%\texttt{ggplot()}, \texttt{geom\_bar()}, \texttt{geom\_rect()} & Visualize discrete probabilities and continuous probability areas. \\
+%\bottomrule
+%\end{tabular}
+%\end{table}
+%\end{frame}
 
-\begin{frame}[fragile]{Summary of R Commands (Chapter 9)}
-The chapter uses a small set of R tools to connect probability formulas with
-simulation and computation.
-
-\begin{table}
-\centering
-\scriptsize
-\begin{tabular}{lp{9.1cm}}
-\toprule
-\textbf{R command} & \textbf{Role in this chapter} \\
-\midrule
-\texttt{sample(..., replace = TRUE)} & Simulates repeated random outcomes, such as coin tosses. \\
-\addlinespace
-\texttt{cumsum(x)} & Creates a running total, useful for visualizing long-run relative frequency. \\
-\addlinespace
-\texttt{data.frame(...)} & Stores outcomes and their probabilities together in a probability-model table. \\
-\addlinespace
-\texttt{sum(x * p\_x)} & Computes the expected value of a discrete random variable. \\
-\addlinespace
-\texttt{sum((x - mu)\string^2 * p\_x)} & Computes the probability-weighted variance. \\
-\addlinespace
-\texttt{sqrt(variance)} & Converts variance into standard deviation. \\
-\addlinespace
-\texttt{ggplot()}, \texttt{geom\_bar()}, \texttt{geom\_rect()} & Visualize discrete probabilities and continuous probability areas. \\
-\bottomrule
-\end{tabular}
-\end{table}
-\end{frame}
-
+% SLIDE 45
 \begin{frame}{Key Takeaways}
 \begin{itemize}
   \item Probability describes uncertainty using numbers from $0$ to $1$.
@@ -995,23 +948,8 @@ simulation and computation.
   \item Disjoint events can be added; complements are found by subtracting from $1$.
   \item Discrete probabilities are sums; continuous probabilities are areas.
   \item Random variables have theoretical means and standard deviations.
-  \item Risk is a probability, while odds are $p/(1-p)$.
+  \item Risk is a probability while odds are $p/(1-p)$.
 \end{itemize}
-\end{frame}
-
-\begin{frame}{Check Your Understanding}
-\begin{enumerate}
-  \item If $\prob{A}=0.37$, what is $\prob{A^c}$?
-  \item If $A$ and $B$ are disjoint with probabilities $0.25$ and $0.40$, what is $\prob{A\text{ or }B}$?
-  \item For a continuous random variable, what is $\prob{X=5}$?
-  \item If $p=0.20$, what are the odds of the event?
-\end{enumerate}
-
-\pause
-\vspace{0.4cm}
-\begin{block}{Answers}
-$0.63$; $0.65$; $0$; $0.20/0.80=0.25$, or $1:4$.
-\end{block}
 \end{frame}
 
 
