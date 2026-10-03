@@ -171,7 +171,8 @@ The results are approximately
 $$
 \bar{x}=14.755 \qquad \text{Median}=13.1 \qquad s=5.616 \qquad IQR=0.9
 $$
-### 2. Corrected statistics
+
+ ### 2. Corrected statistics
 After replacing 31.6 with 13.6:
 
 ```{r q3-corrected, echo=TRUE}
@@ -320,10 +321,6 @@ plot(c(-3,-2,-1,0,1,2,3), c(9,4,1,0,1,4,9))
 The relationship is **strong but nonlinear**. The points lie exactly on the quadratic curve $y=x^2$. There is no single overall increasing or decreasing direction. As $x$ increases from -3 to 0, $y$ decreases. As $x$ increases from 0 to 3, $y$ increases.
 
 ### 2. Pearson correlation
-```{r q6-correlation, echo=TRUE}
-cor(c(-3,-2,-1,0,1,2,3), c(9,4,1,0,1,4,9))
-```
-
 The result is $\boxed{r=0}$. This means that there is **no linear association** between $x$ and $y$. It does not mean that the variables have no relationship.
 
 ### 3. Why $r=0$ does not mean no relationship
