@@ -1,0 +1,865 @@
+---
+title: "STAT $1210$"
+subtitle: "Chapter $9$ Homework: Essential Probability Rules"
+author: "Fall $2026$"
+date: ""
+output:
+  html_document:
+    self_contained: true
+    toc: false
+    number_sections: false
+    theme: flatly
+    highlight: tango
+---
+
+<style>
+:root {
+  --ink: #263746;
+  --muted: #667786;
+  --blue: #294d73;
+  --blue-dark: #183a5c;
+  --blue-soft: #edf3f8;
+  --line: #d8e1e8;
+  --paper: #ffffff;
+  --page: #eef2f5;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+
+.main-container {
+  max-width: 980px !important;
+  width: calc(100% - 40px) !important;
+  margin: 28px auto 42px !important;
+  padding: 42px 58px 56px;
+  box-sizing: border-box;
+  background: var(--paper);
+  border: 1px solid #dde5eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(31, 50, 67, 0.10);
+}
+
+h1, h2, h3, h4 { color: var(--blue-dark); }
+
+h1.title {
+  margin-bottom: 4px;
+  font-weight: 750;
+}
+
+h3.subtitle {
+  margin-top: 0;
+  color: var(--blue);
+  font-weight: 500;
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 1.28em;
+  line-height: 1.35;
+}
+
+h4 {
+  margin-top: 1.25em;
+  font-size: 1.06em;
+}
+
+.question-card {
+  margin: 1.55em 0 2em;
+  padding: 1.3em 1.45em 1.1em;
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--blue);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(35, 54, 74, 0.07);
+}
+
+table {
+  width: 100%;
+  margin: 1.1em 0 1.3em;
+  border-collapse: collapse;
+  border: 1px solid var(--line);
+}
+
+thead th {
+  padding: 0.65em 0.75em !important;
+  background: var(--blue);
+  color: white;
+  border: 0 !important;
+}
+
+tbody td {
+  padding: 0.58em 0.75em !important;
+  border-bottom: 1px solid #e5ebf0 !important;
+}
+
+tbody tr:nth-child(even) td { background: #f7f9fb; }
+
+details.solution {
+  margin-top: 1.15em;
+  border: 1px solid #bfd1df;
+  border-radius: 7px;
+  background: #f8fbfd;
+  overflow: hidden;
+}
+
+details.solution summary {
+  padding: 0.72em 0.95em;
+  color: var(--blue-dark);
+  background: var(--blue-soft);
+  cursor: pointer;
+  font-weight: 700;
+  user-select: none;
+}
+
+details.solution summary:hover { background: #e2edf5; }
+
+.solution-body {
+  padding: 0.95em 1.1em 0.75em;
+}
+
+.solution-body ol { margin-bottom: 0.25em; }
+.solution-body li { margin-bottom: 0.7em; }
+
+@media (max-width: 768px) {
+  .main-container {
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 24px 20px 38px;
+    border-radius: 0;
+  }
+}
+
+@media print {
+  body { background: white; font-size: 11pt; }
+  .main-container {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+  .question-card { break-inside: avoid; box-shadow: none; }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("details.solution").forEach(function(item) {
+    item.removeAttribute("open");
+  });
+});
+</script>
+
+
+::: {.question-card}
+### Question 1: Seed Germination and Empirical Probability
+
+A plant biologist places $800$ native wildflower seeds under the same greenhouse conditions. Within $14$ days, $684$ seeds germinate.
+
+1. What is the random phenomenon, and what are its two possible outcomes for one seed?
+2. Use the data to estimate the probability that a seed germinates within $14$ days.
+3. Estimate the probability that a seed does not germinate within $14$ days.
+4. If the same germination rate applies to another $2000$ seeds, how many would be expected not to germinate?
+5. Does the answer to Part $4$ guarantee that exactly this many seeds will fail to germinate? Explain using the frequentist interpretation of probability.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The random phenomenon is whether one planted seed germinates within $14$ days. The two outcomes are germination and no germination.</li>
+  <li>The empirical probability of germination is
+
+  $$
+  \widehat{P}(\text{germination})
+  =\frac{684}{800}
+  =0.855.
+  $$
+
+  Therefore, the estimated probability is $0.855$, or $85.5\%$.</li>
+  <li>Using the complement rule,
+
+  $$
+  \widehat{P}(\text{no germination})
+  =1-0.855
+  =0.145.
+  $$
+
+  The estimated probability is $0.145$, or $14.5\%$.</li>
+  <li>The expected number is
+
+  $$
+  2000(0.145)=290.
+  $$
+
+  Approximately $290$ seeds would be expected not to germinate.</li>
+  <li>No. Probability describes long-run relative frequency, not an exact result in one future group. The observed number may be somewhat above or below $290$, although the proportion should tend to remain near $0.145$ over many seeds grown under similar conditions.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 2: Recovery Following Veterinary Procedures
+
+A veterinary hospital classifies each animal's recovery following a routine procedure into exactly one of three categories. The following probability model is based on the hospital's historical records.
+
+| Recovery outcome | Routine same-day recovery | Extended observation | Overnight hospitalization |
+|:--|--:|--:|--:|
+| Probability | $0.78$ | $0.17$ | $p$ |
+
+1. Why are the three outcomes disjoint?
+2. Calculate the missing probability $p$.
+3. What is the probability that an animal requires either extended observation or overnight hospitalization?
+4. Use the complement rule to verify the answer to Part $3$.
+5. Among $600$ similar procedures, how many animals would be expected to require overnight hospitalization?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The outcomes are disjoint because each recovery is assigned to exactly one category. An animal cannot simultaneously have a routine same-day recovery and require overnight hospitalization in this model.</li>
+  <li>The probabilities in the complete sample space must sum to $1$:
+
+  $$
+  0.78+0.17+p=1.
+  $$
+
+  Therefore,
+
+  $$
+  p=1-0.95=0.05.
+  $$</li>
+  <li>Because the two outcomes are disjoint,
+
+  $$
+  P(\text{extended or overnight})=0.17+0.05=0.22.
+  $$</li>
+  <li>The complement of requiring additional monitoring is routine same-day recovery. Therefore,
+
+  $$
+  P(\text{extended or overnight})=1-0.78=0.22.
+  $$</li>
+  <li>The expected number is
+
+  $$
+  600(0.05)=30.
+  $$
+
+  Approximately $30$ animals would be expected to require overnight hospitalization.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 3: Wildlife Camera-Trap Detections
+
+A wildlife survey classifies the primary animal in each independent camera-triggered image into one of four categories.
+
+| Animal category | White-tailed deer | Red fox | Raccoon | Other mammal |
+|:--|--:|--:|--:|--:|
+| Probability | $0.46$ | $0.18$ | $0.24$ | $0.12$ |
+
+1. Verify that this is a valid probability model.
+2. What is the probability that an image contains either a red fox or a raccoon?
+3. What is the probability that an image does not contain a white-tailed deer?
+4. Show that Parts $2$ and $3$ represent different events.
+5. Among $1500$ camera-triggered images, how many would be expected to contain an animal from the “other mammal” category?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Every probability is between $0$ and $1$, and
+
+  $$
+  0.46+0.18+0.24+0.12=1.
+  $$
+
+  Therefore, the model is valid.</li>
+  <li>The animal categories are disjoint, so
+
+  $$
+  P(\text{fox or raccoon})=0.18+0.24=0.42.
+  $$</li>
+  <li>Using the complement rule,
+
+  $$
+  P(\text{not deer})=1-0.46=0.54.
+  $$</li>
+  <li>The event “fox or raccoon” contains only two categories and has probability $0.42$. The event “not deer” also includes the other-mammal category, so
+
+  $$
+  P(\text{not deer})=0.18+0.24+0.12=0.54.
+  $$</li>
+  <li>The expected number is
+
+  $$
+  1500(0.12)=180.
+  $$
+
+  Approximately $180$ images would be expected to contain another mammal.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 4: Radioactive Decay and Long-Run Regularity
+
+A radioactive isotope is observed over a period equal to one half-life. The theoretical probability that an individual nucleus decays during this period is $0.50$. In one laboratory trial, $4937$ of $10{,}000$ observed nuclei decay.
+
+1. Calculate the empirical probability of decay in the laboratory trial.
+2. Calculate the difference between the empirical probability and the theoretical probability.
+3. If $60{,}000$ nuclei are observed during one half-life, how many decays would be expected according to the theoretical model?
+4. Must exactly half of the $60{,}000$ nuclei decay? Explain.
+5. According to the law of large numbers, what should happen to the observed proportion of decays as the number of observed nuclei becomes very large?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The empirical probability is
+
+  $$
+  \widehat{P}(\text{decay})=\frac{4937}{10{,}000}=0.4937.
+  $$</li>
+  <li>The difference is
+
+  $$
+  0.4937-0.5000=-0.0063.
+  $$
+
+  The observed proportion is $0.0063$, or $0.63$ percentage points, below the theoretical probability.</li>
+  <li>The expected number of decays is
+
+  $$
+  60{,}000(0.50)=30{,}000.
+  $$</li>
+  <li>No. The value $30{,}000$ is the long-run expected count. Random variation can produce a count above or below this value in a particular trial.</li>
+  <li>The observed proportion should tend to approach $0.50$ as the number of nuclei increases. It is not required to equal $0.50$ exactly at any finite sample size.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 5: Fledgling Success in Songbird Nests
+
+Let $X$ be the number of chicks that successfully leave a randomly selected nest of a particular songbird species. A long-term monitoring program proposes the following discrete probability model.
+
+| Number fledged, $X$ | $0$ | $1$ | $2$ | $3$ | $4$ |
+|:--|--:|--:|--:|--:|--:|
+| Probability | $0.10$ | $0.18$ | $0.32$ | $0.27$ | $p$ |
+
+1. Calculate the missing probability $p$.
+2. Calculate $P(X\geq2)$.
+3. Calculate $P(X>2)$.
+4. Calculate $P(X\leq1)$ using both direct addition and the complement rule.
+5. Explain why $P(X\geq2)$ and $P(X>2)$ are not equal.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The probabilities must sum to $1$:
+
+  $$
+  p=1-(0.10+0.18+0.32+0.27)=1-0.87=0.13.
+  $$</li>
+  <li>At least two fledglings means $X=2$, $3$ or $4$:
+
+  $$
+  P(X\geq2)=0.32+0.27+0.13=0.72.
+  $$</li>
+  <li>More than two fledglings means $X=3$ or $4$:
+
+  $$
+  P(X>2)=0.27+0.13=0.40.
+  $$</li>
+  <li>Using direct addition,
+
+  $$
+  P(X\leq1)=0.10+0.18=0.28.
+  $$
+
+  Using the complement rule,
+
+  $$
+  P(X\leq1)=1-P(X\geq2)=1-0.72=0.28.
+  $$</li>
+  <li>The event $X\geq2$ includes nests with exactly $2$ fledglings, whereas $X>2$ excludes them. The difference between the probabilities is $P(X=2)=0.32$.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 6: Timing Error in a Physics Experiment
+
+A sensor used in a physics experiment has a calibration error $Y$ that is uniformly distributed between $-0.4$ and $0.4$ microseconds. Thus, every interval of the same width within this range has the same probability.
+
+1. Is $Y$ discrete or continuous? What is the total width of its possible range?
+2. Calculate $P(-0.1\leq Y\leq0.2)$.
+3. Calculate $P(Y<-0.25\text{ or }Y>0.30)$.
+4. What is $P(Y=0)$? Explain.
+5. Calculate $P(Y\leq0.2)$ and explain why it equals $P(Y<0.2)$.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<p>For a uniform distribution,</p>
+
+$$
+P(\text{interval})=
+\frac{\text{width of the interval}}{\text{total width}}.
+$$
+
+<ol>
+  <li>The variable is continuous because it can take any value in the interval from $-0.4$ to $0.4$. The total width is
+
+  $$
+  0.4-(-0.4)=0.8\text{ microseconds}.
+  $$</li>
+  <li>The requested interval has width
+
+  $$
+  0.2-(-0.1)=0.3.
+  $$
+
+  Therefore,
+
+  $$
+  P(-0.1\leq Y\leq0.2)=\frac{0.3}{0.8}=0.375.
+  $$</li>
+  <li>The two intervals are disjoint. Their widths are
+
+  $$
+  -0.25-(-0.4)=0.15
+  $$
+
+  and
+
+  $$
+  0.4-0.30=0.10.
+  $$
+
+  Therefore,
+
+  $$
+  P(Y<-0.25\text{ or }Y>0.30)
+  =\frac{0.15+0.10}{0.8}
+  =0.3125.
+  $$</li>
+  <li>A single point has no width in a continuous model, so
+
+  $$
+  P(Y=0)=0.
+  $$</li>
+  <li>The interval from $-0.4$ to $0.2$ has width $0.6$, so
+
+  $$
+  P(Y\leq0.2)=\frac{0.6}{0.8}=0.75.
+  $$
+
+  Because $P(Y=0.2)=0$, including or excluding the endpoint does not change the probability. Thus, $P(Y\leq0.2)=P(Y<0.2)$.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 7: Lobster Carapace Lengths
+
+A marine biologist uses a continuous density model for the carapace length $L$ of adult lobsters in a study region. The model assigns the following areas to three length intervals.
+
+| Carapace-length interval | Area under the density curve |
+|:--|--:|
+| Less than $80$ mm | $0.18$ |
+| From $80$ mm through $100$ mm | $0.52$ |
+| Greater than $100$ mm | $0.30$ |
+
+1. Verify that the three regions form a complete probability model.
+2. Calculate $P(L\geq80)$.
+3. Calculate the probability that a lobster has a carapace length outside the interval from $80$ mm through $100$ mm.
+4. What is $P(L=100)$? Explain.
+5. Compare $P(80\leq L\leq100)$ with $P(80<L<100)$.
+6. Among $600$ randomly selected adult lobsters, how many would be expected to have carapace lengths greater than $100$ mm?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The areas are nonnegative and
+
+  $$
+  0.18+0.52+0.30=1.
+  $$
+
+  Therefore, the three regions cover the complete continuous distribution.</li>
+  <li>Using the complement rule,
+
+  $$
+  P(L\geq80)=1-P(L<80)=1-0.18=0.82.
+  $$</li>
+  <li>The two outside regions are disjoint, so
+
+  $$
+  P(L<80\text{ or }L>100)=0.18+0.30=0.48.
+  $$</li>
+  <li>Carapace length is continuous, so the probability of one exact value is
+
+  $$
+  P(L=100)=0.
+  $$</li>
+  <li>The endpoints each have probability $0$. Therefore,
+
+  $$
+  P(80\leq L\leq100)=P(80<L<100)=0.52.
+  $$</li>
+  <li>The expected number is
+
+  $$
+  600(0.30)=180.
+  $$
+
+  Approximately $180$ lobsters would be expected to have carapace lengths greater than $100$ mm.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 8: Fledglings Produced by an Eagle Nest
+
+Let $X$ be the number of young eagles that successfully leave a randomly selected monitored nest during one breeding season. An illustrative long-run probability model is shown below.
+
+| Number of fledglings, $X$ | $0$ | $1$ | $2$ | $3$ |
+|:--|--:|--:|--:|--:|
+| Probability | $0.20$ | $0.45$ | $0.30$ | $0.05$ |
+
+1. Verify that the table is a valid probability distribution.
+2. Calculate the mean, or expected value, $\mu=E(X)$.
+3. Calculate the variance
+
+$$
+\sigma^2=\sum(x_i-\mu)^2P(X=x_i).
+$$
+
+4. Calculate the standard deviation $\sigma$.
+5. Interpret the expected value. Why does an expected value of $1.2$ not mean that one nest can produce exactly $1.2$ fledglings?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>All probabilities are between $0$ and $1$, and
+
+  $$
+  0.20+0.45+0.30+0.05=1.
+  $$</li>
+  <li>The expected value is
+
+  $$
+  \begin{aligned}
+  \mu
+  &=(0)(0.20)+(1)(0.45)+(2)(0.30)+(3)(0.05)\\
+  &=0+0.45+0.60+0.15\\
+  &=1.20.
+  \end{aligned}
+  $$</li>
+  <li>The variance is
+
+  $$
+  \begin{aligned}
+  \sigma^2
+  &=(0-1.2)^2(0.20)+(1-1.2)^2(0.45)\\
+  &\quad +(2-1.2)^2(0.30)+(3-1.2)^2(0.05)\\
+  &=(1.44)(0.20)+(0.04)(0.45)\\
+  &\quad +(0.64)(0.30)+(3.24)(0.05)\\
+  &=0.288+0.018+0.192+0.162\\
+  &=0.660.
+  \end{aligned}
+  $$</li>
+  <li>The standard deviation is
+
+  $$
+  \sigma=\sqrt{0.660}\approx0.812.
+  $$</li>
+  <li>Across a large number of monitored nests, the average number of fledglings per nest would tend toward $1.2$. A single nest can produce only one of the listed whole-number outcomes. The expected value is a long-run average, not a possible outcome for one nest.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 9: Expected Payout from a Pet-Insurance Policy
+
+An insurer uses the following simplified model for the total veterinary reimbursement $X$ paid on one policy during one year. The categories represent possible annual payout levels, not the amount of an individual veterinary bill.
+
+| Annual payout, $X$ | $\$0$ | $\$250$ | $\$800$ | $\$2500$ |
+|:--|--:|--:|--:|--:|
+| Probability | $0.78$ | $0.12$ | $0.07$ | $0.03$ |
+
+1. Calculate the probability that the insurer makes a positive payout.
+2. Calculate the expected annual payout $E(X)$ for one policy.
+3. Calculate the variance and standard deviation of the annual payout.
+4. For a portfolio of $5000$ similar policies, calculate the expected total annual payout.
+5. Explain why a sustainable premium would generally need to exceed the expected payout calculated in Part $2$.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Using the complement rule,
+
+  $$
+  P(X>0)=1-P(X=0)=1-0.78=0.22.
+  $$</li>
+  <li>The expected payout is
+
+  $$
+  \begin{aligned}
+  \mu=E(X)
+  &=(0)(0.78)+(250)(0.12)\\
+  &\quad +(800)(0.07)+(2500)(0.03)\\
+  &=0+30+56+75\\
+  &=\$161.
+  \end{aligned}
+  $$</li>
+  <li>Using $\mu=161$, the variance is
+
+  $$
+  \begin{aligned}
+  \sigma^2
+  &=(0-161)^2(0.78)+(250-161)^2(0.12)\\
+  &\quad +(800-161)^2(0.07)+(2500-161)^2(0.03)\\
+  &=213{,}879.
+  \end{aligned}
+  $$
+
+  Therefore,
+
+  $$
+  \sigma=\sqrt{213{,}879}\approx\$462.47.
+  $$
+
+  The standard deviation is larger than the mean because most policies have no payout, while a small proportion have much larger payouts.</li>
+  <li>The expected total payout is
+
+  $$
+  5000(\$161)=\$805{,}000.
+  $$</li>
+  <li>The expected payout covers only expected claim costs. A premium must also account for administration, claim processing, reserves, uncertainty, taxes and other operating expenses. The expected value is not automatically an appropriate final premium.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 10: Risk and Odds of a Veterinary Complication
+
+A veterinary hospital reviews $2400$ similar procedures and finds that $72$ animals experienced a minor post-procedure complication. The remaining animals did not experience the complication.
+
+1. Estimate the risk, or probability, of the complication.
+2. Estimate the probability that an animal does not experience the complication.
+3. Calculate the odds of the complication as both a decimal and an event-to-non-event ratio.
+4. If the same estimated risk applies to $10{,}000$ future procedures, how many complications would be expected?
+5. Explain why the numerical values of the risk and odds are close in this example but are not identical.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The estimated risk is
+
+  $$
+  p=\frac{72}{2400}=0.03=3\%.
+  $$</li>
+  <li>Using the complement rule,
+
+  $$
+  1-p=1-0.03=0.97=97\%.
+  $$</li>
+  <li>There were
+
+  $$
+  2400-72=2328
+  $$
+
+  procedures without the complication. The odds are
+
+  $$
+  \frac{72}{2328}=\frac{3}{97}\approx0.03093.
+  $$
+
+  As an event-to-non-event ratio, the odds are $72:2328$, or approximately $1:32.3$.</li>
+  <li>The expected number is
+
+  $$
+  10{,}000(0.03)=300.
+  $$</li>
+  <li>The event is uncommon, so $1-p=0.97$ is close to $1$. Dividing $p$ by $0.97$ changes the numerical value only slightly. Risk uses the total number of procedures as its denominator, whereas odds compare complications directly with non-complications.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 11: Converting Insurance Odds to Probability
+
+An insurer reports that the annual odds of a weather-related water-damage claim in Region A are $1:24$. This notation means one claim occurrence for every $24$ non-occurrences. In Region B, the annual risk of the same type of claim is estimated to be $0.06$.
+
+1. Convert the odds in Region A to a probability.
+2. What is the probability that a policy in Region A does not produce such a claim during the year?
+3. Among $12{,}500$ similar policies in Region A, how many claims would be expected?
+4. Convert the risk in Region B to decimal odds and to an event-to-non-event ratio.
+5. Compare the two regions using probabilities. What is the difference in percentage points, and how many times as large is the Region B risk?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Odds of $1:24$ correspond to decimal odds of $1/24$. Using
+
+  $$
+  p=\frac{\text{odds}}{1+\text{odds}},
+  $$
+
+  we obtain
+
+  $$
+  p=\frac{1/24}{1+1/24}
+  =\frac{1/24}{25/24}
+  =\frac{1}{25}
+  =0.04.
+  $$</li>
+  <li>The complement is
+
+  $$
+  1-0.04=0.96.
+  $$</li>
+  <li>The expected number of claims is
+
+  $$
+  12{,}500(0.04)=500.
+  $$</li>
+  <li>For Region B,
+
+  $$
+  \text{odds}=\frac{0.06}{1-0.06}
+  =\frac{0.06}{0.94}
+  \approx0.06383.
+  $$
+
+  The event-to-non-event ratio is
+
+  $$
+  0.06:0.94=6:94=3:47.
+  $$</li>
+  <li>The risks are $4\%$ in Region A and $6\%$ in Region B. The difference is
+
+  $$
+  6\%-4\%=2
+  $$
+
+  percentage points. The ratio is
+
+  $$
+  \frac{0.06}{0.04}=1.5.
+  $$
+
+  Therefore, the estimated risk in Region B is $1.5$ times the estimated risk in Region A.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question 12: Treatment Requirements for Rehabilitated Birds
+
+A wildlife rehabilitation centre records the number of veterinary treatments $X$ required by a randomly admitted injured bird before it can be released or transferred. A simplified probability model is shown below.
+
+| Number of treatments, $X$ | $0$ | $1$ | $2$ | $3$ | $4$ |
+|:--|--:|--:|--:|--:|--:|
+| Probability | $0.15$ | $0.30$ | $k$ | $0.20$ | $0.10$ |
+
+1. Calculate the missing probability $k$.
+2. Calculate the probability and the odds that a bird requires at least $2$ treatments.
+3. Calculate the expected number of treatments, $\mu=E(X)$.
+4. Calculate the variance and standard deviation of $X$.
+5. If the centre admits $750$ birds under similar conditions, what is the expected total number of treatments?
+6. Interpret the expected value and standard deviation in context.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The probabilities must sum to $1$:
+
+  $$
+  k=1-(0.15+0.30+0.20+0.10)=0.25.
+  $$</li>
+  <li>The probability of at least $2$ treatments is
+
+  $$
+  P(X\geq2)=0.25+0.20+0.10=0.55.
+  $$
+
+  The complement has probability $0.45$, so the odds are
+
+  $$
+  \frac{0.55}{0.45}=\frac{11}{9}\approx1.222.
+  $$
+
+  As an event-to-non-event ratio, the odds are $11:9$.</li>
+  <li>The expected value is
+
+  $$
+  \begin{aligned}
+  \mu
+  &=(0)(0.15)+(1)(0.30)+(2)(0.25)\\
+  &\quad +(3)(0.20)+(4)(0.10)\\
+  &=0+0.30+0.50+0.60+0.40\\
+  &=1.80.
+  \end{aligned}
+  $$</li>
+  <li>The variance is
+
+  $$
+  \begin{aligned}
+  \sigma^2
+  &=(0-1.8)^2(0.15)+(1-1.8)^2(0.30)\\
+  &\quad +(2-1.8)^2(0.25)+(3-1.8)^2(0.20)\\
+  &\quad +(4-1.8)^2(0.10)\\
+  &=(3.24)(0.15)+(0.64)(0.30)+(0.04)(0.25)\\
+  &\quad +(1.44)(0.20)+(4.84)(0.10)\\
+  &=0.486+0.192+0.010+0.288+0.484\\
+  &=1.460.
+  \end{aligned}
+  $$
+
+  Therefore,
+
+  $$
+  \sigma=\sqrt{1.460}\approx1.208.
+  $$</li>
+  <li>The expected total is
+
+  $$
+  750(1.8)=1350
+  $$
+
+  treatments.</li>
+  <li>Across many admitted birds, the centre would expect an average of $1.8$ treatments per bird. Individual birds require only whole numbers of treatments. The standard deviation of approximately $1.21$ treatments describes the typical distance of an individual bird's treatment count from the long-run mean.</li>
+</ol>
+</div>
+</details>
+:::
