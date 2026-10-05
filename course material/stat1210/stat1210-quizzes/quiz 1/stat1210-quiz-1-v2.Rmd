@@ -1,0 +1,194 @@
+---
+title: "STAT 1210 - Quiz 1"
+subtitle: "Part I: Exploring Data — Version 2"
+author: "Fall 2026"
+date: ""
+output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: false
+    number_sections: false
+geometry: margin=0.8in
+fontsize: 10pt
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{array}
+  - \usepackage{enumitem}
+  - \usepackage{pgfplots}
+  - \pgfplotsset{compat=1.18}
+  - \setlist[enumerate]{itemsep=0.35em,topsep=0.35em}
+  - \setlength{\parindent}{0pt}
+---
+
+**Name:** \rule{8.3cm}{0.4pt}  
+**Student number:** \rule{4.4cm}{0.4pt}
+
+## Instructions
+
+- You have 45 minutes to complete the quiz.
+- All your solutions must be hand written on this quiz. 
+- Show the calculations needed to support each numerical answer.
+- Explain conclusions in the context of the question.
+- Report numerical answers to at least three decimal places when appropriate.
+- R coding is not required for this quiz.
+
+\vfill
+\newpage
+
+\vfill
+\begin{center}
+\textit{Empty Page}
+\end{center}
+
+\newpage
+
+## Question 1: Wildlife Observed by Camera Traps (4 marks)
+
+A team of wildlife biologists reviewed 320 separate animal sightings captured by camera traps in a protected forest. Each sighting contained one clearly identifiable animal. The species recorded in the sightings are summarized below.
+
+| Species | Number of sightings |
+|:--|--:|
+| White-tailed deer | 92 |
+| Red fox | 52 |
+| Snowshoe hare | 71 |
+| Raccoon | 63 |
+| Coyote | 42 |
+
+1. Who are the individuals in this dataset, and what variable was recorded?
+2. What percentage of the recorded sightings contained a red fox?
+3. What is one problem with the graph below, and how should it be corrected? Explain why the correction is necessary.
+
+```{r misleading-wildlife-chart, echo=FALSE, warning=FALSE, message=FALSE, fig.width=5.5, fig.height=3.4, fig.align='center'}
+library(ggplot2)
+
+wildlife_data <- data.frame(
+  Species = factor(
+    c("White-tailed deer", "Red fox", "Snowshoe hare",
+      "Raccoon", "Coyote"),
+    levels = c("White-tailed deer", "Red fox", "Snowshoe hare",
+               "Raccoon", "Coyote")
+  ),
+  Sightings = c(92, 52, 71, 63, 42)
+)
+
+ggplot(wildlife_data, aes(x = Species, y = Sightings)) +
+  geom_col(fill = "#3F7D58", width = 0.68) +
+  coord_cartesian(ylim = c(35, 100)) +
+  scale_x_discrete(
+    labels = c(
+      "White-tailed deer" = "Deer",
+      "Red fox" = "Red fox",
+      "Snowshoe hare" = "Hare",
+      "Raccoon" = "Raccoon",
+      "Coyote" = "Coyote"
+    )
+  ) +
+  scale_y_continuous(
+    breaks = seq(40, 100, by = 10),
+    expand = expansion(mult = c(0, 0.03))
+  ) +
+  labs(
+    title = "Forest Wildlife Recorded by Camera Traps",
+    x = "Species observed",
+    y = "Number of sightings"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(
+      hjust = 0.5,
+      face = "bold",
+      colour = "#244D2D"
+    ),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+
+\vfill
+\newpage
+
+\vfill
+\begin{center}
+\textit{Empty Page}
+\end{center}
+
+\newpage
+
+## Question 2: Numerical Summaries and Outliers (8 marks)
+
+The following ordered data are the reaction times, in seconds, for ten participants completing a short computer task:
+
+$$
+4.6,\ 4.9,\ 5.0,\ 5.2,\ 5.4,\ 5.5,\ 5.7,\ 5.9,\ 6.1,\ 10.9
+$$
+
+1. What are the mean and median reaction times?
+2. What are $Q_1$, $Q_3$ and the IQR?
+3. What are the lower and upper $1.5\times\mathrm{IQR}$ fences?
+4. Which pair, the mean and standard deviation or the median and IQR, would better summarize this distribution? Explain in 1-2 sentences.
+
+\newpage
+
+\vfill
+\begin{center}
+\textit{Empty Page}
+\end{center}
+
+\newpage
+
+## Question 3: Cannabis-Use Frequency and Memory-Test Performance (8 marks)
+
+A public health researcher collected anonymous observational data from 15 adults. For each participant, the researcher recorded the number of days on which the participant reported using cannabis during the previous month and the number of errors made on a standardized memory test. A higher number of errors indicates poorer test performance.
+
+```{r cannabis-memory-plot, echo=FALSE, warning=FALSE, message=FALSE, fig.width=5.5, fig.height=3.4, fig.align='center'}
+library(ggplot2)
+
+cannabis_data <- data.frame(
+  Use_Days = 2:16,
+  Memory_Errors = c(
+    5, 8, 7, 11, 12,
+    13, 15, 17, 16, 20,
+    22, 21, 24, 26, 14
+  )
+)
+
+ggplot(cannabis_data, aes(x = Use_Days, y = Memory_Errors)) +
+  geom_point(size = 3, colour = "#604A7B") +
+  scale_x_continuous(
+    breaks = seq(2, 16, by = 2),
+    limits = c(1, 17)
+  ) +
+  scale_y_continuous(
+    breaks = seq(5, 30, by = 5),
+    limits = c(3, 30)
+  ) +
+  labs(
+    title = "Cannabis-Use Frequency and Memory-Test Errors",
+    x = "Number of cannabis-use days in the previous month",
+    y = "Number of memory-test errors"
+  ) +
+  theme_classic(base_size = 12) +
+  theme(
+    plot.title = element_text(
+      hjust = 0.5,
+      face = "bold",
+      colour = "#49365F"
+    ),
+    panel.grid.major = element_line(colour = "grey85"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+1. Which variable is the explanatory variable and which variable is the response variable?
+2. Which observation departs most clearly from the overall pattern? In one or two sentences, suggest one plausible explanation for this observation.
+3. If the observation corresponding to 16 cannabis-use days were removed, would the correlation become closer to 1, closer to 0, or negative? Why?
+4. Can this scatterplot establish that more frequent cannabis use causes a participant to make more memory-test errors? Identify one plausible lurking variable.
+
+\vfill
+
+\newpage
+
+\vfill
+\begin{center}
+\textit{Empty Page}
+\end{center}

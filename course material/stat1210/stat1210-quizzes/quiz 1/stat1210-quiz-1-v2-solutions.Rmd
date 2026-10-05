@@ -1,0 +1,109 @@
+---
+title: "STAT 1210 - Quiz 1 Solutions - Version 2"
+subtitle: "Part I: Exploring Data"
+author: "Fall 2026"
+date: ""
+output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: false
+    number_sections: false
+geometry: margin=0.8in
+fontsize: 10pt
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{array}
+  - \usepackage{enumitem}
+  - \usepackage{pgfplots}
+  - \pgfplotsset{compat=1.18}
+  - \setlist[enumerate]{itemsep=0.35em,topsep=0.35em}
+  - \setlength{\parindent}{0pt}
+---
+
+## Question 1: Wildlife Observed by Camera Traps (4 marks)
+
+1. The individuals are the $320$ separate animal sightings captured by the camera traps. The recorded variable is the species observed in each sighting. This is a categorical variable.
+
+2. The percentage of sightings containing a red fox is
+
+$$
+\frac{52}{320}\times 100\% = 16.25\%
+$$
+
+Therefore, red foxes appeared in $16.25\%$ of the recorded sightings.
+
+3. The vertical axis begins at $35$ sightings instead of $0$. This truncation exaggerates the apparent differences among the species. Because the length of each bar represents its frequency, the vertical axis should begin at 0. This correction would show the relative sizes of the categories more accurately.
+
+## Question 2: Numerical Summaries and Outliers (8 marks)
+
+1. The sum of the ten observations is $59.2$ seconds. Therefore,
+
+$$
+\bar{x}=\frac{59.2}{10}=5.92\text{ seconds}
+$$
+
+The median is the average of the fifth and sixth ordered values:
+
+$$
+\operatorname{Median}=\frac{5.4+5.5}{2}=5.45\text{ seconds}
+$$
+
+2. The median of the lower five observations is 
+
+so the median of the lower five observations is $Q_1=5.0$, and the median of the uper five observations is $Q_3=5.9$. Thus
+
+$$
+\mathrm{IQR}=Q_3-Q_1=5.9-5.0=0.9\text{ seconds}
+$$
+
+3. The fences are
+$$Q_1-1.5(\mathrm{IQR})=5.0-1.5(0.9)=3.65$$
+$$Q_3+1.5(\mathrm{IQR})=5.9+1.5(0.9)=7.25$$
+
+4. The median and IQR would better summarize this right skewed distribution because they are resistant to the unusually large value of $10.9$ seconds. The mean is pulled upward, and the standard deviation would also be inflated by this value.
+
+## Question 3: Cannabis-Use Frequency and Memory-Test Performance (8 marks)
+
+```{r cannabis-memory-plot, echo=FALSE, warning=FALSE, message=FALSE, fig.width=5.5, fig.height=3.4, fig.align='center'}
+library(ggplot2)
+
+cannabis_data <- data.frame(
+  Use_Days = 2:16,
+  Memory_Errors = c(
+    5, 8, 7, 11, 12,
+    13, 15, 17, 16, 20,
+    22, 21, 24, 26, 14
+  )
+)
+
+ggplot(cannabis_data, aes(x = Use_Days, y = Memory_Errors)) +
+  geom_point(size = 3, colour = "#604A7B") +
+  scale_x_continuous(
+    breaks = seq(2, 16, by = 2),
+    limits = c(1, 17)
+  ) +
+  scale_y_continuous(
+    breaks = seq(5, 30, by = 5),
+    limits = c(3, 30)
+  ) +
+  labs(
+    title = "Cannabis-Use Frequency and Memory-Test Errors",
+    x = "Number of cannabis-use days in the previous month",
+    y = "Number of memory-test errors"
+  ) +
+  theme_classic(base_size = 12) +
+  theme(
+    plot.title = element_text(
+      hjust = 0.5,
+      face = "bold",
+      colour = "#49365F"
+    ),
+    panel.grid.major = element_line(colour = "grey85"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+1. The number of cannabis use days during the previous month is the explanatory variable. The number of errors made on the memory test is the response variable.
+2. The observation at $(16,14)$ departs most clearly from the overall pattern. This participant reported using cannabis on 16 days but made only 15 memory-test errors. Possible explanations include individual differences in baseline memory ability, inaccurate self-reporting, variation in test conditions or other lifestyle and health factors.
+3. The correlation would become closer to 1. After removing the observation at $(16,14)$, the remaining observations show a strong positive, approximately linear association. The unusual observation weakens the positive correlation because it has a large value of the explanatory variable but a comparatively small value of the response variable.
+4. The scatterplot is based on observational data and therefore cannot establish that more frequent cannabis use causes a participant to make more memory-test errors. For example, stress could be a lurking variable because it may be associated with both cannabis use frequency and memory test performance. Other plausible lurking variables include sleep, age, other substance use, existing health conditions and educational background.
