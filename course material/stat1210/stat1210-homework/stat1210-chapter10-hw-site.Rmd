@@ -1,0 +1,1450 @@
+---
+title: "STAT $1210$"
+subtitle: "Chapter $10$ Homework: Independence and Conditional Probability"
+author: "Fall $2026$"
+date: ""
+output:
+  html_document:
+    self_contained: true
+    toc: false
+    number_sections: false
+    theme: flatly
+    highlight: tango
+---
+
+<style>
+:root {
+  --ink: #263746;
+  --muted: #667786;
+  --blue: #294d73;
+  --blue-dark: #183a5c;
+  --blue-soft: #edf3f8;
+  --line: #d8e1e8;
+  --paper: #ffffff;
+  --page: #eef2f5;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+
+.main-container {
+  max-width: 980px !important;
+  margin-top: 28px;
+  margin-bottom: 42px;
+  padding: 42px 58px 56px;
+  background: var(--paper);
+  border: 1px solid #dde5eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(31, 50, 67, 0.10);
+}
+
+h1, h2, h3 { color: var(--blue-dark); }
+
+h1.title {
+  margin-bottom: 4px;
+  font-weight: 750;
+}
+
+h3.subtitle {
+  margin-top: 0;
+  color: var(--blue);
+  font-weight: 500;
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 1.28em;
+  line-height: 1.35;
+}
+
+.intro-box {
+  margin: 1.2em 0 1.8em;
+  padding: 1em 1.2em;
+  border-left: 5px solid var(--blue);
+  border-radius: 6px;
+  background: var(--blue-soft);
+}
+
+.question-card {
+  margin: 1.55em 0 2em;
+  padding: 1.3em 1.45em 1.1em;
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--blue);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(35, 54, 74, 0.07);
+}
+
+table {
+  width: 100%;
+  margin: 1.1em 0 1.3em;
+  border-collapse: collapse;
+  border: 1px solid var(--line);
+}
+
+thead th {
+  padding: 0.65em 0.75em !important;
+  background: var(--blue);
+  color: white;
+  border: 0 !important;
+}
+
+tbody td {
+  padding: 0.58em 0.75em !important;
+  border-bottom: 1px solid #e5ebf0 !important;
+}
+
+tbody tr:nth-child(even) td { background: #f7f9fb; }
+
+details.solution {
+  margin-top: 1.15em;
+  border: 1px solid #bfd1df;
+  border-radius: 7px;
+  background: #f8fbfd;
+  overflow: hidden;
+}
+
+details.solution summary {
+  padding: 0.72em 0.95em;
+  color: var(--blue-dark);
+  background: var(--blue-soft);
+  cursor: pointer;
+  font-weight: 700;
+  user-select: none;
+}
+
+details.solution summary:hover { background: #e2edf5; }
+
+.solution-body {
+  padding: 0.95em 1.1em 0.75em;
+}
+
+.solution-body ol { margin-bottom: 0.25em; }
+.solution-body li { margin-bottom: 0.75em; }
+
+@media (max-width: 768px) {
+  .main-container {
+    margin-top: 0;
+    padding: 24px 20px 38px;
+    border-radius: 0;
+  }
+}
+
+@media print {
+  body { background: white; font-size: 11pt; }
+  .main-container {
+    max-width: none !important;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+  .question-card { break-inside: avoid; box-shadow: none; }
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  fig.retina = 2,
+  out.width = "88%"
+)
+```
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("details.solution").forEach(function(item) {
+    item.removeAttribute("open");
+  });
+});
+</script>
+
+
+
+::: {.question-card}
+### Question $1$
+
+A veterinary clinic classifies each arriving patient by species and visit type. For this exercise, the only possible outcomes are
+
+$$
+S=\{CR,CE,DR,DE\}
+$$
+
+where $C$ means cat, $D$ means dog, $R$ means routine visit and $E$ means emergency visit. Let $A$ be the event that the patient is a cat and let $B$ be the event that the visit is an emergency.
+
+1. Write events $A$ and $B$ as sets of outcomes.
+2. Write $A\cap B$ as a set and describe it in words.
+3. Write $A\cup B$ as a set and describe it in words.
+4. Write $A^c$ as a set and describe it in words.
+5. Are $A$ and $B$ disjoint? Explain.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The events are
+
+  $$
+  A=\{CR,CE\}
+  $$
+
+  $$
+  B=\{CE,DE\}
+  $$
+  </li>
+  <li>The intersection is
+
+  $$
+  A\cap B=\{CE\}
+  $$
+
+  It represents an emergency visit involving a cat.</li>
+  <li>The union is
+
+  $$
+  A\cup B=\{CR,CE,DE\}
+  $$
+
+  It represents a visit involving a cat, an emergency visit or both.</li>
+  <li>The complement is
+
+  $$
+  A^c=\{DR,DE\}
+  $$
+
+  It represents a visit involving a dog.</li>
+  <li>The events are not disjoint because $CE$ belongs to both events. Therefore, $A\cap B$ is not empty.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $2$
+
+A wildlife rehabilitation centre records whether each admitted animal is eventually released ($R$) or is not released ($R^c$). Suppose
+
+$$
+P(R)=0.82
+$$
+
+1. Calculate $P(R^c)$.
+2. Calculate $P(R\cap R^c)$.
+3. Calculate $P(R\cup R^c)$.
+4. Are $R$ and $R^c$ disjoint? Are they exhaustive?
+5. Are $R$ and $R^c$ independent? Justify your answer mathematically.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Using the complement rule,
+
+  $$
+  P(R^c)=1-0.82=0.18
+  $$
+  </li>
+  <li>An animal cannot be both released and not released, so
+
+  $$
+  P(R\cap R^c)=0
+  $$
+  </li>
+  <li>The two events cover every possible outcome, so
+
+  $$
+  P(R\cup R^c)=1
+  $$
+  </li>
+  <li>They are disjoint because they cannot occur together. They are exhaustive because one of them must occur.</li>
+  <li>They are not independent. If they were independent, their intersection would satisfy
+
+  $$
+  P(R\cap R^c)=P(R)P(R^c)=(0.82)(0.18)=0.1476
+  $$
+
+  The actual intersection probability is $0$, not $0.1476$. Two disjoint events with positive probabilities cannot be independent.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $3$
+
+A physics laboratory uses two independent safety sensors. During a normal operating period, Sensor $A$ has probability $0.02$ of producing a false alarm and Sensor $B$ has probability $0.03$ of producing a false alarm.
+
+1. What is the probability that both sensors produce false alarms during the same period?
+2. What is the probability that neither sensor produces a false alarm?
+3. What is the probability that at least one sensor produces a false alarm?
+4. What is the probability that exactly one sensor produces a false alarm?
+5. Which step requires the independence assumption?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Independence gives
+
+  $$
+  P(A\cap B)=P(A)P(B)=(0.02)(0.03)=0.0006
+  $$
+  </li>
+  <li>The probabilities of no false alarm are $0.98$ and $0.97$. Therefore,
+
+  $$
+  P(A^c\cap B^c)=(0.98)(0.97)=0.9506
+  $$
+  </li>
+  <li>Using the complement rule,
+
+  $$
+  P(A\cup B)=1-P(A^c\cap B^c)=1-0.9506=0.0494
+  $$
+  </li>
+  <li>Exactly one false alarm can occur along either of two disjoint paths:
+
+  $$
+  P(A\cap B^c)+P(A^c\cap B)
+  $$
+
+  $$
+  =(0.02)(0.97)+(0.98)(0.03)=0.0488
+  $$
+  </li>
+  <li>Independence is required whenever the marginal probabilities are multiplied to obtain a joint probability, including the calculations for both alarms, neither alarm and each exactly-one path.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $4$
+
+A veterinary laboratory tests $150$ samples known not to contain a particular pathogen. The false-positive probability for one sample is $0.006$. Assume the test outcomes are independent from sample to sample.
+
+1. What is the probability that one pathogen-free sample tests negative?
+2. What is the probability that all $150$ samples test negative?
+3. What is the probability that at least one false positive occurs?
+4. Interpret the answer to Part $3$ in context.
+5. Explain why multiplying $150$ by $0.006$ does not give the probability of at least one false positive.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The probability of a correct negative is
+
+  $$
+  1-0.006=0.994
+  $$
+  </li>
+  <li>By independence,
+
+  $$
+  P(\text{all negative})=(0.994)^{150}\approx0.4055
+  $$
+  </li>
+  <li>The complement of at least one false positive is no false positives:
+
+  $$
+  P(\text{at least one false positive})=1-(0.994)^{150}\approx0.5945
+  $$
+  </li>
+  <li>Under this model, there is approximately a $59.45\%$ probability that at least one of the $150$ pathogen-free samples produces a false-positive result.</li>
+  <li>The product $150(0.006)=0.9$ is the expected number of false positives, not the probability of at least one. A count can have an expected value of $0.9$ even though the probability of one or more occurrences is different.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $5$
+
+At $400$ wildlife-monitoring sites, researchers detected red foxes at $168$ sites, coyotes at $124$ sites and both species at $52$ sites. Let $F$ be the event that a randomly selected site had a fox detection and let $C$ be the event that it had a coyote detection.
+
+1. Calculate $P(F)$, $P(C)$ and $P(F\cap C)$.
+2. Calculate the probability that at least one of the two species was detected.
+3. How many sites had neither species detected?
+4. How many sites had only foxes detected?
+5. How many sites had only coyotes detected?
+6. Explain why adding $168$ and $124$ without subtracting $52$ would be incorrect.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The probabilities are
+
+  $$
+  P(F)=\frac{168}{400}=0.42
+  $$
+
+  $$
+  P(C)=\frac{124}{400}=0.31
+  $$
+
+  $$
+  P(F\cap C)=\frac{52}{400}=0.13
+  $$
+  </li>
+  <li>Using the General Addition Rule,
+
+  $$
+  P(F\cup C)=0.42+0.31-0.13=0.60
+  $$
+
+  Therefore, $240$ sites had at least one species detected.</li>
+  <li>The number with neither species is
+
+  $$
+  400-240=160
+  $$
+  </li>
+  <li>The number with foxes only is
+
+  $$
+  168-52=116
+  $$
+  </li>
+  <li>The number with coyotes only is
+
+  $$
+  124-52=72
+  $$
+  </li>
+  <li>The $52$ sites containing both species are included in both marginal counts. Direct addition would count those sites twice, so the overlap must be subtracted once.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $6$
+
+A hypothetical veterinary study of Dalmatians reports
+
+$$
+P(I)=0.24
+$$
+
+$$
+P(B)=0.15
+$$
+
+$$
+P(I\cap B)=0.06
+$$
+
+where $I$ means hearing impairment and $B$ means blue eyes.
+
+1. Calculate $P(I\cap B^c)$, the probability of hearing impairment without blue eyes.
+2. Calculate $P(I^c\cap B)$, the probability of blue eyes without hearing impairment.
+3. Calculate the probability of neither trait.
+4. Verify that the four disjoint regions sum to $1$.
+5. Verify the partition identity $P(I)=P(I\cap B)+P(I\cap B^c)$.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The hearing-impairment event is partitioned by blue-eye status:
+
+  $$
+  P(I\cap B^c)=P(I)-P(I\cap B)=0.24-0.06=0.18
+  $$
+  </li>
+  <li>Similarly,
+
+  $$
+  P(I^c\cap B)=P(B)-P(I\cap B)=0.15-0.06=0.09
+  $$
+  </li>
+  <li>First calculate the union:
+
+  $$
+  P(I\cup B)=0.24+0.15-0.06=0.33
+  $$
+
+  Therefore,
+
+  $$
+  P(I^c\cap B^c)=1-0.33=0.67
+  $$
+  </li>
+  <li>The four disjoint regions are impairment only, both traits, blue eyes only and neither:
+
+  $$
+  0.18+0.06+0.09+0.67=1
+  $$
+  </li>
+  <li>The identity is verified because
+
+  $$
+  P(I\cap B)+P(I\cap B^c)=0.06+0.18=0.24=P(I)
+  $$
+  </li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $7$
+
+A veterinary hospital records gastrointestinal symptoms and laboratory-confirmed parasitic infection for $300$ dogs.
+
+| Infection status | Diarrhea | No diarrhea | Total |
+|:--|--:|--:|--:|
+| Parasitic infection | $54$ | $36$ | $90$ |
+| No parasitic infection | $42$ | $168$ | $210$ |
+| **Total** | **$96$** | **$204$** | **$300$** |
+
+Let $I$ mean parasitic infection and let $D$ mean diarrhea.
+
+1. Calculate $P(I)$ and $P(D)$.
+2. Calculate $P(I\cap D)$.
+3. Calculate $P(I\mid D)$ and interpret it.
+4. Calculate $P(D\mid I)$ and interpret it.
+5. Why are the answers to Parts $3$ and $4$ different even though they use the same intersection count?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The marginal probabilities are
+
+  $$
+  P(I)=\frac{90}{300}=0.30
+  $$
+
+  $$
+  P(D)=\frac{96}{300}=0.32
+  $$
+  </li>
+  <li>The joint probability is
+
+  $$
+  P(I\cap D)=\frac{54}{300}=0.18
+  $$
+  </li>
+  <li>Conditioning on diarrhea restricts the denominator to the $96$ dogs with diarrhea:
+
+  $$
+  P(I\mid D)=\frac{54}{96}=0.5625
+  $$
+
+  Among dogs with diarrhea, $56.25\%$ had a laboratory-confirmed parasitic infection.</li>
+  <li>Conditioning on infection restricts the denominator to the $90$ infected dogs:
+
+  $$
+  P(D\mid I)=\frac{54}{90}=0.60
+  $$
+
+  Among dogs with a parasitic infection, $60\%$ had diarrhea.</li>
+  <li>Both calculations use the $54$ dogs in the intersection, but their denominators differ. Part $3$ uses all dogs with diarrhea, whereas Part $4$ uses all infected dogs.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $8$
+
+Ecologists examine $100$ farms. Native bees are detected at $50$ farms, pesticide use is classified as low at $40$ farms and both conditions occur at $28$ farms. Let $N$ mean native bees were detected and let $L$ mean pesticide use was low.
+
+1. Calculate $P(N)$, $P(L)$ and $P(N\cap L)$.
+2. If $N$ and $L$ were independent, what would $P(N\cap L)$ equal?
+3. Are $N$ and $L$ independent? Explain.
+4. Calculate $P(N\mid L)$ and compare it with $P(N)$.
+5. Under independence, how many of the $100$ farms would be expected to have both characteristics? How does this compare with the observed count?
+6. Does the association establish that low pesticide use causes native-bee detection? Explain briefly.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The probabilities are
+
+  $$
+  P(N)=0.50
+  $$
+
+  $$
+  P(L)=0.40
+  $$
+
+  $$
+  P(N\cap L)=0.28
+  $$
+  </li>
+  <li>Under independence,
+
+  $$
+  P(N)P(L)=(0.50)(0.40)=0.20
+  $$
+  </li>
+  <li>The events are not independent because
+
+  $$
+  P(N\cap L)=0.28\neq0.20=P(N)P(L)
+  $$
+  </li>
+  <li>The conditional probability is
+
+  $$
+  P(N\mid L)=\frac{0.28}{0.40}=0.70
+  $$
+
+  Native bees were detected at $70\%$ of low-pesticide farms, compared with $50\%$ of all farms. Conditioning on $L$ changes the probability of $N$.</li>
+  <li>Independence would predict
+
+  $$
+  100(0.20)=20
+  $$
+
+  farms with both characteristics. The observed count is $28$, which is $8$ higher.</li>
+  <li>No. The data show an association, but other variables such as crop type, habitat quality, floral resources and farm size may affect both pesticide use and bee detection.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $9$
+
+In a wetland survey, $35\%$ of sites are temporary wetlands. Among temporary wetlands, a threatened frog species is detected at $62\%$ of sites. Let $T$ mean temporary wetland and let $F$ mean frog detection.
+
+1. Calculate $P(T\cap F)$.
+2. Interpret $P(T\cap F)$ in context.
+3. Calculate $P(T\cap F^c)$.
+4. Verify that $P(T\cap F)+P(T\cap F^c)=P(T)$.
+5. In a survey of $1200$ sites with the same proportions, approximately how many sites would be both temporary and have a frog detection?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Use the General Multiplication Rule:
+
+  $$
+  P(T\cap F)=P(T)P(F\mid T)=(0.35)(0.62)=0.217
+  $$
+  </li>
+  <li>Approximately $21.7\%$ of all surveyed sites are temporary wetlands where the frog species is detected.</li>
+  <li>Within temporary wetlands,
+
+  $$
+  P(F^c\mid T)=1-0.62=0.38
+  $$
+
+  Therefore,
+
+  $$
+  P(T\cap F^c)=(0.35)(0.38)=0.133
+  $$
+  </li>
+  <li>The two disjoint pieces sum to the temporary-wetland probability:
+
+  $$
+  0.217+0.133=0.350=P(T)
+  $$
+  </li>
+  <li>The expected count is
+
+  $$
+  1200(0.217)=260.4
+  $$
+
+  Approximately $260$ sites would be expected to have both characteristics.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $10$
+
+A wildlife rehabilitation organization summarizes release outcomes for $240$ animals.
+
+| Animal group | Released | Not released | Total |
+|:--|--:|--:|--:|
+| Birds | $84$ | $36$ | $120$ |
+| Mammals | $54$ | $36$ | $90$ |
+| Reptiles | $12$ | $18$ | $30$ |
+| **Total** | **$150$** | **$90$** | **$240$** |
+
+1. Calculate the overall release probability.
+2. Calculate the conditional release probability within each animal group.
+3. Among released animals, calculate the conditional distribution of animal group.
+4. Which animal group has the highest release rate? Which group contributes the largest number of released animals?
+5. Are animal group and release outcome independent? Demonstrate using one conditional probability.
+6. Explain why the table alone does not establish that animal group causes the difference in release outcomes.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The overall release probability is
+
+  $$
+  P(R)=\frac{150}{240}=0.625
+  $$
+  </li>
+  <li>The within-group release probabilities are
+
+  $$
+  P(R\mid\text{bird})=\frac{84}{120}=0.70
+  $$
+
+  $$
+  P(R\mid\text{mammal})=\frac{54}{90}=0.60
+  $$
+
+  $$
+  P(R\mid\text{reptile})=\frac{12}{30}=0.40
+  $$
+  </li>
+  <li>Among the $150$ released animals,
+
+  $$
+  P(\text{bird}\mid R)=\frac{84}{150}=0.56
+  $$
+
+  $$
+  P(\text{mammal}\mid R)=\frac{54}{150}=0.36
+  $$
+
+  $$
+  P(\text{reptile}\mid R)=\frac{12}{150}=0.08
+  $$
+
+  These values sum to $1$.</li>
+  <li>Birds have the highest release rate at $70\%$. Birds also contribute the largest number of released animals, with $84$ releases.</li>
+  <li>The variables are not independent. For example,
+
+  $$
+  P(R\mid\text{bird})=0.70\neq0.625=P(R)
+  $$
+
+  Knowing that an animal is a bird changes the observed release probability.</li>
+  <li>Injury severity, species, age, admission reason and treatment options may differ across animal groups. The table describes an association and does not isolate a causal effect of animal group.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $11$
+
+A veterinary laboratory receives a tray containing $20$ blood samples, of which $5$ are visibly hemolyzed. A technician selects $3$ samples without replacement for immediate review.
+
+1. What is the probability that all $3$ selected samples are not hemolyzed?
+2. What is the probability that at least one selected sample is hemolyzed?
+3. What is the probability that the first sample is not hemolyzed and the second sample is hemolyzed?
+4. If selection were instead performed with replacement, what would be the probability of at least one hemolyzed sample in $3$ selections?
+5. Explain why the draws are dependent when sampling without replacement.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>There are $15$ non-hemolyzed samples. Without replacement,
+
+  $$
+  P(\text{all three not hemolyzed})
+  =\frac{15}{20}\frac{14}{19}\frac{13}{18}
+  \approx0.3991
+  $$
+  </li>
+  <li>Using the complement rule,
+
+  $$
+  P(\text{at least one hemolyzed})
+  =1-0.3991
+  \approx0.6009
+  $$
+  </li>
+  <li>The required sequence has probability
+
+  $$
+  P(\text{first good and second hemolyzed})
+  =\frac{15}{20}\frac{5}{19}
+  \approx0.1974
+  $$
+  </li>
+  <li>With replacement, the probability of a non-hemolyzed result remains $15/20=0.75$ on every draw:
+
+  $$
+  P(\text{at least one hemolyzed})
+  =1-(0.75)^3
+  =0.5781
+  $$
+  </li>
+  <li>Without replacement, each selection changes both the number and composition of the remaining samples. Therefore, the probability for the next draw depends on what was selected earlier.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $12$
+
+A laboratory quality-control device produces two binary indicators on each calibration run. The four ordered pairs
+
+$$
+(0,0),\ (0,1),\ (1,0),\ (1,1)
+$$
+
+are equally likely. Define the following events:
+
+- $A$: the first indicator equals $1$
+- $B$: the second indicator equals $1$
+- $C$: the two indicators agree
+
+1. List the outcomes in $A$, $B$ and $C$.
+2. Find $P(A)$, $P(B)$ and $P(C)$.
+3. Show that each pair of events is independent.
+4. Calculate $P(A\cap B\cap C)$.
+5. Compare the answer from Part $4$ with $P(A)P(B)P(C)$.
+6. What does this example demonstrate about pairwise and mutual independence?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The events are
+
+  $$
+  A=\{(1,0),(1,1)\}
+  $$
+
+  $$
+  B=\{(0,1),(1,1)\}
+  $$
+
+  $$
+  C=\{(0,0),(1,1)\}
+  $$
+  </li>
+  <li>Each event contains $2$ of the $4$ equally likely outcomes, so
+
+  $$
+  P(A)=P(B)=P(C)=\frac{1}{2}
+  $$
+  </li>
+  <li>Each pairwise intersection contains one outcome:
+
+  $$
+  P(A\cap B)=P(A\cap C)=P(B\cap C)=\frac{1}{4}
+  $$
+
+  For every pair,
+
+  $$
+  \frac{1}{4}=\left(\frac{1}{2}\right)\left(\frac{1}{2}\right)
+  $$
+
+  Therefore, $A$, $B$ and $C$ are pairwise independent.</li>
+  <li>All three events occur only for the outcome $(1,1)$, so
+
+  $$
+  P(A\cap B\cap C)=\frac{1}{4}
+  $$
+  </li>
+  <li>The product of the three marginal probabilities is
+
+  $$
+  P(A)P(B)P(C)=\left(\frac{1}{2}\right)^3=\frac{1}{8}
+  $$
+
+  This differs from $P(A\cap B\cap C)=1/4$.</li>
+  <li>The example shows that pairwise independence does not guarantee mutual independence. The three-event product rule requires the stronger mutual-independence condition.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $13$
+
+An animal rehabilitation centre classifies an admitted animal as having a severe injury ($S$) with probability $0.25$ and a non-severe injury ($S^c$) with probability $0.75$. The probability of recovery within $48$ hours is $0.60$ for a severe injury and $0.90$ for a non-severe injury. Let $R$ mean recovery within $48$ hours.
+
+1. Draw a tree diagram showing injury severity followed by recovery status. Label every branch.
+2. Calculate the four joint probabilities at the ends of the tree.
+3. Calculate $P(R)$.
+4. Calculate $P(S\mid R)$.
+5. Explain why $P(S\mid R)$ is not equal to $P(R\mid S)$.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The first branches are $S$ with probability $0.25$ and $S^c$ with probability $0.75$. From $S$, the recovery branches have probabilities $0.60$ and $0.40$. From $S^c$, they have probabilities $0.90$ and $0.10$.</li>
+  <li>Multiplying along each path gives
+
+  $$
+  P(S\cap R)=(0.25)(0.60)=0.150
+  $$
+
+  $$
+  P(S\cap R^c)=(0.25)(0.40)=0.100
+  $$
+
+  $$
+  P(S^c\cap R)=(0.75)(0.90)=0.675
+  $$
+
+  $$
+  P(S^c\cap R^c)=(0.75)(0.10)=0.075
+  $$
+
+  The four path probabilities sum to $1$.</li>
+  <li>The two recovery paths are disjoint:
+
+  $$
+  P(R)=0.150+0.675=0.825
+  $$
+  </li>
+  <li>Among animals that recovered within $48$ hours,
+
+  $$
+  P(S\mid R)=\frac{P(S\cap R)}{P(R)}
+  =\frac{0.150}{0.825}
+  \approx0.1818
+  $$
+  </li>
+  <li>The probability $P(R\mid S)=0.60$ uses all severely injured animals as its denominator. The probability $P(S\mid R)\approx0.1818$ uses all animals that recovered within $48$ hours as its denominator. The conditioning groups are different.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $14$
+
+A physics laboratory routes calibration measurements through three instruments. Instrument $A$ processes $40\%$ of measurements and has error probability $0.01$. Instrument $B$ processes $35\%$ and has error probability $0.025$. Instrument $C$ processes $25\%$ and has error probability $0.04$.
+
+Let $E$ mean that a randomly selected measurement contains an error.
+
+1. Calculate $P(A\cap E)$, $P(B\cap E)$ and $P(C\cap E)$.
+2. Use the Law of Total Probability to calculate $P(E)$.
+3. Given that an error occurred, calculate the probability that the measurement came from Instrument $B$.
+4. Given that an error occurred, which instrument is the most likely source?
+5. Why is Instrument $C$ not automatically responsible for most errors simply because it has the highest within-instrument error rate?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The joint path probabilities are
+
+  $$
+  P(A\cap E)=(0.40)(0.01)=0.0040
+  $$
+
+  $$
+  P(B\cap E)=(0.35)(0.025)=0.00875
+  $$
+
+  $$
+  P(C\cap E)=(0.25)(0.04)=0.0100
+  $$
+  </li>
+  <li>The three instrument groups form a partition, so
+
+  $$
+  P(E)=0.0040+0.00875+0.0100=0.02275
+  $$
+  </li>
+  <li>Using the error group as the denominator,
+
+  $$
+  P(B\mid E)=\frac{0.00875}{0.02275}\approx0.3846
+  $$
+  </li>
+  <li>Instrument $C$ has the largest error-path probability, $0.0100$. Therefore,
+
+  $$
+  P(C\mid E)=\frac{0.0100}{0.02275}\approx0.4396
+  $$
+
+  Instrument $C$ is the most likely source of an observed error.</li>
+  <li>The number of errors contributed by an instrument depends on both its within-instrument error rate and the proportion of all measurements it processes. A high conditional error rate may be offset by a small processing share.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $15$
+
+An automobile insurer divides its policyholders into three age groups. The figures below are hypothetical.
+
+| Age group | Proportion of policyholders | Annual claim probability |
+|:--|--:|--:|
+| Under $25$ | $0.18$ | $0.22$ |
+| Ages $25$--$64$ | $0.57$ | $0.10$ |
+| Age $65$ or older | $0.25$ | $0.14$ |
+
+Let $C$ mean that a policyholder files a claim during the year.
+
+1. Calculate the joint probability of belonging to each age group and filing a claim.
+2. Calculate $P(C)$.
+3. Given that a claim was filed, calculate the probability that it came from each age group.
+4. Which age group has the highest individual claim probability?
+5. Which age group contributes the largest share of all claims? Explain why the answers to Parts $4$ and $5$ differ.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The three claim-path probabilities are
+
+  $$
+  P(\text{under }25\cap C)=(0.18)(0.22)=0.0396
+  $$
+
+  $$
+  P(25\text{--}64\cap C)=(0.57)(0.10)=0.0570
+  $$
+
+  $$
+  P(65+\cap C)=(0.25)(0.14)=0.0350
+  $$
+  </li>
+  <li>The overall claim probability is
+
+  $$
+  P(C)=0.0396+0.0570+0.0350=0.1316
+  $$
+  </li>
+  <li>The reverse conditional probabilities are
+
+  $$
+  P(\text{under }25\mid C)=\frac{0.0396}{0.1316}\approx0.3009
+  $$
+
+  $$
+  P(25\text{--}64\mid C)=\frac{0.0570}{0.1316}\approx0.4331
+  $$
+
+  $$
+  P(65+\mid C)=\frac{0.0350}{0.1316}\approx0.2660
+  $$
+
+  These probabilities sum to $1$.</li>
+  <li>The under-$25$ group has the highest within-group claim probability, $0.22$.</li>
+  <li>The ages-$25$--$64$ group contributes the largest share of claims, approximately $43.31\%$, because it is much larger than either of the other groups. Claim contribution depends on both group size and within-group claim probability.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $16$
+
+A veterinary clinic screens dogs for heartworm. In the population being screened, the prevalence is $4\%$. The test has sensitivity $95\%$ and specificity $97\%$.
+
+Let $H$ mean heartworm infection and let $+$ and $-$ represent positive and negative test results.
+
+1. Write the sensitivity, specificity and false-positive probability using conditional probability notation.
+2. For $10000$ screened dogs, construct the expected counts of true positives, false negatives, false positives and true negatives.
+3. Calculate $P(+)$.
+4. Calculate the positive predictive value $P(H\mid +)$.
+5. Calculate the negative predictive value $P(H^c\mid -)$.
+6. Interpret both predictive values in context.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The test characteristics are
+
+  $$
+  P(+\mid H)=0.95
+  $$
+
+  $$
+  P(-\mid H^c)=0.97
+  $$
+
+  Therefore,
+
+  $$
+  P(+\mid H^c)=1-0.97=0.03
+  $$
+  </li>
+  <li>Among $10000$ dogs, $400$ are expected to have heartworm and $9600$ are expected not to have it.
+
+  $$
+  \text{True positives}=400(0.95)=380
+  $$
+
+  $$
+  \text{False negatives}=400(0.05)=20
+  $$
+
+  $$
+  \text{False positives}=9600(0.03)=288
+  $$
+
+  $$
+  \text{True negatives}=9600(0.97)=9312
+  $$
+  </li>
+  <li>The overall positive probability is
+
+  $$
+  P(+)=P(H)P(+\mid H)+P(H^c)P(+\mid H^c)
+  $$
+
+  $$
+  =(0.04)(0.95)+(0.96)(0.03)=0.0668
+  $$
+  </li>
+  <li>The positive predictive value is
+
+  $$
+  P(H\mid +)=\frac{0.04(0.95)}{0.0668}
+  =\frac{0.038}{0.0668}
+  \approx0.5689
+  $$
+  </li>
+  <li>The probability of a negative result is
+
+  $$
+  P(-)=(0.04)(0.05)+(0.96)(0.97)=0.9332
+  $$
+
+  Therefore,
+
+  $$
+  P(H^c\mid -)=\frac{(0.96)(0.97)}{0.9332}
+  =\frac{0.9312}{0.9332}
+  \approx0.9979
+  $$
+  </li>
+  <li>Among dogs with a positive result, approximately $56.89\%$ are expected to have heartworm under this model. Among dogs with a negative result, approximately $99.79\%$ are expected not to have heartworm.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $17$
+
+The same rapid test is used in two animal shelters. The test has sensitivity $0.90$ and specificity $0.95$ in both shelters. Disease prevalence is $0.02$ in Shelter $A$ and $0.15$ in Shelter $B$.
+
+1. Calculate the false-positive probability.
+2. Calculate the positive predictive value in Shelter $A$.
+3. Calculate the positive predictive value in Shelter $B$.
+4. Why do the predictive values differ even though the test has the same sensitivity and specificity?
+5. If $10000$ animals were screened at each shelter, approximately how many true positives and false positives would occur at each shelter?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The false-positive probability is
+
+  $$
+  P(+\mid D^c)=1-0.95=0.05
+  $$
+  </li>
+  <li>For Shelter $A$,
+
+  $$
+  P(D\mid +)
+  =\frac{(0.02)(0.90)}{(0.02)(0.90)+(0.98)(0.05)}
+  =\frac{0.018}{0.067}
+  \approx0.2687
+  $$
+  </li>
+  <li>For Shelter $B$,
+
+  $$
+  P(D\mid +)
+  =\frac{(0.15)(0.90)}{(0.15)(0.90)+(0.85)(0.05)}
+  =\frac{0.135}{0.1775}
+  \approx0.7606
+  $$
+  </li>
+  <li>Positive predictive value depends on prevalence as well as test accuracy. In Shelter $A$, the disease-free group is much larger and produces many false positives relative to the number of true positives. The higher prevalence in Shelter $B$ increases the proportion of positive results that are true positives.</li>
+  <li>At Shelter $A$,
+
+  $$
+  \text{True positives}=10000(0.02)(0.90)=180
+  $$
+
+  $$
+  \text{False positives}=10000(0.98)(0.05)=490
+  $$
+
+  At Shelter $B$,
+
+  $$
+  \text{True positives}=10000(0.15)(0.90)=1350
+  $$
+
+  $$
+  \text{False positives}=10000(0.85)(0.05)=425
+  $$
+  </li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $18$
+
+An environmental agency receives water samples from three source types. Half come from Treatment Plant $A$, $30\%$ come from Treatment Plant $B$ and $20\%$ come from private wells. The probabilities of dangerous contamination are $0.01$, $0.04$ and $0.12$, respectively.
+
+Let $D$ mean dangerous contamination.
+
+1. Calculate the joint probability of each source type and dangerous contamination.
+2. Use the Law of Total Probability to calculate $P(D)$.
+3. Given that a sample is dangerously contaminated, calculate the probability that it came from each source type.
+4. Which source type is most likely for a contaminated sample?
+5. Among $10000$ samples, how many dangerously contaminated samples would be expected from each source type?
+6. Explain why the most common source of all samples is not necessarily the most common source among contaminated samples.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The contamination paths are
+
+  $$
+  P(A\cap D)=(0.50)(0.01)=0.005
+  $$
+
+  $$
+  P(B\cap D)=(0.30)(0.04)=0.012
+  $$
+
+  $$
+  P(W\cap D)=(0.20)(0.12)=0.024
+  $$
+  </li>
+  <li>The overall probability is
+
+  $$
+  P(D)=0.005+0.012+0.024=0.041
+  $$
+  </li>
+  <li>The reverse conditional probabilities are
+
+  $$
+  P(A\mid D)=\frac{0.005}{0.041}\approx0.1220
+  $$
+
+  $$
+  P(B\mid D)=\frac{0.012}{0.041}\approx0.2927
+  $$
+
+  $$
+  P(W\mid D)=\frac{0.024}{0.041}\approx0.5854
+  $$
+  </li>
+  <li>A contaminated sample is most likely to have come from a private well, with conditional probability approximately $0.5854$.</li>
+  <li>Among $10000$ samples, the expected contaminated counts are
+
+  $$
+  10000(0.005)=50
+  $$
+
+  from Plant $A$,
+
+  $$
+  10000(0.012)=120
+  $$
+
+  from Plant $B$ and
+
+  $$
+  10000(0.024)=240
+  $$
+
+  from private wells.</li>
+  <li>Source frequency and contamination rate both matter. Plant $A$ provides the largest number of samples, but its contamination probability is much lower than the private-well probability.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $19$
+
+A medical study uses two screening tests for the same condition. Disease prevalence is $0.08$. Test $1$ has sensitivity $0.90$ and specificity $0.95$. Test $2$ has sensitivity $0.85$ and specificity $0.98$.
+
+Assume that the two test results are independent **conditional on the person's true disease status**. A person receives positive results on both tests.
+
+1. Calculate $P(T_1^+\cap T_2^+\mid D)$.
+2. Calculate $P(T_1^+\cap T_2^+\mid D^c)$.
+3. Calculate the probability of disease and two positive results.
+4. Calculate the probability of no disease and two positive results.
+5. Use Bayes's Theorem to calculate $P(D\mid T_1^+\cap T_2^+)$.
+6. Explain precisely which independence assumption was used. Why would multiplying the two unconditional positive-test probabilities be incorrect?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Conditional independence within the disease group gives
+
+  $$
+  P(T_1^+\cap T_2^+\mid D)=(0.90)(0.85)=0.765
+  $$
+  </li>
+  <li>The false-positive probabilities are $0.05$ and $0.02$. Conditional independence within the disease-free group gives
+
+  $$
+  P(T_1^+\cap T_2^+\mid D^c)=(0.05)(0.02)=0.001
+  $$
+  </li>
+  <li>The disease-and-two-positive path has probability
+
+  $$
+  P(D\cap T_1^+\cap T_2^+)=(0.08)(0.765)=0.0612
+  $$
+  </li>
+  <li>The disease-free-and-two-positive path has probability
+
+  $$
+  P(D^c\cap T_1^+\cap T_2^+)=(0.92)(0.001)=0.00092
+  $$
+  </li>
+  <li>The posterior probability is
+
+  $$
+  P(D\mid T_1^+\cap T_2^+)
+  =\frac{0.0612}{0.0612+0.00092}
+  \approx0.9852
+  $$
+  </li>
+  <li>The assumption states that the two test results are independent after disease status is fixed. It permits multiplication within the $D$ branch and within the $D^c$ branch. The test results are not necessarily independent in the overall population because both are related to the same underlying disease status. Multiplying unconditional positive probabilities would ignore that shared structure.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $20$
+
+Wildlife veterinarians screen animals for an infectious disease in three habitats. The following values are hypothetical.
+
+| Habitat | Proportion of screened animals | Disease prevalence within habitat |
+|:--|--:|--:|
+| Forest | $0.50$ | $0.06$ |
+| Wetland | $0.30$ | $0.15$ |
+| Grassland | $0.20$ | $0.03$ |
+
+The diagnostic test has sensitivity $0.92$ and specificity $0.96$ in every habitat. Let $D$ mean disease and let $+$ mean a positive test result.
+
+1. Use the Law of Total Probability to calculate the overall disease prevalence $P(D)$.
+2. Calculate the overall probability of a positive result, $P(+)$.
+3. Calculate $P(D\mid +)$.
+4. Calculate $P(\text{wetland}\cap D\cap +)$.
+5. Calculate the total probability of a positive result arising from each habitat.
+6. Given a positive result, calculate the probability that the animal came from a wetland.
+7. Among wetland animals with a positive result, calculate the probability of disease.
+8. Are habitat and disease status independent? Justify your answer using probabilities.
+9. Explain why neither a positive result nor wetland origin alone should be interpreted as proof that an individual animal has the disease.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The overall disease prevalence is
+
+  $$
+  \begin{aligned}
+  P(D)
+  &=(0.50)(0.06)+(0.30)(0.15)+(0.20)(0.03)\\
+  &=0.030+0.045+0.006\\
+  &=0.081
+  \end{aligned}
+  $$
+  </li>
+  <li>The false-positive probability is $1-0.96=0.04$. Therefore,
+
+  $$
+  \begin{aligned}
+  P(+)
+  &=P(D)P(+\mid D)+P(D^c)P(+\mid D^c)\\
+  &=(0.081)(0.92)+(0.919)(0.04)\\
+  &=0.11128
+  \end{aligned}
+  $$
+  </li>
+  <li>The posterior probability of disease is
+
+  $$
+  P(D\mid +)=\frac{(0.081)(0.92)}{0.11128}\approx0.6697
+  $$
+  </li>
+  <li>The wetland, disease and positive-test path has probability
+
+  $$
+  P(W\cap D\cap +)=(0.30)(0.15)(0.92)=0.0414
+  $$
+  </li>
+  <li>For forest animals,
+
+  $$
+  P(F\cap +)=0.50\big[(0.06)(0.92)+(0.94)(0.04)\big]=0.0464
+  $$
+
+  For wetland animals,
+
+  $$
+  P(W\cap +)=0.30\big[(0.15)(0.92)+(0.85)(0.04)\big]=0.0516
+  $$
+
+  For grassland animals,
+
+  $$
+  P(G\cap +)=0.20\big[(0.03)(0.92)+(0.97)(0.04)\big]=0.01328
+  $$
+
+  As a check,
+
+  $$
+  0.0464+0.0516+0.01328=0.11128=P(+)
+  $$
+  </li>
+  <li>Among all positive results,
+
+  $$
+  P(W\mid +)=\frac{0.0516}{0.11128}\approx0.4637
+  $$
+  </li>
+  <li>Within the wetland-positive group,
+
+  $$
+  P(D\mid W\cap +)=\frac{0.0414}{0.0516}\approx0.8023
+  $$
+  </li>
+  <li>Habitat and disease status are not independent because
+
+  $$
+  P(D\mid W)=0.15\neq0.081=P(D)
+  $$
+
+  Knowing the habitat changes the disease probability in this model.</li>
+  <li>A positive result can be false, and most wetland animals are still disease-free before test information is considered. The probabilities describe uncertainty within groups; diagnosis of an individual requires the test result, the relevant population information and appropriate clinical or confirmatory assessment.</li>
+</ol>
+</div>
+</details>
+:::

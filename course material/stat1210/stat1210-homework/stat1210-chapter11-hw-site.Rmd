@@ -1,0 +1,867 @@
+---
+title: "STAT 1210"
+subtitle: "Chapter 11 Homework: The Normal Distributions"
+author: "Fall 2026"
+date: ""
+output:
+  html_document:
+    self_contained: true
+    toc: false
+    number_sections: false
+    theme: flatly
+    highlight: tango
+---
+
+<style>
+:root {
+  --ink: #263746;
+  --muted: #667786;
+  --blue: #294d73;
+  --blue-dark: #183a5c;
+  --blue-soft: #edf3f8;
+  --line: #d8e1e8;
+  --paper: #ffffff;
+  --page: #eef2f5;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+
+.main-container {
+  max-width: 980px !important;
+  margin-top: 28px;
+  margin-bottom: 42px;
+  padding: 42px 58px 56px;
+  background: var(--paper);
+  border: 1px solid #dde5eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(31, 50, 67, 0.10);
+}
+
+h1, h2, h3 { color: var(--blue-dark); }
+
+h1.title {
+  margin-bottom: 4px;
+  font-weight: 750;
+}
+
+h3.subtitle {
+  margin-top: 0;
+  color: var(--blue);
+  font-weight: 500;
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 1.28em;
+  line-height: 1.35;
+}
+
+.intro-box {
+  margin: 1.2em 0 1.8em;
+  padding: 1em 1.2em;
+  border-left: 5px solid var(--blue);
+  border-radius: 6px;
+  background: var(--blue-soft);
+}
+
+.question-card {
+  margin: 1.55em 0 2em;
+  padding: 1.3em 1.45em 1.1em;
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--blue);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(35, 54, 74, 0.07);
+}
+
+table {
+  width: 100%;
+  margin: 1.1em 0 1.3em;
+  border-collapse: collapse;
+  border: 1px solid var(--line);
+}
+
+thead th {
+  padding: 0.65em 0.75em !important;
+  background: var(--blue);
+  color: white;
+  border: 0 !important;
+}
+
+tbody td {
+  padding: 0.58em 0.75em !important;
+  border-bottom: 1px solid #e5ebf0 !important;
+}
+
+tbody tr:nth-child(even) td { background: #f7f9fb; }
+
+details.solution {
+  margin-top: 1.15em;
+  border: 1px solid #bfd1df;
+  border-radius: 7px;
+  background: #f8fbfd;
+  overflow: hidden;
+}
+
+details.solution summary {
+  padding: 0.72em 0.95em;
+  color: var(--blue-dark);
+  background: var(--blue-soft);
+  cursor: pointer;
+  font-weight: 700;
+  user-select: none;
+}
+
+details.solution summary:hover { background: #e2edf5; }
+
+.solution-body {
+  padding: 0.95em 1.1em 0.75em;
+}
+
+.solution-body ol { margin-bottom: 0.25em; }
+.solution-body li { margin-bottom: 0.75em; }
+
+@media (max-width: 768px) {
+  .main-container {
+    margin-top: 0;
+    padding: 24px 20px 38px;
+    border-radius: 0;
+  }
+}
+
+@media print {
+  body { background: white; font-size: 11pt; }
+  .main-container {
+    max-width: none !important;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+  .question-card { break-inside: avoid; box-shadow: none; }
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  fig.retina = 2,
+  out.width = "88%"
+)
+
+course_blue <- "#294D73"
+course_green <- "#3F7D58"
+course_gold <- "#C6923A"
+course_red <- "#A5524A"
+soft_grid <- "#D9E1E7"
+```
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("details.solution").forEach(function(item) {
+    item.removeAttribute("open");
+  });
+});
+</script>
+
+::: {.question-card}
+### Question $1$
+
+A veterinary physiology team models the resting heart rate $H$ of healthy adult domestic cats as approximately Normal with mean $160$ beats per minute and standard deviation $20$ beats per minute.
+
+```{r q1-cat-heart-rate, echo=FALSE, fig.width=7, fig.height=4.1}
+heart_rate <- seq(90, 230, length.out = 800)
+heart_density <- dnorm(heart_rate, mean = 160, sd = 20)
+
+old_par <- par(mar = c(4.4, 4.6, 2.8, 1), las = 1, bty = "l")
+plot(
+  heart_rate,
+  heart_density,
+  type = "n",
+  xlab = "Resting heart rate (beats per minute)",
+  ylab = "Density",
+  main = "Illustrative Normal Model for Resting Heart Rate"
+)
+grid(col = soft_grid, lty = 3)
+lines(heart_rate, heart_density, col = course_blue, lwd = 2)
+abline(v = 160, col = course_red, lty = 2, lwd = 1.5)
+par(old_par)
+```
+
+1. Write the model using the notation $H\sim N(\mu,\sigma)$.
+2. What are the mean and median of this model?
+3. At what two heart rates are the inflection points located?
+4. What proportion of the total area lies to the left of $160$ beats per minute?
+5. If the standard deviation were reduced from $20$ to $12$ beats per minute while the mean remained unchanged, how would the curve change?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The model is
+
+  $$
+  H\sim N(160,20)
+  $$
+  </li>
+  <li>A Normal distribution is symmetric around its mean, so the mean and median are both $160$ beats per minute.</li>
+  <li>The inflection points occur at $\mu-\sigma$ and $\mu+\sigma$:
+
+  $$
+  160-20=140
+  $$
+
+  $$
+  160+20=180
+  $$
+
+  The inflection points are located at $140$ and $180$ beats per minute.</li>
+  <li>Symmetry places half of the total area on each side of the mean, so
+
+  $$
+  P(H<160)=0.5
+  $$
+  </li>
+  <li>The curve would become narrower and taller because values would be more concentrated around $160$. Its total area would remain equal to $1$.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $2$
+
+The gestation length $G$ of a particular breed of dog is modelled as approximately Normal with mean $63$ days and standard deviation $2$ days.
+
+1. Use the $68$--$95$--$99.7$ rule to find the interval containing approximately the middle $68\%$ of gestation lengths.
+2. Find the interval containing approximately the middle $95\%$.
+3. Find the interval containing approximately the middle $99.7\%$.
+4. Approximately what percentage of gestation lengths exceed $67$ days?
+5. Approximately what percentage fall below $61$ days?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The middle $68\%$ lies within one standard deviation of the mean:
+
+  $$
+  63-2=61
+  $$
+
+  $$
+  63+2=65
+  $$
+
+  Approximately $68\%$ of gestation lengths lie between $61$ and $65$ days.</li>
+  <li>The middle $95\%$ lies within two standard deviations:
+
+  $$
+  63-2(2)=59
+  $$
+
+  $$
+  63+2(2)=67
+  $$
+
+  Approximately $95\%$ lie between $59$ and $67$ days.</li>
+  <li>The middle $99.7\%$ lies within three standard deviations:
+
+  $$
+  63-3(2)=57
+  $$
+
+  $$
+  63+3(2)=69
+  $$
+
+  Approximately $99.7\%$ lie between $57$ and $69$ days.</li>
+  <li>The value $67$ is two standard deviations above the mean. The middle $95\%$ leaves $5\%$ in the two tails, so
+
+  $$
+  P(G>67)\approx\frac{0.05}{2}=0.025
+  $$
+
+  Approximately $2.5\%$ exceed $67$ days.</li>
+  <li>The value $61$ is one standard deviation below the mean. The middle $68\%$ leaves $32\%$ outside, so
+
+  $$
+  P(G<61)\approx\frac{0.32}{2}=0.16
+  $$
+
+  Approximately $16\%$ fall below $61$ days.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $3$
+
+Wildlife researchers compare two unusually large animals with their respective reference populations.
+
+- A bald eagle has a wingspan of $2.12$ m. Adult wingspans in its reference population have mean $1.95$ m and standard deviation $0.10$ m.
+- A red fox has a mass of $7.8$ kg. Adult masses in its reference population have mean $6.5$ kg and standard deviation $0.9$ kg.
+
+1. Calculate the z-score for the eagle's wingspan.
+2. Calculate the z-score for the fox's mass.
+3. Interpret each z-score in context.
+4. Which animal has the more unusual high measurement relative to its reference population?
+5. Why would directly comparing $2.12$ with $7.8$ be meaningless?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The eagle's z-score is
+
+  $$
+  z=\frac{2.12-1.95}{0.10}=1.70
+  $$
+  </li>
+  <li>The fox's z-score is
+
+  $$
+  z=\frac{7.8-6.5}{0.9}\approx1.44
+  $$
+  </li>
+  <li>The eagle's wingspan is $1.70$ standard deviations above its population mean. The fox's mass is approximately $1.44$ standard deviations above its population mean.</li>
+  <li>The eagle has the more unusual high measurement because $1.70>1.44$.</li>
+  <li>The raw measurements use different units and describe different characteristics. Z-scores provide a unitless common scale for comparing relative positions.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $4$
+
+The recovery time $R$ after a routine veterinary anaesthetic procedure is modelled as approximately Normal with mean $45$ minutes and standard deviation $6$ minutes.
+
+1. Express $39$ minutes and $57$ minutes as distances from the mean in standard-deviation units.
+2. Use the $68$--$95$--$99.7$ rule to approximate $P(39<R<57)$.
+3. Approximate $P(R<39)$.
+4. Approximate $P(R>57)$.
+5. Among $400$ similar procedures, approximately how many recovery times would be expected to fall between $39$ and $57$ minutes?
+6. Why are these answers approximations rather than exact Normal probabilities?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The two boundaries are
+
+  $$
+  39=45-6=\mu-\sigma
+  $$
+
+  $$
+  57=45+2(6)=\mu+2\sigma
+  $$
+
+  Thus, $39$ minutes is one standard deviation below the mean and $57$ minutes is two standard deviations above the mean.</li>
+  <li>The area from $\mu-\sigma$ to $\mu+\sigma$ is approximately $68\%$. The area from $\mu+\sigma$ to $\mu+2\sigma$ is
+
+  $$
+  \frac{95\%-68\%}{2}=13.5\%
+  $$
+
+  Therefore,
+
+  $$
+  P(39<R<57)\approx0.68+0.135=0.815
+  $$
+  </li>
+  <li>The lower tail below $\mu-\sigma$ contains approximately
+
+  $$
+  P(R<39)\approx0.16
+  $$
+  </li>
+  <li>The upper tail beyond $\mu+2\sigma$ contains approximately
+
+  $$
+  P(R>57)\approx0.025
+  $$
+  </li>
+  <li>The expected number is
+
+  $$
+  400(0.815)=326
+  $$
+
+  Approximately $326$ recovery times would be expected in the interval.</li>
+  <li>The empirical rule uses rounded benchmark percentages. Exact Normal probabilities require a Standard Normal table or software such as R.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $5$
+
+In an illustrative veterinary reference population, serum sodium concentration $S$ is modelled as Normal with mean $145$ mmol/L and standard deviation $4$ mmol/L.
+
+1. Write the model in Normal notation.
+2. Calculate $P(S<137)$ using R.
+3. Calculate $P(S>153)$ using R.
+4. Calculate the probability that a concentration lies outside the interval from $137$ to $153$ mmol/L.
+5. Among $800$ independent measurements from this reference population, approximately how many would be expected outside this interval?
+6. Compare the exact result with the approximation from the $68$--$95$--$99.7$ rule.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The model is
+
+  $$
+  S\sim N(145,4)
+  $$
+  </li>
+  <li>The lower boundary is two standard deviations below the mean. R gives
+
+```{r q5-lower-tail, echo=TRUE}
+pnorm(q = 137, mean = 145, sd = 4)
+```
+
+  Therefore,
+
+  $$
+  P(S<137)\approx0.0228
+  $$
+  </li>
+  <li>The right-tail probability is
+
+```{r q5-upper-tail, echo=TRUE}
+pnorm(q = 153, mean = 145, sd = 4, lower.tail = FALSE)
+```
+
+  Therefore,
+
+  $$
+  P(S>153)\approx0.0228
+  $$
+  </li>
+  <li>The two tail regions are disjoint, so
+
+  $$
+  P(S<137\text{ or }S>153)
+  \approx0.0228+0.0228
+  =0.0455
+  $$
+  </li>
+  <li>The expected number is
+
+  $$
+  800(0.0455)\approx36.4
+  $$
+
+  Approximately $36$ measurements would be expected outside the interval.</li>
+  <li>The empirical rule estimates that $5\%$ lies outside two standard deviations. The exact Normal result is approximately $4.55\%$, which is close because the empirical rule is rounded.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $6$
+
+The wing length $W$ of an adult songbird species is modelled as approximately Normal with mean $74$ mm and standard deviation $5.5$ mm.
+
+1. Standardize the boundaries $68$ mm and $82$ mm.
+2. Use R to calculate $P(68<W<82)$.
+3. What proportion of birds are expected to have wing lengths outside this interval?
+4. In a random sample of $350$ birds, approximately how many would be expected to have wing lengths between $68$ and $82$ mm?
+5. Explain why $P(68<W<82)=P(68\leq W\leq82)$ under this model.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The standardized boundaries are
+
+  $$
+  z_1=\frac{68-74}{5.5}\approx-1.09
+  $$
+
+  $$
+  z_2=\frac{82-74}{5.5}\approx1.45
+  $$
+  </li>
+  <li>The interval probability is calculated by subtracting cumulative areas:
+
+```{r q6-wing-interval, echo=TRUE}
+pnorm(q = 82, mean = 74, sd = 5.5) -
+  pnorm(q = 68, mean = 74, sd = 5.5)
+```
+
+  Therefore,
+
+  $$
+  P(68<W<82)\approx0.7894
+  $$
+  </li>
+  <li>The probability outside the interval is
+
+  $$
+  1-0.7894=0.2106
+  $$
+
+  Approximately $21.06\%$ lie outside the interval.</li>
+  <li>The expected number is
+
+  $$
+  350(0.7894)\approx276.3
+  $$
+
+  Approximately $276$ birds would be expected in the interval.</li>
+  <li>A single exact value has probability $0$ in a continuous model. Including or excluding the endpoints therefore does not change the area or probability.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $7$
+
+A manufacturing process fills veterinary vaccine vials. The fill volume $V$ is modelled as Normal with mean $10.00$ mL and standard deviation $0.12$ mL.
+
+1. Find the lower and upper boundaries of the central $98\%$ of fill volumes.
+2. What fill volume marks the lowest $5\%$ of the distribution?
+3. A vial contains $9.75$ mL. Calculate its z-score.
+4. Use R to find the percentile rank of a $9.75$ mL fill.
+5. Based only on this model, is $9.75$ mL below the lower $5\%$ boundary?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The central $98\%$ leaves $1\%$ in each tail. The boundaries are the $1$st and $99$th percentiles:
+
+```{r q7-central-98, echo=TRUE}
+qnorm(c(0.01, 0.99), mean = 10.00, sd = 0.12)
+```
+
+  The central $98\%$ extends approximately from $9.721$ mL to $10.279$ mL.</li>
+  <li>The lower $5\%$ boundary is
+
+```{r q7-lowest-five, echo=TRUE}
+qnorm(p = 0.05, mean = 10.00, sd = 0.12)
+```
+
+  The boundary is approximately $9.803$ mL.</li>
+  <li>The z-score is
+
+  $$
+  z=\frac{9.75-10.00}{0.12}\approx-2.08
+  $$
+  </li>
+  <li>The cumulative probability is
+
+```{r q7-vial-percentile, echo=TRUE}
+pnorm(q = 9.75, mean = 10.00, sd = 0.12)
+```
+
+  Approximately $0.0186$, or $1.86\%$, of fills are at or below $9.75$ mL. The vial is approximately at the $1.86$th percentile.</li>
+  <li>Yes. Since $9.75<9.803$, the vial lies below the model's lower $5\%$ boundary. This statistical statement does not by itself determine whether the vial satisfies a regulatory requirement.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $8$
+
+Piglet birth weight $B$ is modelled as Normal with mean $1.40$ kg and standard deviation $0.25$ kg. Use the Standard Normal table values below.
+
+| $z$ | $N(z)=P(Z\leq z)$ |
+|--:|--:|
+| $1.40$ | $0.9192$ |
+| $1.60$ | $0.9452$ |
+| $2.00$ | $0.9772$ |
+
+1. Convert $1.05$ kg and $1.80$ kg to z-scores.
+2. Use the table and symmetry to calculate $P(1.05<B<1.80)$.
+3. Calculate $P(B>1.90)$ using the table.
+4. In a population of $2500$ piglets, approximately how many would be expected to weigh more than $1.90$ kg?
+5. Check the interval probability from Part $2$ using one line of R code.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The standardized boundaries are
+
+  $$
+  z_1=\frac{1.05-1.40}{0.25}=-1.40
+  $$
+
+  $$
+  z_2=\frac{1.80-1.40}{0.25}=1.60
+  $$
+  </li>
+  <li>The table does not list the negative value directly, so symmetry gives
+
+  $$
+  N(-1.40)=1-N(1.40)=1-0.9192=0.0808
+  $$
+
+  Therefore,
+
+  $$
+  \begin{aligned}
+  P(1.05<B<1.80)
+  &=P(-1.40<Z<1.60)\\
+  &=N(1.60)-N(-1.40)\\
+  &=0.9452-0.0808\\
+  &=0.8644
+  \end{aligned}
+  $$
+  </li>
+  <li>A weight of $1.90$ kg has z-score
+
+  $$
+  z=\frac{1.90-1.40}{0.25}=2.00
+  $$
+
+  The right-tail probability is
+
+  $$
+  P(B>1.90)=1-N(2.00)=1-0.9772=0.0228
+  $$
+  </li>
+  <li>The expected number is
+
+  $$
+  2500(0.0228)=57
+  $$
+
+  Approximately $57$ piglets would be expected above $1.90$ kg.</li>
+  <li>The R check is
+
+```{r q8-r-check, echo=TRUE}
+pnorm(1.80, mean = 1.40, sd = 0.25) -
+  pnorm(1.05, mean = 1.40, sd = 0.25)
+```
+
+  The result is approximately $0.8644$.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $9$
+
+For one narrowly defined category of automobile repairs, an insurer uses an illustrative Normal model for claim amount $C$ with mean $\$2200$ and standard deviation $\$350$.
+
+1. What claim amount marks the beginning of the highest $7\%$ of claims? Write the probability statement before calculating the boundary.
+2. What claim amount marks the lowest $3\%$ of claims?
+3. What proportion of claims lies between the two boundaries from Parts $1$ and $2$?
+4. Among $4000$ claims, approximately how many would be expected to fall outside those two boundaries?
+5. Explain why the insurer should examine actual claim data before relying on this Normal model.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Let $u$ be the upper boundary. The highest $7\%$ satisfies
+
+  $$
+  P(C>u)=0.07
+  $$
+
+  Therefore, the cumulative area to the left is
+
+  $$
+  P(C\leq u)=0.93
+  $$
+
+```{r q9-upper-seven, echo=TRUE}
+qnorm(p = 0.93, mean = 2200, sd = 350)
+```
+
+  The upper boundary is approximately $\$2716.53$.</li>
+  <li>Let $\ell$ be the lower boundary. It satisfies
+
+  $$
+  P(C\leq\ell)=0.03
+  $$
+
+```{r q9-lower-three, echo=TRUE}
+qnorm(p = 0.03, mean = 2200, sd = 350)
+```
+
+  The lower boundary is approximately $\$1541.72$.</li>
+  <li>The lower tail contains $3\%$ and the upper tail contains $7\%$. Therefore,
+
+  $$
+  P(\ell<C<u)=1-0.03-0.07=0.90
+  $$
+
+  Approximately $90\%$ of claims lie between the two boundaries.</li>
+  <li>The proportion outside is $0.10$, so
+
+  $$
+  4000(0.10)=400
+  $$
+
+  Approximately $400$ claims would be expected outside the boundaries.</li>
+  <li>Repair claims are restricted to nonnegative values and can be right-skewed because a small number of claims may be very expensive. The insurer should examine a histogram or density plot and look for skewness, subgroups and unusual claims before treating the Normal model as reasonable.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $10$
+
+A conservation hatchery models the fork length $L$ of Atlantic salmon smolts as Normal with mean $145$ mm and standard deviation $12$ mm. Smolts in the lowest $10\%$ are classified as **small**, while smolts in the highest $5\%$ are classified as **large**.
+
+1. Write probability statements defining the small and large cutoffs.
+2. Calculate both cutoff lengths using R.
+3. Under the original model, what proportion of smolts is neither small nor large?
+4. Among $1200$ smolts, how many would be expected in each of the three classifications?
+5. In a later season, the mean length increases to $149$ mm while the standard deviation remains $12$ mm. If the original numerical cutoffs are retained, calculate the new proportions classified as small and large.
+6. Compare the new classification proportions with the original proportions.
+7. What cutoff lengths should be used in the later season if the hatchery wants to preserve the lowest-$10\%$ and highest-$5\%$ definitions?
+8. Identify one scientific limitation of using this model to classify future smolts.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Let $\ell$ be the small cutoff and $u$ be the large cutoff. They satisfy
+
+  $$
+  P(L\leq\ell)=0.10
+  $$
+
+  $$
+  P(L>u)=0.05
+  $$
+
+  Equivalently,
+
+  $$
+  P(L\leq u)=0.95
+  $$
+  </li>
+  <li>The cutoffs are
+
+```{r q10-original-cutoffs, echo=TRUE}
+small_cutoff <- qnorm(0.10, mean = 145, sd = 12)
+large_cutoff <- qnorm(0.95, mean = 145, sd = 12)
+c(small = small_cutoff, large = large_cutoff)
+```
+
+  The small cutoff is approximately $129.62$ mm and the large cutoff is approximately $164.74$ mm.</li>
+  <li>The middle proportion is
+
+  $$
+  1-0.10-0.05=0.85
+  $$
+
+  Approximately $85\%$ of smolts are neither small nor large.</li>
+  <li>The expected counts are
+
+  $$
+  1200(0.10)=120\text{ small}
+  $$
+
+  $$
+  1200(0.85)=1020\text{ middle}
+  $$
+
+  $$
+  1200(0.05)=60\text{ large}
+  $$
+  </li>
+  <li>Using the original cutoffs with the new mean gives
+
+```{r q10-shifted-proportions, echo=TRUE}
+p_small_new <- pnorm(small_cutoff, mean = 149, sd = 12)
+p_large_new <- pnorm(
+  large_cutoff,
+  mean = 149,
+  sd = 12,
+  lower.tail = FALSE
+)
+c(small = p_small_new, large = p_large_new)
+```
+
+  The new proportions are approximately
+
+  $$
+  P(L\leq129.62)\approx0.0532
+  $$
+
+  $$
+  P(L>164.74)\approx0.0948
+  $$
+  </li>
+  <li>The small classification decreases from $10\%$ to approximately $5.32\%$, while the large classification increases from $5\%$ to approximately $9.48\%$. The distribution has shifted to the right relative to the fixed historical cutoffs.</li>
+  <li>The updated cutoffs are
+
+```{r q10-updated-cutoffs, echo=TRUE}
+qnorm(c(0.10, 0.95), mean = 149, sd = 12)
+```
+
+  They are approximately $133.62$ mm and $168.74$ mm. Because only the mean increased by $4$ mm, both percentile cutoffs also increased by $4$ mm.</li>
+  <li>The Normal model may not fit future smolt lengths because environmental conditions, age composition, hatchery practices or population structure may change. The model should be checked against current data before classifications are applied.</li>
+</ol>
+
+The figure below shows why the fixed historical cutoffs classify fewer smolts as small and more smolts as large after the mean shifts.
+
+```{r q10-shifted-plot, echo=FALSE, fig.width=7.2, fig.height=4.4}
+length_values <- seq(105, 195, length.out = 800)
+original_density <- dnorm(length_values, mean = 145, sd = 12)
+shifted_density <- dnorm(length_values, mean = 149, sd = 12)
+
+old_par <- par(mar = c(4.4, 4.6, 2.8, 1), las = 1, bty = "l")
+plot(
+  length_values,
+  original_density,
+  type = "n",
+  ylim = c(0, max(original_density, shifted_density) * 1.08),
+  xlab = "Fork length (mm)",
+  ylab = "Density",
+  main = "Original and Shifted Smolt-Length Models"
+)
+grid(col = soft_grid, lty = 3)
+lines(length_values, original_density, col = course_blue, lwd = 2)
+lines(length_values, shifted_density, col = course_green, lwd = 2)
+abline(
+  v = c(small_cutoff, large_cutoff),
+  col = course_red,
+  lty = 2,
+  lwd = 1.5
+)
+legend(
+  "topleft",
+  legend = c(
+    "Original model: mean 145 mm",
+    "Later model: mean 149 mm",
+    "Original fixed cutoffs"
+  ),
+  col = c(course_blue, course_green, course_red),
+  lty = c(1, 1, 2),
+  lwd = c(2, 2, 1.5),
+  bty = "n"
+)
+par(old_par)
+```
+</div>
+</details>
+:::
