@@ -703,13 +703,7 @@ $$
 
 Interpolation allows a percentile to fall between two observed values rather than forcing the quartile to equal one of the observations. For a small dataset, this can provide a smoother representation of the percentile's position within the ordered data.
 
-## Bonus Question: Writing and Drawing are Important
 
-There is no single fixed solution to this bonus question.
-
-A student who chooses the scientific-facts option should be assessed on whether two scientifically meaningful facts are presented, whether each is explained in at least five complete sentences, and whether the submission demonstrates genuine effort and originality.
-
-A student who chooses the drawing option should be assessed according to creativity, effort, originality, and attention to detail rather than artistic technique.
 
 \vfill
 

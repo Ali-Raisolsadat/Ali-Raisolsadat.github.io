@@ -8,6 +8,7 @@
 \usepackage{xcolor}
 \usepackage{tabularx}
 \usepackage{array}
+\usepackage{tikz}
 
 \title[Chapter 10: Independence \& Conditional Probabilities]{\textbf{Chapter 10: Independence and Conditional Probabilities}}
 \subtitle{The Practice of Statistics in the Life Sciences \\ by Brigitte Baldi and David S. Moore}
@@ -790,150 +791,223 @@ It is not an individual diagnosis and it does not show that insomnia causes depr
 \end{alertblock}
 \end{frame}
 
-% SLIDE 27
+% SLIDE 47
+\begin{frame}{Will the Beer Be Cold Before the Pizza Arrives?}
+At a physics department pizza night, the beer is about $18^\circ$C and the pizza will arrive in $20$ minutes. Students test three ways to cool identical cans. They call a can \textbf{cold enough} if its temperature is at most $10^\circ$C after $20$ minutes. Let $C$ mean ``cold enough.''
+
+\begin{table}
+\centering
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Cooling method} & \textbf{Proportion of trials} & \textbf{Chance of success} \\
+\midrule
+Refrigerator ($R$) & $P(R)=0.30$ & $P(C\mid R)=0.10$ \\
+Freezer ($F$)      & $P(F)=0.30$ & $P(C\mid F)=0.55$ \\
+Ice-water bath ($I$)& $P(I)=0.40$ & $P(C\mid I)=0.85$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{block}{Question}
+For a randomly selected trial, what is the probability that the beer is cold enough when the pizza arrives?
+\end{block}
+
+That is we want the $P(C)$. Recall partioning of event; so we can write $P(O)$ as 
+$$P(C) = P(C \cap R) + P(C \cap F) + P(C \cap I)$$
+\end{frame}
+
+% SLIDE 48
+\begin{frame}{Building the Tree: Which Cooling Method?}
+The first branches show which cooling method is used in a trial.
+
+\begin{center}
+\begin{tikzpicture}[x=1.45cm,y=0.70cm]
+  \coordinate (Start) at (0,2);
+  \coordinate (R) at (3,4);
+  \coordinate (F) at (3,2);
+  \coordinate (I) at (3,0);
+
+  \fill (Start) circle (1.5pt);
+  \draw (Start) -- node[above,sloped] {$0.30$} (R);
+  \draw (Start) -- node[above] {$0.30$} (F);
+  \draw (Start) -- node[below,sloped] {$0.40$} (I);
+
+  \node[right] at (R) {Refrigerator ($R$)};
+  \node[right] at (F) {Freezer ($F$)};
+  \node[right] at (I) {Ice-water bath ($I$)};
+\end{tikzpicture}
+\end{center}
+
+\begin{block}{First tree rule}
+Each trial uses one of the three methods, so the branches leaving the starting point sum to $1$.
+$$P(R)+P(F)+P(I)=0.30+0.30+0.40=1$$
+\end{block}
+\end{frame}
+
+% SLIDE 49
+\begin{frame}{Building the Tree: Is the Beer Cold Enough?}
+From each method, add branches for \textbf{cold enough} ($C$) and \textbf{not cold enough} ($C^c$).
+
+\begin{center}
+\begin{tikzpicture}[x=1.30cm,y=0.78cm]
+  \coordinate (Start) at (0,3);
+  \coordinate (R) at (2.3,5);
+  \coordinate (F) at (2.3,3);
+  \coordinate (I) at (2.3,1);
+
+  \draw (Start) -- node[above,sloped,font=\scriptsize] {$0.30$} (R);
+  \draw (Start) -- node[above,font=\scriptsize] {$0.30$} (F);
+  \draw (Start) -- node[below,sloped,font=\scriptsize] {$0.40$} (I);
+
+  \draw (R) -- node[above,sloped,font=\scriptsize] {$0.10$} (5.4,5.7);
+  \draw (R) -- node[below,sloped,font=\scriptsize] {$0.90$} (5.4,4.3);
+  \draw (F) -- node[above,sloped,font=\scriptsize] {$0.55$} (5.4,3.7);
+  \draw (F) -- node[below,sloped,font=\scriptsize] {$0.45$} (5.4,2.3);
+  \draw (I) -- node[above,sloped,font=\scriptsize] {$0.85$} (5.4,1.7);
+  \draw (I) -- node[below,sloped,font=\scriptsize] {$0.15$} (5.4,0.3);
+
+  \node[fill=white,inner sep=1pt] at (R) {$R$};
+  \node[fill=white,inner sep=1pt] at (F) {$F$};
+  \node[fill=white,inner sep=1pt] at (I) {$I$};
+
+  \node[right] at (5.4,5.7) {$C$};
+  \node[right] at (5.4,4.3) {$C^c$};
+  \node[right] at (5.4,3.7) {$C$};
+  \node[right] at (5.4,2.3) {$C^c$};
+  \node[right] at (5.4,1.7) {$C$};
+  \node[right] at (5.4,0.3) {$C^c$};
+\end{tikzpicture}
+\end{center}
+
+\small
+The second branches are complement of conditional probabilities. For example, $P(C\mid I)=0.85$, so $P(C^c\mid I) = 1 - P(C\mid I)=0.15$.
+\end{frame}
+
+% SLIDE 50
+\begin{frame}{Multiply Along a Complete Path}
+Consider the path \textbf{ice-water bath then cold enough}. The trial must use an ice-water bath \emph{and} reach the target temperature.
+
+\begin{block}{General Multiplication Rule}
+$$P(I\cap C)=P(I)P(C\mid I)=(0.40)(0.85)=\boxed{0.34}$$
+\end{block}
+
+Thus, $34\%$ of \textbf{all trials} use an ice-water bath and finish with beer at or below $10^\circ$C.
+
+\begin{block}{Second tree rule}
+Multiply along a complete path to find the probability of that combination of outcomes.
+\end{block}
+\end{frame}
+
+% SLIDE 51
+\begin{frame}{Add the Paths That End in ``Cold Enough''}
+The beer can reach the target temperature by any of the three methods. These paths are disjoint because each trial uses only one method.
+
+\small
+\begin{align*}
+P(R\cap C)&=P(R)P(C\mid R)=(0.30)(0.10)=0.030\\
+P(F\cap C)&=P(F)P(C\mid F)=(0.30)(0.55)=0.165\\
+P(I\cap C)&=P(I)P(C\mid I)=(0.40)(0.85)=0.340\\
+P(R\cap C^c)&=P(R)P(C^c\mid R)=(0.30)(0.90)=0.27\\
+P(F\cap C^c)&=P(F)P(C^c\mid F)=(0.30)(0.45)=0.135\\
+P(I\cap C^c)&=P(I)P(C^c\mid I)=(0.40)(0.15)=0.06
+\end{align*}
+
+So 
+$$P(C)=0.030+0.165+0.340=\boxed{0.535}$$
+$$P(C)=0.27+0.135+0.06=\boxed{0.465}$$
+
+Under this model, the beer is cold enough before the pizza arrives in $53.5\%$ of trials.
+\end{frame}
+
+% SLIDE 52
+\begin{frame}{Built Tree: Is the Beer Cold Enough?}
+\begin{center}
+\begin{tikzpicture}[x=1.12cm,y=0.70cm]
+  \coordinate (Start) at (0,3);
+  \coordinate (R) at (2.3,5);
+  \coordinate (F) at (2.3,3);
+  \coordinate (I) at (2.3,1);
+
+  % Cooling method
+  \draw (Start) -- node[above,sloped,font=\scriptsize] {$0.30$} (R);
+  \draw (Start) -- node[above,font=\scriptsize] {$0.30$} (F);
+  \draw (Start) -- node[below,sloped,font=\scriptsize] {$0.40$} (I);
+
+  % Cold enough or not cold enough, given the method
+  \draw (R) -- node[above,sloped,font=\scriptsize] {$0.10$} (5.4,5.7);
+  \draw (R) -- node[below,sloped,font=\scriptsize] {$0.90$} (5.4,4.3);
+  \draw (F) -- node[above,sloped,font=\scriptsize] {$0.55$} (5.4,3.7);
+  \draw (F) -- node[below,sloped,font=\scriptsize] {$0.45$} (5.4,2.3);
+  \draw (I) -- node[above,sloped,font=\scriptsize] {$0.85$} (5.4,1.7);
+  \draw (I) -- node[below,sloped,font=\scriptsize] {$0.15$} (5.4,0.3);
+
+  \node[fill=white,inner sep=1pt] at (R) {$R$};
+  \node[fill=white,inner sep=1pt] at (F) {$F$};
+  \node[fill=white,inner sep=1pt] at (I) {$I$};
+
+  % Final path probabilities
+  \node[anchor=west,font=\scriptsize] at (5.5,5.7)
+    {$C:\ P(R\cap C)=0.030$};
+  \node[anchor=west,font=\scriptsize] at (5.5,4.3)
+    {$C^c:\ P(R\cap C^c)=0.270$};
+  \node[anchor=west,font=\scriptsize] at (5.5,3.7)
+    {$C:\ P(F\cap C)=0.165$};
+  \node[anchor=west,font=\scriptsize] at (5.5,2.3)
+    {$C^c:\ P(F\cap C^c)=0.135$};
+  \node[anchor=west,font=\scriptsize] at (5.5,1.7)
+    {$C:\ P(I\cap C)=0.340$};
+  \node[anchor=west,font=\scriptsize] at (5.5,0.3)
+    {$C^c:\ P(I\cap C^c)=0.060$};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+% SLIDE 53
+\begin{frame}{Now Reverse the Condition}
+We were given
+$$P(C\mid I)=0.85$$
+This says that \textbf{among trials using an ice-water bath} $85\%$ reach the target temperature.
+
+\begin{block}{A different question}
+Suppose the beer \textbf{did} reach the target temperature. What is the probability that it was cooled in an ice-water bath?
+\end{block}
+
+Now we want $P(I\mid C)$. The group we must consider is \textbf{all trials that ended with cold enough beer}, regardless of the method used.
+$$P(C\mid I)\qquad\text{versus}\qquad P(I\mid C)$$
+\end{frame}
+
+% SLIDE 54
+\begin{frame}{Calculate the Reverse Conditional Probability}
+The tree gives us
+$$P(I\cap C)=0.340 \qquad\text{and}\qquad P(C)=0.535$$
+
+Among trials where the beer was cold enough, the fraction that
+used an ice-water bath is
+$$P(I\mid C) =\frac{P(I\cap C)}{P(C)} =\frac{0.340}{0.535} \approx\boxed{0.636}$$
+
+\begin{block}{Interpretation}
+Of the trials that ended with cold enough beer, about $63.6\%$ used an ice-water bath.
+\end{block}
+
+\small
+Knowing that an ice-water bath was used gives $P(C\mid I)=0.85$. Knowing that the beer became cold gives $P(I\mid C)\approx0.636$. The next section develops a general way to reverse such probabilities.
+\end{frame}
+
+% SLIDE 55
 \begin{frame}{Break Time}
     \begin{center}
         \includegraphics[width=0.4\textwidth]{meme_1.jpeg}
     \end{center}
 \end{frame}
 
-% =============================================================
-% PART VI: TREE DIAGRAMS
-% =============================================================
-\section{Tree Diagrams}
-
-\begin{frame}{Tree Diagrams: Three Rules}
-  Tree diagrams are useful when probabilities occur in \textbf{sequential stages}.
-  \vspace{0.2cm}
-  \begin{enumerate}
-    \item \textbf{Branches leaving the same node sum to 1.}
-    \item \textbf{Multiply along a path} to obtain the joint probability of all events on that path.
-    \item \textbf{Add separate disjoint paths} when several paths lead to the event of interest.
-  \end{enumerate}
-  \begin{block}{Why Trees Work}
-    They combine conditional probability, the General Multiplication Rule, and the Addition Rule in one picture.
-  \end{block}
-\end{frame}
-
-\begin{frame}{Example 10.10: Skin Cancer --- Question and Given Information}
-  \begin{block}{Question}
-    What is the overall probability that a randomly selected patient in this study is a woman?
-  \end{block}
-  We select a patient from a study population of people with skin cancer.
-  \vspace{0.15cm}
-  \textbf{Stage 1: location of the cancer}
-  \[
-    P(H)=0.15,\qquad P(T)=0.41,\qquad P(L)=0.44
-  \]
-  These probabilities sum to 1 because every patient belongs to one of these location categories.
-  \vspace{0.15cm}
-  \textbf{Stage 2: sex given the location}
-  \[
-    P(M\mid H)=0.44,\quad
-    P(M\mid T)=0.63,\quad
-    P(M\mid L)=0.20
-  \]
-  The complementary woman probabilities are $0.56$, $0.37$, and $0.80$.
-\end{frame}
-
-\begin{frame}{Example 10.10: Skin Cancer --- Plan the Solution}
-  There are \textbf{three different ways} to end at ``woman'':
-  \begin{enumerate}
-    \item head and woman;
-    \item trunk and woman;
-    \item limbs and woman.
-  \end{enumerate}
-  \vspace{0.15cm}
-  These paths are disjoint because one patient cannot be in two location categories at once.
-  \begin{alertblock}{Tree-Diagram Plan}
-    Multiply along each complete path to get a joint probability, then add the three disjoint woman paths.
-  \end{alertblock}
-\end{frame}
-
-\begin{frame}{Tree Diagram: Skin Cancer --- Multiply Along a Path}
-  \begin{columns}[c]
-    \begin{column}{0.62\textwidth}
-      \centering
-      \lectureimage{fig_ch10_tree_cancer.png}
-    \end{column}
-    \begin{column}{0.35\textwidth}
-      Consider the path ``limbs, then woman''.
-      \[
-        P(L\cap W)=P(L)P(W\mid L)
-  \]
-      \[
-        =(0.44)(0.80)=\mathbf{0.352}
-  \]
-      \begin{block}{Meaning}
-        About 35.2\% of all patients are both women and in the limbs location category.
-      \end{block}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Tree Diagram: Skin Cancer --- Add the Woman Paths}
-  The three woman paths have probabilities
-  \[
-    P(H\cap W)=0.15(0.56)=0.084,
-  \]
-  \[
-    P(T\cap W)=0.41(0.37)=0.1517,
-  \]
-  \[
-    P(L\cap W)=0.44(0.80)=0.352
-  \]
-  Because these paths are disjoint,
-  \[
-    P(W)=0.084+0.1517+0.352=\mathbf{0.5877}
-  \]
-  \begin{block}{Interpretation}
-    Under the study proportions, approximately \textbf{58.8\%} of the skin-cancer patients are women.
-  \end{block}
-\end{frame}
-
-\begin{frame}{Example 10.11: Reverse Conditional Probability --- Question First}
-  \begin{block}{Question}
-    Among \textbf{women}, what proportion have their cancer in the limbs category?
-  \end{block}
-  We were given
-  \[
-    P(W\mid L)=0.80,
-  \]
-  meaning 80\% of patients in the limbs category are women.
-  \vspace{0.15cm}
-  This reverses the direction of the conditional probability. The quantity we want is
-  \[
-    P(L\mid W),
-  \]
-  so the group of women---not the group of limbs cases---must be the denominator.
-\end{frame}
-
-\begin{frame}{Example 10.11: Reverse Conditional Probability --- Calculate}
-  From the tree,
-  \[
-    P(L\cap W)=0.352,
-    \qquad
-    P(W)=0.5877
-  \]
-  Therefore,
-  \[
-    P(L\mid W)=\frac{P(L\cap W)}{P(W)}
-    =\frac{0.352}{0.5877}
-    =\mathbf{0.599}
-  \]
-  \begin{block}{Interpretation}
-    Approximately 59.9\% of women in the study have cancer in the limbs category.
-  \end{block}
-  \begin{alertblock}{Compare the Directions}
-    $P(W\mid L)=0.80$ and $P(L\mid W)=0.599$ are different because they condition on different groups.
-  \end{alertblock}
-\end{frame}
 
 % =============================================================
 % PART VII: BAYES'S THEOREM
 % =============================================================
 \section{Bayes's Theorem}
 
+% SLIDE 56
 \begin{frame}{Why Bayes's Theorem Is Needed}
   Often we know a probability in one direction but need the reverse.
   \[
@@ -945,426 +1019,289 @@ It is not an individual diagnosis and it does not show that insomnia causes depr
   \vspace{0.2cm}
   \begin{block}{Diagnostic-Test Language}
     \begin{itemize}
-      \item \textbf{Sensitivity}: $P(\text{Test}^+\mid\text{Disease})$.
-      \item \textbf{Specificity}: $P(\text{Test}^-\mid\text{No Disease})$.
-      \item \textbf{Positive Predictive Value}: $P(\text{Disease}\mid\text{Test}^+)$.
+      \item \textbf{Sensitivity}: $P(\text{Test}^+\mid\text{Disease})$
+      \item \textbf{Specificity}: $P(\text{Test}^-\mid\text{No Disease})$
+      \item \textbf{Positive Predictive Value}: $P(\text{Disease}\mid\text{Test}^+)$
     \end{itemize}
   \end{block}
 \end{frame}
 
-\begin{frame}{Mammography Example: Question and Given Information}
-  \begin{block}{Question}
-    A woman in her 60s receives a positive mammogram. Under this model, what is the probability that she actually has breast cancer, $P(C\mid +)$?
-  \end{block}
-  Suppose the model uses
-  \[
-    P(C)=0.0365,
-  \]
-  where $C$ means breast cancer.
-  \vspace{0.1cm}
-  The test characteristics are
-  \[
-    P(+\mid C)=0.85 \qquad \text{(sensitivity)},
-  \]
-  \[
-    P(-\mid C^c)=0.95 \qquad \text{(specificity)}
-  \]
-  Therefore,
-  \[
-    P(+\mid C^c)=1-0.95=0.05
-  \]
+% SLIDE 57
+\begin{frame}{Example 10.14: Mammography}
+Let $C$ mean that a patient has breast cancer, and let $+$ and $-$ denote positive and negative screening results. For a patient in their 60s, suppose our model gives
+$$P(C)=0.0365 \qquad P(C^c)=1-0.0365=0.9635$$
+
+The screening test has
+$$P(+\mid C)=0.85 \qquad\text{and}\qquad P(-\mid C^c)=0.95$$
+Thus, its false-positive probability is
+$$P(+\mid C^c)=1-0.95=0.05$$
+
+\begin{block}{Question}
+If the patient receives a \textbf{positive result}, what is the probability that they have breast cancer, $P(C\mid +)$?
+\end{block}
 \end{frame}
 
-\begin{frame}{Mammography Example: Why Sensitivity Is Not the Answer}
-  Sensitivity tells us
-  \[
-    P(+\mid C)=0.85
-  \]
-  But the patient has already observed a \textbf{positive test}, so the desired probability is
-  \[
-    P(C\mid +)
-  \]
-  \begin{alertblock}{The Direction Has Reversed}
-    ``Positive given cancer'' and ``cancer given positive'' are not interchangeable.
-  \end{alertblock}
-  To answer the patient's question, we must compare two sources of positive tests:
-  \begin{enumerate}
-    \item true positives from the cancer group;
-    \item false positives from the much larger no-cancer group.
-  \end{enumerate}
+% SLIDE 58
+\begin{frame}{Example 10.14: Mammography}
+The test information includes its \textbf{sensitivity}: $P(+\mid C)=0.85$
+
+This is the probability of a positive result \emph{among patients who have cancer}. The question asks for
+$$P(C\mid +)$$
+the probability of cancer \emph{among patients who receive a positive result}.
+
+\begin{block}{Where can a positive result come from?}
+A positive result can occur in either of two disjoint groups:
+$$C\cap + \qquad\text{or}\qquad C^c\cap +$$
+We need both groups to find the probability of a positive result.
+\end{block}
 \end{frame}
 
-\begin{frame}{Tree Diagram: Mammography Screening}
-  \centering
-  \lectureimage[0.80\linewidth]{fig_ch10_tree_mammogram.png}
+% SLIDE 59
+\begin{frame}{Example 10.14: Mammography}
+\centering
+\lectureimage[0.80\linewidth]{fig_ch10_tree_mammogram.png}
+
+\smallskip
+\small
+Follow the branches from cancer status to test result.
+Multiplying along a path gives its joint probability.
 \end{frame}
 
-\begin{frame}{Mammography: Find the Two Positive-Test Paths}
-  \textbf{True-positive path:} cancer, then positive test
-  \[
-    P(C\cap +)=P(C)P(+\mid C)
-    =(0.0365)(0.85)=0.031025
-  \]
-  \textbf{False-positive path:} no cancer, then positive test
-  \[
-    P(C^c\cap +)=P(C^c)P(+\mid C^c)
-    =(0.9635)(0.05)=0.048175
-  \]
-  \begin{block}{Important Observation}
-    The false-positive rate is only 5\%, but it is applied to a very large no-cancer group. Consequently, the false-positive path is actually larger than the true-positive path.
-  \end{block}
+% SLIDE 60
+\begin{frame}{Example 10.14: Mammography}
+\textbf{Cancer and a positive result:}
+$$P(C\cap +)=P(C)P(+\mid C)=(0.0365)(0.85)=0.031025$$
+
+\textbf{No cancer and a positive result:}
+$$P(C^c\cap +)=P(C^c)P(+\mid C^c)=(0.9635)(0.05)=0.048175$$
+
+\begin{block}{All positive results}
+The paths are disjoint so
+$$P(+)=0.031025+0.048175=0.0792$$
+\end{block}
 \end{frame}
 
-\begin{frame}{Mammography: Positive Predictive Value}
-  All positive tests come from one of the two positive-test paths:
-  \[
-    P(+)=0.031025+0.048175=0.0792
-  \]
-  Of these positive tests, the cancer-and-positive branch contributes $0.031025$.
-  Therefore,
-  \[
-    P(C\mid +)
-    =\frac{0.031025}{0.0792}
-    =\mathbf{0.3917}
-  \]
-  \begin{block}{Interpretation}
-    Under this model, about \textbf{39.2\% of positive screening results} occur in women who have cancer. A positive screening test is therefore not the same as a confirmed diagnosis.
-  \end{block}
+% SLIDE 61
+\begin{frame}{Example 10.14: Mammography}
+We now restrict attention to patients with \textbf{positive results}. Of all positive results, the cancer-and-positive path accounts for $0.031025$:
+$$P(C\mid +)=\frac{P(C\cap +)}{P(+)}=\frac{0.031025}{0.0792}\approx\boxed{0.3917}$$
+
+\begin{block}{Interpretation}
+Under this model, about $39.2\%$ of patients who receive a positive screening result have breast cancer. This probability is called the \textbf{positive predictive value}.
+\end{block}
+
+\small
+The $85\%$ sensitivity and the $39.2\%$ positive predictive value condition on different groups.
 \end{frame}
 
-\begin{frame}{Mammography with 1000 Women: Build the Groups}
-  Natural frequencies can make the same Bayes calculation easier to understand
-  \vspace{0.15cm}
-  Imagine 1000 women with the same model proportions. Because 3.65\% of 1000 is not an integer, these are \textbf{expected counts} under the model
-  \begin{itemize}
-    \item Expected cancer cases: $1000(0.0365)=36.5$
-    \item Expected no-cancer cases: $1000-36.5=963.5$
-  \end{itemize}
-  Apply the test characteristics:
-  \begin{itemize}
-    \item Expected true positives: $36.5(0.85)=31.025$
-    \item Expected false positives: $963.5(0.05)=48.175$
-  \end{itemize}
-  \begin{alertblock}{Why This Helps}
-    We can compare the expected numbers of true-positive and false-positive results directly instead of thinking only in decimals
-  \end{alertblock}
-\end{frame}
-
-\begin{frame}{Mammography with 1000 Women: Among the Positives}
-  The expected number of positive results is
-  \[
-    31.025+48.175=79.2
-  \]
-  Of these, 31.025 expected positive results come from the cancer group
-  \[
-    P(C\mid +)=\frac{31.025}{79.2}=\mathbf{0.3917}
-  \]
-  \begin{block}{Base-Rate Effect}
-    The condition is relatively uncommon. Because the no-cancer group is much larger, even a 5\% false-positive rate produces more false positives than true positives
-  \end{block}
-  This expected-frequency calculation is the same logic as Bayes's Theorem; only the representation has changed
-\end{frame}
-
+% SLIDE 62
 \begin{frame}{The Law of Total Probability}
-  Suppose $A_1,\ldots,A_k$ form a partition of the sample space: they are disjoint and exhaustive.
-  \begin{block}{Total Probability}
-    \[
-      P(B)=\sum_{j=1}^{k}P(B\mid A_j)P(A_j)
-  \]
-  \end{block}
-  For mammography,
-  \[
-    P(+)=P(+\mid C)P(C)+P(+\mid C^c)P(C^c)
-  \]
-  This denominator represents \textbf{all possible paths that lead to a positive test}.
+Suppose $A_1,\ldots,A_k$ form a partition of the sample space: they are disjoint and exhaustive.
+\begin{block}{Total Probability}
+$$P(B)=\sum_{j=1}^{k}P(B\mid A_j)P(A_j)$$
+\end{block}
+
+For mammography
+$$P(+)=P(+\mid C)P(C)+P(+\mid C^c)P(C^c)$$
+This denominator represents \textbf{all possible paths that lead to a positive test}.
 \end{frame}
+
+% SLIDE 63
 
 \begin{frame}{The Formal Bayes's Theorem}
-  If $A_1,\ldots,A_k$ form a partition and $P(B)>0$, then
-  \begin{block}{Bayes's Theorem}
-    \[
-      P(A_i\mid B)
-      =\frac{P(B\mid A_i)P(A_i)}
-      {\sum_{j=1}^{k}P(B\mid A_j)P(A_j)}
-  \]
-  \end{block}
-  \begin{itemize}
-    \item Numerator: the particular path $A_i$ followed by $B$.
-    \item Denominator: all disjoint paths that lead to $B$.
-  \end{itemize}
-  \begin{block}{Practical Advice}
-    A tree diagram often reveals the same calculation more transparently than memorizing the formula.
-  \end{block}
+If $A_1,\ldots,A_k$ form a partition and $P(B)>0$, then
+
+\begin{block}{Bayes's Theorem}
+$$P(A_i\mid B)=\frac{P(B\mid A_i)P(A_i)}{\sum_{j=1}^{k}P(B\mid A_j)P(A_j)}$$
+\end{block}
+
+\begin{itemize}
+	\item \textbf{Prior:} $P(A_i)$ is our probability for $A_i$ before observing $B$.
+	\item \textbf{Likelihood:} $P(B\mid A_i)$ tells us how likely the observation $B$ is if $A_i$ is true.
+	\item \textbf{Posterior:} $P(A_i\mid B)$ is the updated probability for $A_i$ after observing $B$.
+	\item \textbf{Evidence:} $\sum_{j=1}^{k}P(B\mid A_j)P(A_j)=P(B)$ accounts for every way $B$ can occur.
+\end{itemize}
+
+\begin{block}{Connection to the Tree Diagram}
+The tree supplies the prior and likelihood for each path. Bayes's Theorem uses them to update the probability of $A_i$.
+\end{block}
 \end{frame}
 
-\begin{frame}{Example 10.14: Mammography --- Question Before the Formula}
-  \begin{block}{Question}
-    Given a positive mammogram, what is the probability of breast cancer, $P(C\mid +)$?
-  \end{block}
-  For two underlying groups, cancer and no cancer,
-  \[
-    P(C\mid +)
-    =\frac{P(+\mid C)P(C)}
-    {P(+\mid C)P(C)+P(+\mid C^c)P(C^c)}
-  \]
-  \begin{itemize}
-    \item The \textbf{numerator} is the probability of the cancer-and-positive path.
-    \item The \textbf{denominator} is the probability of \textbf{all ways to obtain a positive test}.
-  \end{itemize}
-  \begin{block}{Same Logic as the Tree}
-    Bayes's formula is not a new kind of reasoning. It packages the tree-diagram calculation into one equation.
-  \end{block}
+% SLIDE 64
+\begin{frame}{Example 10.14: Mammography}
+\begin{block}{Question}
+Given a positive mammogram, what is the probability of breast cancer, $P(C\mid +)$?
+\end{block}
+For two underlying groups, cancer and no cancer,
+$$P(C\mid +)=\frac{P(+\mid C)P(C)}{P(+\mid C)P(C)+P(+\mid C^c)P(C^c)}$$
+
+\begin{itemize}
+	\item The \textbf{numerator} is the probability of the cancer-and-positive path.
+	\item The \textbf{denominator} is the probability of \textbf{all ways to obtain a positive test}.
+\end{itemize}
+
+\begin{block}{Same Logic as the Tree}
+Bayes's formula is not a new kind of reasoning. It packages the tree-diagram calculation into one equation.
+\end{block}
 \end{frame}
 
-\begin{frame}{Example 10.14: Mammography --- Substitute the Values}
-  Substitute the model probabilities:
-  \[
-    P(C\mid +)
-    =\frac{(0.85)(0.0365)}
-    {(0.85)(0.0365)+(0.05)(0.9635)}
-  \]
-  The numerator is
-  \[
-    (0.85)(0.0365)=0.031025,
-  \]
-  while the denominator is
-  \[
-    0.031025+0.048175=0.0792
-  \]
-  Therefore,
-  \[
-    P(C\mid +)=\mathbf{0.3917}
-  \]
-  \begin{alertblock}{Keep the Question in View}
-    We are asking: among all positive tests, what fraction came from the cancer branch?
-  \end{alertblock}
+% SLIDE 65
+\begin{frame}{Example 10.14: Mammography}
+Substitute the model probabilities:
+$$P(C\mid +)=\frac{(0.85)(0.0365)}{(0.85)(0.0365)+(0.05)(0.9635)} = \frac{0.031025}{0.031025+0.048175} = \frac{0.03102}{0.0792} = \mathbf{0.3917}$$
+  
+\begin{alertblock}{Keep the Question in View}
+We are asking: among all positive tests, what fraction came from the cancer branch?
+\end{alertblock}
 \end{frame}
 
-% =============================================================
-% PART VIII: MORE BAYES APPLICATIONS
-% =============================================================
-\section{Bayes Applications}
-
+% SLIDE 66
 \begin{frame}{The Base-Rate Effect}
-  Bayes's Theorem combines two kinds of information:
-  \begin{itemize}
-    \item the \textbf{base rate or prior probability}; and
-    \item how strongly the observed evidence is associated with each underlying state.
-  \end{itemize}
-  \vspace{0.2cm}
-  When the condition is rare, even a fairly good test can have a low positive predictive value because the much larger negative population can produce many false positives.
-  \begin{block}{Next Examples}
-    Lyme disease, environmental lead screening, fraud detection, and polygraph classification all use the same mathematical structure.
-  \end{block}
+Bayes's Theorem combines two kinds of information:
+\begin{itemize}
+	\item the \textbf{base rate or prior probability}; and
+	\item how strongly the observed evidence is associated with each underlying state.
+\end{itemize}
+\vspace{0.2cm}
+When the condition is rare, even a fairly good test can have a low positive predictive value because the much larger negative population can produce many false positives.
+
+\begin{block}{Next Examples}
+Lyme disease, environmental lead screening, and polygraph classification all use the same mathematical structure.
+\end{block}
 \end{frame}
 
-\begin{frame}{Bayes Example: Lyme Disease --- Question and Given Information}
-  \begin{block}{Question}
-    A person receives a positive Lyme-disease test. Under this model, what is the probability that the person actually has Lyme disease?
-  \end{block}
-  Consider a hypothetical region where
-  \[
-    P(L)=0.02,
-  \]
-  so 2\% of the population has Lyme disease.
-  The test has
-  \[
-    P(+\mid L)=0.90
-  \]
-  and
-  \[
-    P(+\mid L^c)=0.20
-  \]
-  The low 2\% base rate is important because 98\% of the population belongs to the no-Lyme group.
+% SLIDE 67
+\begin{frame}{Bayes Example: Lyme Disease}
+Let $L$ mean that a person has Lyme disease, and let $+$ meana positive test result. Suppose a hypothetical region and test have the following probabilities:
+$$P(L)=0.02 \qquad P(+\mid L)=0.90 \qquad P(+\mid L^c)=0.20$$
+
+The probability of not having Lyme disease is
+$$P(L^c)=1-0.02=0.98$$
+
+\begin{block}{Question}
+If a person receives a \textbf{positive result}, what is the probability that they have Lyme disease, $P(L\mid +)$?
+\end{block}
 \end{frame}
 
-\begin{frame}{Bayes Example: Lyme Disease --- Compare Positive Paths}
-  True-positive path:
-  \[
-    P(L\cap +)=0.02(0.90)=0.018
-  \]
-  False-positive path:
-  \[
-    P(L^c\cap +)=0.98(0.20)=0.196
-  \]
-  Therefore,
-  \[
-    P(L\mid +)=\frac{0.018}{0.018+0.196}=\mathbf{0.084}
-  \]
-  \begin{block}{Interpretation}
-    Under these hypothetical assumptions, only about 8.4\% of positive results come from people with Lyme disease. The rare base rate and high false-positive rate dominate the calculation.
-  \end{block}
+% SLIDE 68
+\begin{frame}{Bayes Example: Lyme Disease}
+A positive result can come from a person with Lyme disease or a person without it. Bayes's Theorem includes both paths:
+$$P(L\mid +)=\frac{P(L)P(+\mid L)}{P(L)P(+\mid L)+P(L^c)P(+\mid L^c)}$$
+
+Substituting the model probabilities gives
+$$
+\begin{aligned}
+P(L\mid +)
+&=\frac{(0.02)(0.90)}{(0.02)(0.90)+(0.98)(0.20)}\\
+&=\frac{0.018}{0.018+0.196}\\
+&\approx\boxed{0.084}
+\end{aligned}
+$$
+
+\begin{block}{Interpretation}
+Under this hypothetical model, about $8.4\%$ of people with a positive result have Lyme disease.
+\end{block}
 \end{frame}
 
-\begin{frame}{Bayes Example: Lead Screening --- Question and Given Information}
-  \begin{block}{Question}
-    A water sample turns red in the screening test. Under this model, what is the probability that the sample actually contains dangerous lead levels?
-  \end{block}
-  Suppose 5\% of water samples contain dangerous lead levels:
-  \[
-    P(L)=0.05
-  \]
-  A screening reagent turns red with probability
-  \[
-    P(R\mid L)=0.95
-  \]
-  when lead is present, and
-  \[
-    P(R\mid L^c)=0.10
-  \]
-  when the water is safe.
+% SLIDE 69
+\begin{frame}{Bayes Example: Lead Screening}
+Let $L$ mean that a water sample contains dangerous lead levels and let $R$ mean that the screening reagent turns red. Suppose the following hypothetical probabilities apply:
+$$P(L)=0.05 \qquad P(R\mid L)=0.95 \qquad P(R\mid L^c)=0.10$$
+
+The probability that a sample does not contain dangerous lead levels is
+$$P(L^c)=1-0.05=0.95$$
+
+\begin{block}{Question}
+If a sample \textbf{turns red}, what is the probability that it contains dangerous lead levels, $P(L\mid R)$?
+\end{block}
 \end{frame}
 
-\begin{frame}{Bayes Example: Lead Screening --- Calculate and Interpret}
-  True-red path:
-  \[
-    P(L\cap R)=0.05(0.95)=0.0475
-  \]
-  False-red path:
-  \[
-    P(L^c\cap R)=0.95(0.10)=0.0950
-  \]
-  Hence
-  \[
-    P(L\mid R)=\frac{0.0475}{0.0475+0.0950}=\mathbf{0.333}
-  \]
-  \begin{block}{Interpretation}
-    Under this model, one third of red screening results correspond to contaminated samples. A red result is useful evidence, but confirmatory testing is still warranted.
-  \end{block}
+% SLIDE 70
+\begin{frame}{Bayes Example: Lead Screening}
+A red result can come from a sample with dangerous lead levels or one without them. Bayes's Theorem includes both paths:
+$$P(L\mid R)=\frac{P(L)P(R\mid L)}{P(L)P(R\mid L)+P(L^c)P(R\mid L^c)}$$
+
+Substituting the model probabilities gives
+$$
+\begin{aligned}
+P(L\mid R)
+&=\frac{(0.05)(0.95)}{(0.05)(0.95)+(0.95)(0.10)}\\
+&=\frac{0.0475}{0.0475+0.0950}=\boxed{\frac{1}{3}\approx 0.333}
+\end{aligned}
+$$
+
+\begin{block}{Interpretation}
+Under this hypothetical model, about one third of samples that turn red contain dangerous lead levels.
+\end{block}
 \end{frame}
 
-\begin{frame}{Bayes Example: Fraud Detection --- Question and Given Information}
-  \begin{block}{Question}
-    A claim is flagged by the automated system. Under this model, what is the probability that the claim is actually fraudulent?
-  \end{block}
-  Suppose only 1\% of submitted claims are actually fraudulent:
-  \[
-    P(F)=0.01
-  \]
-  An automated system flags
-  \[
-    P(\text{Flag}\mid F)=0.85
-  \]
-  of fraudulent claims and also flags
-  \[
-    P(\text{Flag}\mid F^c)=0.05
-  \]
-  of legitimate claims.
+% SLIDE 71
+\begin{frame}{Bayes Example: Polygraph Classification}
+Let $L$ mean that a person is lying about the matter being tested, and let $+$ mean a positive deception indication. For a hypothetical group of people being tested, suppose
+$$P(L)=0.10 \qquad P(+\mid L)=0.80 \qquad P(+\mid L^c)=0.15$$
+
+The probability that a person is telling the truth is
+$$P(L^c)=1-0.10=0.90$$
+
+\begin{block}{Question}
+If a person receives a \textbf{positive deception indication}, what is the probability that they are lying, $P(L\mid +)$?
+\end{block}
 \end{frame}
 
-\begin{frame}{Bayes Example: Fraud Detection --- Calculate and Interpret}
-  Fraud-and-flag path:
-  \[
-    P(F\cap\text{Flag})=0.01(0.85)=0.0085
-  \]
-  Legitimate-but-flagged path:
-  \[
-    P(F^c\cap\text{Flag})=0.99(0.05)=0.0495
-  \]
-  Thus
-  \[
-    P(F\mid\text{Flag})
-    =\frac{0.0085}{0.0085+0.0495}
-    =\mathbf{0.147}
-  \]
-  \begin{alertblock}{Decision-Making Lesson}
-    A flag is evidence that should trigger review, not proof of fraud. In this hypothetical model, about 85\% of flagged claims are false positives.
-  \end{alertblock}
+% SLIDE 72
+\begin{frame}{Bayes Example: Polygraph Classification --- Solution}
+A positive indication can come from a person who is lying or a person who is telling the truth. Bayes's Theorem includes both paths:
+$$P(L\mid +)=\frac{P(L)P(+\mid L)}{P(L)P(+\mid L)+P(L^c)P(+\mid L^c)}$$
+
+Substituting the hypothetical probabilities gives
+$$
+\begin{aligned}
+P(L\mid +)
+&=\frac{(0.10)(0.80)}{(0.10)(0.80)+(0.90)(0.15)}\\
+&=\frac{0.080}{0.080+0.135} \approx\boxed{0.372}
+\end{aligned}
+$$
+
+\begin{block}{Interpretation}
+Under this hypothetical model, about $37.2\%$ of people who receive a positive indication are lying about the matter tested.
+\end{block}
 \end{frame}
 
-\begin{frame}{Bayes Example: Polygraph Classification --- Question and Given Information}
-  \begin{block}{Question}
-    A person receives a positive deception indication. Under this model, what is the probability that the person is actually lying?
-  \end{block}
-  Suppose 10\% of a particular suspect pool is lying about the matter being tested:
-  \[
-    P(L)=0.10
-  \]
-  The classification procedure gives a positive indication with probability
-  \[
-    P(+\mid L)=0.80
-  \]
-  for a liar and
-  \[
-    P(+\mid L^c)=0.15
-  \]
-  for a truth-teller.
+% SLIDE 73
+\begin{frame}{Playing Blackjack}
+\begin{block}{Question}
+After ten known non-10-valued cards are removed from a standard deck, what is the probability that the next card has value 10?
+\end{block}
+
+In a standard 52-card deck, 16 cards have value 10 (10, J, Q, K), so initially
+$$P(10)=\frac{16}{52}=\mathbf{0.307}$$
+
+Suppose ten known non-10-valued cards are removed.
+\begin{itemize}
+	\item The deck now contains only 42 cards.
+	\item All 16 ten-valued cards are still present.
+\end{itemize}
+
+\begin{block}{Why This Is Dependence}
+The first ten observed cards changed the composition of the remaining deck, so the probability of the next card depends on what was previously removed.
+\end{block}
 \end{frame}
 
-\begin{frame}{Bayes Example: Polygraph Classification --- Calculate and Interpret}
-  Lying-and-positive path:
-  \[
-    P(L\cap +)=0.10(0.80)=0.08
-  \]
-  Truthful-but-positive path:
-  \[
-    P(L^c\cap +)=0.90(0.15)=0.135
-  \]
-  Therefore,
-  \[
-    P(L\mid +)=\frac{0.08}{0.08+0.135}=\mathbf{0.372}
-  \]
-  \begin{block}{Statistical Point}
-    Under these hypothetical rates, a positive classification corresponds to a 37.2\% probability of the underlying state. An imperfect classification is not conclusive evidence by itself.
-  \end{block}
+% SLIDE 74
+\begin{frame}{Playing Blackjack}
+After the ten non-10-valued cards have been removed
+$$P(10\mid\text{10 non-10 cards removed})=\frac{16}{42}=\mathbf{0.381}$$
+
+The probability increased from 30.7\% to 38.1\% because the denominator decreased while all 16 favourable ten-valued cards remained.
+
+\begin{block}{Learning Purpose}
+Sampling without replacement creates dependence. Conditional probability updates the chance of future draws as the composition of the remaining population changes.
+\end{block}
+
+\small This change in one card probability alone does not establish the expected advantage of a complete blackjack strategy.
 \end{frame}
 
-% =============================================================
-% PART IX: DEPENDENCE WITHOUT REPLACEMENT
-% =============================================================
-\section{Dependence Without Replacement}
-
-\begin{frame}{Independent Trials Are Not the Same as the Markov Property}
-  For idealized American roulette,
-  \[
-    P(\text{red})=\frac{18}{38}
-  \]
-  on every spin, regardless of previous colours. This is \textbf{independence}.
-  \vspace{0.2cm}
-  \begin{alertblock}{Terminology}
-    Independence should not be confused with the \textbf{Markov property}. A Markov process may depend on its current state; independent trials do not depend on previous outcomes at all.
-  \end{alertblock}
-  Changing the size of a wager after earlier outcomes does not alter the underlying probability of the next independent spin.
-\end{frame}
-
-\begin{frame}{Card Removal Example: Question and Given Information}
-  \begin{block}{Question}
-    After ten known non-10-valued cards are removed from a standard deck, what is the probability that the next card has value 10?
-  \end{block}
-  In a standard 52-card deck, 16 cards have value 10 (10, J, Q, K), so initially
-  \[
-    P(10)=\frac{16}{52}=\mathbf{0.307}
-  \]
-  Suppose ten known non-10-valued cards are removed.
-  \vspace{0.15cm}
-  \begin{itemize}
-    \item The deck now contains only 42 cards.
-    \item All 16 ten-valued cards are still present.
-  \end{itemize}
-  \begin{block}{Why This Is Dependence}
-    The first ten observed cards changed the composition of the remaining deck, so the probability of the next card depends on what was previously removed.
-  \end{block}
-\end{frame}
-
-\begin{frame}{Card Removal Example: Calculate the Updated Probability}
-  After the ten non-10-valued cards have been removed,
-  \[
-    P(10\mid\text{10 non-10 cards removed})
-    =\frac{16}{42}
-    =\mathbf{0.381}
-  \]
-  The probability increased from 30.7\% to 38.1\% because the denominator decreased while all 16 favourable ten-valued cards remained.
-  \begin{block}{Learning Purpose}
-    Sampling without replacement creates dependence. Conditional probability updates the chance of future draws as the composition of the remaining population changes.
-  \end{block}
-  \small This change in one card probability alone does not establish the expected advantage of a complete blackjack strategy.
-\end{frame}
-
-% =============================================================
-% PART X: SYNTHESIS
-% =============================================================
-\section{Chapter Synthesis}
-
+% SLIDE 75
 \begin{frame}{Chapter 10 Synthesis: Which Probability Tool?}
   \begin{table}
     \centering
@@ -1383,37 +1320,6 @@ It is not an individual diagnosis and it does not show that insomnia causes depr
       \bottomrule
     \end{tabularx}
   \end{table}
-\end{frame}
-
-\begin{frame}{A Reliable Problem-Solving Workflow}
-  \small
-  \begin{enumerate}
-    \item \textbf{Define the events clearly.}
-    \item \textbf{Translate the wording}: and, or, not, or given.
-    \item \textbf{Write down known probabilities} before calculating.
-    \item \textbf{Check whether independence is stated or justified.}
-    \item For $P(B\mid A)$, identify the \textbf{condition $A$ first}.
-    \item For a tree, verify that outgoing branches from each node \textbf{sum to 1}.
-    \item \textbf{Keep extra digits} during intermediate steps; round at the end.
-    \item \textbf{Interpret the answer in context}; association is not automatically causation or an individual diagnosis.
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Final Conceptual Connection}
-  \begin{block}{Independence}
-    Conditioning does \textbf{not} change the probability:
-    \[
-      P(B\mid A)=P(B)
-  \]
-  \end{block}
-  \begin{block}{Conditional Probability}
-    New information changes the sample space and may change the probability.
-  \end{block}
-  \begin{block}{Bayes's Theorem}
-    Reverses a conditional probability by combining the prior probability with \textbf{all paths that could have produced the observed evidence}.
-  \end{block}
-  \centering
-  \textbf{These ideas form the conceptual backbone of Chapter 10.}
 \end{frame}
 
 \end{document}
