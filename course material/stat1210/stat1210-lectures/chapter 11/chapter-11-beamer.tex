@@ -33,12 +33,12 @@
 
 \begin{document}
 
-\section{Introduction}
-
+% SLIDE 1
 \begin{frame}
   \titlepage
 \end{frame}
 
+% SLIDE 2
 \begin{frame}{Why Study Normal Distributions}
 Normal distributions are among the most important continuous probability models in introductory statistics.
 
@@ -51,74 +51,66 @@ This chapter connects four ideas: the shape of a Normal curve, the area under th
 \end{block}
 \end{frame}
 
-\begin{frame}{Chapter Roadmap}
-The chapter develops one coherent story.
-\begin{enumerate}
-  \item The geometry of a Normal curve
-  \item The 68--95--99.7 rule for quick probability estimates
-  \item Standardization and z-scores
-  \item Exact probabilities and percentiles using R or the Standard Normal table
-\end{enumerate}
-\vspace{0.15cm}
-\begin{alertblock}{Important Reminder}
-A Normal distribution is a model. A histogram or density plot should be checked before a Normal model is treated as reasonable for observed data.
-\end{alertblock}
-\end{frame}
-
-\section{The Anatomy of a Normal Curve}
-
+% SLIDE 3
 \begin{frame}{What Is a Normal Curve}
 A Normal curve is a density curve that is
 \begin{itemize}
-  \item symmetric
-  \item single-peaked
-  \item bell-shaped
+	\item symmetric
+	\item single-peaked
+	\item bell-shaped
 \end{itemize}
 
 Every Normal distribution is determined by two population parameters.
 \begin{itemize}
-  \item The mean $\mu$ determines the location of the centre
-  \item The standard deviation $\sigma$ determines the spread
+	\item The mean $\mu$ determines the location of the centre
+	\item The standard deviation $\sigma$ determines the spread
 \end{itemize}
 
-The total area under the curve is 1, so area can be interpreted as probability.
+The total area under the curve is 1 so area can be (and is) interpreted as probability.
 \end{frame}
 
+% SLIDE 4
 \begin{frame}{Anatomy of a Normal Curve}
   \centering
-  \lectureimage[0.92\linewidth]{fig_ch11_normal_anatomy.png}
+  \lectureimage[0.80\linewidth]{fig_ch11_normal_anatomy.png}
 \end{frame}
 
+% SLIDE 5
 \begin{frame}{Key Geometric Features}
 Several geometric features are worth remembering.
-\begin{itemize}
-  \item Symmetry around $\mu$ means the mean and median are equal
-  \item The two tails approach the horizontal axis without touching it
-  \item Equal distances to the left and right of the mean enclose equal areas
-  \item The points $\mu-\sigma$ and $\mu+\sigma$ are the inflection points
-\end{itemize}
+\begin{enumerate}
+	\item Symmetry around $\mu$ means the mean and median are equal
+	\item The two tails approach the horizontal axis without touching it
+	\item Equal distances to the left and right of the mean enclose equal areas	
+	\item The points $\mu-\sigma$ and $\mu+\sigma$ are the inflection points
+\end{enumerate}
 
 Once $\mu$ and $\sigma$ are known, the shape of the Normal curve is completely determined.
 \end{frame}
 
+% SLIDE 6
 \begin{frame}{Location and Spread}
 The mean moves the curve left or right without changing its bell shape.
 
 \vspace{0.15cm}
 The standard deviation changes the width of the curve.
 \begin{itemize}
-  \item A larger standard deviation produces a wider and flatter curve
-  \item A smaller standard deviation produces a narrower and taller curve
+	\item A larger standard deviation produces a wider and flatter curve
+	\item A smaller standard deviation produces a narrower and taller curve
 \end{itemize}
 
-The taller appearance does not mean more probability. Every density curve still has total area 1.
+The taller appearance does not mean more probability. 
+
+Every density curve still has total area 1.
 \end{frame}
 
+% SLIDE 7
 \begin{frame}{Location and Spread Visualized}
   \centering
-  \lectureimage[0.92\linewidth]{fig_ch11_two_normals.png}
+  \lectureimage[0.80\linewidth]{fig_ch11_two_normals.png}
 \end{frame}
 
+% SLIDE 8
 \begin{frame}{Why Is the Narrower Curve Taller}
 A density curve must always have total area 1.
 
@@ -133,158 +125,150 @@ Width and height work together so that the total area under the curve stays equa
 \end{block}
 \end{frame}
 
+% SLIDE 9
 \begin{frame}{Inflection Points and the Standard Deviation}
 The standard deviation also has a geometric interpretation.
 
 \vspace{0.15cm}
 An \textbf{inflection point} is a point where the direction of curvature changes. In every Normal curve, the inflection points occur exactly one standard deviation from the mean.
-
-\[
-\mu-\sigma
-\]
-
-\[
-\mu+\sigma
-\]
+$$\mu-\sigma$$
+$$\mu+\sigma$$
 
 This property is special to the Normal family and should not be applied automatically to other distributions.
 \end{frame}
 
+% SLIDE 10
 \begin{frame}{Inflection Points on the Curve}
   \centering
-  \lectureimage[0.88\linewidth]{fig_ch11_inflection.png}
+  \lectureimage[0.80\linewidth]{fig_ch11_inflection.png}
 \end{frame}
 
-\begin{frame}{Why Normal Distributions Matter}
-Normal models are useful for several connected reasons.
+% SLIDE 11
+\begin{frame}{Applications of Normal Models}
+\small
 \begin{itemize}
-  \item Many continuous measurements are approximately Normal within an appropriate population
-  \item Repeated measurement error often produces approximately Normal patterns
-  \item Later in the course, many sampling distributions become approximately Normal
-  \item Standardization allows observations from different settings to be compared on a common scale
+	\item \textbf{Modelling continuous measurements}: Researchers can estimate the proportion of newborns
+whose birth weights fall within a specified range.
+	\item \textbf{Modelling random measurement errors}: In regression, residuals help assess a Normal model for the errors, supporting confidence intervals and hypothesis tests.
 \end{itemize}
 
-\begin{alertblock}{Model Checking}
-Many life-science variables are not approximately Normal. Skewed data should not be forced into a Normal interpretation.
-\end{alertblock}
+These applications require checking whether a Normal model is reasonable for the relevant population or errors.
+
+\begin{itemize}
+	\item \textbf{Approximating sampling distributions}: Ecologists can test whether a population's mean body mass differs from a reference value.
+	\item \textbf{Comparing observations through standardization}: Laboratories can express measurements from different
+          instruments in standard deviation units.
+\end{itemize}
+
+Standardization gives a common scale. A Normal model also allows us to translate standardized values into percentiles.
 \end{frame}
 
-\section{The 68--95--99.7 Rule}
-
+% SLIDE 12
 \begin{frame}{The 68--95--99.7 Rule}
 Every Normal distribution has the same approximate area pattern when distances are measured in standard-deviation units.
+$$P(\mu-\sigma<X<\mu+\sigma)\approx 0.68$$
+$$P(\mu-2\sigma<X<\mu+2\sigma)\approx 0.95$$
+$$P(\mu-3\sigma<X<\mu+3\sigma)\approx 0.997$$
 
-\[
-P(\mu-\sigma<X<\mu+\sigma)\approx 0.68
-\]
-
-\[
-P(\mu-2\sigma<X<\mu+2\sigma)\approx 0.95
-\]
-
-\[
-P(\mu-3\sigma<X<\mu+3\sigma)\approx 0.997
-\]
-
-These are approximations, not exact probabilities.
+These are approximations and not exact probabilities.
 \end{frame}
 
-\begin{frame}{The 68--95--99.7 Rule Visualized}
+% SLIDE 13
+\begin{frame}{The 68--95--99.7 Rule}
   \centering
-  \lectureimage[0.92\linewidth]{fig_ch11_empirical_rule.png}
+  \lectureimage[0.80\linewidth]{fig_ch11_empirical_rule.png}
 \end{frame}
 
+% SLIDE 14
 \begin{frame}{Using Symmetry to Find Tail Areas}
 The rule gives several other useful areas.
 \begin{itemize}
-  \item The middle 68\% leaves 32\% outside, so each tail beyond $\pm1\sigma$ contains about 16\%
-  \item The middle 95\% leaves 5\% outside, so each tail beyond $\pm2\sigma$ contains about 2.5\%
-  \item The middle 99.7\% leaves 0.3\% outside, so each tail beyond $\pm3\sigma$ contains about 0.15\%
+	\item The middle 68\% leaves 32\% outside, so each tail beyond $\pm1\sigma$ contains about 16\%
+	\item The middle 95\% leaves 5\% outside, so each tail beyond $\pm2\sigma$ contains about 2.5\%
+	\item The middle 99.7\% leaves 0.3\% outside, so each tail beyond $\pm3\sigma$ contains about 0.15\%
 \end{itemize}
 
 This rule is most useful when a boundary is exactly one, two or three standard deviations from the mean.
 \end{frame}
 
-\begin{frame}{Example 11.1: Heights of Young Women}
+% SLIDE 15
+\begin{frame}{Example 11.1: Heights of Patients}
 \begin{block}{Question}
-A model for the heights of young women aged 18 to 24 is approximately Normal with mean 64.5 inches and standard deviation 2.5 inches. What interval contains approximately the middle 95\% of heights and what proportion lies above the upper end of that interval?
+Suppose the heights of adult female patients aged 18 to 24 in a clinic are approximately Normally distributed with mean $64.5$ inches and standard deviation $2.5$ inches. What interval contains approximately the middle $95\%$ of heights, and what proportion lies above the upper end of that interval?
 \end{block}
 
 \begin{block}{Explanation}
-The middle 95\% of a Normal distribution lies within two standard deviations of the mean. The remaining 5\% is split equally between the two tails because the curve is symmetric.
+Approximately $95\%$ of a Normal distribution lies within two standard deviations of the mean. The remaining $5\%$ is split equally between the two tails because the curve is symmetric.
 \end{block}
 \end{frame}
 
-\begin{frame}{Example 11.1: Solution}
+% SLIDE 16
+\begin{frame}{Example 11.1: Heights of Patients}
+Starting with
+$$P(\mu - 2\sigma < X < \mu + 2\sigma)$$
+
 The lower boundary is
-\[
-64.5-2(2.5)=59.5\text{ inches}
-\]
+$$\mu - 2\sigma = 64.5-2(2.5)=59.5\text{ inches}$$
 
 The upper boundary is
-\[
-64.5+2(2.5)=69.5\text{ inches}
-\]
+$$\mu + 2\sigma = 64.5+2(2.5)=69.5\text{ inches}$$
 
-Approximately 95\% of heights lie between 59.5 inches and 69.5 inches.
+Approximately $95\%$ of the patients' heights lie between $59.5$ inches and $69.5$ inches.
 
-The upper tail contains half of the remaining 5\%, so the proportion above 69.5 inches is
-\[
-\frac{0.05}{2}=0.025
-\]
+The upper tail contains half of the remaining $5\%$, so
+$$P(\text{height}>69.5)=\frac{0.05}{2}=\boxed{0.025}$$
 
-Under the model, about 2.5\% of young women are taller than 69.5 inches.
+Under this model, about $2.5\%$ of the patients are taller than $69.5$ inches.
 \end{frame}
 
-\begin{frame}{Example 11.2: Adding Areas Together}
+% SLIDE 17
+\begin{frame}{Example 11.2: Heights of Patients}
+Let $H$ be the height, in inches, of a randomly selected adult female patient from the clinic. The Normal model has mean $\mu=64.5$ inches and standard deviation $\sigma=2.5$ inches.
+
 \begin{block}{Question}
-The same height model has mean 64.5 inches and standard deviation 2.5 inches. What is the approximate probability that a randomly selected young woman is taller than 62 inches?
+What is the approximate probability that the patient is taller than $62$ inches? That is, find
+$$P(H>62)$$
 \end{block}
 
 \begin{block}{Explanation}
-A height of 62 inches is one standard deviation below the mean because $64.5-2.5=62$. The desired region is the area to the right of $\mu-\sigma$, which can be found by combining the middle 68\% and the upper 16\%.
+Since $62=64.5-2.5=\mu-\sigma$, we need the area to the right of one standard deviation below the mean.
 \end{block}
 \end{frame}
 
-\begin{frame}{Example 11.2: Visual Guide}
-  \centering
-  \lectureimage[0.90\linewidth]{fig_ch11_heights_62.png}
+% SLIDE 18
+\begin{frame}{Example 11.2: Heights of Patients}
+The middle $68\%$ lies between $\mu-\sigma$ and $\mu+\sigma$
+$$P(62<H<67)=0.68\quad\text{approximately}$$
+
+The area above $\mu+\sigma=67$ is approximately
+$$P(H>67)=\frac{1-0.68}{2}=0.16$$
+
+Adding these disjoint regions gives
+$$P(H>62)=P(62<H<67)+P(H>67)\approx 0.68+0.16=\boxed{0.84}$$
+
+Under this model, approximately $84\%$ of the female patients are taller than $62$ inches.
 \end{frame}
 
-\begin{frame}{Example 11.2: Solution}
-The area from $\mu-\sigma$ to $\mu+\sigma$ is about 68\%.
-
-The area above $\mu+\sigma$ is about 16\%.
-
-Adding these two regions gives
-\[
-0.68+0.16=0.84
-\]
-
-The approximate probability that a randomly selected young woman is taller than 62 inches is 0.84.
-
-\vspace{0.15cm}
-\begin{block}{Interpretation}
-This is an empirical-rule estimate. The exact Normal probability is slightly different, but 0.84 is a very good approximation.
-\end{block}
+% SLIDE 19
+\begin{frame}{Example 11.2: Heights of Patients}
+\includegraphics[width=0.80\linewidth]{fig_ch11_heights_62.png}
 \end{frame}
 
+% SLIDE 20
 \begin{frame}{Notation for a Normal Distribution}
-Statisticians often write a Normal model in compact notation.
-\[
-N(\mu,\sigma)
-\]
+We can write the a normal random variable in compact notation as 
+$X\sim N(\mu,\sigma)$
 
-In these notes, the second parameter is the \textbf{standard deviation}.
+In these notes the second parameter is the \textbf{standard deviation}.
 
-For the young-women height model, we write
-\[
-N(64.5,2.5)
-\]
+\vspace{1cm}
+For the patient height model
+$$H\sim N(64.5,2.5)$$
 
-This notation is convenient because it shows the centre and spread at a glance.
+This means that $H$ follows a Normal distribution with mean $64.5$ inches and standard deviation $2.5$ inches.
 \end{frame}
 
+% SLIDE 21
 \begin{frame}{A Normal Distribution Is an Approximation}
 Real data are never mathematically perfect.
 
@@ -295,25 +279,22 @@ A Normal model is still useful when it gives a good approximation to the shape o
 Approximate models are common in statistics. Their value comes from being useful, interpretable and reasonably accurate for the purpose at hand.
 \end{frame}
 
-\section{The Standard Normal Distribution}
-
+% SLIDE 22
 \begin{frame}{Standardizing and Z-Scores}
 A \textbf{z-score} measures how far an observation lies from the mean in standard-deviation units.
+$$z=\frac{x-\mu}{\sigma}$$
 
-\[
-z=\frac{x-\mu}{\sigma}
-\]
-
-A positive z-score means the observation is above the mean.
-
-A negative z-score means the observation is below the mean.
-
-A z-score of 0 means the observation is exactly at the mean.
+\begin{itemize}
+	\item A positive z-score means the observation is above the mean.
+	\item A negative z-score means the observation is below the mean.
+	\item A z-score of 0 means the observation is exactly at the mean.
+\end{itemize}
 \end{frame}
 
-\begin{frame}{Example 11.3: Standardizing Women's Heights}
+% SLIDE 23
+\begin{frame}{Example 11.3: Standardizing Heights of Patients}
 \begin{block}{Question}
-Young women's heights are modelled as approximately Normal with mean 64.5 inches and standard deviation 2.5 inches. What are the z-scores for 70 inches and 60 inches?
+Patient heights are modelled as approximately Normal with mean 64.5 inches and standard deviation 2.5 inches. What are the z-scores for 70 inches and 60 inches?
 \end{block}
 
 \begin{block}{Explanation}
@@ -321,25 +302,24 @@ The standardizing formula is used for each height. The resulting z-score tells u
 \end{block}
 \end{frame}
 
-\begin{frame}{Example 11.3: Solution}
-For 70 inches,
-\[
-z=\frac{70-64.5}{2.5}=2.2
-\]
+% SLIDE 24
+\begin{frame}{Example 11.3: Standardizing Heights of Patients}
+For 70 inches
+$$z=\frac{70-64.5}{2.5}=2.2$$
 
-For 60 inches,
-\[
-z=\frac{60-64.5}{2.5}=-1.8
-\]
+For 60 inches
+$$z=\frac{60-64.5}{2.5}=-1.8$$
 
 A height of 70 inches is 2.2 standard deviations above the mean. A height of 60 inches is 1.8 standard deviations below the mean.
 \end{frame}
 
+% SLIDE 25
 \begin{frame}{Standardizing Women's Heights Visualized}
-  \centering
-  \lectureimage[0.92\linewidth]{fig_ch11_zscores.png}
+\centering
+\lectureimage[0.90\linewidth]{fig_ch11_zscores.png}
 \end{frame}
 
+% SLIDE 26
 \begin{frame}{Why Standardize}
 Standardizing places observations from different settings on a common scale.
 
@@ -350,90 +330,82 @@ A raw value such as 28 points on one test cannot be directly compared with 1250 
 Standardization changes centre and scale. It does not magically make non-Normal data become Normal.
 \end{frame}
 
+% SLIDE 27
 \begin{frame}{The Standard Normal Distribution}
 When a Normal random variable is standardized, the result follows the \textbf{standard Normal distribution}.
-
-\[
-Z\sim N(0,1)
-\]
+$$Z\sim N(0,1)$$
 
 This distribution has mean 0 and standard deviation 1.
 
 Once values are converted to z-scores, every Normal-distribution problem can be related to the same common curve.
 \end{frame}
 
+% SLIDE 28
 \begin{frame}{Applications of Z-Scores and the 68--95--99.7 Rule}
 The ideas in this section are not only theoretical.
 
 \vspace{0.15cm}
 Z-scores and the empirical rule are used to
 \begin{itemize}
-  \item assess whether a measurement is unusually low or unusually high
-  \item compare observations from different scales
-  \item set review thresholds and safety limits
-  \item interpret standard scores such as T-scores
+	\item assess whether a measurement is unusually low or unusually high
+	\item compare observations from different scales
+	\item set review thresholds and safety limits
+	\item interpret standard scores such as T-scores
 \end{itemize}
 \end{frame}
 
+% SLIDE 29
 \begin{frame}{Application: Assessing Patient Health}
 \begin{block}{Question}
 Healthy adult male hemoglobin levels are modelled as Normal with mean 15.0 g/dL and standard deviation 1.0 g/dL. A patient has hemoglobin 13.0 g/dL. What is the z-score and what proportion of healthy men have a lower level?
 \end{block}
 
 \begin{block}{Solution}
-\[
-z=\frac{13.0-15.0}{1.0}=-2.0
-\]
+$$z=\frac{13.0-15.0}{1.0}=-2.0$$
 A z-score of $-2.0$ is two standard deviations below the mean. By the 68--95--99.7 rule, about 95\% lies within $\pm2\sigma$, leaving about 5\% outside. The lower tail therefore contains about 2.5\%.
 \end{block}
 \end{frame}
 
+% SLIDE 30
 \begin{frame}{Application: Quality Control of Solutions}
 \begin{block}{Question}
 A saline solution has mean concentration 0.900 M and standard deviation 0.005 M. A technician measures 0.912 M. Is this unusual?
 \end{block}
 
 \begin{block}{Solution}
-\[
-z=\frac{0.912-0.900}{0.005}=2.4
-\]
+$$z=\frac{0.912-0.900}{0.005}=2.4$$
 A z-score of 2.4 is well above 2 standard deviations from the mean, so this concentration is unusual under the model and should be checked.
 \end{block}
 \end{frame}
 
+% SLIDE 31
 \begin{frame}{Application: Comparing Different Scales}
 \begin{block}{Question}
 A student scores 1250 on the SAT where the mean is 1050 and the standard deviation is 100. The same student scores 28 on the ACT where the mean is 21 and the standard deviation is 5. Which score is more impressive relative to its own distribution?
 \end{block}
 
 \begin{block}{Solution}
-\[
-z_{SAT}=\frac{1250-1050}{100}=2.0
-\]
-\[
-z_{ACT}=\frac{28-21}{5}=1.4
-\]
+$$z_{SAT}=\frac{1250-1050}{100}=2.0$$
+$$z_{ACT}=\frac{28-21}{5}=1.4$$
 The SAT score has the larger z-score, so it is stronger relative to its reference distribution.
 \end{block}
 \end{frame}
 
+% SLIDE 32
 \begin{frame}{Application: Setting a Review Threshold for Claims}
 \begin{block}{Question}
-Minor auto claims are modelled as Normal with mean 1500 dollars and standard deviation 200 dollars. What claim amount marks roughly the most expensive 2.5\%?
+Minor auto accident claims are modelled as Normal with mean 1500 dollars and standard deviation 200 dollars. What claim amount marks roughly the most expensive 2.5\%?
 \end{block}
 
 \begin{block}{Explanation and Solution}
 The upper 2.5\% begins at about $z=2$ under the 68--95--99.7 rule.
-\[
-2=\frac{x-1500}{200}
-\]
-\[
-x=1900
-\]
+$$2=\frac{x-1500}{200}$$
+$$x=1900$$
 Claims above about 1900 dollars fall in the upper 2.5\% region of this approximate model.
 \end{block}
 \end{frame}
 
+% SLIDE 33
 \begin{frame}{Application: Laser Manufacturing Tolerances}
 \begin{block}{Question}
 Laser wavelengths are modelled as Normal with mean 650 nm and standard deviation 2 nm. A sensor works safely for wavelengths from 644 nm to 656 nm. What percentage of lasers fall in this safe range?
@@ -441,35 +413,34 @@ Laser wavelengths are modelled as Normal with mean 650 nm and standard deviation
 
 \begin{block}{Solution}
 The endpoints correspond to
-\[
-z=\frac{644-650}{2}=-3
-\]
-\[
-z=\frac{656-650}{2}=3
-\]
+$$z=\frac{644-650}{2}=-3$$
+$$z=\frac{656-650}{2}=3$$
 The interval from $-3\sigma$ to $+3\sigma$ contains about 99.7\% of the distribution, so about 99.7\% of lasers fall in the safe range.
 \end{block}
 \end{frame}
 
+% SLIDE 34
 \begin{frame}{Application: Bone Mineral Density and T-Scores}
 T-scores are standardized comparisons used in bone-density assessment.
 
 \vspace{0.15cm}
 Clinical interpretation often uses the following cutoffs.
 \begin{itemize}
-  \item Normal: T-score at least $-1.0$
-  \item Osteopenia: T-score between $-2.5$ and $-1.0$
-  \item Osteoporosis: T-score at most $-2.5$
+	\item Normal: T-score at least $-1.0$
+	\item Osteopenia: T-score between $-2.5$ and $-1.0$
+	\item Osteoporosis: T-score at most $-2.5$
 \end{itemize}
 
 These cutoffs are reference thresholds. They do not imply that every patient population has a perfect standard Normal distribution.
 \end{frame}
 
-\begin{frame}{Bone Mineral Density Categories}
+% SLIDE 35
+\begin{frame}{Application: Bone Mineral Density and T-Scores}
   \centering
   \lectureimage[0.86\linewidth]{fig_ch11_dexa.png}
 \end{frame}
 
+% SLIDE 36
 \begin{frame}{Application: Setting a Warranty Threshold}
 \begin{block}{Question}
 Refrigerator lifespans are modelled as Normal with mean 5.0 years and standard deviation 1.2 years. What warranty length leaves about 16\% of refrigerators failing during the warranty period?
@@ -480,21 +451,20 @@ A left-tail area of 16\% is approximately one standard deviation below the mean 
 \end{block}
 \end{frame}
 
-\begin{frame}{Warranty Threshold Visualized}
-  \centering
-  \lectureimage[0.88\linewidth]{fig_ch11_warranty.png}
-\end{frame}
-
+% SLIDE 37
 \begin{frame}{Application: Warranty Threshold Solution}
 The warranty boundary is
-\[
-5.0-1.2=3.8\text{ years}
-\]
+$$5.0-1.2=3.8\text{ years}$$
 
 A warranty of about 3.8 years leaves roughly 16\% of refrigerators failing before that boundary under the model.
 \end{frame}
 
-\section{Finding Normal Probabilities}
+% SLIDE 38
+\begin{frame}{Application: Warranty Threshold Solution}
+  \centering
+  \lectureimage[0.80\linewidth]{fig_ch11_warranty.png}
+\end{frame}
+
 
 \begin{frame}{Areas Under a Normal Curve as Probabilities}
 For a continuous probability model, area under the density curve represents probability.
