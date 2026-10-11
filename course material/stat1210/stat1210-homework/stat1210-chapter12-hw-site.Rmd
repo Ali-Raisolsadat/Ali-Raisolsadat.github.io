@@ -1,0 +1,1014 @@
+---
+title: "STAT 1210"
+subtitle: "Chapter 12 Homework: Binomial and Poisson Distributions"
+author: "Fall 2026"
+date: ""
+output:
+  html_document:
+    self_contained: true
+    toc: false
+    number_sections: false
+    theme: flatly
+    highlight: tango
+---
+
+<style>
+:root {
+  --ink: #263746;
+  --muted: #667786;
+  --blue: #294d73;
+  --blue-dark: #183a5c;
+  --blue-soft: #edf3f8;
+  --line: #d8e1e8;
+  --paper: #ffffff;
+  --page: #eef2f5;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+
+.main-container {
+  max-width: 980px !important;
+  margin-top: 28px;
+  margin-bottom: 42px;
+  padding: 42px 58px 56px;
+  background: var(--paper);
+  border: 1px solid #dde5eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(31, 50, 67, 0.10);
+}
+
+h1, h2, h3 { color: var(--blue-dark); }
+
+h1.title {
+  margin-bottom: 4px;
+  font-weight: 750;
+}
+
+h3.subtitle {
+  margin-top: 0;
+  color: var(--blue);
+  font-weight: 500;
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 1.28em;
+  line-height: 1.35;
+}
+
+.intro-box {
+  margin: 1.2em 0 1.8em;
+  padding: 1em 1.2em;
+  border-left: 5px solid var(--blue);
+  border-radius: 6px;
+  background: var(--blue-soft);
+}
+
+.question-card {
+  margin: 1.55em 0 2em;
+  padding: 1.3em 1.45em 1.1em;
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--blue);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(35, 54, 74, 0.07);
+}
+
+table {
+  width: 100%;
+  margin: 1.1em 0 1.3em;
+  border-collapse: collapse;
+  border: 1px solid var(--line);
+}
+
+thead th {
+  padding: 0.65em 0.75em !important;
+  background: var(--blue);
+  color: white;
+  border: 0 !important;
+}
+
+tbody td {
+  padding: 0.58em 0.75em !important;
+  border-bottom: 1px solid #e5ebf0 !important;
+}
+
+tbody tr:nth-child(even) td { background: #f7f9fb; }
+
+details.solution {
+  margin-top: 1.15em;
+  border: 1px solid #bfd1df;
+  border-radius: 7px;
+  background: #f8fbfd;
+  overflow: hidden;
+}
+
+details.solution summary {
+  padding: 0.72em 0.95em;
+  color: var(--blue-dark);
+  background: var(--blue-soft);
+  cursor: pointer;
+  font-weight: 700;
+  user-select: none;
+}
+
+details.solution summary:hover { background: #e2edf5; }
+
+.solution-body {
+  padding: 0.95em 1.1em 0.75em;
+}
+
+.solution-body ol { margin-bottom: 0.25em; }
+.solution-body li { margin-bottom: 0.75em; }
+
+@media (max-width: 768px) {
+  .main-container {
+    margin-top: 0;
+    padding: 24px 20px 38px;
+    border-radius: 0;
+  }
+}
+
+@media print {
+  body { background: white; font-size: 11pt; }
+  .main-container {
+    max-width: none !important;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+  .question-card { break-inside: avoid; box-shadow: none; }
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  fig.retina = 2,
+  out.width = "88%"
+)
+```
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("details.solution").forEach(function(item) {
+    item.removeAttribute("open");
+  });
+});
+</script>
+
+::: {.question-card}
+### Question $1$
+
+A veterinary researcher evaluates a new treatment in $12$ dogs with the same bacterial infection. Under the proposed model, each dog has probability $0.75$ of recovering within seven days, and the recovery outcomes are independent. Let $X$ be the number of dogs that recover within seven days.
+
+1. What is one trial in this setting?
+2. What are the two possible outcome categories for each trial?
+3. What outcome is being labelled a success?
+4. State the values of $n$ and $p$.
+5. Write the probability model for $X$ and list all possible values of $X$.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>One trial is the treatment outcome for one dog.</li>
+  <li>The two outcomes are recovery within seven days and no recovery within seven days.</li>
+  <li>A success is a dog recovering within seven days.</li>
+  <li>The parameters are
+
+  $$
+  n=12 \qquad p=0.75
+  $$
+  </li>
+  <li>The model is
+
+  $$
+  X\sim\operatorname{Bin}(12,0.75)
+  $$
+
+  The possible values are
+
+  $$
+  X\in\{0,1,2,\ldots,12\}
+  $$
+  </li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $2$
+
+For each situation below, determine whether the stated count has a binomial distribution. If it does, identify $n$ and $p$. If it does not, identify at least one binomial condition that fails.
+
+1. A shelter contains $20$ long-haired and $20$ short-haired cats. Ten cats are selected without replacement, and the number of long-haired cats is recorded.
+2. Thirty independently triggered wildlife-camera photographs are examined. Under a stable monitoring model, each photograph has probability $0.12$ of containing a red fox. The number containing a red fox is recorded.
+3. An animal rescue centre records the number of emergency calls received during one day.
+4. Patients are treated one at a time until the first adverse reaction occurs. The number of patients treated is recorded.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>This is not exactly binomial. The cats are sampled without replacement from a small population, so the selections are dependent and the probability of selecting a long-haired cat changes after each selection.</li>
+  <li>This is binomial under the stated model. There are $30$ fixed, independent trials; each photograph is classified as containing a red fox or not; and the success probability remains $0.12$. Thus,
+
+  $$
+  X\sim\operatorname{Bin}(30,0.12)
+  $$
+  </li>
+  <li>This is not binomial because there is no fixed number of trials. It is a count of events during a time interval and may be a candidate for a Poisson model if the Poisson assumptions are reasonable.</li>
+  <li>This is not binomial because the number of trials is not fixed in advance. Sampling stops when the first adverse reaction occurs.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $3$
+
+A field ecologist monitors $20$ nest boxes. Under a binomial model, each box has probability $0.35$ of being occupied by the target bird species. Let $X$ be the number of occupied boxes.
+
+Write each statement using probability notation. Then give an appropriate R expression without calculating the numerical value.
+
+1. Exactly $6$ boxes are occupied.
+2. At most $6$ boxes are occupied.
+3. Fewer than $6$ boxes are occupied.
+4. More than $6$ boxes are occupied.
+5. At least $6$ boxes are occupied.
+6. No boxes are occupied.
+7. At least one box is occupied.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+
+The model is $X\sim\operatorname{Bin}(20,0.35)$.
+
+| Statement | Probability notation | R expression |
+|:--|:--:|:--|
+| Exactly $6$ | $P(X=6)$ | `dbinom(6, 20, 0.35)` |
+| At most $6$ | $P(X\leq6)$ | `pbinom(6, 20, 0.35)` |
+| Fewer than $6$ | $P(X<6)=P(X\leq5)$ | `pbinom(5, 20, 0.35)` |
+| More than $6$ | $P(X>6)$ | `pbinom(6, 20, 0.35, lower.tail = FALSE)` |
+| At least $6$ | $P(X\geq6)=P(X>5)$ | `pbinom(5, 20, 0.35, lower.tail = FALSE)` |
+| No boxes | $P(X=0)$ | `dbinom(0, 20, 0.35)` |
+| At least one | $P(X\geq1)=1-P(X=0)$ | `1 - dbinom(0, 20, 0.35)` |
+
+The boundary changes by one for strict inequalities because $X$ is a discrete count.
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $4$
+
+In a simplified Mendelian model, each offspring from a particular genetic cross has probability $0.25$ of expressing a recessive trait. Four offspring are observed, and the outcomes are modelled as independent.
+
+1. Define the random variable $X$ and state its distribution.
+2. List the four arrangements that produce exactly one offspring with the trait, using $S$ for an offspring with the trait and $F$ otherwise.
+3. Calculate the probability of one particular arrangement.
+4. Use the binomial formula to calculate the probability that exactly one offspring expresses the trait.
+5. Interpret the probability in context.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Let $X$ be the number of offspring that express the recessive trait. Then
+
+  $$
+  X\sim\operatorname{Bin}(4,0.25)
+  $$
+  </li>
+  <li>The four arrangements are
+
+  $$
+  \{SFFF,FSFF,FFSF,FFFS\}
+  $$
+  </li>
+  <li>Each arrangement has probability
+
+  $$
+  (0.25)(0.75)^3=0.10546875
+  $$
+  </li>
+  <li>The number of arrangements is $\binom{4}{1}=4$. Therefore,
+
+  $$
+  \begin{aligned}
+  P(X=1)
+  &=\binom{4}{1}(0.25)^1(0.75)^3\\
+  &=4(0.25)(0.75)^3\\
+  &=0.421875\\
+  &\approx0.4219
+  \end{aligned}
+  $$
+
+```{r q4-binomial, echo=TRUE}
+dbinom(1, size = 4, prob = 0.25)
+```
+  </li>
+  <li>Across many groups of four offspring generated under this model, approximately $42.19\%$ of the groups would contain exactly one offspring expressing the recessive trait.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $5$
+
+A physics laboratory tests $10$ newly manufactured radiation sensors. Each sensor has probability $0.08$ of failing its calibration test, independently of the others. Let $X$ be the number of sensors that fail.
+
+1. State the distribution of $X$.
+2. Translate “no more than one sensor fails” into probability notation.
+3. Calculate the probability that no sensors fail.
+4. Calculate the probability that exactly one sensor fails.
+5. Calculate the probability that no more than one sensor fails.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The model is
+
+  $$
+  X\sim\operatorname{Bin}(10,0.08)
+  $$
+  </li>
+  <li>“No more than one” means
+
+  $$
+  P(X\leq1)=P(X=0)+P(X=1)
+  $$
+  </li>
+  <li>The probability of no failures is
+
+  $$
+  P(X=0)=\binom{10}{0}(0.08)^0(0.92)^{10}=0.4344
+  $$
+  </li>
+  <li>The probability of exactly one failure is
+
+  $$
+  P(X=1)=\binom{10}{1}(0.08)(0.92)^9=0.3777
+  $$
+  </li>
+  <li>Adding the two disjoint probabilities gives
+
+  $$
+  P(X\leq1)=0.4344+0.3777=0.8121
+  $$
+
+```{r q5-binomial, echo=TRUE}
+pbinom(1, size = 10, prob = 0.08)
+```
+  </li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $6$
+
+A veterinary vaccine causes a short-lived fever in approximately $1.5\%$ of vaccinated animals. A clinic vaccinates $50$ animals, and the fever outcomes are modelled as independent with the same probability for each animal. Let $X$ be the number that develop a fever.
+
+1. State the binomial model.
+2. Calculate the expected number of animals that develop a fever.
+3. Calculate the probability that none develop a fever.
+4. Use the complement rule to calculate the probability that at least one develops a fever.
+5. Explain why the answer to Part $4$ can be larger than $0.50$ even though the risk for one animal is only $0.015$.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The model is
+
+  $$
+  X\sim\operatorname{Bin}(50,0.015)
+  $$
+  </li>
+  <li>The expected count is
+
+  $$
+  \mu=np=(50)(0.015)=0.75
+  $$
+  </li>
+  <li>The probability of no fevers is
+
+  $$
+  P(X=0)=(0.985)^{50}=0.4697
+  $$
+  </li>
+  <li>Using the complement rule,
+
+  $$
+  \begin{aligned}
+  P(X\geq1)
+  &=1-P(X=0)\\
+  &=1-(0.985)^{50}\\
+  &=0.5303
+  \end{aligned}
+  $$
+
+```{r q6-at-least-one, echo=TRUE}
+1 - dbinom(0, size = 50, prob = 0.015)
+```
+  </li>
+  <li>The probability $0.015$ applies to one animal. Across $50$ independent opportunities, there are many chances for at least one fever to occur. The individual risk remains $0.015$; the larger value describes the entire group.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $7$
+
+A conservation programme releases $40$ juvenile frogs into restored wetlands. Based on previous releases, each frog is modelled as surviving the first month with probability $0.65$, independently of the others. Let $X$ be the number that survive.
+
+1. Calculate the mean number of survivors.
+2. Calculate the variance.
+3. Calculate the standard deviation.
+4. Interpret the mean and standard deviation in context.
+5. Calculate $\mu-2\sigma$ and $\mu+2\sigma$. Explain what this interval describes and why it does not guarantee where the count from one release will fall.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The mean is
+
+  $$
+  \mu=np=(40)(0.65)=26
+  $$
+  </li>
+  <li>The variance is
+
+  $$
+  \sigma^2=np(1-p)=(40)(0.65)(0.35)=9.1
+  $$
+  </li>
+  <li>The standard deviation is
+
+  $$
+  \sigma=\sqrt{9.1}=3.0166
+  $$
+  </li>
+  <li>Across many comparable releases of $40$ frogs, the average number surviving would approach $26$. The number surviving in a typical release varies from this mean on a scale of roughly $3.02$ frogs.</li>
+  <li>The endpoints are
+
+  $$
+  \mu-2\sigma=26-2(3.0166)=19.9668
+  $$
+
+  $$
+  \mu+2\sigma=26+2(3.0166)=32.0332
+  $$
+
+  This gives a rough reference range of about $20$ to $32$ survivors. It is not a guaranteed range because the binomial count is random, and no probability for this interval has been calculated here.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $8$
+
+A shipment contains $5000$ sterile specimen tubes, of which $10$ have a labelling defect. A laboratory selects $25$ tubes without replacement for inspection. Let $X$ be the number of defective tubes selected.
+
+1. Why is the exact distribution of $X$ not binomial?
+2. Verify that the sample satisfies the $10\%$ condition.
+3. Explain why a binomial approximation is reasonable and state the approximate model.
+4. Using the approximation, calculate the probability that no defective tubes are selected.
+5. Calculate the probability that at least one defective tube is selected.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The tubes are selected without replacement. Each selection changes the composition of the remaining shipment, so the trials are not exactly independent and the defect probability is not exactly constant.</li>
+  <li>The sampling fraction is
+
+  $$
+  \frac{25}{5000}=0.005=0.5\%
+  $$
+
+  This is well below $10\%$.</li>
+  <li>Removing one tube has a negligible effect on the next selection because the sample is very small relative to the shipment. The defect proportion is
+
+  $$
+  p=\frac{10}{5000}=0.002
+  $$
+
+  Therefore,
+
+  $$
+  X\approx\operatorname{Bin}(25,0.002)
+  $$
+  </li>
+  <li>Using the approximation,
+
+  $$
+  P(X=0)=(0.998)^{25}=0.9512
+  $$
+  </li>
+  <li>Using the complement rule,
+
+  $$
+  P(X\geq1)=1-(0.998)^{25}=0.0488
+  $$
+
+```{r q8-binomial-approximation, echo=TRUE}
+1 - dbinom(0, size = 25, prob = 0.002)
+```
+  </li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $9$
+
+A bird-banding study models the number of banded birds resighted during migration as $X\sim\operatorname{Bin}(100,p)$. Previous studies indicate that the expected number resighted is $18$.
+
+1. Use the binomial mean formula to determine $p$.
+2. Calculate the variance and standard deviation of $X$.
+3. Calculate the probability that exactly $20$ birds are resighted.
+4. Is the expected value necessarily the most likely observed count? Explain why an expected value and an exact-count probability describe different features of the distribution.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Because $\mu=np$,
+
+  $$
+  18=100p
+  $$
+
+  Therefore,
+
+  $$
+  p=0.18
+  $$
+  </li>
+  <li>The variance is
+
+  $$
+  \sigma^2=(100)(0.18)(0.82)=14.76
+  $$
+
+  The standard deviation is
+
+  $$
+  \sigma=\sqrt{14.76}=3.8419
+  $$
+  </li>
+  <li>The exact probability is
+
+  $$
+  \begin{aligned}
+  P(X=20)
+  &=\binom{100}{20}(0.18)^{20}(0.82)^{80}\\
+  &\approx0.0870
+  \end{aligned}
+  $$
+
+```{r q9-resighting, echo=TRUE}
+dbinom(20, size = 100, prob = 0.18)
+```
+  </li>
+  <li>The expected value is the long-run average count across many repetitions. The probability $P(X=20)$ concerns one particular count in one study. Even when the mean is a possible whole-number outcome, a single sample is not required to equal it, and the most probable count must be determined from the complete distribution.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $10$
+
+An insurer estimates that each of $30$ independently insured dogs has probability $0.12$ of generating at least one veterinary claim during the next month. Let $X$ be the number of dogs that generate a claim.
+
+1. State the probability model and calculate the expected number of dogs generating claims.
+2. Calculate the probability that at most $3$ dogs generate claims.
+3. Use the complement rule to calculate the probability that at least $4$ dogs generate claims.
+4. Calculate the probability that exactly $3$ dogs generate claims.
+5. Explain why the answers to Parts $2$ and $4$ are not the same.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The model and mean are
+
+  $$
+  X\sim\operatorname{Bin}(30,0.12)
+  $$
+
+  $$
+  \mu=np=(30)(0.12)=3.6
+  $$
+  </li>
+  <li>The event $X\leq3$ contains the counts $0$, $1$, $2$ and $3$:
+
+  $$
+  \begin{aligned}
+  P(X\leq3)
+  &=\sum_{k=0}^{3}\binom{30}{k}(0.12)^k(0.88)^{30-k}\\
+  &\approx0.5071
+  \end{aligned}
+  $$
+  </li>
+  <li>The complement of at least $4$ is at most $3$:
+
+  $$
+  P(X\geq4)=1-P(X\leq3)=1-0.5071=0.4929
+  $$
+
+```{r q10-pet-insurance-tail, echo=TRUE}
+pbinom(3, size = 30, prob = 0.12)
+pbinom(3, size = 30, prob = 0.12, lower.tail = FALSE)
+```
+  </li>
+  <li>The probability of exactly $3$ is
+
+  $$
+  P(X=3)=\binom{30}{3}(0.12)^3(0.88)^{27}=0.2224
+  $$
+  </li>
+  <li>At most $3$ includes four possible counts: $0$, $1$, $2$ and $3$. Exactly $3$ includes only one count. Therefore, $P(X\leq3)$ must include more probability than $P(X=3)$.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $11$
+
+An animal rescue centre receives an average of $2.4$ emergency calls per hour. Suppose calls occur independently at an approximately constant rate.
+
+1. Explain why a Poisson model may be appropriate.
+2. Let $X$ be the number of calls received during a three-hour evening shift. Determine $\lambda$ and state the distribution of $X$.
+3. Let $Y$ be the number of calls received during a $30$-minute period. Determine $\lambda$ and state the distribution of $Y$.
+4. State the mean, variance and standard deviation of $X$.
+5. Identify two real-world circumstances that could make the Poisson model unsuitable.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The variable counts events during a fixed time interval. The model states that calls occur independently and at an approximately constant average rate, which are central Poisson assumptions.</li>
+  <li>Three hours gives
+
+  $$
+  \lambda=(3)(2.4)=7.2
+  $$
+
+  Therefore,
+
+  $$
+  X\sim\operatorname{Pois}(7.2)
+  $$
+  </li>
+  <li>Thirty minutes is $0.5$ hour, so
+
+  $$
+  \lambda=(0.5)(2.4)=1.2
+  $$
+
+  Therefore,
+
+  $$
+  Y\sim\operatorname{Pois}(1.2)
+  $$
+  </li>
+  <li>For $X$,
+
+  $$
+  \mu=\lambda=7.2
+  $$
+
+  $$
+  \sigma^2=\lambda=7.2
+  $$
+
+  $$
+  \sigma=\sqrt{7.2}=2.6833
+  $$
+  </li>
+  <li>The model could fail if the call rate changes by time of day or during severe weather. It could also fail if one emergency produces several related calls, creating clusters rather than independent events.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $12$
+
+A wildlife rehabilitation hospital receives an average of $3.2$ injured-animal admissions per day. Assume the daily count follows a Poisson distribution with this mean. Let $X$ be the number of admissions in one day.
+
+1. State the distribution of $X$.
+2. Calculate the probability of exactly $2$ admissions.
+3. Calculate the probability of at most $2$ admissions.
+4. Calculate the probability of more than $2$ admissions.
+5. State and interpret the mean and standard deviation.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The model is
+
+  $$
+  X\sim\operatorname{Pois}(3.2)
+  $$
+  </li>
+  <li>The probability of exactly $2$ is
+
+  $$
+  \begin{aligned}
+  P(X=2)
+  &=\frac{e^{-3.2}(3.2)^2}{2!}\\
+  &=0.2087
+  \end{aligned}
+  $$
+  </li>
+  <li>The cumulative probability is
+
+  $$
+  \begin{aligned}
+  P(X\leq2)
+  &=\sum_{k=0}^{2}\frac{e^{-3.2}(3.2)^k}{k!}\\
+  &=0.3799
+  \end{aligned}
+  $$
+  </li>
+  <li>Using the complement rule,
+
+  $$
+  P(X>2)=1-P(X\leq2)=1-0.3799=0.6201
+  $$
+
+```{r q12-poisson-admissions, echo=TRUE}
+dpois(2, lambda = 3.2)
+ppois(2, lambda = 3.2)
+ppois(2, lambda = 3.2, lower.tail = FALSE)
+```
+  </li>
+  <li>The mean and standard deviation are
+
+  $$
+  \mu=\lambda=3.2
+  $$
+
+  $$
+  \sigma=\sqrt{3.2}=1.7889
+  $$
+
+  Across many comparable days, the hospital would average $3.2$ admissions per day. Daily counts vary around this mean on a scale of approximately $1.79$ admissions.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $13$
+
+A microbiologist counts bacterial colonies in equal microscope fields. The number of colonies in one field is modelled as Poisson with mean $1.5$. Counts in non-overlapping fields are assumed independent.
+
+1. Calculate the probability of observing no colonies in one field.
+2. Calculate the probability of observing at least one colony in one field.
+3. Let $T$ be the total number of colonies in two non-overlapping fields. Explain why $T$ has a Poisson distribution and determine its parameter.
+4. Calculate the probability that the two fields contain a total of at least $4$ colonies.
+5. Identify one biological pattern that would make the independence assumption questionable.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>For one field,
+
+  $$
+  P(X=0)=\frac{e^{-1.5}(1.5)^0}{0!}=e^{-1.5}=0.2231
+  $$
+  </li>
+  <li>Using the complement rule,
+
+  $$
+  P(X\geq1)=1-P(X=0)=1-e^{-1.5}=0.7769
+  $$
+  </li>
+  <li>The sum of independent Poisson counts is Poisson, with parameter equal to the sum of the individual parameters. Therefore,
+
+  $$
+  \lambda_T=1.5+1.5=3
+  $$
+
+  and
+
+  $$
+  T\sim\operatorname{Pois}(3)
+  $$
+  </li>
+  <li>Using the complement through $3$ colonies,
+
+  $$
+  \begin{aligned}
+  P(T\geq4)
+  &=1-P(T\leq3)\\
+  &=1-\sum_{k=0}^{3}\frac{e^{-3}3^k}{k!}\\
+  &=0.3528
+  \end{aligned}
+  $$
+
+```{r q13-poisson-fields, echo=TRUE}
+ppois(3, lambda = 3, lower.tail = FALSE)
+```
+  </li>
+  <li>Colonies may cluster because nearby cells came from the same bacterial aggregate or because some parts of the slide provide better growth conditions. Such clustering can make counts in nearby fields dependent.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $14$
+
+During baseline monitoring, the weekly number of equipment failures in a physics laboratory is modelled as $X\sim\operatorname{Pois}(\lambda)$. Historical records indicate that the probability of a week with no failures is $0.70$.
+
+1. Use the Poisson formula for $P(X=0)$ to show that
+
+$$
+e^{-\lambda}=0.70
+$$
+
+2. Solve for $\lambda$.
+3. Interpret $\lambda$ in context.
+4. Calculate the probability of exactly one failure in a week.
+5. Calculate the probability of at least two failures in a week.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>For a Poisson random variable,
+
+  $$
+  P(X=0)=\frac{e^{-\lambda}\lambda^0}{0!}=e^{-\lambda}
+  $$
+
+  Since $P(X=0)=0.70$,
+
+  $$
+  e^{-\lambda}=0.70
+  $$
+  </li>
+  <li>Taking natural logarithms gives
+
+  $$
+  -\lambda=\ln(0.70)
+  $$
+
+  Therefore,
+
+  $$
+  \lambda=-\ln(0.70)=0.3567
+  $$
+  </li>
+  <li>The laboratory experiences an average of approximately $0.357$ equipment failures per week under the baseline model.</li>
+  <li>The probability of one failure is
+
+  $$
+  \begin{aligned}
+  P(X=1)
+  &=e^{-0.3567}(0.3567)\\
+  &\approx0.2497
+  \end{aligned}
+  $$
+  </li>
+  <li>The complement of at least two failures is zero or one failure:
+
+  $$
+  \begin{aligned}
+  P(X\geq2)
+  &=1-P(X=0)-P(X=1)\\
+  &=1-0.7000-0.2497\\
+  &=0.0503
+  \end{aligned}
+  $$
+
+```{r q14-reverse-poisson, echo=TRUE}
+lambda <- -log(0.70)
+lambda
+dpois(1, lambda = lambda)
+ppois(1, lambda = lambda, lower.tail = FALSE)
+```
+  </li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $15$
+
+A coastal public-health programme conducts two types of monitoring during a harmful-algal-bloom season.
+
+- Each week, the programme tests $60$ shellfish. Under the sampling model, each shellfish independently has probability $0.04$ of exceeding the toxin threshold.
+- The programme also receives an average of $1.2$ public illness reports per week. Reports are modelled as occurring independently at a stable weekly rate.
+
+Let $X$ be the number of tested shellfish that exceed the threshold and let $Y$ be the number of illness reports received in one week.
+
+1. State an appropriate model for $X$. Explain why it is binomial.
+2. Calculate the probability that none of the $60$ shellfish exceed the threshold.
+3. Calculate the probability that at least one shellfish exceeds the threshold.
+4. State an appropriate model for $Y$. Explain why it is Poisson.
+5. Calculate the probability of receiving at least $3$ illness reports in one week.
+6. Calculate and interpret the mean and standard deviation of $Y$.
+7. Explain why $P(X\geq1)$ and $P(Y\geq3)$ answer fundamentally different questions even though both are upper-tail probabilities.
+8. Describe one plausible violation of the binomial model for $X$ and one plausible violation of the Poisson model for $Y$.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The shellfish count is modelled as
+
+  $$
+  X\sim\operatorname{Bin}(60,0.04)
+  $$
+
+  There are $60$ fixed trials, each shellfish is classified as exceeding or not exceeding the threshold, the success probability is $0.04$, and the outcomes are assumed independent.</li>
+  <li>The probability that none exceed the threshold is
+
+  $$
+  P(X=0)=(0.96)^{60}=0.0864
+  $$
+  </li>
+  <li>Using the complement rule,
+
+  $$
+  P(X\geq1)=1-(0.96)^{60}=0.9136
+  $$
+
+```{r q15-binomial-component, echo=TRUE}
+dbinom(0, size = 60, prob = 0.04)
+1 - dbinom(0, size = 60, prob = 0.04)
+```
+  </li>
+  <li>The report count is modelled as
+
+  $$
+  Y\sim\operatorname{Pois}(1.2)
+  $$
+
+  It counts events in a fixed one-week interval under assumptions of independent occurrence and an approximately constant rate.</li>
+  <li>The complement of at least $3$ reports is at most $2$ reports:
+
+  $$
+  \begin{aligned}
+  P(Y\geq3)
+  &=1-P(Y\leq2)\\
+  &=1-\sum_{k=0}^{2}\frac{e^{-1.2}(1.2)^k}{k!}\\
+  &=0.1205
+  \end{aligned}
+  $$
+
+```{r q15-poisson-component, echo=TRUE}
+ppois(2, lambda = 1.2, lower.tail = FALSE)
+```
+  </li>
+  <li>For the Poisson model,
+
+  $$
+  \mu_Y=\lambda=1.2
+  $$
+
+  $$
+  \sigma_Y=\sqrt{1.2}=1.0954
+  $$
+
+  Across many comparable weeks, the programme would receive an average of $1.2$ reports per week. Weekly counts vary around that mean on a scale of approximately $1.10$ reports.</li>
+  <li>$P(X\geq1)$ concerns at least one success among a fixed set of $60$ shellfish trials. In contrast, $P(Y\geq3)$ concerns at least three events during a one-week interval with no fixed number of opportunities. The models, parameters and thresholds are different, so the numerical probabilities should not be compared as if they measured the same risk.</li>
+  <li>The binomial model could fail if shellfish collected from the same location are exposed to the same toxin patch, making their outcomes dependent or giving different sites different probabilities. The Poisson model could fail if reports cluster after a public warning or if the underlying illness rate changes during the week.</li>
+</ol>
+</div>
+</details>
+:::
+

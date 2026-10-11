@@ -2,7 +2,7 @@
 title: "Chapter 9: Essential Probability Rules"
 subtitle: "The Practice of Statistics in the Life Sciences<br>by Brigitte Baldi and David S. Moore"
 author: "Instructor: Ali Raisolsadat"
-date: "Part II: Probability"
+date: "Part II: Probability and Distributions"
 
 output:
   html_document:
@@ -690,7 +690,7 @@ knitr::opts_chunk$set(
   error = FALSE
 )
 
-required_packages <- c("ggplot2", "gridExtra", "dplyr", "tidyr")
+required_packages <- c("ggplot2")
 missing_packages <- required_packages[
   !vapply(required_packages, requireNamespace, logical(1), quietly = TRUE)
 ]
@@ -704,9 +704,6 @@ if (length(missing_packages) > 0) {
 
 suppressPackageStartupMessages({
   library(ggplot2)
-  library(gridExtra)
-  library(dplyr)
-  library(tidyr)
 })
 
 set.seed(123) # Set seed for reproducible figures
@@ -789,7 +786,7 @@ p_blood <- ggplot(blood_data, aes(x = Type, y = Probability)) +
   geom_bar(stat = "identity", fill = "#4C72B0", alpha = 0.8, color = "black", width = 0.7) +
   geom_text(aes(label = Probability), vjust = -0.5, size = 3.5, fontface = "bold") +
   scale_y_continuous(limits = c(0, 0.45)) +
-  labs(title = "Discrete Probability Model: Asian American Blood Types",
+  labs(title = "Illustrative Blood-Type Probability Model",
        x = "Blood Type",
        y = "Probability") +
   lecture_theme
@@ -835,7 +832,7 @@ save_plot("fig_ch9_dalmatian.png", p_dalmatian, width = 5, height = 3.5)
 
 
 # =============================================================
-# 5. Women's Heights: Histogram to Density Curve
+# 5. Patient Heights: Histogram to Density Curve
 # =============================================================
 # Simulate a large sample of heights (mean = 64.5, sd = 2.5)
 set.seed(123)
@@ -852,7 +849,7 @@ p_heights <- ggplot(heights, aes(x = Height)) +
                 color = "#2c3e50", size = 1.2) +
   geom_vline(xintercept = 62, linetype = "dashed", color = "black", size = 0.8) +
   annotate("text", x = 59, y = 0.05, label = "Area = 0.316\n(31.6%)", color = "#8b0000", fontface = "bold") +
-  labs(title = "Heights of Women (Age 40-49)",
+  labs(title = "Illustrative Distribution of Patient Heights",
        x = "Height (inches)",
        y = "Density") +
   lecture_theme
@@ -885,451 +882,834 @@ save_plot("fig_ch9_uniform_shaded.png", p_uniform_shaded, width = 6, height = 3.
 
 # Chapter 9 {.chapter-root .unlisted}
 
-## The Idea of Probability
+## Randomness and Probability
 
-When people hear the word "random," they usually think of something that is completely haphazard, chaotic, or patternless. In statistics, **randomness** has a very specific, mathematical meaning. 
+Probability gives us a mathematical language for describing uncertainty. The outcome of one trial may be impossible to predict, yet repeated trials often reveal a stable pattern.
 
-Consider the birth of a baby: we cannot know for sure whether the next baby born in the U.S. will be a boy or a girl. The individual outcome is uncertain. However, if we look at millions of births over a decade, a remarkably stable pattern emerges. 
+> **RANDOM PHENOMENON**  
+> A phenomenon is **random** when individual outcomes are uncertain but a regular and predictable distribution emerges over many repetitions.
 
-> **RANDOMNESS AND PROBABILITY**  
-> We call a phenomenon **random** if individual outcomes are uncertain, but there is nonetheless a regular, predictable distribution of outcomes in a large number of repetitions.  
-> 
-> The **probability** of any outcome is the proportion of times the outcome would occur in a very long series of repetitions.
+Radioactive decay provides a useful example. We cannot identify the next atom that will decay, but a large collection of atoms follows a highly regular decay pattern. Probability describes that long-run regularity.
 
-### Two Ways to Determine Probability
+### Two Ways to Determine a Probability
 
-How do we actually figure out what the probability of an event is? Biologists and statisticians generally rely on two methods:
+Probabilities can come from a theoretical model or from observed data. The two approaches answer the same type of question, but their sources are different.
 
-**1. Theoretical Probability (The Math)**
-Based on underlying physical or biological laws.
-*   *Example:* Mendel’s theory of genetic inheritance states that sex chromosomes (XX for girls, XY for boys) should be roughly equally represented. Therefore, the theoretical probability of a newborn being a boy is exactly **0.50 (or 50%)**.
+| Approach | Source of the probability | Illustration |
+|:--|:--|:--|
+| **Theoretical probability** | A mathematical, genetic or physical model | During one half-life, a model assigns probability $0.50$ that a tracer atom decays |
+| **Empirical probability** | A proportion observed in data | If $498$ of $1000$ atoms decay, the estimated probability is $498/1000=0.498$ |
 
-**2. Empirical Probability (The Data)**
-Based on observing the long-term pattern of actual events.
-*   *Example:* In practice, biological factors affect gamete success and embryo survival. If we look at U.S. birth records from 1990 to 2014, the proportion of male babies is consistently around **0.512**. Therefore, the empirical probability of a newborn being a boy is **0.512 (or 51.2%)**.
+The hat in an empirical estimate reminds us that the value came from a particular dataset:
 
-Whether we use theory or data, we use these long-term patterns to create a **probability model**—a mathematical representation of uncertainty.
+$$
+\widehat{P}(A)=\frac{\text{number of observed occurrences of }A}{\text{number of trials}}
+$$
 
----
+Theoretical and empirical probabilities need not match exactly in a finite experiment. Random variation causes the empirical proportion to fluctuate around the model probability.
 
-### The Frequentist Interpretation of Probability
+> **Important distinction:** A theoretical probability is a feature of a specified model. An empirical probability is an estimate calculated from observations.
 
-In the life sciences, we usually rely on the **frequentist approach** to probability. This means we define probability based on what happens in the long run: the relative frequency of an outcome over many, many repetitions.
+### The Frequentist Interpretation
 
-**Example: The Common Cold**
-Suppose Gallup surveys 14,169 random adults and finds that 11.2% had a cold yesterday. If they ran the survey again with 14,169 *different* adults, they wouldn't get exactly 11.2%. Random samples vary. However, if they took thousands of these samples, the results would eventually average out to the true population parameter. 
+In the **frequentist interpretation**, the probability of an event is the proportion of times that event would occur in a very long sequence of repetitions performed under the same conditions.
 
-**Example: The Coin Toss (Long-Run Regularity)**
-If you toss a coin 10 times, you might get 2 heads (20%) or 8 heads (80%). In the short run, the proportion of heads is highly variable. But if you toss that same coin 5,000 times, the proportion of heads will inevitably settle down to exactly 0.50. 
+Suppose $498$ of $1000$ tracer atoms decay during one half-life. The observed relative frequency is
 
-<img src="fig_ch9_cointoss.png" alt="Line graph of two separate 5000 coin toss simulations. Both lines swing wildly between 0 and 1 on the left side of the graph, but eventually flatten out and converge exactly on the 0.5 line as the number of tosses increases." />
+$$
+\frac{498}{1000}=0.498
+$$
 
-*   *Notice the horizontal axis is on a logarithmic scale to highlight the wild swings during the first 100 tosses.*
-*   *Probability 0.5 does not mean "exactly half of the next 10 tosses." It means "occurs half the time in a very large number of trials."*
+A new group of $1000$ atoms would probably produce a slightly different proportion. Across many large groups, however, the empirical proportions would tend to cluster near the theoretical value $0.50$.
 
-> **The Law of Large Numbers**
-> This phenomenon—where the results of random events stabilize as the number of trials increases—is known as the Law of Large Numbers. It is the reason why casinos always make money and why large sample sizes in biology yield more trustworthy results!
+This interpretation has two parts:
 
----
+1. The outcome of one trial remains uncertain.
+2. The relative frequency becomes increasingly stable over many independent repetitions.
 
-### The Illusion of Randomness
+### Coin Tosses and the Law of Large Numbers
 
-Human brains are terrible at recognizing true randomness because we are hardwired to look for patterns. 
+For a fair coin, the theoretical probability of heads is $0.5$. After $n$ tosses, the cumulative proportion of heads is
 
-Consider tossing a coin six times. Which of these outcomes is more probable?
-1.  **H T H T T H**
-2.  **T T T H H H**
+$$
+\widehat{P}_n(\text{heads})
+=\frac{\text{number of heads among the first }n\text{ tosses}}{n}
+$$
 
-Almost everyone intuitively says the first one is more probable because it "looks" more random. The second one looks like a weird pattern. 
+<img src="fig_ch9_cointoss.png" alt="Two simulations of 5000 fair-coin tosses. The cumulative proportions fluctuate substantially at first and then tend toward 0.5 as the number of tosses increases." />
 
-**The reality:** Both sequences are exactly equally probable. A coin has no memory. It does not know what happened on the previous toss, and it does not try to "balance out" the sequence in the short run. True randomness often produces streaks and clusters that look like patterns to the human eye. 
+Early proportions can change sharply because each new toss represents a large fraction of the observations collected so far. After thousands of tosses, one additional result has very little effect on the cumulative proportion.
 
----
+> **LAW OF LARGE NUMBERS**  
+> As the number of independent repetitions increases, the observed relative frequency tends to approach the underlying probability.
 
-### Personal Probability
+The Law of Large Numbers does **not** say that:
 
-Sometimes, we need to assign a probability to an event that cannot be repeated thousands of times. 
+- the first $10$ tosses must contain exactly $5$ heads
+- a run of tails makes heads more likely on the next toss
+- a cumulative proportion must move steadily toward $0.5$
+- every long sequence will contain exactly equal counts
 
-*   *Question:* "What is the probability that humans find extraterrestrial life in this century?"
+It describes a long-run tendency, not a short-run balancing mechanism.
 
-We cannot simulate this century 5,000 times to see how often we find aliens. Therefore, we cannot use the frequentist definition of probability. Instead, scientists rely on **personal probability**.
+The simulation can be reproduced with a few introductory R commands:
 
-> **PERSONAL PROBABILITY**  
-> A personal probability is a number between 0 and 1 that expresses an individual’s scientific judgment of how likely an outcome is.
+```{r coin-toss-r, echo=TRUE}
+set.seed(42)
+tosses <- sample(c("H", "T"), size = 5000, replace = TRUE)
+mean(tosses == "H")
+```
 
-While the word "personal" makes it sound like a guess, in science, these probabilities are often highly rigorous. When climatologists state, "There is a 90% probability that sea levels will rise by $X$ meters," they are stating a personal probability grounded in extensive data, physics, and computer modeling.
+The result will generally be close to $0.5$, but it need not equal $0.5$ exactly.
 
-Regardless of whether a probability is frequentist or personal, it must obey the strict mathematical rules of probability that we will cover in the next section.
+### Randomness Naturally Produces Streaks
+
+People often judge a mixed-looking sequence as more random than one containing clusters. Consider these two results from six fair-coin tosses:
+
+$$
+\text{Sequence A: H T H T T H}
+$$
+
+$$
+\text{Sequence B: T T T H H H}
+$$
+
+Each is one specific sequence of six tosses, so each has probability
+
+$$
+\left(\frac{1}{2}\right)^6=\frac{1}{64}
+$$
+
+The second sequence may look less random, but it is not less probable. Random processes naturally generate runs and clusters.
+
+The mistaken belief that a future outcome must compensate for a recent streak is called the **gambler's fallacy**. A fair coin has no memory; after five tails, the probability of heads on the next toss is still $0.5$.
+
+### Probability Beyond Repeatable Experiments
+
+Some uncertain events cannot literally be repeated under identical conditions. For example, we might ask about the probability that humans discover extraterrestrial life during this century. Such a probability reflects the available evidence, scientific models and informed judgement.
+
+Regardless of how a probability is obtained, it must satisfy the mathematical rules introduced later in this chapter.
 
 ## Probability Models
 
-In the previous section, we discussed the *idea* of probability. To move from just "understanding" probability to actually *using* it in biology and medicine, we need a formal mathematical structure. 
+To use probability formally, we must identify every possible outcome and specify how probability is assigned.
 
-Consider the sex of the next baby to be born. We don't know the outcome in advance, but we know two things:
-1.  **A list of all possible outcomes:** Male or Female.
-2.  **A probability for each outcome:** Roughly 1/2 for each (based on Mendelian genetics).
+> **PROBABILITY-MODEL VOCABULARY**  
+> The **sample space** $S$ is the set of all possible outcomes of a random phenomenon.  
+> An **event** is one outcome or a collection of outcomes; mathematically, it is a subset of $S$.  
+> A **probability model** consists of a sample space and a rule for assigning probabilities to events.
 
-These two pieces of information form the foundation of all probability models. 
+For one coin toss,
 
-> **PROBABILITY MODELS VOCABULARY**  
-> *   The **sample space ($S$)** of a random phenomenon is the set of *all* possible outcomes.  
-> *   An **event** is an outcome (or a set of outcomes) of a random phenomenon. Mathematically, an event is a subset of the sample space.  
-> *   A **probability model** is a mathematical description of a random phenomenon consisting of two parts: a sample space $S$ and a way of assigning probabilities to events.
+$$
+S=\{\text{heads},\text{tails}\}
+$$
 
-A sample space $S$ can be a simple, finite list, or it can be a massive, continuous interval. For example, if a baby is born, the sample space is small: $S = \{\text{Male}, \text{Female}\}$. But if a national health survey records the body weight of adults, the sample space contains every possible numerical weight over a realistic interval (e.g., $S = \{\text{all weights between 60 lbs and 600 lbs}\}$).
+The event “heads” contains one outcome. If two coins are tossed, the sample space changes:
 
-**Example 9.5: Blood Types**  
-Your blood type greatly impacts the kind of blood transfusion or organ transplant you can safely receive. Eight different blood types occur as a result of the presence or absence of certain molecules on the surface of red blood cells. A person’s blood type is given as a combination of a group (O, A, B, or AB) and a Rhesus factor (+ or −). 
+$$
+S=\{HH,HT,TH,TT\}
+$$
 
-These eight types make up our sample space:
-$$S = \{O+, O-, A+, A-, B+, B-, AB+, AB-\}$$
+The event “exactly one head” is now
 
-How do we assign probabilities to this sample space? The frequencies of these blood types differ among ethnic groups. Within a given group, we can use the empirical frequencies to assign probabilities. For instance, the American Red Cross reports the following frequencies among Asian Americans:
+$$
+A=\{HT,TH\}
+$$
 
-| Blood Type | $O+$ | $O-$ | $A+$ | $A-$ | $B+$ | $B-$ | $AB+$ | $AB-$ |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Probability** | 0.39 | 0.01 | 0.27 | 0.005 | 0.25 | 0.004 | 0.07 | 0.001 |
+The sample space depends on the random phenomenon being studied and on what information is recorded.
 
-<img src="fig_ch9_blood_types.png" alt="Bar chart showing the discrete probabilities of the 8 different blood types." />
+### Example 9.5: A Blood-Type Probability Model
 
-**Changing the Scope:** What if a doctor only cares about the patient's Rhesus (Rh) factor?
-We can redefine our random phenomenon. For any randomly selected Asian American, the Rh factor can only be positive or negative. We now have a new, smaller sample space:
-$$S = \{Rh+, Rh-\}$$
+A blood type combines an ABO group with a Rhesus factor. For the following illustrative population model, the sample space is
 
-Based on the known proportions (by adding up all the positive probabilities and all the negative probabilities from the table above), our new probability model is:
+$$
+S=\{O+,O-,A+,A-,B+,B-,AB+,AB-\}
+$$
 
-| Rh Factor | $Rh+$ | $Rh-$ |
-| :--- | :--- | :--- |
-| **Probability** | 0.98 | 0.02 |
+| Blood type | $O+$ | $O-$ | $A+$ | $A-$ | $B+$ | $B-$ | $AB+$ | $AB-$ |
+|:--|--:|--:|--:|--:|--:|--:|--:|--:|
+| Probability | $0.39$ | $0.01$ | $0.27$ | $0.005$ | $0.25$ | $0.004$ | $0.07$ | $0.001$ |
 
-**Example 9.6: Random Numbers**  
-Suppose we want to use statistical software to choose a number at random between 0 and 1. We might get 0.289351, or we might get 0.5816462947. 
+<img src="fig_ch9_blood_types.png" alt="Bar chart showing the probability assigned to each of eight blood types in an illustrative population model." />
 
-What is the sample space? It is an entire continuous interval of numbers:
-$$S = \{\text{all numbers between 0 and 1}\}$$
+This model is valid because every probability lies between $0$ and $1$, and the probabilities sum to $1$:
 
-Let’s call the outcome of the random number generator $Y$. How can we assign a probability to the exact event $\{Y = 1/3\}$? Or the range $\{0.3 \le Y \le 0.7\}$? 
+$$
+0.39+0.01+0.27+0.005+0.25+0.004+0.07+0.001=1
+$$
 
-We face a mathematical problem: we cannot simply list out probabilities for every single value of $Y$ and add them up in a table, because there are infinitely many possible decimal numbers between 0 and 1! Instead, we have to use mathematical functions to assign probabilities over the entire continuous space.
+The bar chart is appropriate because the blood types are separate categorical outcomes. Rare outcomes remain part of the sample space even when their probabilities are small.
 
-<img src="fig_ch9_continuous_uniform.png" alt="A uniform density block stretching from x=0 to x=1, showing a continuous mathematical area rather than separate bars." />
+### Changing the Scope of the Model
 
----
+The Rhesus factor describes whether red blood cells carry the RhD antigen. A blood type is labelled Rh-positive when the antigen is present and Rh-negative when it is absent.
 
-### Key Concept: Discrete vs. Continuous Sample Spaces
+If we record only the Rh factor, the sample space becomes
 
-Examples 9.5 and 9.6 highlight a fundamental division in statistics that dictates which mathematical tools we must use.
+$$
+S=\{Rh+,Rh-\}
+$$
 
-1.  **Discrete Sample Space:** An itemized, finite list of outcomes, where each specific outcome has an associated probability. 
-    *   *Example:* Blood types ($S = \{O+, O-, \dots\}$). We use tables and basic addition to find probabilities.
-2.  **Continuous Sample Space:** An unbroken interval of infinite outcomes. 
-    *   *Example:* Exact heights, weights, or random numbers between 0 and 1. We must use mathematical functions (density curves) to assign probabilities over an interval.
+We obtain the probability of $Rh+$ by combining the positive blood-type outcomes:
 
-> **Looking Ahead:**
-> Pay close attention to whether your data is discrete or continuous! For discrete models, finding the probability of an event is as simple as looking at a table and adding numbers together. For continuous models, we have to calculate the *area under a curve* (which we will learn how to do very soon!).
+$$
+P(Rh+)=0.39+0.27+0.25+0.07=0.98
+$$
 
-## Probability Rules
+Similarly,
 
-Whether a sample space is discrete (like blood types) or continuous (like random numbers), the mathematical rules of probability remain exactly the same. These rules stem directly from the idea of probability as "the long-run proportion of repetitions on which an event occurs." 
+$$
+P(Rh-)=0.01+0.005+0.004+0.001=0.02
+$$
 
-Here are the four fundamental facts that must be true for *any* valid assignment of probabilities:
+| Rh factor | $Rh+$ | $Rh-$ |
+|:--|--:|--:|
+| Probability | $0.98$ | $0.02$ |
 
-1.  **Probabilities are proportions:** Any proportion is a number between 0 and 1, so any probability must also be a number between 0 and 1. An event with probability 0 *never* occurs. An event with probability 1 occurs on *every* trial.
-2.  **The whole equals 1:** Because *some* outcome must occur on every trial, the sum of the probabilities for all possible outcomes in a sample space must equal exactly 1 (or 100%).
-3.  **Adding non-overlapping events:** When two events have no outcomes in common, they can never happen together (their joint probability is zero). Therefore, the probability that one *or* the other occurs is simply the sum of their individual probabilities.
-4.  **The Complement Rule:** The probability that an event *does not* occur is exactly 1 minus the probability that the event *does* occur. 
+This smaller model does not contradict the eight-outcome model. It answers a less detailed question by combining outcomes.
 
-We can use standard mathematical notation to state these four facts concisely. We use capital letters near the beginning of the alphabet (like $A$, $B$, $C$) to denote events, and we write the probability of an event as $P(A)$.
+### Discrete and Continuous Sample Spaces
 
-> **THE FOUR FUNDAMENTAL PROBABILITY RULES**  
-> 
-> **Rule 1.** The probability $P(A)$ of any event $A$ satisfies:  
-> $$0 \le P(A) \le 1$$  
-> 
-> **Rule 2.** If $S$ is the complete sample space in a probability model, then:  
-> $$P(S) = 1$$  
-> 
-> **Rule 3. The Addition Rule for Disjoint Events.** Two events $A$ and $B$ are **disjoint** (mutually exclusive) if they have no outcomes in common and can never occur together, meaning $P(A \text{ and } B) = 0$. If $A$ and $B$ are disjoint, then:  
-> $$P(A \text{ or } B) = P(A) + P(B)$$  
-> *(Note: This rule extends to multiple disjoint events: $P(A \text{ or } B \text{ or } C) = P(A) + P(B) + P(C)$).*
-> 
-> **Rule 4. The Complement Rule.** For any event $A$, the probability that $A$ does not occur is called the **complement** of $A$. It is calculated as:  
-> $$P(A \text{ does not occur}) = 1 - P(A)$$
+Probability models are divided into two broad types.
 
----
+| Feature | Discrete sample space | Continuous sample space |
+|:--|:--|:--|
+| Possible outcomes | Finite or countably infinite | Every value in an interval |
+| Probability of one value | May be positive | Equals $0$ |
+| How probabilities are found | Add probabilities of listed outcomes | Calculate areas under a density curve |
+| Example | Number of impaired ears | Exact body height |
 
-### The Strict Definition of "AND" and "OR"
+A variable can be intrinsically continuous even when it is recorded in rounded units. Height does not become discrete merely because it is reported to the nearest centimetre.
 
-In normal English (and even in law!), the words "and" and "or" can be vague. The Federal Trade Commission once had to start a legal deposition by formally defining these terms so lawyers wouldn't argue over them in court. 
+## Fundamental Probability Rules
 
-In probability, we have strict, unwavering definitions for these words:
+Every valid probability model, discrete or continuous, must follow the same basic rules.
 
-*   **OR ($A \text{ or } B$):** This is **inclusive**. It means *at least one* event must be true (either $A$ alone occurs, $B$ alone occurs, or *both* occur together).
-*   **AND ($A \text{ and } B$):** This is the **intersection**. It means *both* events must be completely satisfied at the exact same time.
+### Rule 1: The Sample Space Has Probability One
 
-*(If events are NOT disjoint and can happen at the same time, we have to use a slightly more complex General Addition Rule to avoid double-counting them. We will cover this in Chapter 10!)*
+Some outcome in the sample space must occur:
 
----
+$$
+P(S)=1
+$$
 
-**Example 9.7: Using the Probability Rules (Blood Types)**  
-Let's apply these rules to the Asian American blood type data from Example 9.5. 
+### Rule 2: Probabilities Are Between Zero and One
 
-Recall our sample space probabilities:
-$P(O+) = 0.39$
-$P(A+) = 0.27$
-$P(B+) = 0.25$
-$P(AB+) = 0.07$
+For every event $A$,
 
-**Applying Rule 3 (Addition for Disjoint Events):**
-What is the probability that a randomly selected person has a positive Rhesus factor (Rh+)? Because a person cannot have O+ and A+ blood at the same time, these are *disjoint* outcomes. Therefore, we can simply add them up:
+$$
+0\leq P(A)\leq 1
+$$
 
-$$P(\text{Rh+}) = P(O+) + P(A+) + P(B+) + P(AB+)$$
-$$P(\text{Rh+}) = 0.39 + 0.27 + 0.25 + 0.07 = 0.98$$
+A negative probability or a probability larger than $1$ is impossible.
 
-*(Checking Rules 1 and 2: Notice that all individual probabilities are between 0 and 1, and if we added the probabilities for the negative blood types as well, the entire sample space would sum to exactly 1).*
+### Rule 3: Addition for Disjoint Events
 
-**Applying Rule 4 (The Complement Rule):**
-What is the probability that an Asian American’s blood type would **not** have a positive Rhesus factor? We could add up all the negative blood types, or we can use the much faster Complement Rule:
+Two events are **disjoint**, or mutually exclusive, when they have no outcomes in common. They cannot occur on the same trial, so
 
-$$P(\text{Rh is not positive}) = 1 - P(\text{Rh is positive})$$
-$$P(\text{Rh is not positive}) = 1 - 0.98 = 0.02$$
+$$
+P(A\text{ and }B)=0
+$$
 
-## Discrete vs. Continuous Probability Models
+For disjoint events,
 
-In our previous examples, we saw that assigning probabilities depends entirely on the nature of the sample space.
+$$
+P(A\text{ or }B)=P(A)+P(B)
+$$
 
-### Discrete Probability Models
+For three pairwise-disjoint events,
 
-> **DISCRETE PROBABILITY MODEL**  
-> A probability model with a sample space made up of a finite list of individual outcomes is called **discrete**.  
-> To assign probabilities in a discrete model, list the probabilities of all individual outcomes. The probability of any event is the sum of the probabilities of the outcomes making up the event.
+$$
+P(A\text{ or }B\text{ or }C)=P(A)+P(B)+P(C)
+$$
 
-**Example 9.8: Hearing Impairment in Dalmatians**  
-Pure dog breeds are often highly inbred, leading to congenital defects. A study examined hearing impairment in 5,333 Dalmatians. Call the number of ears impaired (deaf) in a randomly chosen Dalmatian $X$. The researchers found the following probability model for $X$:
+The simple addition rule applies only when the events do not overlap. Chapter 10 develops the general rule for events that can occur together.
 
-| Number of Impaired Ears ($X$) | 0 | 1 | 2 |
-| :--- | :---: | :---: | :---: |
-| **Probability** | 0.70 | 0.22 | 0.08 |
+### Rule 4: The Complement Rule
 
-*(Notice that the probabilities sum exactly to 1.0, satisfying Rule 2).*
+The complement $A^c$ contains all outcomes in the sample space that are not in $A$:
 
-<img src="fig_ch9_dalmatian.png" alt="Bar chart showing the discrete probabilities of Dalmatian hearing impairment: 0.70 for 0 ears, 0.22 for 1 ear, and 0.08 for 2 ears." />
+$$
+P(A^c)=1-P(A)
+$$
 
-What is the probability that a randomly chosen Dalmatian has *some* hearing impairment? This means the dog has either 1 or 2 impaired ears. Because these outcomes are disjoint (a dog cannot have exactly 1 deaf ear and exactly 2 deaf ears simultaneously), we use the Addition Rule:
+The complement rule is especially useful for questions involving “not,” “none,” or later, “at least one.”
 
-$$P(X \ge 1) = P(X = 1) + P(X = 2)$$
-$$P(X \ge 1) = 0.22 + 0.08 = 0.30$$
+### Reading AND and OR Carefully
 
-> **Inequality Signs Matter!**  
-> In discrete models, you must be extremely careful with inequality signs. The probability that $X$ is greater than or equal to 1 ("at least 1") is NOT the same as the probability that $X$ is strictly greater than 1.  
-> $P(X \ge 1) = 0.30$  
-> $P(X > 1) = P(X = 2) = 0.08$
+Probability gives these words precise meanings.
 
----
+- **$A$ or $B$** means that at least one event occurs. Probability uses the inclusive meaning of “or,” so both may occur unless the events are disjoint.
+- **$A$ and $B$** means that both events occur on the same trial.
+- **not $A$** means the complement $A^c$.
 
-### Continuous Probability Models & Density Curves
+In the blood-type model, the outcomes $O+$ and $A+$ are disjoint because one individual cannot have both blood types. Therefore, their probabilities can be added directly.
 
-In contrast, Example 9.6 introduced a random number generator with a continuous sample space: $S = \{\text{all numbers between 0 and 1}\}$. This interval contains an *infinite* number of possible outcomes. 
+### Example 9.7: Positive and Negative Rhesus Factor
 
-We cannot list infinite probabilities in a table. Instead, we use a mathematical function to assign probabilities to *ranges* of values. These mathematical functions are called **density curves**.
+The four positive blood-type outcomes are disjoint, so
 
-> **DENSITY CURVE**  
-> A density curve is a curve that:  
-> 1. Is always on or above the horizontal axis.  
-> 2. Has an **area of exactly 1** underneath it.  
-> 
-> The area under the curve and above any range of values on the horizontal axis is the proportion of all observations that fall within that range.
+$$
+\begin{aligned}
+P(Rh+)
+&=P(O+)+P(A+)+P(B+)+P(AB+)\\
+&=0.39+0.27+0.25+0.07\\
+&=0.98
+\end{aligned}
+$$
 
-**Example 9.9 & 9.10: From Histogram to Density Curve (Women's Heights)**  
-In Chapter 1, we described continuous distributions using histograms. Sometimes the overall pattern of a large number of observations is so regular that we can model it with a smooth curve. 
+The complement of a positive Rhesus factor is a negative Rhesus factor:
 
-Look at the distribution of heights of American women (age 40 to 49). The histogram is symmetric, and both tails fall off smoothly from a central peak. We can draw a smooth density curve over the histogram to model the data. 
+$$
+\begin{aligned}
+P(Rh-)
+&=1-P(Rh+)\\
+&=1-0.98\\
+&=0.02
+\end{aligned}
+$$
 
-<img src="fig_ch9_heights.png" alt="Histogram of women's heights overlaid with a smooth bell-shaped density curve. The area under the curve to the left of 62 inches is shaded red, with a label indicating the area is 0.316." />
+The complement method is shorter than adding the four negative blood-type probabilities, although both approaches give the same answer.
 
-If we want to know the probability that a randomly chosen woman is 62 inches or shorter, we do not add up individual bars. Instead, we calculate the **area under the density curve** to the left of 62. 
+### Checking Whether a Discrete Model Is Valid
 
-Because the total area under the entire curve is exactly 1 (100% of the population), the shaded area represents the exact probability: **0.316**.
+When a table claims to be a discrete probability model, check both conditions:
 
-> **CONTINUOUS PROBABILITY MODEL**  
-> A continuous probability model assigns probabilities as **areas under a density curve**. The area under the curve and above any range of values is the probability of an outcome occurring in that range.
+1. Every probability is between $0$ and $1$.
+2. The probabilities sum to exactly $1$, apart from minor rounding.
 
-**Example 9.11: Random Numbers (The Uniform Density Curve)**  
-Density curves come in many shapes. The random number generator (Example 9.6) spreads its output uniformly (evenly) across the entire interval from 0 to 1. This is modeled by a **uniform density curve**.
+For example, the values $0.20$, $0.35$, $0.15$ and $0.30$ form a valid model because all are nonnegative and
 
-<img src="fig_ch9_uniform_shaded.png" alt="A rectangular block from x=0 to x=1 with a height of 1. The area between x=0.3 and x=0.7 is shaded, showing an area of 0.4." />
+$$
+0.20+0.35+0.15+0.30=1
+$$
 
-Because the height of this curve is exactly 1, the area of any block is simply its width. 
-What is the probability that the random number $Y$ falls between 0.3 and 0.7?
-$$P(0.3 \le Y \le 0.7) = \text{Width} = (0.7 - 0.3) = 0.4$$
-
-What is the probability of getting a number less than or equal to 0.5, OR greater than 0.8? Because these are disjoint intervals, we add their areas:
-$$P(Y \le 0.5 \text{ or } Y > 0.8) = P(Y \le 0.5) + P(Y > 0.8) = 0.5 + 0.2 = 0.7$$
-
-> **The Probability of an Exact Number is Zero!**  
-> Continuous models assign probabilities to *intervals*, not individual points. In a continuous model, the probability of hitting one exact, infinitely precise number is always 0.  
-> For example, what is $P(Y = 0.8)$? Since a single point has no width, the area of the line is $0 \times 1 = 0$. In continuous math, $P(Y \le 0.8)$ is exactly the same as $P(Y < 0.8)$!
+The values $0.20$, $0.35$, $-0.05$ and $0.50$ do not form a valid model, even though they sum to $1$, because probabilities cannot be negative.
 
 ## Random Variables
 
-In Examples 9.8 and 9.11, we used mathematical notation that is highly convenient: we let $X$ stand for the number of impaired ears in a Dalmatian, and $Y$ stand for the outcome of a random number generator. 
-
-Because the value changes from one random choice to another, we call these variables **random variables**.
+A random phenomenon may produce a numerical result. We use a random variable to assign a mathematical name to that result.
 
 > **RANDOM VARIABLE**  
-> A **random variable** is a variable whose value is a numerical outcome of a random phenomenon. We typically use uppercase letters like $X$ or $Y$ to represent them.  
-> 
-> The **probability distribution** of a random variable $X$ tells us exactly what values $X$ can take and how to assign probabilities to those values.
+> A **random variable** is a variable whose numerical value is determined by the outcome of a random phenomenon. Random variables are usually represented by uppercase letters such as $X$ or $Y$.
 
-**Example 9.12: Two Types of Random Variables**  
-There are two main types of random variables, corresponding directly to the two types of probability models we just learned:
+The **probability distribution** of a random variable tells us:
 
-1.  **Discrete Random Variables:** Have a countable (typically finite) list of possible outcomes. 
-    *   *Example:* The hearing impairment $X$ is discrete because its possible values are exactly the whole numbers $\{0, 1, 2\}$.
-2.  **Continuous Random Variables:** Can take on *any* value in an unbroken interval, with probabilities given as areas under a density curve.
-    *   *Example:* The random number $Y$ is continuous because it fills the entire interval between 0 and 1. 
+- which values the random variable can take
+- how probability is assigned to those values
 
-> **Be careful with the "true nature" of a variable!**  
-> While most people report their height in whole numbers of inches (e.g., 65 inches), humans do not grow magically one inch at a time. All possible values within a realistic interval can actually exist (e.g., 65.1259 inches). Therefore, the random variable for *height* is truly continuous, even if we round it to discrete buckets when speaking.
+For example:
 
----
+- $X=$ number of impaired ears in a randomly selected Dalmatian, so $X\in\{0,1,2\}$
+- $Y=$ a random number selected from $[0,1]$, so every real number in that interval is possible
 
-### Parameters vs. Statistics
+### Discrete and Continuous Random Variables
 
-In Chapter 2, we learned how to calculate the mean ($\bar{x}$) and standard deviation ($s$) of a set of actual observed data (a sample). 
+A **discrete random variable** has a finite or countable set of possible values. Counts are usually discrete.
 
-Random variables also have means and standard deviations! However, because a random variable represents the mathematical model for *all* possible outcomes in the entire sample space $S$, their measures are **parameters** rather than statistics.
+A **continuous random variable** can take any value in an interval. Measurements such as time, mass, temperature and height are usually modelled as continuous.
 
-We use Greek letters to distinguish theoretical parameters from observed sample statistics:
-*   **Mean of a random variable:** $\mu$ (mu)
-*   **Standard Deviation of a random variable:** $\sigma$ (sigma)
+The distinction concerns the possible values of the underlying variable, not simply how the values happen to be written in a dataset.
 
----
+## Discrete Probability Models
 
-### Computing $\mu$ and $\sigma$ for a Discrete Random Variable
+For a discrete random variable, each possible value is assigned a probability. The probability of an event is obtained by adding the probabilities of the values that belong to that event.
 
-Computing the mean and standard deviation of a *continuous* random variable requires calculus (integration) and is beyond the scope of this course. However, calculating them for a *discrete* random variable involves basic arithmetic.
+If $X$ takes values $x_1,x_2,\ldots$ with probabilities $p_1,p_2,\ldots$, then a valid model satisfies
 
-> **MATHEMATICS OF DISCRETE RANDOM VARIABLES**  
-> Let $X$ be a discrete random variable with $k$ possible outcomes: $x_1, x_2, \dots, x_k$.  
-> 
-> **1. The Mean (Expected Value):**  
-> $$\mu = E(X) = \sum x_i \cdot P(X = x_i)$$  
-> *(You multiply each possible outcome by its probability, and add them all up).*
-> 
-> **2. The Variance:**  
-> $$\sigma^2 = \sum (x_i - \mu)^2 \cdot P(X = x_i)$$  
-> 
-> **3. The Standard Deviation:**  
-> $$\sigma = \sqrt{\sigma^2}$$
+$$
+0\leq p_i\leq 1
+$$
 
-The mean $\mu$ is also called the **expected value** of $X$ (written as $E(X)$), because it is the value we expect to get, on average, over many, many repetitions of the random event. The standard deviation $\sigma$ is roughly the expected deviation from that mean in the long run.
+and
 
-**Example 9.13: Expected Hearing Impairment in Dalmatians**  
-Let's calculate the theoretical mean and standard deviation for the Dalmatian probability model.
+$$
+\sum_i p_i=1
+$$
 
-| $X$ (impaired ears) | 0 | 1 | 2 |
-| :--- | :---: | :---: | :---: |
-| **Probability $P(X)$** | 0.70 | 0.22 | 0.08 |
+### Example 9.8: Hearing Impairment in Dalmatians
 
-**1. Calculate the Mean (Expected Value):**
-$$\mu = (0 \times 0.70) + (1 \times 0.22) + (2 \times 0.08)$$
-$$\mu = 0 + 0.22 + 0.16 = \mathbf{0.38 \text{ impaired ears}}$$
+A study of $5333$ Dalmatians recorded the number of ears with hearing impairment. Let $X$ be the number of impaired ears in a randomly selected dog.
 
-**2. Calculate the Variance:**
-$$\sigma^2 = (0 - 0.38)^2 \times 0.70 + (1 - 0.38)^2 \times 0.22 + (2 - 0.38)^2 \times 0.08$$
-$$\sigma^2 = (0.1444 \times 0.70) + (0.3844 \times 0.22) + (2.6244 \times 0.08)$$
-$$\sigma^2 = 0.10108 + 0.084568 + 0.209952 = \mathbf{0.3956}$$
+| Number of impaired ears $x$ | $0$ | $1$ | $2$ |
+|:--|--:|--:|--:|
+| $P(X=x)$ | $0.70$ | $0.22$ | $0.08$ |
 
-**3. Calculate the Standard Deviation:**
-$$\sigma = \sqrt{0.3956} = \mathbf{0.62897}$$
+<img src="fig_ch9_dalmatian.png" alt="Discrete probability model for the number of impaired ears in a Dalmatian: 0 with probability 0.70, 1 with probability 0.22 and 2 with probability 0.08." />
 
-**Conclusion:**
-In the long run, across thousands of randomly selected Dalmatian dogs, we expect to find an average of **0.38 impaired ears** per dog. The expected deviation from this value is roughly **0.63 impaired ears**. 
+The model is valid because
 
-*(Note that the expected value, 0.38, is not one of the values the random variable $X$ can actually take. A single dog cannot have 0.38 deaf ears! It is a theoretical long-run average).*
+$$
+0.70+0.22+0.08=1
+$$
 
-Since we are learning introductory R, we can use vectorized operations to do this exact calculation instantly without doing the algebra by hand!
+The probability of at least one impaired ear is
 
-```{r expected_value_r, echo=TRUE}
-# Define the outcomes (x) and their probabilities (p_x)
+$$
+\begin{aligned}
+P(X\geq 1)
+&=P(X=1)+P(X=2)\\
+&=0.22+0.08\\
+&=0.30
+\end{aligned}
+$$
+
+The same result follows from the complement rule:
+
+$$
+P(X\geq 1)=1-P(X=0)=1-0.70=0.30
+$$
+
+The phrase **at least one** includes both $1$ and $2$, whereas **more than one** includes only $2$:
+
+$$
+P(X>1)=P(X=2)=0.08
+$$
+
+This distinction matters in discrete models because an individual point may have positive probability.
+
+The calculation can be checked with short R commands:
+
+```{r dalmatian-probability-r, echo=TRUE}
 x <- c(0, 1, 2)
 p_x <- c(0.70, 0.22, 0.08)
 
-# 1. Calculate the Expected Value (mu)
-mu <- sum(x * p_x)
-print(mu)
-
-# 2. Calculate the Variance
-variance <- sum((x - mu)^2 * p_x)
-
-# 3. Calculate the Standard Deviation
-sigma <- sqrt(variance)
-print(sigma)
+sum(p_x)
+sum(p_x[x >= 1])
 ```
 
-## Risk and Odds
+## Continuous Probability Models
 
-Random events can be described in a variety of ways. In the life sciences, the most common descriptors are **probability**, **risk**, and **odds**. While they are mathematically related, they represent different ways of communicating uncertainty. 
+A continuous random variable can take infinitely many values across an interval. We cannot list a positive probability for every point. Instead, probabilities are represented by areas under a **density curve**.
 
-*   **Risk** means different things in different fields, but in statistics and the health sciences, it simply corresponds to the *probability of an undesirable event* (e.g., death, disease, side effects). 
-*   **Odds** are a somewhat less intuitive concept with a foundation in gambling. An "odds" is a ratio of two probabilities: the probability of an event occurring divided by the probability of it *not* occurring. Because it is a ratio, odds can take any positive value, including numbers infinitely greater than 1!
+> **DENSITY CURVE**  
+> A density curve lies on or above the horizontal axis and has total area equal to $1$.
 
-> **MATHEMATICS OF RISK AND ODDS**  
-> If an outcome $A$ has a probability $p$ of occurring:
-> 
-> *   **Risk:** The risk of an undesirable outcome is simply its probability.
->     $$\text{Risk}(A) = p$$
-> *   **Odds:** The odds of an outcome is the ratio of it occurring over it not occurring.
->     $$\text{Odds}(A) = \frac{p}{1 - p}$$
+For a continuous random variable $Y$,
 
-Odds can be expressed as a single decimal numerical value, or as a ratio of two integers (e.g., "1:3" or "1 to 3").
+$$
+P(a\leq Y\leq b)=\text{area under the density curve from }a\text{ to }b
+$$
 
----
+Probability is determined by **area**, not by the height of the curve at a single point. A tall curve over a narrow interval can contain less area than a shorter curve over a wide interval.
 
-**Example 9.14: Blood Clots in Immobilized Patients (Rare Events)**
+### Example 9.9--9.10: Patient Heights
 
-**Study Context:** Patients immobilized for a substantial amount of time can develop deep vein thrombosis (DVT), a blood clot in a leg or pelvis vein. The drug manufacturer Pfizer tested the effectiveness of the drug Fragmin in preventing DVT. Of 1,518 randomly chosen immobilized patients given Fragmin, 42 experienced a DVT complication (meaning the remaining 1,476 patients did not).
+A smooth density curve can summarize the overall distribution of a continuous measurement such as height.
 
-The proportion (probability) of patients experiencing DVT is $42 / 1518 = 0.0277$, or $2.77\%$. We can compute the risk and odds:
+<img src="fig_ch9_heights.png" alt="Histogram of simulated patient heights with a smooth density curve. The area to the left of 62 inches is shaded." />
 
-*   **Risk:** $p = 0.0277$
-*   **Odds:** $\frac{p}{1 - p} = \frac{0.0277}{1 - 0.0277} = \frac{42}{1476} = 0.0285$
+The total area under the curve is $1$. If the shaded area to the left of $62$ inches is $0.316$, then
 
-> **Instructor's Note: How to read an odds ratio**  
-> The odds of a DVT complication are $42:1476$, which simplifies to about **$1:35$**. This means that for every 1 patient who experiences a DVT complication, approximately 35 patients do not.
+$$
+P(Y\leq 62)=0.316
+$$
 
-Notice that the numerical values for risk ($0.0277$) and odds ($0.0285$) are extremely close! **Rule of thumb:** When an undesirable event is rare, risk and odds give very similar numerical values because the denominator for odds ($1 - p$) is very close to $1$. 
+This means that approximately $31.6\%$ of the population described by the model is at most $62$ inches tall. The value $0.316$ is an area under the curve; it is not the height of the curve at $62$.
 
----
+### Example 9.11: The Uniform Distribution
 
-**Example 9.15: Sickle-Cell Anemia (Common Events)**
+Suppose $Y$ is selected uniformly from $0$ to $1$. “Uniformly” means intervals of equal width have equal probability. The density is a rectangle with height $1$ because its total area must be
 
-What happens when an event is not rare? 
+$$
+\text{width}\times\text{height}=(1-0)(1)=1
+$$
 
-**Study Context:** Sickle-cell anemia is an inherited blood disease. Individuals carrying only one copy of the defective gene ("sickle-cell trait") are healthy but can pass it on. If a couple learns that they *both* carry the trait, genetic laws state there is a 25% chance they will conceive a child suffering from the disease.
+<img src="fig_ch9_uniform_shaded.png" alt="Uniform density from 0 to 1 with the interval from 0.3 to 0.7 shaded." />
 
-*   **Risk:** The risk of conceiving a child with sickle-cell anemia is simply $p = \mathbf{0.25}$ (or 25%).
-*   **Odds:** The odds of this outcome are:
-    $$\text{Odds} = \frac{0.25}{1 - 0.25} = \frac{0.25}{0.75} = \mathbf{0.333}$$
+The probability that $Y$ lies between $0.3$ and $0.7$ is the area of the shaded rectangle:
 
-The odds can also be written as the ratio **$1:3$**. 
+$$
+\begin{aligned}
+P(0.3\leq Y\leq 0.7)
+&=\text{width}\times\text{height}\\
+&=(0.7-0.3)(1)\\
+&=0.4
+\end{aligned}
+$$
 
-In this case, the risk ($0.25$) and the odds ($0.33$) have very different numerical values! Always make sure you understand whether a medical report is quoting a *risk* or an *odds ratio*, as mixing them up for common events will drastically alter your clinical interpretation.
+For a general uniform distribution on $[a,b]$, the rectangle must have height
 
----
+$$
+\frac{1}{b-a}
+$$
 
-### Converting Odds Back to Risk (Probability)
+Therefore, for an interval $[c,d]$ inside $[a,b]$,
 
-Sometimes medical literature only provides the odds, but you want to know the actual probability ($p$). You can compute the risk $p$ from the odds using this simple algebraic rearrangement:
+$$
+P(c\leq Y\leq d)=\frac{d-c}{b-a}
+$$
 
-$$p = \frac{\text{odds}}{1 + \text{odds}}$$
+This is the width of the requested interval divided by the total width.
 
-**Checking our Sickle-Cell Example:**
-We know the odds of the child inheriting the disease were $1/3$ (or $0.333$). Let's convert that back to probability:
+### Adding Disjoint Continuous Intervals
 
-$$p = \frac{1/3}{1 + 1/3}$$
-$$p = \frac{1/3}{4/3}$$
-$$p = \frac{1}{4} = \mathbf{0.25}$$
+For $Y$ uniformly distributed from $0$ to $1$, the events $Y\leq0.5$ and $Y>0.8$ are disjoint intervals. Therefore,
 
-We successfully recovered our original $25\%$ probability!
+$$
+\begin{aligned}
+P(Y\leq0.5\text{ or }Y>0.8)
+&=P(Y\leq0.5)+P(Y>0.8)\\
+&=0.5+0.2\\
+&=0.7
+\end{aligned}
+$$
+
+Now suppose $X$ is uniformly distributed on $[2,10]$. The total width is
+
+$$
+10-2=8
+$$
+
+The intervals $X<4$ and $X\geq7$ are disjoint, so
+
+$$
+\begin{aligned}
+P(X<4\text{ or }X\geq7)
+&=\frac{4-2}{8}+\frac{10-7}{8}\\
+&=\frac{2}{8}+\frac{3}{8}\\
+&=\frac{5}{8}
+\end{aligned}
+$$
+
+### Why Exact Values Have Probability Zero
+
+For every continuous random variable and every exact value $c$,
+
+$$
+P(Y=c)=0
+$$
+
+A single point has zero width, so the area above it is zero. This does not mean that the value is impossible in an ordinary-language sense. It means that no exact point receives positive probability in an ideal continuous model.
+
+Because the endpoint contributes zero probability,
+
+$$
+P(Y\leq0.8)=P(Y<0.8)
+$$
+
+This is different from a discrete model. For the Dalmatian variable, $P(X=1)=0.22$, so including or excluding $1$ changes the probability.
+
+## Parameters of a Probability Distribution
+
+Chapter 2 used the sample mean $\bar{x}$ and sample standard deviation $s$ to describe observed data. A probability distribution also has a centre and spread, but these are theoretical **parameters**.
+
+| Quantity | Observed sample | Probability distribution |
+|:--|:--:|:--:|
+| Mean | $\bar{x}$ | $\mu$ |
+| Standard deviation | $s$ | $\sigma$ |
+
+The mean of a random variable is also called its **expected value**.
+
+### Mean or Expected Value of a Discrete Random Variable
+
+Suppose $X$ has possible values $x_1,\ldots,x_k$ with probabilities $p_1,\ldots,p_k$. Its expected value is
+
+$$
+\mu=E(X)=\sum_{i=1}^{k}x_i p_i
+$$
+
+The expected value is a probability-weighted average. Outcomes with larger probabilities contribute more heavily.
+
+In a long series of independent repetitions, the average observed value tends toward $\mu$. The expected value does not have to be one of the possible individual outcomes.
+
+### Variance and Standard Deviation
+
+The variance of a discrete random variable is the probability-weighted average squared distance from the mean:
+
+$$
+\sigma^2=\sum_{i=1}^{k}(x_i-\mu)^2p_i
+$$
+
+The standard deviation is
+
+$$
+\sigma=\sqrt{\sigma^2}
+$$
+
+Variance is measured in squared units. Standard deviation is measured in the same units as the random variable, which makes it easier to interpret.
+
+### Observed Data and a Probability Model
+
+The sample and model formulas have the same goal but describe different objects.
+
+| | Observed sample | Probability model |
+|:--|:--:|:--:|
+| Mean | $\displaystyle\bar{x}=\frac{1}{n}\sum_{j=1}^{n}x_j$ | $\displaystyle\mu=\sum_{i=1}^{k}x_i p_i$ |
+| Standard deviation | $\displaystyle s=\sqrt{\frac{\sum_{j=1}^{n}(x_j-\bar{x})^2}{n-1}}$ | $\displaystyle\sigma=\sqrt{\sum_{i=1}^{k}(x_i-\mu)^2p_i}$ |
+
+$\bar{x}$ and $s$ summarize values that were actually observed. $\mu$ and $\sigma$ describe the full probability model. With many independent observations from that model, the sample summaries tend to approach the distribution parameters.
+
+### Example 9.13: Mean of the Dalmatian Distribution
+
+For the Dalmatian model,
+
+| $x$ | $P(X=x)$ | $xP(X=x)$ |
+|--:|--:|--:|
+| $0$ | $0.70$ | $0.00$ |
+| $1$ | $0.22$ | $0.22$ |
+| $2$ | $0.08$ | $0.16$ |
+| **Total** | **$1.00$** | **$0.38$** |
+
+Therefore,
+
+$$
+\begin{aligned}
+\mu=E(X)
+&=(0)(0.70)+(1)(0.22)+(2)(0.08)\\
+&=0.38
+\end{aligned}
+$$
+
+The long-run average is $0.38$ impaired ears per dog. A single dog cannot have $0.38$ impaired ears; the expected value describes the average across many dogs.
+
+### Example 9.13: Variance and Standard Deviation
+
+Using $\mu=0.38$, calculate each squared deviation and weight it by its probability.
+
+| $x$ | $P(X=x)$ | $x-\mu$ | $(x-\mu)^2$ | $(x-\mu)^2P(X=x)$ |
+|--:|--:|--:|--:|--:|
+| $0$ | $0.70$ | $-0.38$ | $0.1444$ | $0.10108$ |
+| $1$ | $0.22$ | $0.62$ | $0.3844$ | $0.084568$ |
+| $2$ | $0.08$ | $1.62$ | $2.6244$ | $0.209952$ |
+
+The variance is
+
+$$
+\begin{aligned}
+\sigma^2
+&=(0-0.38)^2(0.70)+(1-0.38)^2(0.22)+(2-0.38)^2(0.08)\\
+&=0.10108+0.084568+0.209952\\
+&=0.3956
+\end{aligned}
+$$
+
+The standard deviation is
+
+$$
+\sigma=\sqrt{0.3956}=0.62897\approx0.63
+$$
+
+The calculations can be checked in R using vectorized arithmetic:
+
+```{r dalmatian-mean-sd-r, echo=TRUE}
+x <- c(0, 1, 2)
+p_x <- c(0.70, 0.22, 0.08)
+
+mu <- sum(x * p_x)
+variance <- sum((x - mu)^2 * p_x)
+sigma <- sqrt(variance)
+
+c(mean = mu, variance = variance, standard_deviation = sigma)
+```
+
+## Probability, Risk and Odds
+
+Probability, risk and odds describe the same uncertain event in different ways. They are related but are not numerically interchangeable.
+
+### Risk
+
+In health and life-science applications, **risk** usually means the probability of an undesirable event. If event $A$ occurs with probability $p$, then
+
+$$
+\operatorname{Risk}(A)=p
+$$
+
+Risk must lie between $0$ and $1$ and is often reported as a percentage.
+
+### Odds
+
+Odds compare the probability that an event occurs with the probability that it does not occur:
+
+$$
+\operatorname{Odds}(A)=\frac{p}{1-p}
+$$
+
+Odds may be reported as a decimal or as a ratio. Odds of $1:3$ mean one occurrence for every three non-occurrences in the long run.
+
+### Example 9.14: Deep Vein Thrombosis
+
+Among $1518$ patients receiving Fragmin, $42$ experienced deep vein thrombosis (DVT). The estimated risk is
+
+$$
+\begin{aligned}
+p
+&=\frac{42}{1518}\\
+&\approx0.0277\\
+&=2.77\%
+\end{aligned}
+$$
+
+The number who did not experience DVT was
+
+$$
+1518-42=1476
+$$
+
+The odds of DVT are therefore
+
+$$
+42:1476
+$$
+
+Dividing both sides by $42$ gives
+
+$$
+42:1476\approx1:35
+$$
+
+This means that for approximately every one patient who experienced DVT, $35$ did not.
+
+As a numerical ratio, the odds are
+
+$$
+\frac{42}{1476}\approx0.0285
+$$
+
+The risk $0.0277$ and odds $0.0285$ are close because DVT is rare in this group. When $p$ is small, $1-p$ is close to $1$, so $p/(1-p)$ is close to $p$.
+
+### Example 9.15: Sickle-Cell Inheritance
+
+If both parents have sickle-cell trait, a standard genetic model gives the following probabilities for each child:
+
+| Outcome | Probability |
+|:--|--:|
+| Inherits neither sickle-cell gene | $0.25$ |
+| Inherits one and has sickle-cell trait | $0.50$ |
+| Inherits both and has sickle-cell disease | $0.25$ |
+
+The risk of sickle-cell disease is
+
+$$
+p=0.25=25\%
+$$
+
+The odds are
+
+$$
+\begin{aligned}
+\operatorname{Odds}
+&=\frac{p}{1-p}\\
+&=\frac{0.25}{0.75}\\
+&=\frac{1}{3}\approx0.333
+\end{aligned}
+$$
+
+The ratio form is $1:3$. The risk is $25\%$, while the numerical odds are approximately $0.333$. The difference is meaningful because the event is not extremely rare.
+
+### Converting Odds Back to Probability
+
+Let $o$ represent numerical odds. Starting with
+
+$$
+o=\frac{p}{1-p}
+$$
+
+solve for $p$:
+
+$$
+\begin{aligned}
+o(1-p)&=p\\
+o-op&=p\\
+o&=p+op\\
+o&=p(1+o)\\
+p&=\frac{o}{1+o}
+\end{aligned}
+$$
+
+For odds of $1/3$,
+
+$$
+\begin{aligned}
+p
+&=\frac{1/3}{1+1/3}\\
+&=\frac{1/3}{4/3}\\
+&=\frac{1}{4}=0.25
+\end{aligned}
+$$
+
+For ratio odds $a:b$, the event occurs in $a$ of every $a+b$ long-run outcomes, so
+
+$$
+p=\frac{a}{a+b}
+$$
+
+For example, odds of $2:5$ correspond to probability
+
+$$
+\frac{2}{2+5}=\frac{2}{7}\approx0.286
+$$
+
+## Checking Chapter 9 Calculations in R
+
+R is useful for checking arithmetic after the probability model has been constructed. It does not decide which outcomes belong to an event or whether a model is scientifically appropriate.
+
+```{r chapter9-r-summary, echo=TRUE}
+# Empirical probability
+684 / 800
+
+# Complement
+1 - 0.855
+
+# Probability from a discrete model
+sum(c(0.22, 0.08))
+
+# Risk to odds, then odds back to risk
+p <- 0.25
+odds <- p / (1 - p)
+odds / (1 + odds)
+```
+
+The mathematical reasoning should come first: define the event, identify the appropriate model and select the probability rule. R then provides a quick numerical check.
+
+## Chapter 9 Synthesis
+
+The chapter connects several representations of uncertainty.
+
+| Situation | Main idea | Calculation |
+|:--|:--|:--|
+| Repeated trials | Long-run relative frequency | Empirical proportion |
+| Discrete event | Add probabilities of included outcomes | $P(A)=\sum_{x\in A}P(X=x)$ |
+| Complement | Event does not occur | $P(A^c)=1-P(A)$ |
+| Disjoint events | Events cannot occur together | $P(A\text{ or }B)=P(A)+P(B)$ |
+| Continuous interval | Probability is area | Area under the density curve |
+| Distribution centre | Long-run weighted average | $\mu=\sum x_i p_i$ |
+| Distribution spread | Probability-weighted squared distance | $\sigma^2=\sum(x_i-\mu)^2p_i$ |
+| Health risk | Probability of an undesirable event | $p$ |
+| Odds | Occurrence compared with non-occurrence | $p/(1-p)$ |
+
+### A Reliable Problem-Solving Process
+
+1. Define the random phenomenon precisely.
+2. Write the sample space or identify the possible values of the random variable.
+3. Translate the wording into an event using phrases such as **or**, **and**, **not**, **at least**, or **more than**.
+4. Decide whether the model is discrete or continuous.
+5. Select the appropriate rule or area calculation.
+6. Show the numerical work.
+7. Interpret the result in the context and in the correct units.
+
+### Common Errors to Avoid
+
+- Treating a theoretical probability as though it must occur exactly in a small sample
+- Believing a random process must compensate for a recent streak
+- Forgetting that the simple addition rule requires disjoint events
+- Confusing “at least one” with “more than one”
+- Reading the height of a density curve as a probability
+- Assigning positive probability to one exact value in a continuous model
+- Interpreting an expected value as a required individual outcome
+- Reporting odds as though they were probabilities
+
+### Final Checklist
+
+By the end of Chapter 9, you should be able to:
+
+- explain probability as long-run regularity
+- distinguish theoretical from empirical probability
+- identify sample spaces, outcomes and events
+- verify a discrete probability model
+- use the disjoint addition and complement rules
+- distinguish discrete and continuous random variables
+- calculate probabilities from a discrete table or as areas under a density curve
+- calculate and interpret $\mu$, $\sigma^2$ and $\sigma$ for a discrete random variable
+- convert between probability, risk and odds

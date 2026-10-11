@@ -696,10 +696,11 @@ knitr::opts_chunk$set(
   fig.height = 4
 )
 
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(gridExtra)
+if (!requireNamespace("ggplot2", quietly = TRUE)) {
+  stop("Install the ggplot2 package before knitting these notes")
+}
+
+suppressPackageStartupMessages(library(ggplot2))
 
 set.seed(123)
 
@@ -870,6 +871,28 @@ save_plot("fig_ch12_poisson_mumps.png", p_poisson_mumps, width = 7, height = 4)
 
 # Chapter 12 {.chapter-root .unlisted}
 
+## Why This Chapter Matters
+
+Chapter 11 focused mainly on continuous measurements such as height, mass and bone mineral density. Chapter 12 turns to **counts**: whole numbers that record how many times a specified event occurs.
+
+Examples include:
+
+- the number of type O blood donations among the next five donors
+- the number of contaminated containers in a sample
+- the number of tagged fish in a catch
+- the number of patients who respond to a treatment
+- the number of disease cases recorded during one month
+- the number of radioactive decays detected during a fixed observation period
+
+Two probability distributions will be used for different types of counts.
+
+| Count model | What is counted | Defining structure |
+|:--|:--|:--|
+| **Binomial distribution** | Successes among trials | A fixed number of binary trials |
+| **Poisson distribution** | Events in an interval | A fixed interval of time, space or exposure |
+
+The fact that a variable is a whole-number count does not identify its probability model. We must first examine the process that produced the count.
+
 ## The Binomial Setting and Binomial Distributions
 
 ### Introduction: Counting Successes
@@ -886,14 +909,16 @@ A binomial setting has four conditions. These conditions describe the data-gener
 
 > **The four conditions of a binomial setting**
 >
-> 1. **Fixed number of trials:** The number of observations or trials is fixed in advance and is denoted by $n$
+> 1. **Binary outcomes:** Each trial is classified into one of two categories, labelled success and failure for mathematical convenience
 > 2. **Independent trials:** The outcome of one trial does not change the probability distribution for another trial
-> 3. **Two outcome categories:** Each trial is classified into one of two categories, which are labelled success and failure for mathematical convenience
+> 3. **Fixed number of trials:** The number of observations or trials is fixed in advance and is denoted by $n$
 > 4. **Same success probability:** The probability of success is the same on every trial and is denoted by $p$
 
 The word **success** is only a label. A success does not need to represent a desirable outcome. For example, a contaminated container can be labelled a success if contamination is the event being counted.
 
 The acronym **BINS** can be used as a memory aid: **B**inary outcomes, **I**ndependent trials, fixed **N**umber of trials and **S**ame probability of success.
+
+The number of successes is usually represented by $X$. The symbol $k$ is used for a particular possible value of that count. For example, $P(X=2)$ is the probability that the count equals $k=2$.
 
 A birth-count example illustrates the structure. A fixed number of single births can be considered under a probability model that treats the outcomes as independent and assigns the same probability to the chosen outcome on each birth. If the chosen outcome is labelled a success, the number of successes among the births is binomial under those assumptions. The example is about the mathematical structure of repeated trials rather than a claim that real biological probabilities are exactly equal across all populations or settings.
 
@@ -983,9 +1008,15 @@ Each donor in the blood-donation model has probability 0.45 of having type O blo
 
 **Explanation**
 
-The count $X$ is binomial with $n=5$ and $p=0.45$. Exactly two successes means two type O donations and three non-type O donations.
+The count $X$ is binomial with $n=5$ and $p=0.45$. Exactly two successes means two type O donations and three non-type O donations. Let $S$ represent a type O donation and let $F$ represent a non-type O donation.
 
-One particular arrangement is SFSFF, where S represents type O and F represents not type O. Independence allows the probabilities along this arrangement to be multiplied.
+There are ten sequences containing exactly two successes:
+
+$$
+\Omega=\{SSFFF,SFSFF,SFFSF,SFFFS,FSSFF,\\FSFSF,FSFFS,FFSSF,FFSFS,FFFSS\}
+$$
+
+One particular arrangement is $SFSFF$. Independence allows the probabilities along this arrangement to be multiplied.
 
 $$
 P(\text{SFSFF})=(0.45)(0.55)(0.45)(0.55)(0.55)
@@ -997,7 +1028,11 @@ $$
 P(\text{SFSFF})=(0.45)^2(0.55)^3
 $$
 
-Every arrangement containing two successes and three failures has the same probability. There are 10 different positions in which the two successes can occur among five trials.
+Every arrangement containing two successes and three failures has the same probability. The number of different positions for the two successes is
+
+$$
+\binom{5}{2}=\frac{5!}{2!3!}=10
+$$
 
 **Solution**
 
@@ -1053,6 +1088,20 @@ The binomial coefficient counts the possible locations of the $k$ successes. The
 
 The coefficient accounts for the number of arrangements. The power $p^k$ accounts for the $k$ successes. The power $(1-p)^{n-k}$ accounts for the remaining failures.
 
+### Translating Wording into Probability Notation
+
+The wording of a question should be translated before a formula or R function is selected.
+
+| Wording | Probability notation | Useful R expression |
+|:--|:--:|:--|
+| Exactly $2$ | $P(X=2)$ | `dbinom(2, size, prob)` |
+| At most $2$ or no more than $2$ | $P(X\leq2)$ | `pbinom(2, size, prob)` |
+| Fewer than $2$ | $P(X<2)=P(X\leq1)$ | `pbinom(1, size, prob)` |
+| More than $2$ | $P(X>2)=1-P(X\leq2)$ | `pbinom(2, size, prob, lower.tail = FALSE)` |
+| At least $2$ | $P(X\geq2)=1-P(X\leq1)$ | `pbinom(1, size, prob, lower.tail = FALSE)` |
+
+The strict inequalities require special attention because $X$ is discrete. For example, $X<2$ includes $0$ and $1$, while $X\leq2$ also includes $2$.
+
 ### Calculating Binomial Probabilities with R
 
 The formula explains the mathematics, while R provides an efficient way to carry out the calculations. Two functions are especially important.
@@ -1063,8 +1112,6 @@ The formula explains the mathematics, while R provides an efficient way to carry
 | At most $q$ successes | `pbinom(q, size, prob)` | Cumulative probability from 0 through $q$ |
 
 For a discrete random variable, `dbinom()` gives a **probability mass function**, usually abbreviated PMF. The letter `d` is part of R's naming convention, but the mathematical object is a probability mass rather than a continuous density.
-
-The wording of a question should be translated before R is used. "Exactly 2" means $P(X=2)$. "At most 2" or "no more than 2" means $P(X\le 2)$. "More than 2" means $P(X>2)$. "At least 2" means $P(X\ge 2)$.
 
 **Example 12.5: Inspecting Pharmaceutical Containers**
 
@@ -1190,10 +1237,6 @@ The distribution is strongly right-skewed because the success probability is sma
 ### Practice: Binomial Probability, Mean and Variance
 
 The following examples apply the same ideas in several settings. Each example begins by identifying the binomial model, then uses the appropriate formulas or R functions.
-
-> **Quick reference**
->
-> The mean is $\mu=np$, the variance is $\sigma^2=np(1-p)$, the standard deviation is $\sigma=\sqrt{np(1-p)}$ and the exact probability is $P(X=k)=\binom{n}{k}p^k(1-p)^{n-k}$
 
 #### Genetics
 
@@ -1644,6 +1687,26 @@ $$
 
 Poisson models are often associated with rare events, but rarity is not a mathematical requirement. The model can be used whenever the Poisson assumptions are reasonable. As $\lambda$ becomes larger, both the mean and variance increase because they are equal to the same parameter.
 
+### Matching $\lambda$ to the Interval
+
+The parameter $\lambda$ must refer to the same interval as the random variable. If the event rate is constant, $\lambda$ scales in direct proportion to the amount of exposure.
+
+Suppose an animal rescue centre receives an average of $3$ calls per hour. Then the corresponding means are:
+
+| Interval | Poisson mean |
+|:--|--:|
+| $30$ minutes | $\lambda=1.5$ |
+| $1$ hour | $\lambda=3$ |
+| $2$ hours | $\lambda=6$ |
+
+For a two-hour period, the appropriate model is
+
+$$
+X\sim\operatorname{Pois}(6)
+$$
+
+Using $\lambda=3$ for a two-hour count would mix incompatible units. Always identify the interval before calculating a Poisson probability.
+
 ### Poisson Probabilities and Surveillance
 
 Poisson models are useful in settings where event counts are monitored over time. A baseline model can describe what counts would look like if events occurred independently at a stable rate. An unusually large count may then provide evidence that the baseline model no longer describes the process well.
@@ -1715,10 +1778,47 @@ $$
 
 **Solution**
 
-R gives
+For $X\sim\operatorname{Pois}(0.1)$,
 
 $$
-P(X\ge4)\approx0.00000385
+P(X=k)=\frac{e^{-0.1}(0.1)^k}{k!}
+$$
+
+Using the complement rule,
+
+$$
+\begin{aligned}
+P(X\geq4)
+&=1-P(X\leq3)\\
+&=1-\sum_{k=0}^{3}\frac{e^{-0.1}(0.1)^k}{k!}\\
+&=1-\left[
+\frac{e^{-0.1}(0.1)^0}{0!}
++\frac{e^{-0.1}(0.1)^1}{1!}
++\frac{e^{-0.1}(0.1)^2}{2!}
++\frac{e^{-0.1}(0.1)^3}{3!}
+\right]
+\end{aligned}
+$$
+
+The four cumulative terms are
+
+| $k$ | $P(X=k)$ |
+|--:|--:|
+| $0$ | $0.9048374180$ |
+| $1$ | $0.0904837418$ |
+| $2$ | $0.0045241871$ |
+| $3$ | $0.0001508062$ |
+| **Total** | **$0.9999961532$** |
+
+Therefore,
+
+$$
+\begin{aligned}
+P(X\geq4)
+&=1-0.9999961532\\
+&=0.0000038468\\
+&\approx0.00000385
+\end{aligned}
 $$
 
 This probability is extremely small under the baseline model. An observed count of four would therefore provide strong evidence that the baseline Poisson model is not describing that month well. The calculation does not identify the cause by itself.
@@ -1739,6 +1839,34 @@ print(prob_outbreak_alt)
 ```
 
 The original example connects this calculation with the large 2006 mumps outbreak that began in Iowa. The historical outbreak is useful context for the idea of surveillance counts departing from a baseline. The value $\lambda=0.1$ in these notes is treated as an illustrative baseline for the probability calculation rather than as a claim about Iowa's documented historical monthly average.
+
+### Example: Monitoring Wildlife Deaths
+
+Suppose a wildlife monitoring programme usually records an average of $2$ dead seabirds per week along a fixed coastal route. If deaths occur independently at an approximately stable rate and the monitoring effort remains comparable, the baseline weekly count can be modelled as
+
+$$
+X\sim\operatorname{Pois}(2)
+$$
+
+One week, the team records $8$ dead seabirds. The probability of observing at least $8$ under the baseline model is
+
+$$
+\begin{aligned}
+P(X\geq8)
+&=1-P(X\leq7)\\
+&=1-\sum_{k=0}^{7}\frac{e^{-2}2^k}{k!}\\
+&\approx0.0011
+\end{aligned}
+$$
+
+Thus, a count of $8$ or more would occur only about $0.11\%$ of the time if the baseline model were appropriate.
+
+```{r seabird-upper-tail}
+# Probability of at least 8 deaths when lambda = 2
+ppois(q = 7, lambda = 2, lower.tail = FALSE)
+```
+
+The small probability indicates that the observed count is unusual under the assumed baseline. It does **not** identify a cause. Disease, severe weather, a pollutant release, seasonal migration, increased monitoring effort or a failure of the constant-rate assumption could contribute to the result. The appropriate conclusion is that the observation warrants investigation.
 
 ### Calculating Poisson Probabilities with R
 
@@ -1795,3 +1923,42 @@ The central skill is not formula memorization. The central skill is matching the
 ### A Consistent Problem-Solving Process
 
 A count-probability problem becomes easier when the model is identified before any calculation is attempted. The setting should first be checked for the assumptions of a binomial or Poisson model. The random variable should then be defined clearly in words. The question should be translated into notation such as $P(X=k)$, $P(X\le k)$ or an upper-tail probability. The appropriate formula or R function can then be selected. The final result should be interpreted in the original context and should not be given more certainty than the model assumptions justify.
+
+A practical workflow is:
+
+1. Define the random variable in words and state what one count represents.
+2. Identify whether the count comes from trials or from an interval.
+3. Check the assumptions of the proposed model.
+4. Record the parameters and their units: $n$ and $p$ for a binomial model, or $\lambda$ for a Poisson model.
+5. Translate the wording into probability notation.
+6. Decide whether an exact mass, cumulative probability or complement is most efficient.
+7. Calculate using the formula or the corresponding R function.
+8. Interpret the answer in context and acknowledge important modelling limitations.
+
+### Common Errors to Avoid
+
+- Using a binomial model merely because the outcome is a count
+- Forgetting that sampling without replacement creates dependence
+- Treating the word **success** as necessarily meaning a desirable outcome
+- Confusing $P(X>k)$ with $P(X\geq k)$
+- Using `dbinom()` or `dpois()` when a cumulative probability is required
+- Forgetting to subtract from $1$ for an upper-tail probability
+- Interpreting a non-integer expected value as a possible individual count
+- Using a Poisson $\lambda$ measured for a different time or exposure interval
+- Treating an unusual count as proof of a specific cause
+
+### Final Checklist
+
+By the end of Chapter 12, you should be able to:
+
+- distinguish a binomial count from a Poisson count
+- check the four BINS conditions
+- explain when the $10\%$ condition supports a binomial approximation
+- derive and apply the binomial probability formula
+- translate verbal probability statements into mathematical notation
+- calculate binomial probabilities by hand and with `dbinom()` or `pbinom()`
+- calculate and interpret the binomial mean, variance and standard deviation
+- state and evaluate the assumptions of a Poisson model
+- calculate Poisson probabilities by hand and with `dpois()` or `ppois()`
+- use a complement for upper-tail probabilities
+- interpret an unusually large count cautiously in a surveillance setting

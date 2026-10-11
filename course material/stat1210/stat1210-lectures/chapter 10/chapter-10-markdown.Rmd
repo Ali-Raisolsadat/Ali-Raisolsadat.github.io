@@ -1038,7 +1038,7 @@ For this introductory example, we use the **simplified probability model** that 
 
 Under that model, $P(A)=0.5$ and $P(B)=0.5$. The first baby is a girl with probability $0.5$. *Given that outcome*, the model still assigns probability $0.5$ that the second baby is a girl. Therefore,
 
-$$P(A \text{ and } B)=0.5 \times 0.5=0.25.$$
+$$P(A \text{ and } B)=0.5 \times 0.5=0.25$$
 
 The important idea is not the specific value $0.25$; it is that the second probability remains unchanged after we learn the outcome of the first birth. That is the idea of **independence**, which we define next.
 
@@ -1086,9 +1086,9 @@ At this point, we are using independence conceptually. Later in the chapter, aft
 
 $$P(A \text{ and } B)=P(A)P(B)$$
 
-or, when $P(A)>0$,
+or, when $P(A)>0$
 
-$$P(B \mid A)=P(B).$$
+$$P(B \mid A)=P(B)$$
 
 ---
 
@@ -1106,8 +1106,8 @@ Instead, we use the Complement Rule. The opposite of "at least one" is "none at 
 $$P(\text{at least one false positive}) = 1 - P(\text{no false positives})$$
 
 **The Math:**
-1.  If the false positive rate is $0.004$, the probability of a *correct negative* for one person is:
-    $$1 - 0.004 = 0.996$$
+
+1.  If the false positive rate is $0.004$, the probability of a *correct negative* for one person is: $$1 - 0.004 = 0.996$$
 2.  What is the probability that *all 200 people* get a correct negative? We use the Multiplication Rule for independent events:
     $$P(\text{all 200 negative}) = 0.996 \times 0.996 \times \dots \times 0.996$$
     $$P(\text{all 200 negative}) = (0.996)^{200} = \mathbf{0.4486}$$
@@ -1126,12 +1126,12 @@ This does **not** mean that any one person's probability of a false positive has
 
 Students often confuse these two terms. They are very different!
 
-*   **Disjoint Events:** Cannot happen at the same time. ($P(A \text{ and } B) = 0$). We use the **Addition Rule** ($P(A \text{ or } B) = P(A) + P(B)$).
+*   **Disjoint Events:** Cannot happen at the same time. ($P(A \text{ and } B) = 0$). So we use the **Addition Rule** $P(A \text{ or } B) = P(A) + P(B)$.
 *   **Independent Events:** Do not influence each other. We use the **Multiplication Rule** ($P(A \text{ and } B) = P(A)P(B)$).
 
 For two events with **positive probability**, disjointness actually implies dependence. If $A$ and $B$ are disjoint and I tell you that $A$ occurred, then $B$ cannot have occurred, so
 
-$$P(B \mid A)=0.$$
+$$P(B \mid A)=0$$
 
 If $P(B)>0$, then $P(B \mid A)\neq P(B)$, so the events are not independent. The only technical exception occurs when one of the events has probability 0. Therefore, for the ordinary nonzero-probability events encountered in this course, **disjoint events are not independent**.
 
@@ -1180,12 +1180,13 @@ The graph deliberately rescales each life-stage column to **100%**. That is exac
 > $$P(B \mid A) = \frac{P(A \text{ and } B)}{P(A)}$$
 
 Keep in mind the distinct roles of the events in $P(B \mid A)$:
+
 *   **Event $A$** (after the bar) is the *condition*. It is the information we are given. It becomes our new "total" denominator.
 *   **Event $B$** (before the bar) is the event whose probability we are actively calculating.
 
 A reliable verbal translation is:
 
-$$P(B \mid A)=\frac{\text{probability of being in both }A\text{ and }B}{\text{probability of being in the condition }A}.$$
+$$P(B \mid A)=\frac{\text{probability of being in both }A\text{ and }B}{\text{probability of being in the condition }A}$$
 
 The denominator must match the event **after** the conditioning bar. This is why reversing the order usually changes the answer.
 
@@ -1197,7 +1198,7 @@ Order matters! What is the conditional probability that a randomly chosen tree i
 
 Now, "Western Hemlock" is our given information. We only look at the WH row (which totals 0.48):
 
-$$P(sapling \mid WH) = \frac{P(sapling \text{ and } WH)}{P(WH)} = \frac{0.04}{0.48} = 0.0833\ldots \approx \mathbf{0.08}$$
+$$P(sapling \mid WH) = \frac{P(sapling \text{ and } WH)}{P(WH)} = \frac{0.04}{0.48} = 0.083333 \approx \mathbf{0.08}$$
 
 Approximately 8% of western hemlock trees are saplings. 
 
@@ -1220,6 +1221,7 @@ If you recall our unit on two-way tables, conditional probabilities are exactly 
 We now have three distinct ideas in place: **disjointness**, **independence**, and **conditioning**. This is the right moment to connect them to the general probability rules.
 
 So far, we have learned the "special" rules of probability:
+
 *   The Addition Rule $P(A \text{ or } B) = P(A) + P(B)$ **(Only works if disjoint)**
 *   The Multiplication Rule $P(A \text{ and } B) = P(A)P(B)$ **(Only works if independent)**
 
@@ -1240,6 +1242,7 @@ If events $A$ and $B$ are not disjoint, they overlap. The probability that one *
 Congenital deafness in dogs is often associated with pigmentation deficiencies. A study examined thousands of Dalmatians for both hearing impairment (Event $I$) and blue iris colour (Event $B$).
 
 The study found:
+
 *   $P(I) = 0.28$ (28% were hearing-impaired)
 *   $P(B) = 0.11$ (11% were blue-eyed)
 *   $P(I \text{ and } B) = 0.05$ (5% were both)
@@ -1266,10 +1269,10 @@ Venn diagrams are fantastic for visualizing the General Addition Rule because yo
 By rearranging the definition of Conditional Probability, we unlock a formula to find the probability that two events happen together, regardless of whether they are independent. 
 
 > **GENERAL MULTIPLICATION RULE FOR ANY TWO EVENTS**  
-> If $P(A)>0$, then
-> $$P(A \text{ and } B)=P(A)P(B \mid A).$$
-> Similarly, if $P(B)>0$,
-> $$P(A \text{ and } B)=P(B)P(A \mid B).$$
+> If $P(A)>0$ then
+> $$P(A \text{ and } B)=P(A)P(B \mid A)$$
+> Similarly if $P(B)>0$
+> $$P(A \text{ and } B)=P(B)P(A \mid B)$$
 > 
 > *Think of it logically: first restrict attention to one event, then multiply by the appropriate conditional probability for the second event.*
 
@@ -1278,6 +1281,7 @@ By rearranging the definition of Conditional Probability, we unlock a formula to
 In a Gallup survey, **52%** of American adults said they do not drink soda on a typical day. Of those who drink no soda, **39%** described themselves as overweight. 
 
 Let’s define our probabilities:
+
 *   $P(\text{no soda}) = 0.52$
 *   $P(\text{overweight} \mid \text{no soda}) = 0.39$
 
@@ -1295,16 +1299,17 @@ The precise definition of independence can be expressed using either a product c
 
 > **MATHEMATICAL DEFINITION OF INDEPENDENCE**  
 > Two events $A$ and $B$ are independent exactly when
-> $$P(A \text{ and } B)=P(A)P(B).$$
-> If $P(A)>0$, this is equivalent to
-> $$P(B \mid A)=P(B).$$
-> If $P(B)>0$, it is also equivalent to
-> $$P(A \mid B)=P(A).$$
+> $$P(A \text{ and } B)=P(A)P(B)$$
+> If $P(A)>0$ then this is equivalent to
+> $$P(B \mid A)=P(B)$$
+> If $P(B)>0$ then it is also equivalent to
+> $$P(A \mid B)=P(A)$$
 > *(The product criterion is especially convenient because it does not require us to divide by a probability that might be zero.)*
 
 **Example 10.9: Proving Dependence (Dalmatians again)**
 
 Let's look back at our Dalmatian data from Example 10.5. 
+
 *   $P(\text{impaired}) = 0.28$
 *   $P(\text{blue-eyed}) = 0.11$
 
@@ -1388,11 +1393,11 @@ $$P(\text{Under 25} \mid \text{Claim}) = \frac{0.08}{0.16} = \mathbf{0.50}$$
 
 We can also reverse the conditioning to ask a different question: *What proportion of under-25 customers filed a claim?*
 
-$$P(\text{Claim} \mid \text{Under 25})=\frac{0.08}{0.20}=\mathbf{0.40}.$$
+$$P(\text{Claim} \mid \text{Under 25})=\frac{0.08}{0.20}=\mathbf{0.40}$$
 
-For customers 25 or older,
+For customers 25 or older
 
-$$P(\text{Claim} \mid \text{25 or older})=\frac{0.16-0.08}{1-0.20}=\frac{0.08}{0.80}=\mathbf{0.10}.$$
+$$P(\text{Claim} \mid \text{25 or older})=\frac{0.16-0.08}{1-0.20}=\frac{0.08}{0.80}=\mathbf{0.10}$$
 
 > **Key Insight:** In this hypothetical dataset, under-25 customers make up 20% of customers but 50% of claims, and their observed claim rate is 40% compared with 10% for older customers. These calculations illustrate how conditional probabilities can inform risk classification. Actual insurance pricing uses many variables, regulatory requirements, and actuarial models; the age comparison alone is not a complete pricing rule.
 
@@ -1466,7 +1471,7 @@ To solve this, we map the information onto a tree diagram.
 To find the overall probability that a patient is a woman, we look at all three distinct paths that end in "Woman" (highlighted in red on the diagram). Because these three paths are completely disjoint, we can just add them up:
 Using the rounded branch values shown on the diagram,
 
-$$P(\text{woman}) \approx 0.084 + 0.152 + 0.352 = \mathbf{0.588}.$$
+$$P(\text{woman}) \approx 0.084 + 0.152 + 0.352 = \mathbf{0.588}$$
 
 Using the unrounded products gives $0.5877$, which also rounds to $0.588$. Approximately 59% of all individuals in this study with skin cancer were women. 
 
@@ -1487,9 +1492,9 @@ We already calculated both of these numbers using our tree diagram!
 *   The joint probability at the end of the bottom branch is $0.352$.
 *   The total overall probability of being a woman is $0.588$.
 
-Using the unrounded total $P(\text{woman})=0.5877$,
+Using the unrounded total $P(\text{woman})=0.5877$
 
-$$P(\text{limbs} \mid \text{woman}) = \frac{0.352}{0.5877} = \mathbf{0.599}.$$
+$$P(\text{limbs} \mid \text{woman}) = \frac{0.352}{0.5877} = \mathbf{0.599}$$
 
 **Conclusion:** Approximately 60% of skin cancers in women are located on the limbs. 
 
@@ -1551,7 +1556,7 @@ The Positive Predictive Value is simply the True Positives divided by *all* Posi
 $$PPV = \frac{\text{True Positives}}{\text{True Positives} + \text{False Positives}}$$
 Using the unrounded branch probabilities,
 
-$$PPV=\frac{0.031025}{0.031025+0.048175}=\mathbf{0.3917}\approx \mathbf{0.392}.$$
+$$PPV=\frac{0.031025}{0.031025+0.048175}=\mathbf{0.3917}\approx \mathbf{0.392}$$
 
 **Conclusion:** Under this simplified model, if a randomly selected woman in her 60s receives a positive mammogram result, the probability that she has breast cancer is about **39%**. The complementary probability, about 61%, means **no breast cancer under this model**; it does not mean that the person is necessarily healthy in every other respect. A positive screening result generally leads to further diagnostic assessment rather than being treated as a final diagnosis.
 
@@ -1566,7 +1571,7 @@ Bayesian calculations are often easier to understand if we imagine a large group
 
 So among roughly $310+482=792$ positive tests, only about 310 are true positives:
 
-$$\frac{310}{792}\approx0.391.$$
+$$\frac{310}{792}\approx0.391$$
 
 This natural-frequency view and the probability calculation are two ways of expressing the same Bayes reasoning.
 
@@ -1582,13 +1587,13 @@ Before writing Bayes's Theorem, notice one more rule. If $A_1,\ldots,A_k$ form a
 
 > **LAW OF TOTAL PROBABILITY**  
 > If $A_1,\ldots,A_k$ form a partition and the conditional probabilities are defined, then
-> $$P(B)=\sum_{j=1}^{k}P(B\mid A_j)P(A_j).$$
+> $$P(B)=\sum_{j=1}^{k}P(B\mid A_j)P(A_j)$$
 
 Bayes's Theorem uses that total as its denominator.
 
 > **BAYES'S THEOREM**  
 > Suppose that $A_1,A_2,\dots,A_k$ form a partition of the sample space and that $P(B)>0$. Then
-> $$P(A_i \mid B)=\frac{P(B \mid A_i)P(A_i)}{\sum_{j=1}^{k}P(B \mid A_j)P(A_j)}.$$
+> $$P(A_i \mid B)=\frac{P(B \mid A_i)P(A_i)}{\sum_{j=1}^{k}P(B \mid A_j)P(A_j)}$$
 > 
 > *(In a diagnostic-testing example, the numerator is one path that produces a positive test, while the denominator is the probability of all mutually exclusive paths that produce a positive test.)*
 
@@ -1604,7 +1609,7 @@ $$P(\text{Cancer} \mid \text{Test}^+) = \frac{P(\text{Test}^+ \mid \text{Cancer}
 
 $$P(\text{Cancer} \mid \text{Test}^+) = \frac{(0.85)(0.0365)}{(0.85)(0.0365) + (0.05)(0.9635)}$$
 
-$$=\frac{0.031025}{0.031025+0.048175}=\mathbf{0.3917}\approx\mathbf{0.392}.$$
+$$=\frac{0.031025}{0.031025+0.048175}=\mathbf{0.3917}\approx\mathbf{0.392}$$
 
 > **Instructor's Note: Logic over Memorization**  
 > Bayes's theorem is heavily used in advanced statistics and machine learning (it is how spam filters work!). However, for this class, you may find the formal equation challenging to memorize. It is far better to draw the tree diagram and logically divide the *True Positives* by *All Positives*!
@@ -1616,7 +1621,7 @@ Because the human brain struggles to intuitively grasp Bayes's Theorem (a cognit
 In diagnostic or classification examples with a positive/flagged outcome, a useful special case is
 
 $$P(\text{condition} \mid \text{positive})
-=\frac{\text{true-positive branch}}{\text{true-positive branch}+\text{false-positive branch}}.$$
+=\frac{\text{true-positive branch}}{\text{true-positive branch}+\text{false-positive branch}}$$
 
 This is a special two-group version of Bayes's Theorem, not a replacement for the general formula.
 
@@ -1708,7 +1713,7 @@ $$P(\text{Lying} \mid \text{Failed Test}) = \frac{0.08}{0.08 + 0.135} = \frac{0.
 
 For independent repeated trials, earlier outcomes do not change the probability of the next trial. For example, on an **American roulette wheel** with 18 red slots out of 38 total slots, each idealized spin has
 
-$$P(\text{red})=\frac{18}{38},$$
+$$P(\text{red})=\frac{18}{38}$$
 
 regardless of the colours observed on previous spins. This is **independence**. It should not be confused with the more general **Markov property**: a Markov process may depend on its current state, whereas independent trials do not depend on previous outcomes at all.
 
