@@ -348,60 +348,111 @@ Wildlife researchers compare two unusually large animals with their respective r
 
 The recovery time $R$ after a routine veterinary anaesthetic procedure is modelled as approximately Normal with mean $45$ minutes and standard deviation $6$ minutes.
 
-1. Express $39$ minutes and $57$ minutes as distances from the mean in standard-deviation units.
-2. Use the $68$--$95$--$99.7$ rule to approximate $P(39<R<57)$.
-3. Approximate $P(R<39)$.
-4. Approximate $P(R>57)$.
-5. Among $400$ similar procedures, approximately how many recovery times would be expected to fall between $39$ and $57$ minutes?
-6. Why are these answers approximations rather than exact Normal probabilities?
+Use a cumulative left-tail Standard Normal table to answer the following questions.
+
+1. What are the z-scores corresponding to $39$ minutes and $57$ minutes?
+2. What is the probability that recovery takes between $39$ and $57$ minutes, $P(39<R<57)$?
+3. What is the probability that recovery takes less than $39$ minutes, $P(R<39)$?
+4. What is the probability that recovery takes more than $57$ minutes, $P(R>57)$?
+5. Among $400$ similar procedures, how many recovery times would be expected to fall between $39$ and $57$ minutes?
+6. Why are the probabilities calculated using the z-table still approximations?
 
 <details class="solution">
 <summary>Show solution</summary>
 <div class="solution-body">
 <ol>
-  <li>The two boundaries are
+<li>
 
-  $$
-  39=45-6=\mu-\sigma
-  $$
+The standardized boundaries are
 
-  $$
-  57=45+2(6)=\mu+2\sigma
-  $$
+$$
+z_{\mathrm{lower}}=\frac{39-45}{6}=-1.00
+$$
 
-  Thus, $39$ minutes is one standard deviation below the mean and $57$ minutes is two standard deviations above the mean.</li>
-  <li>The area from $\mu-\sigma$ to $\mu+\sigma$ is approximately $68\%$. The area from $\mu+\sigma$ to $\mu+2\sigma$ is
+$$
+z_{\mathrm{upper}}=\frac{57-45}{6}=2.00
+$$
 
-  $$
-  \frac{95\%-68\%}{2}=13.5\%
-  $$
+Thus, $39$ minutes is one standard deviation below the mean, and $57$ minutes is two standard deviations above the mean.
 
-  Therefore,
+</li>
+<li>
 
-  $$
-  P(39<R<57)\approx0.68+0.135=0.815
-  $$
-  </li>
-  <li>The lower tail below $\mu-\sigma$ contains approximately
+We want $P(39<R<57)$. The table gives
 
-  $$
-  P(R<39)\approx0.16
-  $$
-  </li>
-  <li>The upper tail beyond $\mu+2\sigma$ contains approximately
+$$
+P(Z\le-1.00)=0.1587
+\qquad
+P(Z\le2.00)=0.9772
+$$
 
-  $$
-  P(R>57)\approx0.025
-  $$
-  </li>
-  <li>The expected number is
+Subtracting the cumulative areas gives
 
-  $$
-  400(0.815)=326
-  $$
+$$
+\begin{aligned}
+P(39<R<57)
+&=P(-1.00<Z<2.00)\\
+&=P(Z\le2.00)-P(Z\le-1.00)\\
+&\approx0.9772-0.1587\\
+&=\boxed{0.8185}
+\end{aligned}
+$$
 
-  Approximately $326$ recovery times would be expected in the interval.</li>
-  <li>The empirical rule uses rounded benchmark percentages. Exact Normal probabilities require a Standard Normal table or software such as R.</li>
+Approximately $81.85\%$ of recovery times fall between $39$ and $57$ minutes.
+
+</li>
+<li>
+
+We want the left-tail probability below $39$ minutes. Using symmetry and the table entry $P(Z\le1.00)=0.8413$,
+
+$$
+\begin{aligned}
+P(R<39)
+&=P(Z<-1.00)\\
+&=1-P(Z\le1.00)\\
+&\approx1-0.8413\\
+&=\boxed{0.1587}
+\end{aligned}
+$$
+
+Approximately $15.87\%$ of recovery times are less than $39$ minutes.
+
+</li>
+<li>
+
+We want the right-tail probability above $57$ minutes. Using the complement rule,
+
+$$
+\begin{aligned}
+P(R>57)
+&=P(Z>2.00)\\
+&=1-P(Z\le2.00)\\
+&\approx1-0.9772\\
+&=\boxed{0.0228}
+\end{aligned}
+$$
+
+Approximately $2.28\%$ of recovery times exceed $57$ minutes.
+
+</li>
+<li>
+
+Multiplying the number of procedures by the probability from Part $2$ gives the expected count:
+
+$$
+400(0.8185)=327.4
+$$
+
+Approximately $327$ procedures would be expected to have recovery times between $39$ and $57$ minutes. This is an expected count, not a guarantee of the observed count.
+
+</li>
+<li>
+
+The z-table rounds probabilities to a limited number of decimal places. Also, the Normal distribution is an approximate model for actual recovery times.
+
+The table gives more precise Normal probabilities than the rounded percentages in the $68$--$95$--$99.7$ rule.
+
+</li>
 </ol>
 </div>
 </details>
