@@ -1024,6 +1024,7 @@ In this second diagram, the events intersect. The shared overlapping area repres
 **Example 10.1: Mapping the Sample Space (Two-Way Tables)**
 
 Suppose we are tracking the next two single births at a local hospital. We define two events of interest:
+
 *   **$A$:** The first baby is a girl.
 *   **$B$:** The second baby is a girl.
 
@@ -1253,8 +1254,6 @@ $$P(I \text{ or } B) = 0.28 + 0.11 - 0.05 = \mathbf{0.34}$$
 
 What is the probability that a Dalmatian is **neither**? We use the complement rule:
 $$P(\text{neither}) = 1 - 0.34 = \mathbf{0.66}$$
-
-**Visualizing with Venn Diagrams**
 Venn diagrams are fantastic for visualizing the General Addition Rule because you can simply think about adding and subtracting geometric areas.
 
 <img src="fig_ch10_dalmatian_venn.png" alt="Two Venn diagrams side by side. The left diagram shows the raw probabilities of I (0.28) and B (0.11) with a centre overlap of 0.05. The right diagram shows the distinct, subtracted sections: I only (0.23), B only (0.06), Both (0.05), and Neither (0.66)." />
@@ -1435,17 +1434,19 @@ These three rules combine conditional probability, the General Multiplication Ru
 
 ---
 
-**Example 10.10: Skin Cancer in Men and Women (Multi-Stage Probability)**
+**Example 10.10: Skin Cancer (Multi-Stage Probability)**
 
-Intense or repetitive sun exposure can lead to skin cancer. However, because men and women have different clothing styles and sun-exposure patterns, the locations of skin cancers differ by gender. 
+Intense or repetitive sun exposure can lead to skin cancer. However, because men and women have different clothing styles and sun exposure patterns, the locations of skin cancers differ by gender. 
 
-An Italian medical study broke down the presence of melanoma into sequential stages. 
+An Italian medical study broke down the presence of melanoma into sequential stages. When describing skin cancer locations, the **trunk** includes the chest, back, and abdomen; the **head** includes areas such as the face, scalp, and ears; and the **limbs** are the arms and legs, including the hands and feet.
+
 **Stage 1: Where is the cancer located?**
 If we randomly select an individual with skin cancer, the location probabilities are:
 
 *   $P(\text{head}) = 0.15$
 *   $P(\text{trunk}) = 0.41$
 *   $P(\text{limbs}) = 0.44$
+
 *(Notice these add up to 1.0, representing 100% of the patients).*
 
 **Stage 2: Given the location, what is the patient's gender?**
