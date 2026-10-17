@@ -736,81 +736,219 @@ save_plot <- function(filename, plot, width, height) {
 # =============================================================
 # Chapter 6: Confounding Diagram
 # =============================================================
+create_circle <- function(x0, y0, r, node_name, fill_colour,
+                          border = "solid") {
+  theta <- seq(0, 2 * pi, length.out = 180)
 
-create_circle <- function(x0, y0, r, node_name, fill_colour) {
-  theta <- seq(0, 2 * pi, length.out = 120)
   data.frame(
     x = x0 + r * cos(theta),
     y = y0 + r * sin(theta),
     node = node_name,
-    fill = fill_colour
+    fill = fill_colour,
+    border = border
   )
 }
 
-confounding_circles <- rbind(
-  create_circle(0, 2.7, 1.15, "Explanatory", "#D9EAD3"),
-  create_circle(5, 2.7, 1.15, "Response", "#D9EAD3"),
-  create_circle(2.5, 0, 1.25, "Lurking", "#93C47D")
+# Calculate endpoints so arrows stop outside the circles.
+circle_edge <- function(from, to, r_from, r_to, gap = 0.10) {
+  direction <- (to - from) / sqrt(sum((to - from)^2))
+
+  start <- from + (r_from + gap) * direction
+  end <- to - (r_to + gap) * direction
+
+  data.frame(
+    x = start[1],
+    y = start[2],
+    xend = end[1],
+    yend = end[2]
+  )
+}
+
+make_diagram <- function(lurking = FALSE) {
+  explanatory <- c(0, 2.2)
+  response <- c(7, 2.2)
+  third_variable <- c(3.5, -0.8)
+
+  upper_radius <- 1.15
+  lower_radius <- 1.45
+
+  circles <- rbind(
+    create_circle(
+      0, 2.2, upper_radius,
+      "Explanatory", "#E5F0E1"
+    ),
+    create_circle(
+      7, 2.2, upper_radius,
+      "Response", "#E5F0E1"
+    ),
+    create_circle(
+      3.5, -0.8, lower_radius,
+      "Third variable", "#B8D7A6",
+      border = if (lurking) "dashed" else "solid"
+    )
+  )
+
+  # These arrows represent possible influences, not proven causes.
+  influences <- rbind(
+    circle_edge(
+      third_variable, explanatory,
+      lower_radius, upper_radius
+    ),
+    circle_edge(
+      third_variable, response,
+      lower_radius, upper_radius
+    )
+  )
+
+  lower_label <- if (lurking) {
+    "Diet quality\n(omitted from\nthe analysis)\nLURKING VARIABLE"
+  } else {
+    "Diet, lifestyle,\nsocioeconomic factors\n(potential\nconfounders)"
+  }
+
+  labels <- data.frame(
+    x = c(0, 7, 3.5),
+    y = c(2.2, 2.2, -0.8),
+    label = c(
+      "Beverage\npreference\n(explanatory)",
+      "Health\noutcome\n(response)",
+      lower_label
+    )
+  )
+
+  caption <- if (lurking) {
+    paste(
+      "Possible influences are shown.",
+      "The dashed border marks a variable omitted from the analysis."
+    )
+  } else {
+    "Solid arrows show possible influences, not established causal effects."
+  }
+
+  ggplot() +
+    # An observed association has no causal arrowhead.
+    annotate(
+      "segment",
+      x = 1.25, y = 2.2,
+      xend = 5.75, yend = 2.2,
+      linetype = "dashed",
+      linewidth = 0.65,
+      colour = "#425246"
+    ) +
+    annotate(
+      "text",
+      x = 3.5, y = 2.58,
+      label = "Observed association",
+      size = 3.5,
+      colour = "#26382B"
+    ) +
+    geom_segment(
+      data = influences,
+      aes(x = x, y = y, xend = xend, yend = yend),
+      arrow = grid::arrow(
+        length = grid::unit(0.18, "cm"),
+        type = "closed"
+      ),
+      linewidth = 0.70,
+      colour = "#425246"
+    ) +
+    geom_polygon(
+      data = circles,
+      aes(
+        x = x, y = y,
+        group = node,
+        fill = fill,
+        linetype = border
+      ),
+      colour = "#527446",
+      linewidth = 0.65
+    ) +
+    scale_fill_identity() +
+    scale_linetype_identity() +
+    geom_text(
+      data = labels,
+      aes(x = x, y = y, label = label),
+      size = 3.5,
+      lineheight = 1.03,
+      colour = "#18251C"
+    ) +
+    coord_fixed(
+      xlim = c(-1.6, 8.6),
+      ylim = c(-2.5, 3.6),
+      expand = FALSE
+    ) +
+    labs(caption = caption) +
+    theme_void() +
+    theme(
+      plot.caption = element_text(
+        size = 9,
+        colour = "#425246",
+        hjust = 0.5,
+        margin = margin(t = 8)
+      ),
+      plot.margin = margin(10, 10, 10, 10),
+      plot.background = element_rect(
+        fill = "white",
+        colour = NA
+      )
+    )
+}
+
+# Create the two diagrams.
+p_confound <- make_diagram(lurking = FALSE)
+p_lurking <- make_diagram(lurking = TRUE)
+
+# Display both diagrams in the knitted document.
+print(p_confound)
+print(p_lurking)
+
+# Save image files for the Beamer slides.
+ggsave(
+  filename = "fig_ch6_confounding.png",
+  plot = p_confound,
+  width = 7,
+  height = 4.5,
+  units = "in",
+  dpi = 300,
+  bg = "white"
 )
 
-confounding_labels <- data.frame(
-  x = c(0, 5, 2.5),
-  y = c(2.7, 2.7, 0),
+ggsave(
+  filename = "fig_ch6_lurking.png",
+  plot = p_lurking,
+  width = 7,
+  height = 4.5,
+  units = "in",
+  dpi = 300,
+  bg = "white"
+)
+
+scenarios <- data.frame(
+  scenario = c(
+    "Low bias, high variability",
+    "High bias, high variability",
+    "Low bias, low variability",
+    "High bias, low variability"
+  ),
+  centre_x = c(0, 16, 0, 16),
+  centre_y = c(16, 16, 0, 0),
+  bias = c(0, 2.6, 0, 2.6),
+  spread = c(1.65, 1.65, 0.55, 0.55),
   label = c(
-    "Beverage\npreference\n(explanatory)",
-    "Health\noutcome\n(response)",
-    "Lifestyle, diet,\nsocioeconomic factors\n(potential confounders)"
+    "Lower bias\nHigher variability",
+    "Higher bias\nHigher variability",
+    "Lower bias\nLower variability",
+    "Higher bias\nLower variability"
   )
 )
 
-p_confound <- ggplot() +
-  geom_polygon(
-    data = confounding_circles,
-    aes(x = x, y = y, group = node, fill = fill),
-    colour = "white",
-    linewidth = 0.5
-  ) +
-  scale_fill_identity() +
-  # The dashed arrow represents the observed explanatory-response association.
-  geom_segment(
-    aes(x = 1.25, y = 2.7, xend = 3.75, yend = 2.7),
-    arrow = arrow(length = unit(0.25, "cm"), type = "closed"),
-    linewidth = 0.9,
-    linetype = "dashed",
-    colour = "#333333"
-  ) +
-  annotate("text", x = 2.5, y = 3.05, label = "Observed association", size = 3.7) +
-  # A confounder is related to the explanatory variable and the response.
-  geom_segment(
-    aes(x = 1.65, y = 0.85, xend = 0.75, yend = 1.75),
-    arrow = arrow(length = unit(0.25, "cm"), type = "closed"),
-    linewidth = 0.9,
-    colour = "#333333"
-  ) +
-  geom_segment(
-    aes(x = 3.35, y = 0.85, xend = 4.25, yend = 1.75),
-    arrow = arrow(length = unit(0.25, "cm"), type = "closed"),
-    linewidth = 0.9,
-    colour = "#333333"
-  ) +
-  geom_text(
-    data = confounding_labels,
-    aes(x = x, y = y, label = label),
-    size = 3.8,
-    lineheight = 0.95
-  ) +
-  coord_fixed(xlim = c(-1.4, 6.4), ylim = c(-1.4, 4.1)) +
-  theme_void() +
-  theme(plot.margin = margin(10, 10, 10, 10))
-
-save_plot("fig_ch6_confounding.png", p_confound, width = 7, height = 4.5)
-
-# =============================================================
-# Chapter 6: Sampling Variability and Bias Analogy
-# =============================================================
+# -------------------------------------------------------------
+# Target rings, drawn from the outside inward
+# -------------------------------------------------------------
 
 make_circle <- function(r, fill_colour) {
-  theta <- seq(0, 2 * pi, length.out = 120)
+  theta <- seq(0, 2 * pi, length.out = 180)
+
   data.frame(
     x = r * cos(theta),
     y = r * sin(theta),
@@ -818,75 +956,187 @@ make_circle <- function(r, fill_colour) {
   )
 }
 
-rings <- rbind(
-  data.frame(make_circle(6, "#F5F5F5"), ring = 1),
-  data.frame(make_circle(5, "#B8B9B9"), ring = 2),
-  data.frame(make_circle(4, "#4B91C8"), ring = 3),
-  data.frame(make_circle(3, "#EE784A"), ring = 4),
-  data.frame(make_circle(2, "#F8B953"), ring = 5),
-  data.frame(make_circle(1, "#FCE174"), ring = 6)
+radii <- 6:1
+
+ring_colours <- c(
+  "#F5F5F5",
+  "#B8B9B9",
+  "#4B91C8",
+  "#EE784A",
+  "#F8B953",
+  "#FCE174"
 )
 
-sampling_scenarios <- c(
-  "(a) Smaller Samples\nMore Sampling Variability",
-  "(b) Larger Samples\nLess Sampling Variability",
-  "(c) Low Variability\nCentred on the Truth",
-  "(d) Biased Design\nCentred Away from the Truth"
+rings <- do.call(
+  rbind,
+  lapply(seq_along(radii), function(i) {
+    data.frame(
+      make_circle(radii[i], ring_colours[i]),
+      ring = i
+    )
+  })
 )
 
+# Position one target in each quadrant.
 rings_all <- do.call(
   rbind,
-  lapply(sampling_scenarios, function(s) data.frame(rings, scenario = s))
+  lapply(seq_len(nrow(scenarios)), function(i) {
+    data.frame(
+      x = rings$x + scenarios$centre_x[i],
+      y = rings$y + scenarios$centre_y[i],
+      fill = rings$fill,
+      ring = rings$ring,
+      scenario = scenarios$scenario[i]
+    )
+  })
 )
-rings_all$scenario <- factor(rings_all$scenario, levels = sampling_scenarios)
 
-# Each point represents an estimate produced by one repeated sample.
-# The larger-sample panel is more tightly concentrated around the true parameter.
+# -------------------------------------------------------------
+# Illustrative estimates from repeated samples
+# -------------------------------------------------------------
+
 set.seed(42)
-pts_small <- data.frame(
-  x = rnorm(25, 0, 2.0),
-  y = rnorm(25, 0, 2.0),
-  scenario = sampling_scenarios[1]
-)
-pts_large <- data.frame(
-  x = rnorm(25, 0, 0.9),
-  y = rnorm(25, 0, 0.9),
-  scenario = sampling_scenarios[2]
-)
-pts_precise <- data.frame(
-  x = rnorm(25, 0, 0.45),
-  y = rnorm(25, 0, 0.45),
-  scenario = sampling_scenarios[3]
-)
-pts_biased <- data.frame(
-  x = rnorm(25, 2.5, 0.75),
-  y = rnorm(25, -2.5, 0.75),
-  scenario = sampling_scenarios[4]
+
+n_repeated_samples <- 40
+
+points_all <- do.call(
+  rbind,
+  lapply(seq_len(nrow(scenarios)), function(i) {
+    data.frame(
+      x = scenarios$centre_x[i] +
+        rnorm(
+          n_repeated_samples,
+          mean = scenarios$bias[i],
+          sd = scenarios$spread[i]
+        ),
+      y = scenarios$centre_y[i] +
+        rnorm(
+          n_repeated_samples,
+          mean = 0,
+          sd = scenarios$spread[i]
+        ),
+      scenario = scenarios$scenario[i]
+    )
+  })
 )
 
-pts_all <- rbind(pts_small, pts_large, pts_precise, pts_biased)
-pts_all$scenario <- factor(pts_all$scenario, levels = sampling_scenarios)
+# -------------------------------------------------------------
+# Draw the targets and the axes for the panel arrangement
+# -------------------------------------------------------------
 
 p_targets <- ggplot() +
   geom_polygon(
     data = rings_all,
-    aes(x = x, y = y, group = interaction(scenario, ring), fill = fill),
-    colour = "black",
+    aes(
+      x = x,
+      y = y,
+      group = interaction(scenario, ring),
+      fill = fill
+    ),
+    colour = "#444444",
     linewidth = 0.25
   ) +
   scale_fill_identity() +
-  geom_point(data = pts_all, aes(x = x, y = y), colour = "#C44E52", size = 2.2, alpha = 0.85) +
-  facet_wrap(~scenario, ncol = 2) +
-  coord_fixed(xlim = c(-6.5, 6.5), ylim = c(-6.5, 6.5)) +
+
+  # Each cross marks a true population value.
+  geom_point(
+    data = scenarios,
+    aes(x = centre_x, y = centre_y),
+    shape = 3,
+    size = 3,
+    stroke = 0.7,
+    colour = "black"
+  ) +
+
+  # Each point represents an estimate from one repeated sample.
+  geom_point(
+    data = points_all,
+    aes(x = x, y = y),
+    shape = 21,
+    fill = "#702963",
+    colour = "white",
+    stroke = 0.3,
+    size = 2.3,
+    alpha = 0.9
+  ) +
+
+  # Target labels
+  geom_text(
+    data = scenarios,
+    aes(
+      x = centre_x,
+      y = centre_y + 7.6,
+      label = label
+    ),
+    size = 3.8,
+    fontface = "bold",
+    lineheight = 1.05
+  ) +
+
+  # Horizontal axis: bias increases from left to right.
+  annotate(
+    "segment",
+    x = -6, y = -8.5,
+    xend = 22, yend = -8.5,
+    arrow = grid::arrow(
+      length = grid::unit(0.25, "cm"),
+      type = "closed"
+    ),
+    linewidth = 0.8
+  ) +
+  annotate(
+    "text",
+    x = 8, y = -10.5,
+    label = "Increasing bias",
+    size = 4.3,
+    fontface = "bold"
+  ) +
+
+  # Vertical axis: variability increases from bottom to top.
+  annotate(
+    "segment",
+    x = -8.5, y = -6,
+    xend = -8.5, yend = 22,
+    arrow = grid::arrow(
+      length = grid::unit(0.25, "cm"),
+      type = "closed"
+    ),
+    linewidth = 0.8
+  ) +
+  annotate(
+    "text",
+    x = -11, y = 8,
+    label = "Increasing sampling variability",
+    angle = 90,
+    size = 4.3,
+    fontface = "bold"
+  ) +
+
+  coord_fixed(
+    xlim = c(-13, 24),
+    ylim = c(-12, 26),
+    expand = FALSE
+  ) +
   theme_void() +
   theme(
-    plot.background = element_rect(fill = "white", colour = NA),
-    strip.text = element_text(face = "bold", size = 10.5, margin = margin(b = 8), colour = "black"),
-    panel.spacing = unit(1.5, "lines"),
-    plot.margin = margin(10, 10, 10, 10)
+    plot.background = element_rect(
+      fill = "white",
+      colour = NA
+    ),
+    plot.margin = margin(12, 12, 12, 12)
   )
 
-save_plot("fig_ch6_archery.png", p_targets, width = 8, height = 8)
+print(p_targets)
+
+ggsave(
+  filename = "fig_ch6_archery.png",
+  plot = p_targets,
+  width = 8,
+  height = 8,
+  units = "in",
+  dpi = 300,
+  bg = "white"
+)
 ```
 
 # Chapter 6 {.chapter-root .unlisted}

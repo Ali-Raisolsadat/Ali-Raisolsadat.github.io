@@ -34,10 +34,12 @@
 
 \begin{document}
 
+% SLIDE 1
 \begin{frame}
   \titlepage
 \end{frame}
 
+% SLIDE 2
 \begin{frame}{Why This Chapter Matters}
 Statistical methods are useful only when the data have been collected in a way that matches the scientific question.
 
@@ -51,350 +53,462 @@ Before a mean, proportion, confidence interval or test is interpreted, the study
 
 The quality of a statistical conclusion depends on the quality of the data-generation process.
 \end{frame}
-%
-%\begin{frame}{Chapter Roadmap}
-%This chapter develops the main ideas in a sequence that matches the way studies are planned.
-%\begin{enumerate}
-%  \item Observational studies and experiments
-%  \item Lurking variables and confounding
-%  \item Populations, samples and parameters
-%  \item Sampling designs and probability sampling
-%  \item Bias in sample surveys
-%  \item Case-control and cohort studies
-%  \item Matching conclusions to study design
-%\end{enumerate}
-%\end{frame}
 
+% SECTION 1
 \section{Observational Studies and Experiments}
 
-\begin{frame}{Gathering Data}
-Many scientific questions concern populations that are too large to study completely.
-
-\vspace{0.15cm}
-A health researcher may want to estimate a proportion for adults in a country. A wildlife biologist may want to learn about fish in a river system. A laboratory may want to understand a biological process from a manageable set of specimens.
-
-\vspace{0.15cm}
-In each setting, the main issue is not simply how much data are collected. The main issue is whether the data were collected through a design that supports the intended conclusion.
+% SLIDE 3
+\begin{frame}{Gathering Data and Study Design}
+\begin{itemize}
+	\item Many scientific questions concern populations that are too large to study completely.
+	\begin{enumerate}
+		\item A health researcher may want to estimate a proportion for adults in a country.
+		\item A wildlife biologist may want to learn about fish in a river system. 
+		\item A laboratory may want to understand a biological process from a manageable set of specimens.
+	\end{enumerate}
+	\item In each setting, the main issue is not simply how much data are collected. The main issue is whether the data were collected through a design that supports the intended conclusion.
+	\item A numerical method cannot repair a study design that systematically excludes important groups, measures the wrong variable or mixes the effect of an explanatory variable with other factors.
+	\item Statistical reasoning therefore begins with a clear description of how the data were generated.
+\end{itemize}
 \end{frame}
 
-\begin{frame}{Study Design Comes Before Statistical Analysis}
-A numerical method cannot repair a study design that systematically excludes important groups, measures the wrong variable or mixes the effect of an explanatory variable with other factors.
+% SLIDE 4
+\begin{frame}{Observational Studies versus Experiments}
+Suppose researchers want to know whether a fertilizer increases seedling growth.
 
-\vspace{0.15cm}
-Statistical reasoning therefore begins with a clear description of how the data were generated.
-\end{frame}
-
-\begin{frame}{Observation versus Experiment}
-Two broad approaches are used to gather data in the life sciences.
-
-\begin{block}{Observational Study}
-An observational study records information without deliberately assigning the main explanatory condition being studied.
+\begin{block}{Observational Study: Observe Existing Conditions}
+Researchers compare seedlings that growers already fertilize with seedlings they do not fertilize. The researchers record conditions and growth without assigning fertilizer use.
 \end{block}
 
-\begin{block}{Experiment}
-An experiment deliberately imposes one or more treatments on experimental units and compares their responses.
+\begin{block}{Experiment: Assign Treatments}
+Researchers assign seedlings to receive fertilizer or water alone then compare their growth over four weeks.
 \end{block}
+
+\small
+In the observational study, the groups might also differ in soil, sunlight, or watering. These differences could help explain any observed difference in growth.
 \end{frame}
 
-\begin{frame}{Why the Distinction Matters}
-The distinction matters because observational associations can have several explanations.
+% SLIDE 5
+\begin{frame}{Random Sampling versus Random Assignment}
+Suppose a greenhouse contains $1000$ seedlings.
 
-\vspace{0.15cm}
-Individuals who differ in the explanatory variable may also differ in age, behaviour, environment, socioeconomic conditions or other characteristics.
+\begin{block}{Random Sampling: Which Seedlings Enter the Study?}
+Researchers randomly select $60$ seedlings from the greenhouse. 
 
-\vspace{0.15cm}
-A well-designed randomized experiment helps separate the treatment effect from those other variables, which strengthens causal interpretation.
+\textbf{Random sampling} helps the sample represent the greenhouse population, supporting generalization to that population.
+\end{block}
+
+\begin{block}{Random Assignment: Which Treatment Does Each Receive?}
+Researchers randomly assign the selected seedlings: $30$ receive fertilizer and $30$ receive water alone.
+ 
+\textbf{Random assignment} makes the treatment groups comparable on average, supporting a causal comparison.
+\end{block}
+
+\small
+A study can use one, both, or neither. Random assignment does not guarantee that the study participants represent a wider population.
 \end{frame}
 
-\begin{frame}{When Are Observational Studies Needed}
-Observational studies remain essential when an experiment would be unethical, impossible or scientifically inappropriate.
-
-\vspace{0.15cm}
-For example, researchers should not randomly assign people to smoke cigarettes in order to study long-term health effects.
-
-\vspace{0.15cm}
-In these situations, strong scientific conclusions still depend on careful design, subject-matter knowledge and attention to alternative explanations.
-\end{frame}
-
-\begin{frame}{Random Sampling and Random Assignment}
-These two ideas solve different problems.
+% SLIDE 6
+\begin{frame}{When Are Observational Studies Needed?}
+A well-designed randomized experiment strengthens causal interpretation but researchers cannot always assign the conditions they want to study.
 
 \begin{itemize}
-  \item \textbf{Random sampling} helps support generalization from a sample to a population
-  \item \textbf{Random assignment} helps support causal comparisons between treatments
+	\item \textbf{An experiment would be unethical.} Researchers should not assign people to smoke cigarettes to investigate long-term health outcomes.
+	\item \textbf{The condition cannot be assigned.} Researchers studying age and memory must observe people of different ages.
+	\item \textbf{The research concerns existing conditions.} Ecologists may compare wildlife populations in habitats that have already experienced different levels of disturbance.
 \end{itemize}
 
-A study can use one, both or neither of these forms of randomness.
+\begin{block}{How Can Researchers Strengthen the Evidence?}
+They can measure other relevant variables, compare similar groups and examine alternative explanations for the association.
+\end{block}
 \end{frame}
 
+% SECTION 2
 \section{Confounding and Lurking Variables}
 
-\begin{frame}{Lurking Variables and Confounding}
-The main difficulty in an observational study is that the explanatory variable can be related to other variables that also affect the response.
-
-\begin{block}{Lurking Variable}
-A lurking variable is a variable that is not included as an explanatory or response variable in the analysis but may help explain the observed relationship.
-\end{block}
-
-\begin{block}{Confounding}
-Confounding occurs when the effects of two or more explanatory variables on a response cannot be separated clearly from the available data.
-\end{block}
-\end{frame}
-
-\begin{frame}{How the Ideas Differ}
-A lurking variable is a possible source of an alternative explanation.
-
-\vspace{0.15cm}
-Confounding describes the resulting difficulty in separating effects.
-
-\vspace{0.15cm}
-The ideas are related, but they are not identical.
-\end{frame}
-
-\begin{frame}{Reducing Confounding}
-Confounding is a major concern in observational research because naturally occurring groups can differ in many ways.
-
-\vspace{0.15cm}
-Researchers may try to reduce confounding through methods such as restriction, matching, stratification or statistical adjustment.
-
-\vspace{0.15cm}
-These methods can reduce the problem, but unmeasured differences may still remain.
-\end{frame}
-
-\begin{frame}{Example 6.2: Wine, Beer, or Spirits?}
-\begin{block}{Question}
-Some observational studies have reported that health outcomes differ among moderate drinkers who prefer wine, beer or spirits.
-
-Does an observed difference in health establish that beverage type itself causes the difference?
-\end{block}
-\end{frame}
-
-\begin{frame}{Example 6.2: Explanation}
-Beverage preference can be related to many other characteristics.
-
-\vspace{0.15cm}
-Groups that prefer different beverages may also differ in diet, smoking behaviour, exercise, income, education and access to health care.
-
-\vspace{0.15cm}
-If these characteristics also relate to the health outcome, the effect of beverage preference cannot be separated cleanly from the effects of the other variables.
-\end{frame}
-
-\begin{frame}{Example 6.2: Confounding Diagram}
-  \centering
-  \lectureimage[0.8\linewidth]{fig_ch6_confounding.png}
-\end{frame}
-
-\begin{frame}{Example 6.2: Solution}
-The observational association does not by itself establish a causal effect of beverage type.
-
-\vspace{0.15cm}
-Potential confounders provide alternative explanations for the observed difference.
-
-\vspace{0.15cm}
-A scientifically appropriate conclusion is that beverage preference and health are associated in the observed data after considering the study design. A stronger causal claim would require stronger evidence and careful control of competing explanations.
-\end{frame}
-
-\section{Sampling}
-
-\begin{frame}{Sampling}
-A sample is a subset of a larger population.
-
-\vspace{0.15cm}
-Sampling is necessary because a complete census is often too expensive, too slow or impossible.
-
-\vspace{0.15cm}
-The goal is not simply to obtain many observations. The goal is to obtain observations through a design that supports the intended generalization.
-\end{frame}
-
-\begin{frame}{Core Terminology}
-Several terms should be distinguished before a sample is selected.
+% SLIDE 7
+\begin{frame}{Lurking Variables: What Else Might Explain Growth?}
+Suppose an observational study finds that fertilized seedlings grow more than unfertilized seedlings.
 
 \begin{itemize}
-  \item \textbf{Population:} the full group of individuals or units about which information is desired
-  \item \textbf{Sample:} the subset of individuals or units from which data are actually collected
-  \item \textbf{Sampling frame:} the practical list or mechanism used to identify units that can be selected
-  \item \textbf{Sampling design:} the planned method used to choose the sample
+	\item The explanatory variable is \textbf{fertilizer use}.
+  	\item The response variable is \textbf{seedling growth}.
+\end{itemize}
+
+However, growers who use fertilizer might also place their seedlings in sunnier locations. The researchers did not record sunlight exposure.
+
+\begin{block}{Lurking Variable}
+A lurking variable is a variable omitted from the analysis that may help explain the observed relationship. Here, \textbf{sunlight exposure} is a possible lurking variable.
+\end{block}
+
+Greater growth could reflect fertilizer, sunlight or both.
+\end{frame}
+
+% SLIDE 8
+\begin{frame}{Confounding: Which Factor Explains the Difference?}
+Now suppose nearly all fertilized seedlings receive full sunlight while nearly all unfertilized seedlings grow in shade.
+
+The groups differ in \textbf{two ways}: fertilizer use and sunlight.
+The data provide little opportunity to compare fertilizer treatments under the same sunlight conditions.
+
+\begin{block}{Confounding}
+Confounding occurs when the effects of different explanatory variables on the response cannot be clearly separated. Here, the effects of fertilizer and sunlight are confounded.
+\end{block}
+
+\begin{alertblock}{How the Ideas Differ}
+``Lurking'' describes a variable's omission from the analysis. ``Confounding'' describes the difficulty of separating effects. Even a recorded variable can be involved in confounding.
+\end{alertblock}
+\end{frame}
+
+% SLIDE 9
+\begin{frame}{Reducing Confounding in Observational Studies}
+To investigate fertilizer use, researchers could make comparisons among seedlings grown under similar conditions.
+
+\begin{itemize}
+	\item \textbf{Restriction:} include only seedlings grown in full sunlight.
+	\item \textbf{Matching:} compare fertilized and unfertilized seedlings with similar sunlight exposure and soil conditions.
+	\item \textbf{Stratification:} compare fertilizer groups separately within full-sun, partial-shade, and shade categories.
+	\item \textbf{Statistical adjustment:} include measured factors, such as sunlight and watering, in a statistical model.
+\end{itemize}
+
+\begin{block}{A Limitation}
+These methods can reduce confounding when suitable comparisons are available. Unmeasured or poorly measured differences can still affect the conclusions.
+\end{block}
+\end{frame}
+
+% SLIDE 10
+\begin{frame}{Example 6.2: Wine, Beer or Spirits?}
+\begin{block}{Question}
+Some observational studies have reported that health outcomes differ among moderate drinkers who prefer wine, beer or spirits. Does an observed difference in health establish that beverage type itself causes the difference?
+\end{block}
+
+\begin{itemize}
+	\item Beverage preference can be related to many other characteristics.
+	\item Groups that prefer different beverages may also differ in diet, smoking behaviour, exercise, income, education and access to health care.
+	\item If these characteristics also relate to the health outcome, the effect of beverage preference cannot be separated cleanly from the effects of the other variables.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Parameter and Statistic}
-Two additional terms connect sampling to later inference.
-
-\begin{block}{Parameter}
-A numerical characteristic of a population
-\end{block}
-
-\begin{block}{Statistic}
-A numerical characteristic calculated from a sample
-\end{block}
-
-Statistical inference uses sample statistics to learn about unknown population parameters.
+% SLIDE 11
+\begin{frame}{Example 6.2: Wine, Beer or Spirits?}
+\centering
+\lectureimage[0.8\linewidth]{fig_ch6_confounding.png}
 \end{frame}
 
-\begin{frame}{Why a Representative Sample Matters}
-A spoonful from a well-mixed pot of soup can give useful information about the flavour of the pot because the ingredients are distributed throughout the mixture.
-
-\vspace{0.15cm}
-The analogy should not be interpreted to mean that one spoonful represents the pot perfectly. Small samples can still vary by chance.
-
-\vspace{0.15cm}
-Human populations and ecological systems are often much more heterogeneous than soup, so a deliberate sampling design is needed.
+% SLIDE 12
+\begin{frame}{Example 6.2: Wine, Beer or Spirits?}
+\centering
+\lectureimage[0.8\linewidth]{fig_ch6_lurking.png}
 \end{frame}
 
-\begin{frame}{Planning a Sample}
-A useful sampling plan begins with several questions.
+% SLIDE 13
+\begin{frame}{Example 6.2: Wine, Beer or Spirits?}
+\begin{itemize}
+	\item The observational association does not by itself establish a causal effect of beverage type.
+	\item Potential confounders provide alternative explanations for the observed difference.
+	\item A scientifically appropriate conclusion is that beverage preference and health are associated in the observed data after considering the study design. A stronger causal claim would require stronger evidence and careful control of competing explanations.
+\end{itemize}
+\end{frame}
+
+% SECTION 3
+\section{Sampling}
+
+% SLIDE 14
+\begin{frame}{Sampling}
+A university health centre wants to learn about the sleep habits of first-year students.
+
+Asking every first-year student would be a \textbf{census}. Instead, the centre could collect information from \textbf{sample}: a subset of those students.
+
+\begin{block}{Why Sample?}
+A census can be expensive, slow or difficult to complete. A carefully selected sample can provide useful information with fewer resources.
+\end{block}
+
+The main challenge is deciding \textbf{how to select students} so that the results help us understand the larger group.
+\end{frame}
+
+% SLIDE 15
+\begin{frame}{Example: Defining the Population and Variable}
+The health centre wants to estimate the proportion of currently enrolled first-year students who average at least $7$ hours of nighttime sleep.
+
+For this study, each student reports their average hours of night time sleep over the previous $7$ nights.
+
+\begin{block}{Questions}
 \begin{enumerate}
-  \item What is the target population
-  \item What variables will be measured and how will they be defined
-  \item What sampling frame will be used
-  \item What sampling method will select the units
-  \item How will missing data and nonresponse be handled
+	\item What is the population of interest?
+	\item What variable determines whether a student belongs to the group being counted?
+\end{enumerate}
+\end{block}
+\end{frame}
+
+% SLIDE 16
+\begin{frame}{Example: Defining the Population and Variable}
+\begin{block}{Population}
+All currently enrolled first-year students at that university. This is the group the health centre wants to describe.
+\end{block}
+
+\begin{block}{Variable}
+Whether a student's reported average night time sleep over the previous $7$ nights is at least $7$ hours:
+$$\text{Yes: average}\geq7 \qquad \text{No: average}<7$$
+This is a \textbf{categorical variable}.
+\end{block}
+
+The reported average number of hours is a quantitative variable. We classify it into yes or no categories to answer the study's question.
+\end{frame}
+
+% SLIDE 17
+\begin{frame}{From the Population to the Sample}
+The health centre needs a practical way to identify and select students.
+
+\begin{block}{Sampling Frame}
+The list or mechanism used to identify units that can be selected. For example, it could be the university's current first year enrolment list.
+\end{block}
+
+\begin{block}{Sampling Design}
+The planned method for selecting units. For example, randomly select $200$ distinct student IDs from that list and invite those students to complete the survey.
+\end{block}
+
+The \textbf{sample} provides the data. If some selected students do not respond, the health centre must consider whether respondents differ from nonrespondents.
+\end{frame}
+
+% SLIDE 18
+\begin{frame}{Parameter versus Statistic}
+\begin{block}{Parameter: Describes the Population}
+Let $p$ be the proportion of \textbf{all first year students} at this university who meet the sleep criterion. This population proportion is unknown.
+\end{block}
+
+\begin{block}{Statistic: Calculated from the Sample}
+Suppose all $200$ selected students respond, and $124$ meet the sleep criterion. The sample proportion is
+$$\hat{p}=\frac{124}{200}=0.62$$
+Another sample could produce a different value of $\hat{p}$.
+\end{block}
+
+\textbf{Statistical inference} uses the observed $62\%$ to estimate $p$ and describe the uncertainty in that estimate.
+\end{frame}
+
+% SLIDE 19
+\begin{frame}{Why the Selection Method Matters}
+Suppose the health centre surveys only students studying in the library at $10$ p.m.
+
+\begin{block}{Who Might Be Missed?}
+Students who study elsewhere, work evening shifts, commute or go to bed earlier may be absent. Their sleep habits could differ from those of students in the library.
+\end{block}
+
+Selecting students randomly from a complete enrolment list gives students across these groups a chance of selection.
+
+\begin{alertblock}{Sample Size Is Not Enough}
+Surveying more students in the same library does not remove the problem of systematically missing other students.
+\end{alertblock}
+\end{frame}
+
+% SLIDE 20
+\begin{frame}{Planning the Sleep Survey}
+Before collecting data, the health centre specifies:
+\begin{enumerate}
+	\item \textbf{Target population:}currently enrolled first year students at this university.
+	\item \textbf{Measurement:} reported average nighttime sleep over the previous $7$ nights, classified using the $7$-hour threshold.
+	\item \textbf{Sampling frame:} an updated first year enrolment list.
+	\item \textbf{Selection method:} randomly select $200$ distinct student IDs.
+	\item \textbf{Missing-data plan:} arrange reminders, record response rates and specify how incomplete answers will be handled.
 \end{enumerate}
 \end{frame}
 
-\begin{frame}{Defining a Population and a Variable}
-\begin{block}{Question}
-A university health centre wants to estimate the proportion of first-year students who usually sleep at least 7 hours per night.
+% SLIDE 21
+\begin{frame}{Generalizing from the Sample}
+Suppose $62\%$ of the surveyed students meet the sleep criterion. What can the health centre conclude?
 
-What is the population and what is the main variable?
+\begin{itemize}
+	\item The result estimates the proportion among \textbf{first year students at this university}.
+	\item The design does not automatically support conclusions about students in other years or at other universities.
+	\item Even with random selection, the estimate can vary from sample to sample.
+	\item An incomplete enrolment list, nonresponse, or inaccurate sleep reports can introduce additional errors.
+\end{itemize}
+
+\begin{block}{The Main Principle}
+A useful generalization depends on who was eligible, how students were selected and how the data were collected.
 \end{block}
 \end{frame}
 
-\begin{frame}{Defining a Population and a Variable: Solution}
-The population is all first-year students at that university.
-
-\vspace{0.15cm}
-The main variable is whether a student usually sleeps at least 7 hours per night.
-
-\vspace{0.15cm}
-This variable can be recorded as a yes-or-no categorical variable, or the number of hours slept can be recorded as a quantitative variable and then classified if needed.
-\end{frame}
-
-\begin{frame}{Generalizing from a Sample}
-A scientifically sensible generalization requires more than a large sample.
-
-\vspace{0.15cm}
-The sample must be connected to the target population through a design that gives relevant individuals a fair chance of selection.
-
-\vspace{0.15cm}
-If important groups are systematically missed, the result can be biased even when the sample size is large.
-\end{frame}
-
+% SECTION 4
 \section{Sampling Designs}
 
-\begin{frame}{Sampling Variability and Bias}
-Two ideas are central in sampling.
+% SLIDE 22
+\begin{frame}{Sampling Variability versus Bias}
+Suppose a university repeatedly selects samples of first year students to estimate the proportion meeting a sleep criterion.
 
-\begin{block}{Sampling Variability}
-The natural sample-to-sample variation that occurs because different random samples usually produce different statistics
+\begin{block}{Sampling Variability: How Much Do Estimates Differ?}
+Different random samples usually produce different sample proportions. This natural variation from sample to sample is \textbf{sampling variability}.
 \end{block}
 
-\begin{block}{Bias}
-A systematic tendency for a sampling method or measurement process to miss the true population value in a particular direction
+\begin{block}{Bias: Where Are the Estimates Centred?}
+A method is biased if its estimates systematically tend to be above or below the true population value.
+
+For example, surveying only students in the library late at night may systematically misrepresent the university's first year students.
 \end{block}
 \end{frame}
 
-\begin{frame}{Archery Analogy for Sampling Designs}
-  \centering
-  \lectureimage[0.5\linewidth]{fig_ch6_archery.png}
+% SLIDE 23
+\begin{frame}{Archery Analogy: Bias and Sampling Variability}
+\centering
+\lectureimage[0.52\linewidth]{fig_ch6_archery.png}
 \end{frame}
 
-\begin{frame}{Reading the Archery Analogy}
-In the archery figure, each point represents an estimate from a repeated sample.
+% SLIDE 24
+\begin{frame}{Reading the Four Targets}
+The horizontal axis compares \textbf{bias}. The vertical axis compares \textbf{sampling variability}.
 
-\vspace{0.15cm}
-The centre of the target represents the true population value.
-
-\vspace{0.15cm}
-The figure illustrates four situations.
 \begin{itemize}
-  \item Small sample and high variability
-  \item Large sample and high variability
-  \item Small sample and low variability
-  \item Biased sampling that is systematically off-centre
+	\item \textbf{Upper left:} estimates vary widely but are centred near the truth.
+	\item \textbf{Upper right:} estimates vary widely and are centred away from the truth.
+	\item \textbf{Lower left:} estimates are tightly grouped near the truth.
+	\item \textbf{Lower right:} estimates are tightly grouped but systematically miss the truth.
+\end{itemize}
+
+\begin{block}{Two Different Questions}
+How spread out are the estimates? Where is the distribution of estimates centred?
+\end{block}
+\end{frame}
+
+% SLIDE 25
+\begin{frame}{What Does Increasing Sample Size Improve?}
+Under the same sampling design, larger samples generally reduce sampling variability.
+
+\begin{block}{In the Archery Analogy}
+Increasing sample size can tighten the grouping of estimates. It does not necessarily move that grouping toward the bullseye.
+\end{block}
+
+For example, surveying more late night library users may give a more precise estimate for that group while still misrepresenting all first year students.
+
+\begin{alertblock}{Precision Does Not Guarantee Accuracy}
+A tightly grouped set of estimates can still be systematically wrong. Good sampling requires attention to both variability and bias.
+\end{alertblock}
+\end{frame}
+
+% SLIDE 26
+\begin{frame}{Poor Sampling Designs: Who Gets Included?}
+The health centre wants to estimate the proportion of first-year students who average at least $7$ hours of night time sleep. Consider two ways it might collect responses:
+
+\begin{block}{Plan A: Ask Whoever Is Nearby}
+A researcher surveys students leaving a first year lecture. This is a \textbf{convenience sample}.
+\end{block}
+
+\begin{block}{Plan B: Invite Anyone Interested}
+The centre posts an open survey link: ``Are you getting enough sleep? Tell us about it!'' This is a \textbf{voluntary response sample}.
+\end{block}
+
+In both cases, the participating students may differ systematically from the population the centre wants to describe.
+\end{frame}
+
+% SLIDE 27
+\begin{frame}{Convenience Sampling: Easy to Reach}
+\begin{block}{Definition}
+A convenience sample selects individuals or units because they are readily available.
+\end{block}
+
+Surveying students leaving one lecture is convenient but the sample includes only students who attend that class.
+
+\begin{itemize}
+	\item Students in other courses have no opportunity to be included.
+  	\item Students absent from that lecture are missed.
+  	\item Attendance and course schedules may be related to sleep habits.
+\end{itemize}
+
+\begin{alertblock}{Why This Matters}
+Even a large number of responses from that lecture may misrepresent first year students across the university.
+\end{alertblock}
+\end{frame}
+
+% SLIDE 28
+\begin{frame}{Voluntary Response: Who Chooses to Participate?}
+\begin{block}{Definition}
+A voluntary response sample forms when an open invitation allows individuals to select themselves into the sample.
+\end{block}
+
+For the online sleep survey, students who are concerned about their sleep may be especially motivated to respond.
+
+\begin{itemize}
+	\item Participation may depend on the very characteristic being studied.
+	\item Posting the link widely does not ensure that respondents represent all first-year students.
+\end{itemize}
+
+\begin{alertblock}{An Important Distinction}
+An open survey is voluntary response sampling. Inviting randomly selected students is a different design.
+\end{alertblock}
+\end{frame}
+
+% SLIDE 29
+\begin{frame}{Probability Samples: Selection by Chance}
+Veterinary researchers want to estimate the average weight of all dairy cows in a region. They cannot weigh every cow so they need a sample.
+
+\begin{block}{Probability Sample}
+A probability sample uses a random selection procedure. Every population unit has a \textbf{known nonzero probability} of being included.
+\end{block}
+
+For example, researchers could randomly select cow IDs from a complete regional registry.
+\begin{itemize}
+  \item Researchers follow a defined selection procedure.
+  \item Selection probabilities need not be equal.
+  \item The design allows sampling uncertainty to be assessed.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Key Lesson from the Archery Figure}
-Larger samples often reduce sampling variability.
+% SLIDE 30
+\begin{frame}{Simple Random Sampling: Choosing Individual Cows}
+Suppose the registry lists $1000$ dairy cows. Researchers want to select $50$ distinct cows.
 
-\vspace{0.15cm}
-Larger samples do not automatically remove systematic bias.
+\begin{block}{Simple Random Sample}
+In a simple random sample of size $n$, every possible group of $n$ population units has the same chance of selection.
+\end{block}
 
-\vspace{0.15cm}
-A method that consistently misses important parts of the population can remain wrong even when the sample becomes very large.
+The researchers could number the cows from $1$ to $1000$ and use software to select $50$ distinct numbers at random.
+$$P(\text{a particular cow is selected})=\frac{50}{1000}=0.05$$
+
+\small
+Every cow has the same inclusion probability and every possible group of $50$ cows is equally likely. Selecting nearby cows until $50$ are reached would not satisfy this definition.
 \end{frame}
 
-\begin{frame}{Poor Sampling Designs}
-Not all samples are created in ways that support reliable inference.
+% SLIDE 31
+\begin{frame}{Other Probability Designs: Sampling Across Farms}
+Selecting individual cows across an entire region may require considerable travel. Other designs organize selection differently.
 
 \begin{itemize}
-  \item Convenience samples are based on easy availability
-  \item Voluntary response samples are formed by individuals who choose themselves to respond
+	\item \textbf{Stratified sampling:} divide the registry into breed groups and select a random sample of cows from \emph{every} breed group.
+	\item \textbf{Cluster sampling:}randomly select farms and weigh \emph{every} dairy cow on the selected farms.
+	\item \textbf{Multistage sampling:} randomly select farms, then randomly select cows \emph{within} those farms.
 \end{itemize}
 
-Both approaches can produce strong bias because participation is not controlled by a suitable probability mechanism.
+\begin{block}{The Main Difference}
+Stratification samples within every group. Cluster sampling selects some groups. Multistage sampling adds further selection within chosen groups.
+\end{block}
 \end{frame}
 
-\begin{frame}{Convenience Samples}
-A convenience sample consists of units that are easiest to reach.
-
-\vspace{0.15cm}
-Examples include surveying people in one classroom, taking the first specimens that arrive in a lab or interviewing shoppers who happen to pass a kiosk.
-
-\vspace{0.15cm}
-These samples may be useful for preliminary work, but they usually do not support confident generalization to a broader population.
-\end{frame}
-
-\begin{frame}{Voluntary Response Samples}
-A voluntary response sample is formed when people choose for themselves whether to participate.
-
-\vspace{0.15cm}
-Examples include internet polls and call-in surveys.
-
-\vspace{0.15cm}
-People with especially strong opinions are often more likely to respond, which can create severe bias.
-\end{frame}
-
-\begin{frame}{Probability Samples}
-A probability sample uses a known chance mechanism to select units.
-
-\vspace{0.15cm}
-These designs create a clearer connection between the sample and the population.
-
-\vspace{0.15cm}
-The simplest example is a simple random sample.
-\end{frame}
-
-\begin{frame}{Simple Random Samples}
-In a simple random sample of size $n$, every possible sample of size $n$ has the same chance of being selected.
-
-\vspace{0.15cm}
-This design helps protect against selection bias and provides a foundation for statistical inference.
-\end{frame}
-
-\begin{frame}{Other Probability Designs}
-Other common probability designs include
-\begin{itemize}
-  \item \textbf{Stratified samples}, which sample separately within identified groups
-  \item \textbf{Cluster samples}, which randomly select groups or clusters, then observe units within them
-  \item \textbf{Multistage samples}, which apply random selection in several stages
-\end{itemize}
-
-These designs are often more practical than a single simple random sample in large populations.
-\end{frame}
-
+% SLIDE 32
 \begin{frame}{Random Sampling versus Random Assignment}
-Random sampling and random assignment both use chance, but they serve different scientific purposes.
+Suppose the researchers also want to compare two feed supplements.
 
-\begin{itemize}
-  \item Random sampling supports generalization to a population
-  \item Random assignment supports causal comparison of treatments
-\end{itemize}
+\begin{block}{Random Sampling: Which Cows Enter the Study?}
+Randomly select cows from the regional registry.
 
-Confusing these ideas is a common first-year mistake, so it is important to keep their purposes separate.
+This supports generalization from the sampled cows to the population covered by that registry.
+\end{block}
+
+\begin{block}{Random Assignment: Which Supplement Does Each Receive?}
+Randomly assign the participating cows to supplement A or supplement B, then compare their weight gain.
+
+This makes the treatment groups comparable on average and supports a causal comparison.
+\end{block}
+
+\small
+A study can use both procedures. Random assignment alone does not make the participating cows representative of the region.
 \end{frame}
 
+% SLIDE 33
+\begin{frame}{Break Time}
+\centering
+\lectureimage[0.52\linewidth]{meme_1.jpg}
+\end{frame}
+
+
+% SECTION 5
 \section{Sample Surveys}
 
 \begin{frame}{Sample Surveys}
