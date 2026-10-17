@@ -2,7 +2,7 @@
 title: "Chapter 6: Samples and Observational Studies"
 subtitle: "The Practice of Statistics in the Life Sciences<br>by Brigitte Baldi and David S. Moore"
 author: "Instructor: Ali Raisolsadat"
-date: "Part III: Data Generation"
+date: "Part III: Foundations of Statistical Inference"
 
 output:
   html_document:
@@ -1153,6 +1153,13 @@ This chapter begins by separating observational studies from experiments. It the
 >
 > A numerical method cannot repair a study design that systematically excludes important groups, measures the wrong variable or mixes the effect of an explanatory variable with other factors. Statistical reasoning therefore begins with a careful description of how the data were generated.
 
+The central questions of this chapter are:
+
+1. Is the study observational or experimental?
+2. If a sample was used, how was it selected from the population?
+3. What sources of bias or confounding could affect the conclusion?
+4. Does the design support generalization, a causal conclusion, both or neither?
+
 ### Observation versus Experiment
 
 Two broad approaches are used to gather data in the life sciences. An **observational study** records information without deliberately assigning the explanatory conditions of interest. An **experiment** deliberately assigns a treatment or condition to experimental units, then observes the response.
@@ -1171,6 +1178,39 @@ Observational studies remain essential when experiments would be unethical, impo
 
 A useful first-year distinction is therefore that **random sampling** helps support generalization from a sample to a population, while **random assignment** helps support causal comparisons between treatments. These two uses of randomness solve different problems.
 
+**Seedling example**
+
+Suppose researchers want to know whether fertilizer increases seedling growth.
+
+- In an **observational study**, the researchers compare seedlings that growers already fertilize with seedlings they do not fertilize. Fertilizer use is observed rather than assigned. The two groups may also differ in soil, sunlight, watering or grower experience.
+- In an **experiment**, the researchers assign seedlings to receive fertilizer or water alone, keep the other growing conditions as comparable as possible and compare growth after four weeks.
+
+The experimental design gives researchers more control over competing explanations. The observational design can identify an association, but it does not by itself establish that fertilizer caused the difference in growth.
+
+### Random Sampling versus Random Assignment
+
+Suppose a greenhouse contains $1000$ seedlings and researchers select $60$ for a study.
+
+> **Random sampling asks: Which seedlings enter the study?**
+>
+> Randomly selecting $60$ seedlings helps the sample represent the greenhouse population. This supports generalization from the sample to that population.
+
+> **Random assignment asks: Which treatment does each selected seedling receive?**
+>
+> Randomly assigning $30$ seedlings to fertilizer and $30$ to water alone helps make the treatment groups comparable on average. This supports a causal comparison between the treatments.
+
+A study can use random sampling, random assignment, both or neither. Random assignment does not automatically make the participants representative of a wider population, and random sampling alone does not establish causation.
+
+### When Observational Studies Are Needed
+
+Randomized experiments are powerful, but researchers cannot always assign the conditions they want to study.
+
+- **The assignment would be unethical.** Researchers should not assign people to smoke cigarettes to investigate long-term health outcomes.
+- **The characteristic cannot be assigned.** Researchers studying age and memory must observe people of different ages.
+- **The research concerns existing conditions.** Ecologists may compare wildlife populations in habitats that have already experienced different levels of disturbance.
+
+Researchers can strengthen observational evidence by measuring other relevant variables, comparing similar groups, using appropriate statistical adjustments and examining alternative explanations. These steps improve the evidence, but they do not reproduce all the protection provided by random assignment.
+
 ### Confounding and Lurking Variables
 
 The main difficulty in an observational study is that the explanatory variable can be associated with other variables that also affect the response. This issue is described through the related ideas of lurking variables and confounding.
@@ -1186,6 +1226,31 @@ The main difficulty in an observational study is that the explanatory variable c
 A lurking variable is therefore a possible source of an alternative explanation. Confounding describes the resulting difficulty in separating effects. The terms are related, but they are not identical.
 
 Confounding is a major concern in observational research because naturally occurring groups can differ in many ways. Careful design can reduce this problem through methods such as restriction, matching or stratification. Statistical adjustment can also account for measured variables. These approaches can reduce confounding, but unmeasured differences may still remain.
+
+**Lurking-variable example**
+
+Suppose an observational study finds that fertilized seedlings grow more than unfertilized seedlings.
+
+- The explanatory variable is **fertilizer use**.
+- The response variable is **seedling growth**.
+- Growers who use fertilizer might also place their seedlings in sunnier locations, but the researchers did not record sunlight exposure.
+
+Sunlight is a possible **lurking variable** because it was omitted from the analysis and may help explain the observed association. Greater growth could reflect fertilizer, sunlight or both.
+
+Now suppose nearly every fertilized seedling receives full sunlight while nearly every unfertilized seedling grows in shade. The groups differ in both fertilizer use and sunlight exposure, and the data contain little opportunity to compare fertilizer treatments under the same sunlight conditions. The effects of fertilizer and sunlight are therefore **confounded**.
+
+> **The distinction**
+>
+> Lurking describes the omission of a variable from the analysis. Confounding describes the inability to separate the effects of explanatory variables. A variable can be measured and still participate in confounding if the study contains no suitable comparisons.
+
+Researchers could reduce confounding by:
+
+1. **Restriction:** include only seedlings grown in full sunlight
+2. **Matching:** compare fertilized and unfertilized seedlings with similar sunlight exposure and soil conditions
+3. **Stratification:** compare fertilizer groups separately within full-sun, partial-shade and shade categories
+4. **Statistical adjustment:** include measured factors such as sunlight and watering in a statistical model
+
+These approaches help only for variables that are measured adequately and for which suitable comparisons exist. Unmeasured or poorly measured differences can still affect the conclusion.
 
 ### Confounding in an Observational Study
 
@@ -1203,6 +1268,9 @@ The diagram below represents this structure. The dashed arrow represents the obs
 
 <img src="fig_ch6_confounding.png" alt="Diagram showing an observed association between beverage preference and health together with potential confounding variables related to both" />
 
+<img src="fig_ch6_lurking.png" alt="Diagram showing an observed association between beverage preference and health together with potential lurking variables related to both" />
+
+
 **Solution**
 
 The observational association does not by itself establish a causal effect of beverage type. Potential confounders provide alternative explanations for the observed difference. A scientifically appropriate conclusion is that beverage preference and health are associated in the observed data after considering the study design. A causal claim would require stronger evidence and careful control of competing explanations.
@@ -1213,9 +1281,11 @@ The confounding example shows why the way individuals enter a study matters. The
 
 ## Sampling
 
-A **sample** is a subset of a larger population. Sampling is necessary because a complete census of every individual is often too expensive, too slow or impossible. The goal is not simply to obtain many observations. The goal is to obtain observations through a design that supports the intended generalization.
+A **census** attempts to collect information from every unit in a population. A **sample** is a subset of that population from which data are actually collected. Sampling is necessary because a census is often expensive, slow, difficult to complete or impossible.
 
-A wildlife agency may want to estimate the number of salmon migrating through a river system. A public-health agency may want to describe a characteristic of adults in a country. A virology laboratory may want to characterize circulating viral strains. In each case, the sample should be connected clearly to the population about which the conclusion will be made.
+Suppose a university health centre wants to learn about the sleep habits of first-year students. Asking every first-year student would be a census. A more practical approach is to select a sample of students and use the resulting data to learn about the larger group.
+
+The goal is not simply to collect many observations. The goal is to select observations through a design that supports the intended generalization. A carefully selected moderate-sized sample can be more informative about a population than a much larger sample collected from a systematically unrepresentative group.
 
 ### Core Terminology
 
@@ -1237,7 +1307,19 @@ Two additional terms connect sampling to later statistical inference.
 >
 > A **parameter** is a numerical characteristic of a population. A **statistic** is a numerical characteristic calculated from a sample. Statistical inference uses sample statistics to learn about unknown population parameters.
 
-For example, the true proportion of adults in a population with a particular characteristic is a parameter. The proportion observed in a random sample is a statistic. Different random samples will usually produce slightly different statistics, which leads to the idea of sampling variability.
+For the sleep study, the **target population** is all currently enrolled first-year students at the university. The health centre wants to estimate the proportion whose average nighttime sleep over the previous $7$ nights is at least $7$ hours.
+
+The reported average number of hours is quantitative. To answer the study question, the researchers classify each student into one of two categories:
+
+$$
+\text{Yes: average sleep}\geq 7\text{ hours}
+$$
+
+$$
+\text{No: average sleep}<7\text{ hours}
+$$
+
+The resulting yes-or-no variable is categorical.
 
 ### Why a Representative Sample Matters
 
@@ -1260,41 +1342,81 @@ These steps improve reproducibility because another researcher can determine who
 
 ### Defining a Population and a Variable
 
-**Real-World Example: The Microplastic Study**
+**Example: Sleep Habits of First-Year Students**
 
-**Question**
+The university health centre wants to estimate the proportion of currently enrolled first-year students who average at least $7$ hours of nighttime sleep. Each selected student reports their average nighttime sleep over the previous $7$ nights.
 
-A toxicology team wants to estimate the percentage of adults with detectable microplastic particles in a blood specimen. What definitions are needed before sampling begins?
+> **Population**
+>
+> All currently enrolled first-year students at the university. This is the group the health centre wants to describe.
 
-**Explanation**
+> **Variable**
+>
+> Whether the student's reported average nighttime sleep over the previous $7$ nights is at least $7$ hours. The possible categories are yes and no.
 
-The phrase "adults" is too broad for a reproducible study. The researchers need a target population with geographic, age and eligibility criteria. The phrase "detectable microplastics" also requires an operational definition because the measured result depends on the laboratory method and its detection limits.
+The exact definitions matter. Replacing nighttime sleep with total sleep, changing the reporting period or including students from other years would change the variable or population being studied.
 
-The original notes use an illustrative definition in which the population consists of healthy adults aged 18 to 65 living in North America with specified exclusions. The variable is classified as positive when the laboratory method detects synthetic polymer particles above a stated size threshold. These definitions are examples of how eligibility and measurement rules can be made explicit rather than claims about one required scientific standard.
+### From the Population to the Sample
 
-**Solution**
+The health centre needs a practical way to identify and select students.
 
-The study should define both the target population and the laboratory outcome before data are collected. A clear population definition determines to whom the result is intended to apply. A clear measurement definition determines what a positive result means. The sampling frame and selection method must then be chosen to connect the actual sample to that target population.
+- The **sampling frame** could be the university's current first-year enrolment list.
+- The **sampling design** could randomly select $200$ distinct student IDs from that list and invite those students to complete the survey.
+- The **sample** consists of the selected students from whom usable data are obtained.
+
+These three ideas should be kept separate. The population is the group the researchers want to describe, the frame is the practical source used for selection and the sample is the group providing the observed data. If the enrolment list is incomplete, the sampling frame does not fully cover the target population. If selected students do not respond, the respondents may differ from the original probability sample.
+
+### Parameter versus Statistic
+
+Let $p$ represent the proportion of **all currently enrolled first-year students at the university** who meet the sleep criterion. This population proportion is a parameter and is unknown.
+
+Suppose all $200$ selected students respond and $124$ meet the criterion. The sample proportion is
+
+$$
+\hat{p}=\frac{124}{200}=0.62
+$$
+
+The value $\hat p=0.62$ is a statistic because it is calculated from the sample. Another random sample of $200$ students would probably produce a different value of $\hat p$. Statistical inference uses the observed statistic to estimate the population parameter and to describe the uncertainty created by sampling variability.
+
+### Why the Selection Method Matters
+
+Suppose the health centre surveys only students studying in the library at $10$ p.m. Students who study elsewhere, work evening shifts, commute or go to bed earlier may be absent. If their sleep habits differ from those of students in the library, the resulting sample can systematically misrepresent the target population.
+
+Selecting students randomly from a complete enrolment list gives students across these groups a chance of selection. Surveying more students in the same library does not solve the problem because the selection mechanism continues to exclude the same types of students.
+
+> **Sample size is not enough**
+>
+> A larger sample generally reduces random sampling variability when the design is unchanged. It does not automatically correct systematic undercoverage, self-selection or measurement bias.
+
+### A Complete Plan for the Sleep Survey
+
+Before collecting data, the health centre should specify:
+
+1. **Target population:** currently enrolled first-year students at the university
+2. **Measurement:** reported average nighttime sleep over the previous $7$ nights, classified using the $7$-hour threshold
+3. **Sampling frame:** an updated first-year enrolment list
+4. **Selection method:** randomly select $200$ distinct student IDs
+5. **Missing-data plan:** arrange reminders, record the response rate and specify how incomplete answers will be handled
+
+Planning these details in advance makes the study reproducible and exposes possible weaknesses before the survey begins.
 
 ### Generalizing from a Sample
 
-A sample supports statistical generalization only to the extent that the sampling design connects the observed units to the target population. A convenience sample from a few accessible locations may provide valuable biological information, but probability calculations alone do not make it representative of an entire continent or species.
+A sample supports statistical generalization only to the extent that the sampling design connects the observed units to the target population.
 
-**White-Nose Syndrome in Bats**
+Suppose $62\%$ of the surveyed students meet the sleep criterion. This statistic estimates the proportion among first-year students at this university, provided that the enrolment frame, random selection and response process work as intended.
 
-**Question**
+The design does not automatically support conclusions about:
 
-Suppose ecologists study 200 little brown bats from three accessible caves in upstate New York in order to learn about white-nose syndrome across North America. How far can the results be generalized from the sampling design alone?
+- students in later years
+- students at other universities
+- all young adults in the province or country
 
-**Explanation**
+Even with random selection, the statistic varies from sample to sample. An incomplete enrolment list, nonresponse or inaccurate sleep reports can introduce additional errors.
 
-The sampled bats provide direct information about the locations and conditions that were actually represented. Bats in other regions may experience different temperatures, elevations, habitats or disease dynamics. Because the three caves were chosen for accessibility rather than by a probability sample of North American bat habitats, the sampling design does not provide a statistical guarantee that the sample represents all North American little brown bats.
-
-Subject-matter evidence can still support a broader scientific argument. For example, researchers may compare biological mechanisms across environments or combine results from multiple regions. This type of broader generalization concerns **external validity** and requires scientific justification beyond the original sampling mechanism.
-
-**Solution**
-
-The strongest design-based conclusions apply to populations represented by the sampled caves and similar conditions. Generalization to all North American little brown bats requires additional biological evidence, broader sampling or both. The limitation does not make the original study useless. It defines the scope of the conclusion that the data can support directly.
+> **Main principle**
+>
+> A useful generalization depends on who was eligible, how the sample was selected and how the data were collected. The scope of the conclusion should not exceed the scope of the design.
 
 The next section develops sampling designs that use chance to reduce systematic selection bias and support population inference more directly.
 
@@ -1304,7 +1426,11 @@ The next section develops sampling designs that use chance to reduce systematic 
 
 Statistical inference uses information from a sample to learn about a population. Reliable inference depends on two different ideas that should not be confused: **sampling variability** and **bias**.
 
-Sampling variability is the natural sample-to-sample variation produced by random selection. Bias is a systematic tendency for a method to miss the target in a particular direction. A larger random sample usually reduces sampling variability. A larger sample does not automatically remove bias.
+Suppose the university repeatedly selects random samples of first-year students and calculates the proportion meeting the sleep criterion. Different samples will usually give different values. This natural sample-to-sample variation is **sampling variability**.
+
+**Bias** concerns a different question: where are the estimates centred over repeated use of the method? A method is biased when its estimates systematically tend to be above or below the true population value. Surveying only students in the library late at night may repeatedly misrepresent the university's first-year students.
+
+A larger random sample usually reduces sampling variability. A larger sample does not automatically remove bias.
 
 ### Sampling Variability and Bias
 
@@ -1314,11 +1440,20 @@ The archery analogy below is useful when each plotted point is interpreted as an
 
 The panels illustrate several ideas. Smaller samples tend to produce more variable estimates. Larger samples tend to produce less variable estimates when the sampling design is otherwise comparable. A precise unbiased method produces estimates tightly concentrated around the true parameter. A biased design can produce estimates that are tightly clustered around the wrong value.
 
+- **Upper left:** the estimates vary widely but are centred near the truth
+- **Upper right:** the estimates vary widely and are centred away from the truth
+- **Lower left:** the estimates are tightly grouped near the truth
+- **Lower right:** the estimates are tightly grouped but systematically miss the truth
+
 > **Bias**
 >
 > A sampling or measurement method is biased when it systematically tends to produce results that are shifted away from the true population value in a particular direction.
 
 The distinction between variability and bias is fundamental. Random variation can often be reduced by increasing sample size. Systematic bias requires a change in the design or measurement process.
+
+> **Precision does not guarantee accuracy**
+>
+> Increasing the sample size can tighten the grouping of estimates. It does not necessarily move that grouping toward the true value. Surveying more late-night library users may estimate that group's sleep habits very precisely while still misrepresenting all first-year students.
 
 ### Poor Sampling Designs
 
@@ -1326,35 +1461,49 @@ Two common sampling methods allow human choice to determine who enters the sampl
 
 #### Convenience Samples
 
-A **convenience sample** selects individuals who are easy to reach. A survey conducted only among people passing through one shopping centre is an example. The main concern is that people who are convenient to contact may differ systematically from the target population in age, work schedule, income, health status or other relevant characteristics.
+A **convenience sample** selects individuals who are easy to reach. For the sleep study, a researcher might survey students leaving one first-year lecture. This is convenient, but it includes only students enrolled in that course who attended on that day. Students in other courses and students absent from the lecture have no opportunity to participate. Attendance and course schedules may also relate to sleep habits.
 
 The problem is not that every convenience sample must be badly distorted. The problem is that the design gives no known probability mechanism connecting the sample to the full population, so the direction and size of selection bias are difficult to assess.
 
 #### Voluntary Response Samples
 
-A **voluntary response sample** is created when an open invitation allows individuals to choose whether to participate. Online opt-in polls, call-in polls and open website surveys are examples.
+A **voluntary response sample** is created when an open invitation allows individuals to choose whether to participate. The health centre might post an open link stating, "Are you getting enough sleep? Tell us about it!"
 
-People with strong opinions, unusual experiences or a special interest in the topic may be more likely to respond. This self-selection can produce substantial bias because participation depends directly on individual choice rather than on random selection from the population.
+Students who are especially concerned about their sleep may be more motivated to respond. Participation can therefore depend on the very characteristic being studied. Posting the survey widely does not ensure that the respondents represent all first-year students.
+
+An open survey is a voluntary response sample. A survey sent only to students who were selected randomly is a probability-sampling design, even though the selected students can still choose whether to respond. Failure of selected students to respond is a **nonresponse** problem rather than voluntary response sampling.
 
 ### Probability Samples
 
-A **probability sample** uses a random mechanism so that selection probabilities are known or can be determined from the design. Probability sampling does not guarantee that one particular sample will perfectly match the population. Its advantage is that chance rather than personal judgement controls selection, which provides a mathematical basis for measuring sampling variability.
+A **probability sample** uses a random selection mechanism so that every population unit has a known, nonzero probability of inclusion. The selection probabilities do not have to be equal in every probability design.
+
+Probability sampling does not guarantee that one particular sample will perfectly match the population. Its advantage is that chance rather than personal judgement controls selection, which provides a mathematical basis for assessing sampling variability.
+
+Suppose veterinary researchers want to estimate the average weight of all dairy cows in a region. They could randomly select cow IDs from a complete regional registry. The registry defines the sampling frame, and the random procedure defines how cows enter the sample.
 
 > **Simple random sample**
 >
 > A simple random sample, abbreviated SRS, of size $n$ is selected so that every possible sample of size $n$ from the population has the same chance of being chosen.
 
-As a consequence, each individual has the same probability of selection in an SRS. Modern studies usually implement random selection with software rather than by physically drawing names from a container.
+Suppose the registry contains $1000$ cows and the researchers select $50$ distinct cows. They can number the cows from $1$ to $1000$ and use software to select $50$ distinct numbers at random. In this SRS,
+
+$$
+P(\text{a particular cow is selected})=\frac{50}{1000}=0.05
+$$
+
+Every cow has the same inclusion probability, and every possible group of $50$ cows is equally likely. Selecting the nearest cows until $50$ have been weighed would not satisfy the definition of an SRS.
 
 A simple random sample is an important reference design, but large studies often use more efficient or practical probability designs.
 
 #### Other Probability Designs
 
-A **stratified random sample** divides the population into non-overlapping groups called strata, then takes a probability sample within each stratum. Strata may be based on age group, geographic region or another characteristic that is important to the study. Stratification can ensure that each specified subgroup contributes observations and can improve precision when the strata are internally similar.
+A **stratified random sample** divides the population into non-overlapping groups called strata, then takes a probability sample within every stratum. For the cow study, the researchers could divide the registry by breed and randomly sample cows from each breed. Stratification ensures that every specified breed group contributes observations and can improve precision when units within a stratum are relatively similar.
 
-A **multistage sample** selects units in several stages. A national education study might first select geographic areas, then schools within selected areas, then classrooms or students within selected schools. Each stage follows a probability selection rule. Multistage sampling is common when a complete list of all individuals in a large population is unavailable or impractical to use directly.
+A **cluster sample** randomly selects naturally occurring groups, then studies every unit or a defined set of units in the selected groups. The researchers could randomly select farms and weigh every dairy cow on those farms. Cluster sampling can reduce travel and administrative costs, but cows from the same farm may be more similar to one another than cows selected independently across the region.
 
-A **cluster sample** selects naturally occurring groups such as schools, clinics or geographic areas, then studies all or a sample of individuals within the selected clusters. Cluster sampling can reduce travel or administrative cost, although observations within a cluster may be more similar to one another than observations selected independently across the population.
+A **multistage sample** makes random selections in successive stages. The researchers could randomly select farms and then randomly select cows within the chosen farms. Multistage sampling is useful when a complete list of every individual in a large population is unavailable or impractical to use directly.
+
+The central difference is easy to remember: stratification samples within **every** stratum, cluster sampling selects **some** groups and multistage sampling adds further selection within the chosen groups.
 
 ### Random Sampling and Random Assignment
 
@@ -1367,43 +1516,37 @@ Random sampling and random assignment both use chance, but they answer different
 
 A study can use one form of randomness without using the other. For example, a clinical experiment may use volunteers rather than a random sample of all patients, but it may randomly assign those volunteers to treatments. The experiment can support a causal comparison within the study population while broader generalization requires additional care.
 
+For the dairy-cow study, researchers might randomly select cows from the regional registry and then randomly assign the participating cows to feed supplement A or supplement B. Random selection supports generalization to the population covered by the registry. Random assignment supports a causal comparison of the supplements. Random assignment alone would not make a convenience sample of cows representative of the entire region.
+
 ---
 
 ## Sample Surveys
 
-A **sample survey** collects information from a sample of individuals in order to describe a population. Many sample surveys are cross-sectional, meaning that they describe the population during a particular time period. Repeated cross-sectional surveys can also be conducted at regular intervals to track population changes over time.
+A **sample survey** collects information from a sample of individuals in order to describe a population. Many sample surveys are **cross-sectional**, meaning that they describe a population at a particular time or during a specified period. Repeated cross-sectional surveys can be conducted at regular intervals to track population changes.
 
 A sample survey should not be confused with a **census**. A census attempts to collect information from every unit in the target population, while a sample survey intentionally studies only a subset. The American Community Survey and many public-health surveys are sample surveys. The decennial United States Census is designed as a census rather than as a sample survey.
 
-Even a well-designed probability sample can produce biased survey results if the sampling frame is incomplete, selected people do not respond or the questions are measured poorly. Four important sources of survey error are undercoverage, nonresponse, response bias and question wording or order.
+Suppose a regional health agency wants to estimate the proportion of adults who have difficulty accessing health care. Instead of contacting every adult, it conducts a sample survey. Problems can arise at three stages:
+
+1. **Coverage and selection:** Who can be selected, and how are participants chosen?
+2. **Participation:** Which selected individuals actually respond?
+3. **Measurement:** How accurately do the received answers describe access to health care?
+
+Even a well-designed probability sample can produce biased results if the sampling frame is incomplete, selected people do not respond or the questions are measured poorly. Four important sources of survey error are undercoverage, nonresponse, response bias and question wording or order.
 
 ### Undercoverage
 
 A **sampling frame** is the practical list or mechanism from which the sample is selected. **Undercoverage** occurs when some members of the target population are missing from the frame or have a lower chance of inclusion than the intended design requires.
 
-A household-mailing frame, for example, can miss people without stable household addresses or people living in institutional or group settings. If the omitted groups differ from the included groups on the survey variable, the resulting estimates can be biased.
+Suppose the health agency randomly selects telephone numbers from a list containing only landlines. Adults who use only cell phones cannot be selected. If cell-phone-only adults differ from landline users in age, employment, income or access to health care, the resulting estimate may be systematically misleading.
 
-**Example 6.8: The Cell Phone Problem**
-
-**Question**
-
-Why did landline-only telephone surveys become increasingly vulnerable to undercoverage as more households relied only on mobile phones?
-
-**Explanation**
-
-A landline-only sampling frame excludes households that do not have a landline. By the mid-2010s, roughly half of United States households were wireless-only. Wireless-only households also differed from landline households on age and several social or health characteristics. A survey that omitted them could therefore misrepresent the target population.
-
-Telephone surveys responded by incorporating mobile-phone numbers into dual-frame or related sampling designs. The change illustrates how a sampling frame must evolve when the population's communication patterns change.
-
-**Solution**
-
-The problem is undercoverage because an important part of the target population has little or no chance of selection from a landline-only frame. A broader frame that includes both landline and mobile-phone users reduces this source of bias.
+This is undercoverage even if the agency selects the listed landline numbers perfectly at random. Random sampling from an incomplete frame does not give missing groups a chance of selection. A broader frame that includes both landline and mobile-phone users would reduce this problem.
 
 ### Nonresponse Bias
 
 **Nonresponse** occurs when a person selected for the sample cannot be contacted or chooses not to participate. Nonresponse does not automatically create bias. Bias arises when the people who respond differ systematically from the selected people who do not respond on variables related to the survey outcome.
 
-Survey response rates vary by survey, year and mode of contact. The original notes contrast government surveys that use intensive follow-up with scientific surveys that experience moderate nonresponse and commercial polls that can have very low response rates. The numerical rates should therefore be interpreted as examples rather than universal constants.
+For example, adults who work long shifts may be harder to contact. If their access to health care also differs from that of respondents, the final estimate may be biased.
 
 Weighting adjustments can reduce nonresponse bias when useful information about response patterns is available. Weighting cannot guarantee that all bias has been removed because respondents and nonrespondents may differ in ways that were not measured.
 
@@ -1413,7 +1556,9 @@ A crucial distinction separates nonresponse from voluntary response. In a probab
 
 **Response bias** occurs when recorded answers differ systematically from the values or opinions the survey intends to measure. The bias can arise from the respondent, interviewer, measurement method or social setting.
 
-Several mechanisms are common. Respondents may underreport behaviours they believe will be judged negatively or overreport behaviours viewed favourably. Memory can shift the reported timing of past events, a phenomenon sometimes called **telescoping**. Interviewer wording, tone or other characteristics can also influence answers.
+For example, patients interviewed by staff from their own clinic may feel uncomfortable reporting dissatisfaction with that clinic. The survey receives an answer, but the answer may systematically overstate satisfaction.
+
+Several other mechanisms are common. Respondents may underreport behaviours they believe will be judged negatively or overreport behaviours viewed favourably. Memory can shift the reported timing of past events, a phenomenon sometimes called **telescoping**. Interviewer wording, tone or other characteristics can also influence answers.
 
 For example, a respondent may report an inaccurate amount of alcohol use because of social desirability. A person who visited a dentist eight months ago may incorrectly remember the visit as occurring within the last six months. These errors are different from sampling error because increasing the sample size does not automatically correct them.
 
@@ -1421,27 +1566,37 @@ For example, a respondent may report an inaccurate amount of alcohol use because
 
 The wording and order of survey questions can influence the responses. A question that uses emotionally charged language, provides unbalanced alternatives or contains ambiguous terms can change what respondents think they are being asked.
 
-The original notes give a wording example in which responses differed when government spending was described as "assistance to the poor" rather than "welfare". The numerical percentages in that example illustrate a general lesson: two phrases that appear to refer to similar policy areas can carry different meanings or emotional associations for respondents.
+A neutral question asks, "How satisfied are you with the service?" A leading version such as, "How excellent was the service?" assumes a favourable evaluation and may push respondents toward a more positive answer.
 
 **Example 6.10: Question Order and Reported Happiness**
 
 **Question**
 
-A study asks university students about overall life satisfaction and the number of dates they had in the previous month. Why might the correlation between the two answers change when the order of the questions is reversed?
+A study asks university students about their recent dating experiences and overall life satisfaction. Why might the answer to the happiness question change when the dating question is asked first?
 
 **Explanation**
 
-Question order can change what information is most available in a respondent's mind. When the dating question is asked first, it can make recent dating experiences more salient before the respondent evaluates overall life satisfaction. The original example reports a correlation near zero when general happiness is asked first and a much stronger positive correlation when the dating question is asked first.
+Question order can change what information is most available in a respondent's mind. When the dating question is asked first, it can make recent dating experiences more salient before the respondent evaluates overall life satisfaction. Respondents may then give dating experiences more weight in their overall evaluation.
 
 **Solution**
 
-The change does not imply that the underlying relationship between dating and happiness changed within a few minutes. It shows that the measurement process changed. The order of the questions influenced the way respondents interpreted or answered the later question.
+The change does not imply that the underlying relationship between dating and happiness changed within a few minutes. It shows that the measurement process changed. The order of the questions influenced how respondents interpreted or answered the later question.
+
+Researchers can investigate order effects by randomly assigning respondents to different question orders and comparing the resulting answers. In this setting, random assignment is used inside a survey to study a measurement effect.
 
 A survey result should therefore be evaluated together with the exact wording, question order, sampling frame, response process and nonresponse information. The numerical estimate is only one part of the evidence.
 
 ### A Survey Quality Checklist
 
-A useful survey evaluation can be organized around a short sequence of questions. The target population and sampling frame should be clear. The method of selection should be identified. Undercoverage and nonresponse should be considered separately. The wording and order of questions should be reviewed for possible response effects. The final conclusion should then be limited to the population and variables that the design actually supports.
+A useful survey evaluation can be organized around the following questions:
+
+1. **Population:** Who is the survey intended to describe?
+2. **Coverage and selection:** Who appears in the sampling frame, who is missing and how were participants selected?
+3. **Nonresponse:** How many selected individuals responded, and might nonrespondents differ from respondents?
+4. **Question wording:** Are the questions clear, balanced and neutral?
+5. **Question order and setting:** Could earlier questions, the interviewer or the response setting influence the answers?
+
+A high response rate is helpful, but it does not by itself guarantee an unbiased survey. The sampling frame may still omit important groups, and the answers may still be measured inaccurately. The final conclusion should be limited to the population and variables that the complete design supports.
 
 The survey sections focus on describing populations at a point or period in time. Some scientific questions instead concern how an exposure is related to a later outcome. Case-control and cohort studies are designed for that purpose.
 
@@ -1451,33 +1606,44 @@ The survey sections focus on describing populations at a point or period in time
 
 Case-control and cohort studies are observational designs used to study relationships between exposures and outcomes. They are especially important when an experiment would be unethical, impractical or too slow.
 
+An **exposure** is a characteristic or experience being investigated, such as medication use, smoking behaviour or contact with a pollutant. An **outcome** is the health event or response the researchers want to study.
+
+The designs differ primarily in how participants are selected and organized:
+
+- A **cohort study** begins with a defined group and exposure information, then determines which individuals develop the outcome.
+- A **case-control study** begins by selecting people according to outcome status, then compares their previous exposures.
+
+Both are observational because researchers record exposures and outcomes without assigning the exposures. A study is not automatically an experiment merely because participants are followed over time.
+
 A rare disease provides a useful motivation. If a disease occurs in about 1 person out of 10,000, a random sample of 100,000 people would contain about 10 cases on average. A case-control study can investigate such an outcome more efficiently by deliberately including people who already have the disease.
 
 ### Case-Control Studies
 
 A **case-control study** selects individuals according to their outcome status. The cases have the outcome of interest. The controls do not have the outcome and should ideally come from the same source population that produced the cases.
 
+Controls do not need to be completely healthy. They need to represent the exposure distribution in the population from which the cases arose, apart from not having the outcome under study.
+
 > **Case-control study**
 >
 > A case-control study compares previous exposures or characteristics of cases with those of controls. The design is especially useful for rare outcomes because researchers do not need to follow a very large population while waiting for enough cases to occur.
 
-Case-control studies are often retrospective because exposure information is collected from past records or recalled histories after the outcome has occurred. Some case-control studies can instead use exposure information that was recorded earlier in an existing cohort or database.
+Case-control studies are often retrospective because exposure information is collected from past records or recalled histories after the outcome has occurred. This creates a possible **recall bias** if cases remember or report earlier exposures differently from controls. Some case-control studies instead use exposure information recorded earlier in an existing cohort or database.
 
 **Real-World Case Study: Reye's Syndrome and Aspirin Exposure**
 
 **Question**
 
-The original notes describe a study that compared children who developed Reye's syndrome after a viral illness with similar children who did not. Researchers then examined earlier aspirin exposure. Why is a case-control design efficient for a rare outcome? What population quantity cannot be estimated directly from the researcher-chosen case-control ratio?
+Reye's syndrome is a rare illness affecting the brain and liver, mainly in children and teenagers following a viral illness. Researchers compared children diagnosed with Reye's syndrome with children who did not develop the syndrome after a similar preceding illness. They then examined aspirin use before the syndrome developed. Why is this design efficient, and what population quantity cannot be estimated from the researcher-chosen case-control ratio?
 
 **Explanation**
 
-The design begins by locating cases, so it does not require a huge random sample of children in order to wait for a rare outcome to appear. Controls provide a comparison group for examining whether previous exposures were more common among cases.
+The design begins by locating cases, so it does not require a huge cohort of children to be followed while researchers wait for a rare outcome to appear. Controls provide a comparison group for examining whether previous aspirin exposure was more common among cases.
 
 The proportion of cases in the study is selected by the researchers. If 50 cases and 150 controls are enrolled, the study contains 25% cases because of the design. That percentage is not an estimate of the disease prevalence in the population.
 
 **Solution**
 
-The design is efficient because it concentrates data collection on individuals who are informative about a rare outcome. It cannot directly estimate population prevalence or incidence from the case-control sampling ratio. It can, however, estimate measures of association between exposure and outcome when the cases and controls are selected appropriately.
+The design is efficient because it deliberately includes individuals with the rare outcome. It cannot directly estimate population prevalence or incidence from the case-control sampling ratio. Appropriately designed case-control studies can estimate exposure-outcome associations, commonly through an **odds ratio**.
 
 The Reye's syndrome example also illustrates the need for careful causal language. A strong exposure difference in a case-control study is important evidence of association, but observational data remain vulnerable to confounding, selection bias and measurement error.
 
@@ -1491,42 +1657,46 @@ A **cohort study** identifies a group of individuals who are initially classifie
 
 A cohort does not need to be homogeneous in every characteristic. The important feature is that participants belong to a defined study population whose exposures and outcomes can be compared over time. Cohort studies can be prospective or retrospective depending on when the data are assembled relative to the events being studied.
 
+A cohort followed over time can estimate **incidence**, meaning the occurrence of new cases during follow-up among individuals at risk. The same cohort can also be used to study several outcomes. These advantages often come with substantial time, cost and the possibility of loss to follow-up.
+
 **Real-World Case Study: The British Doctors Study**
 
 **Question**
 
-The original notes describe a long-term study of tens of thousands of British male physicians that compared smoking habits with later health outcomes. What information can a cohort design provide? What limitations remain?
+Beginning in $1951$, researchers collected information about British doctors' smoking habits and subsequently recorded deaths and their causes. The $50$-year report followed $34439$ male doctors through $2001$, with smoking information updated periodically. What information can this cohort provide, and what limitations remain?
 
 **Explanation**
 
-A prospective cohort records exposure information before many outcomes occur, which establishes the time order between exposure and outcome more clearly than asking participants to reconstruct distant exposures after disease has developed. Because the cohort is followed over time, researchers can estimate rates of new outcomes within the study population and compare those rates across exposure groups.
+A prospective cohort records exposure information before many outcomes occur, which establishes the time order between exposure and outcome more clearly than asking participants to reconstruct distant exposures after disease has developed. Because the doctors were followed over time, researchers can estimate death rates and compare them across smoking groups. They can examine death from any cause and deaths from particular diseases.
 
-The design is still observational. Smokers and nonsmokers can differ in other characteristics, so confounding remains possible. Long follow-up can also produce attrition when participants stop responding, move away or otherwise leave observation. If loss to follow-up is related to both exposure and outcome, selection bias can result.
+The design is still observational because the researchers recorded smoking behaviour; they did not assign doctors to smoke, stop smoking or remain nonsmokers. Smoking groups could differ in age, alcohol use or other relevant characteristics, so confounding remains possible. Long follow-up can also produce attrition when participants stop responding, move away or otherwise leave observation. If loss to follow-up is related to both exposure and outcome, selection bias can result.
 
 **Solution**
 
-A cohort study can estimate incidence within the observed cohort, compare outcome rates across exposure groups and study several outcomes from the same exposures. Its main practical disadvantages include time, cost and loss to follow-up. Its main statistical limitation is that exposure groups are not created by random assignment, so confounding can remain.
+A cohort study can estimate incidence within the observed cohort, compare outcome rates across exposure groups and study several outcomes from the same exposures. Its main practical disadvantages include time, cost and loss to follow-up. Its main statistical limitation is that exposure groups are not created by random assignment, so confounding can remain. The findings from male British doctors also do not automatically generalize to every population.
 
 It is therefore not generally correct to say that a cohort study is automatically "stronger" than a case-control study. Each design has different strengths. Case-control studies are efficient for rare outcomes. Cohort studies make incidence and temporal ordering easier to study. The appropriate design depends on the scientific question, available data, time and ethical constraints.
 
 ### Comparing the Observational Designs
 
-| Feature | Sample survey | Case-control study | Cohort study |
+| Feature | Cross-sectional survey | Case-control study | Cohort study |
 |:--|:--|:--|:--|
-| Typical starting point | A sample from a population | Outcome status | A defined cohort and exposure information |
-| Main direction | Usually a population snapshot | Often looks backward for exposure | Often follows outcomes forward |
-| Useful for rare outcomes | Usually inefficient | Especially useful | Can require a very large cohort |
-| Can estimate prevalence directly | Yes, with an appropriate probability sample and measurement process | Not from the researcher-chosen case-control ratio | Sometimes, depending on the cohort and timing |
-| Can estimate incidence directly | Usually not from a single cross-sectional survey | No | Yes, within a properly followed cohort |
-| Main concerns | Coverage, nonresponse and response bias | Selection, recall and confounding | Confounding, attrition and cost |
+| Starting point | Sample from a population | Cases and controls selected by outcome | Defined group with exposure information |
+| What is compared? | Characteristics measured at one time | Previous exposures of cases and controls | New outcomes across exposure groups |
+| Main strength | Describing a population at a given time | Studying rare outcomes efficiently | Measuring new outcomes over time |
+| Estimates prevalence? | Yes, with suitable sampling | Not from the case-control ratio | Possible, if the required data are collected |
+| Estimates incidence? | Not from a single snapshot | Not from the case-control ratio alone | Yes, with suitable follow-up |
+| Main concerns | Undercoverage, nonresponse and inaccurate answers | Control selection, recall bias and confounding | Confounding, loss to follow-up, time and cost |
 
-The table summarizes common patterns rather than absolute rules. Real studies can combine features or use more advanced designs.
+The table summarizes common patterns rather than absolute rules. These categories can overlap: surveys may collect data within cohort or case-control studies, and real investigations may combine several design features.
 
 ### From Observational Studies to Experiments
 
-Observational studies can provide strong and scientifically important evidence, especially when experiments are impossible or unethical. Their interpretation must still consider alternative explanations such as confounding and selection bias.
+Suppose researchers observe that fertilized seedlings grow more than unfertilized seedlings. In an observational study, the groups may also differ in sunlight, soil or watering. Researchers must consider these alternative explanations before attributing the difference to fertilizer.
 
-A well-designed randomized experiment addresses a different problem by assigning treatments through chance. Random assignment helps create treatment groups that are comparable before treatment, which strengthens causal interpretation. The next chapter develops experimental design in more detail.
+In a randomized experiment, researchers assign seedlings to receive fertilizer or water alone and keep the other growing conditions as comparable as possible. Random assignment helps balance other characteristics between the groups, strengthening the causal comparison.
+
+Observational studies can still provide strong and scientifically important evidence, especially when experiments are impossible or unethical. Their interpretation must account for alternative explanations such as confounding and selection bias. Experiments address a different problem by deliberately assigning treatments through chance.
 
 ---
 

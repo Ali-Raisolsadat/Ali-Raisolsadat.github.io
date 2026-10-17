@@ -9,11 +9,12 @@
 \usepackage{tabularx}
 \usepackage{array}
 \usepackage{ragged2e}
+\usepackage{booktabs,tabularx,array}
 
 \title[Chapter 6: Samples and Observational Studies]{\textbf{Chapter 6: Samples and Observational Studies}}
 \subtitle{The Practice of Statistics in the Life Sciences \\ by Brigitte Baldi and David S. Moore}
 \author{Instructor: Ali Raisolsadat}
-\date{Part III: Data Generation}
+\date{Part III: Foundations of Statistical Inference}
 
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{itemize items}[circle]
@@ -511,225 +512,302 @@ A study can use both procedures. Random assignment alone does not make the parti
 % SECTION 5
 \section{Sample Surveys}
 
-\begin{frame}{Sample Surveys}
-A sample survey is a study that gathers information from a sample in order to describe a population.
+% SLIDE 34
+\begin{frame}{Sample Surveys: From Selection to Answers}
+\begin{block}{Undercoverage}
+A \textbf{sample survey} is a study that gathers information from a sample in order to describe a population.
+\end{block}
 
 \vspace{0.15cm}
-Even a large survey can be misleading if some groups are missed, many selected individuals do not respond or the questions are poorly designed.
-\end{frame}
+\textbf{Example}: A regional health agency wants to estimate the proportion of adults who have difficulty accessing health care. Instead of contacting every adult, it conducts a sample survey.
 
-\begin{frame}{Undercoverage}
-Undercoverage occurs when some groups in the population are left out of the sampling frame or are given little chance of selection.
-
-\vspace{0.15cm}
-A survey that samples only landline telephone numbers, for example, can underrepresent people who rely mainly on cell phones.
-\end{frame}
-
-\begin{frame}{Example 6.8: The Cell Phone Problem}
-\begin{block}{Question}
-A health survey uses only landline telephone numbers to sample adults. Why can this design produce undercoverage bias?
+\begin{block}{Three Places Where Problems Can Arise}
+\begin{enumerate}
+	\item \textbf{Coverage:} Who can be selected?
+ 	 \item \textbf{Participation:} Who actually responds?	
+ 	 \item \textbf{Measurement:} How accurately do the answers describe what the agency wants to measure?
+\end{enumerate}
 \end{block}
 \end{frame}
 
-\begin{frame}{Example 6.8: Solution}
-Adults who rely mainly on cell phones may be missed or underrepresented.
+% SLIDE 35
+\begin{frame}{Undercoverage: Who Cannot Be Selected?}
+Suppose the health agency randomly selects telephone numbers from a list containing \textbf{only landlines}.
 
-\vspace{0.15cm}
-If cell-phone-only adults differ from landline users on the characteristic being measured, the sample statistic can be systematically different from the population value.
-
-\vspace{0.15cm}
-The problem is not simply that the sample is smaller. The problem is that the sampling frame excludes part of the target population.
-\end{frame}
-
-\begin{frame}{Nonresponse Bias}
-Nonresponse bias occurs when selected individuals do not participate and the nonrespondents differ in important ways from those who do respond.
-
-\vspace{0.15cm}
-Weighting or follow-up efforts may reduce the problem, but they do not automatically remove it.
-\end{frame}
-
-\begin{frame}{Response Bias}
-Response bias occurs when the answers given are systematically inaccurate.
-
-\vspace{0.15cm}
-Sensitive topics, interviewer effects, question wording and social pressure can all affect how people answer.
-\end{frame}
-
-\begin{frame}{Wording and Order of Questions}
-The wording and order of survey questions can influence the responses.
-
-\vspace{0.15cm}
-Leading wording can push respondents toward a particular answer. Earlier questions can also shape how later questions are interpreted.
-\end{frame}
-
-\begin{frame}{Example 6.10: Question Order and Reported Happiness}
 \begin{block}{Question}
-A survey first asks people about recent dating experiences and then asks how happy they are overall. Why might the answer to the second question be affected by the first?
+Can this sample reliably represent all adults in the region, including those who use only cell phones?
+\end{block}
+
+\begin{block}{Undercoverage}
+Undercoverage occurs when the sampling frame leaves out part of the target population. Cell-phone-only adults cannot be selected from this list.
+\end{block}
+
+If these excluded adults differ in access to health care, the resulting estimate can be systematically misleading.
+\end{frame}
+
+% SLIDE 36
+\begin{frame}{Nonresponse versus Response Bias}
+Even among adults who can be selected, further problems may occur.
+
+\begin{block}{Nonresponse Bias: Missing Answers}
+Selected adults do not participate and their characteristics differ from those of respondents.
+
+For example, adults working long shifts may be harder to contact. If their access to health care also differs, the estimate can be biased.
+\end{block}
+
+\begin{block}{Response Bias: Inaccurate Answers}
+Participants give answers that systematically misrepresent the characteristic being measured.
+
+For example, patients interviewed by their own clinic's staff may feel uncomfortable reporting dissatisfaction with that clinic.
+\end{block}
+
+\small
+Nonresponse concerns whose answers are missing. Response bias concerns the accuracy of the answers received.
+\end{frame}
+
+% SLIDE 37
+\begin{frame}{Question Order: What Is on the Respondent's Mind?}
+Consider a survey that asks these questions in this order:
+\begin{enumerate}
+	\item How satisfied are you with your recent dating experiences?
+	\item How happy are you with your life overall?
+\end{enumerate}
+
+\begin{block}{Question}
+Why might the first question influence the answer to the second?
+\end{block}
+
+The first question draws attention to dating experiences. Respondents may give those experiences more weight when evaluating their overall happiness.
+
+\begin{block}{Improving the Design}
+Researchers could randomly assign respondents to different question orders and compare the answers. This helps reveal whether order influences the results.
 \end{block}
 \end{frame}
 
-\begin{frame}{Example 6.10: Solution}
-The first question can bring a specific aspect of life to mind and make it unusually prominent when the respondent answers the second question.
+% SLIDE 38
+\begin{frame}{Survey Quality}
+Before trusting a survey result, ask:
 
-\vspace{0.15cm}
-The overall happiness response may therefore reflect the temporary influence of the earlier question rather than the person\textquotesingle s broader long-run judgment.
+\begin{enumerate}
+	\item \textbf{Population:} Who is the survey intended to describe?
+	\item \textbf{Coverage and selection:} Who appears in the sampling frame and how were participants selected?
+	\item \textbf{Nonresponse:} How many selected individuals responded and might nonrespondents differ from respondents?
+	\item \textbf{Question wording:} Are questions clear and neutral? For example, ``How satisfied are you?'' is more neutral than ``How excellent was the service?''
+	\item \textbf{Question order and setting:} Could earlier questions or the interviewer influence the answers?
+\end{enumerate}
+
+\textbf{Note}: A high response rate is helpful, but it does not by itself guarantee an unbiased survey.
 \end{frame}
 
-\begin{frame}{A Survey Quality Checklist}
-When evaluating a survey, useful questions include
+% SECTION 6
+\section{Cohort and Case-Control Studies}
+
+% SLIDE 39
+\begin{frame}{Cohort and Case-Control Studies}
+\begin{block}{Exposure}
+An exposure is a characteristic or experience being investigated, such as medication use or contact with a pollutant.
+\end{block}
+
+\begin{block}{Cohort Study}
+Researchers identify a group of individuals, record their exposures and determine which individuals develop the outcome. They compare outcome rates across exposure groups.
+\end{block}
+
+\begin{block}{Case-Control Study}
+Researchers select individuals according to whether they have the outcome, then compare their previous exposures.
+\end{block}
+
+Both are \textbf{observational studies}: researchers record exposures and outcomes without assigning treatments. The key distinction is how participants are selected, not simply whether the study uses historical records.
+\end{frame}
+
+% SLIDE 40
+\begin{frame}{Case-Control Studies}
+\begin{block}{Cases and Controls}
+\textbf{Cases} have the outcome being studied.
+
+\textbf{Controls} do not have that outcome and should represent the population from which the cases arose.
+\end{block}
+
+Researchers compare previous exposure histories to ask: was the exposure more common among cases than among controls?
+
 \begin{itemize}
-  \item Who is the target population
-  \item What is the sampling frame
-  \item How were units selected
-  \item What was the response rate
-  \item Could wording or ordering influence the answers
+	\item The design is efficient for \textbf{rare outcomes} because researchers deliberately recruit cases.
+	\item Controls need not be completely healthy: they must be suitable comparisons for the outcome studied.
+	\item Differences in exposure histories may reflect an association, but confounding and recall bias must be considered.
 \end{itemize}
 \end{frame}
 
-\section{Cohort and Case-Control Studies}
+% SLIDE 41
+\begin{frame}{Case Study: Reye's Syndrome and Aspirin}
+Reye's syndrome is a rare illness affecting the brain and liver, mainly in children and teenagers following a viral illness. Researchers investigated whether aspirin use during the earlier illness was associated with developing the syndrome.
 
-\begin{frame}{Cohort and Case-Control Studies}
-Case-control and cohort studies are observational designs used to study relationships between exposures and outcomes.
+\begin{itemize}
+	\item \textbf{Cases:} children diagnosed with Reye's syndrome.
+	\item \textbf{Controls:} children without the syndrome who had experienced a similar preceding illness.
+	\item \textbf{Exposure:} aspirin use before the syndrome developed.
+\end{itemize}
 
-\vspace{0.15cm}
-They are especially important when an experiment would be unethical, impractical or too slow.
-\end{frame}
-
-\begin{frame}{Case-Control Studies}
-A case-control study selects individuals according to their outcome status.
-
-\vspace{0.15cm}
-The cases have the outcome of interest. The controls do not and should ideally come from the same source population.
-
-\vspace{0.15cm}
-This design is especially useful for rare outcomes because researchers do not need to wait for enough cases to appear in a very large cohort.
-\end{frame}
-
-\begin{frame}{Case-Control Studies: What They Can and Cannot Do}
-Case-control studies can efficiently examine whether previous exposures were more common among cases than among controls.
-
-\vspace{0.15cm}
-They cannot directly estimate population prevalence or incidence from the researcher-chosen case-control ratio.
-\end{frame}
-
-\begin{frame}{Real-World Case Study: Reye's Syndrome and Aspirin Exposure}
-\begin{block}{Question}
-Why is a case-control design efficient for a rare outcome such as Reye\textquotesingle s syndrome? What population quantity cannot be estimated directly from the researcher-chosen case-control ratio?
+\begin{block}{Questions}
+\begin{enumerate}
+  	\item Why is case-control sampling efficient here?
+	\item Can the proportion of cases in the study tell usow common the syndrome is in the population?
+\end{enumerate}
 \end{block}
 \end{frame}
 
-\begin{frame}{Real-World Case Study: Explanation}
-The design begins by locating cases, so it does not require a huge random sample while waiting for a rare outcome to occur.
+% SLIDE 42
+\begin{frame}{Case Study: What Can This Design Tell Us?}
+\begin{block}{Why Is It Efficient?}
+Researchers begin with identified cases rather than following a very large group while waiting for a rare outcome to occur. Controls provide a comparison for previous aspirin exposure.
+\end{block}
 
-\vspace{0.15cm}
-Controls provide a comparison group for examining whether previous exposures were more common among cases.
+\begin{block}{Why Does the Sample Not Give Disease Frequency?}
+Researchers choose how many cases and controls to recruit.
+
+For example, recruiting equal numbers would make $50\%$ of the sample cases. This would not mean that $50\%$ of the population has the syndrome.
+\end{block}
+
+Appropriately designed case-control studies can estimate exposure--outcome associations, commonly using an \textbf{odds ratio}. The chosen case-control ratio alone cannot estimate population prevalence or incidence.
 \end{frame}
 
-\begin{frame}{Real-World Case Study: Solution}
-The design is efficient because it concentrates data collection on individuals who are informative about a rare outcome.
+% SLIDE 43
+\begin{frame}{Cohort Studies: From Exposure to Outcome}
+\begin{block}{Cohort}
+A cohort is a defined group of individuals whose outcomes are studied over time.
+\end{block}
 
-\vspace{0.15cm}
-It cannot directly estimate population prevalence or incidence from the case-control sampling ratio.
+\begin{block}{Prospective Cohort Study}
+Researchers record exposures before the outcomes of interest occur then follow participants to identify new outcomes.
 
-\vspace{0.15cm}
-It can, however, estimate measures of association between exposure and outcome when the cases and controls are selected appropriately.
+They compare outcome rates across exposure groups without assigning the exposures.
+\end{block}
+
+\begin{itemize}
+	\item Following individuals over time allows researchers to estimate \textbf{incidence}: the occurrence of new cases
+	\item The same cohort can be studied for several outcomes.
+  	\item Long follow-up can require substantial time and resources.
+\end{itemize}
 \end{frame}
 
-\begin{frame}{Cohort Studies}
-A cohort study identifies a group of individuals according to exposures or characteristics, then compares the occurrence of outcomes across those groups.
+% SLIDE 44
+\begin{frame}{Case Study: The British Doctors Study}
+Beginning in $1951$, researchers collected information about British doctors' smoking habits and subsequently recorded deaths and their causes. The $50$ year report followed $34439$ male doctors through $2001$. Smoking information was updated periodically.
 
-\vspace{0.15cm}
-A prospective cohort collects exposure information before the outcomes occur and follows participants forward through time.
-\end{frame}
+\begin{itemize}
+	\item \textbf{Exposure:} smoking history, including whether participants continued smoking or stopped.
+	\item \textbf{Outcomes:} death from any cause and deaths from particular diseases. 
+	\item Researchers observed smoking behaviour; they did not assign doctors to smoke.
+\end{itemize}
 
-\begin{frame}{Strengths and Limitations of Cohort Studies}
-Cohort studies can estimate incidence within the observed cohort, compare outcome rates across exposure groups and study several outcomes from the same exposures.
-
-\vspace{0.15cm}
-Their main practical disadvantages include time, cost and loss to follow-up.
-
-\vspace{0.15cm}
-Their main statistical limitation is that exposure groups are not created by random assignment, so confounding can remain.
-\end{frame}
-
-\begin{frame}{Real-World Case Study: The British Doctors Study}
-\begin{block}{Question}
-What information can a cohort design provide in a study of smoking and later health outcomes? What limitations remain?
+\begin{block}{Questions}
+\begin{enumerate}
+	\item What does following these doctors over time allow researchers to estimate?
+	\item Why does this remain an observational study?
+\end{enumerate}
 \end{block}
 \end{frame}
 
-\begin{frame}{Real-World Case Study: Explanation}
-A prospective cohort records exposure information before many outcomes occur, which clarifies the time order between exposure and outcome.
+% SLIDE 45
+\begin{frame}{Case Study: The British Doctors Study}
+\begin{block}{1. What Can Researchers Estimate?}
+Following the doctors over time allows researchers to estimate \textbf{death rates} and compare them across smoking groups.
 
-\vspace{0.15cm}
-Because the cohort is followed over time, researchers can estimate rates of new outcomes and compare those rates across exposure groups.
-\end{frame}
+They can examine deaths from any cause as well as deaths from particular diseases. These comparisons help assess the association between smoking history and later mortality.
+\end{block}
 
-\begin{frame}{Real-World Case Study: Solution}
-A cohort study can estimate incidence within the observed cohort, compare outcome rates across exposure groups and study several outcomes from the same exposures.
+\begin{block}{2. Why Is This an Observational Study?}
+The researchers recorded the doctors' smoking behaviour; they did not assign participants to smoke, stop smoking, or remain nonsmokers.
 
-\vspace{0.15cm}
-Confounding can still remain because the exposure groups were not formed by random assignment.
+Following people over time does not make a study an experiment. An experiment requires researchers to impose treatments.
+\end{block}
 
-\vspace{0.15cm}
-Attrition can also create selection bias if loss to follow-up is related to both exposure and outcome.
-\end{frame}
-
-\begin{frame}{Comparing the Observational Designs}
 \small
-\begin{table}
-\centering
-\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.18\textwidth} >{\RaggedRight\arraybackslash}p{0.24\textwidth} >{\RaggedRight\arraybackslash}p{0.26\textwidth} X}
-\toprule
-Feature & Sample survey & Case-control study & Cohort study \\
-\midrule
-Typical starting point & A sample from a population & Outcome status & A defined cohort and exposure information \\
-Main direction & Usually a population snapshot & Often looks backward for exposure & Often follows outcomes forward \\
-Useful for rare outcomes & Usually inefficient & Especially useful & Can require a very large cohort \\
-Can estimate prevalence directly & Yes, with appropriate sampling and measurement & Not from the chosen case-control ratio & Sometimes, depending on the cohort and timing \\
-Can estimate incidence directly & Usually not from one cross-sectional survey & No & Yes, within a properly followed cohort \\
-Main concerns & Coverage, nonresponse and response bias & Selection, recall and confounding & Confounding, attrition and cost \\
-\bottomrule
-\end{tabularx}
-\end{table}
+Because smoking groups were not randomly assigned, other differences between the groups may contribute to differences in death rates.
 \end{frame}
 
-\begin{frame}{From Observational Studies to Experiments}
-Observational studies can provide strong and scientifically important evidence, especially when experiments are impossible or unethical.
-
-\vspace{0.15cm}
-Their interpretation must still consider alternative explanations such as confounding and selection bias.
-
-\vspace{0.15cm}
-A randomized experiment addresses a different problem by assigning treatments through chance, which strengthens causal interpretation.
+% SLIDE 46
+\begin{frame}{Case Study: The British Doctors Study}
+Limitations to Consider:
+\begin{itemize}
+	\item \textbf{Confounding:} smoking groups may differ in age, alcohol use, or other relevant characteristics.
+	\item \textbf{Loss to follow-up:} missing outcomes can bias comparisons if those lost differ systematically.
+	\item \textbf{Generalization:} findings from male doctors do not automatically describe every population.
+\end{itemize}
 \end{frame}
 
+% SECTION 7
 \section{Summary}
 
-\begin{frame}{Chapter Summary: Core Ideas}
-Data collection determines what a statistical analysis can support.
+% SLIDE 47
+\begin{frame}{Comparing Observational Study Designs}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.25}
 
-\vspace{0.12cm}
-An observational study measures naturally occurring variables without deliberately assigning the main explanatory condition. An experiment deliberately assigns treatments.
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{0.19\textwidth}
+  *{3}{>{\raggedright\arraybackslash}X}
+}
+\toprule
+\textbf{Feature}
+& \textbf{Cross-sectional survey}
+& \textbf{Case-control study}
+& \textbf{Cohort study} \\
+\midrule
 
-\vspace{0.12cm}
-Probability sampling connects a sample to a population. Increasing sample size can reduce sampling variability, but it does not automatically remove bias.
+Starting point
+& Sample from a population
+& Cases and controls selected by outcome
+& Defined group with exposure information \\
 
-\vspace{0.12cm}
-Case-control and cohort studies are important observational designs with different strengths and limitations.
+What is compared?
+& Characteristics measured at one time
+& Previous exposures of cases and controls
+& New outcomes across exposure groups \\
+
+Main strength
+& Describing a population at a given time
+& Studying rare outcomes efficiently
+& Measuring new outcomes over time \\
+
+Estimates prevalence?
+& Yes, with suitable sampling
+& Not from the case-control ratio
+& Possible, if the required data are collected \\
+
+Estimates incidence?
+& Not from a single snapshot
+& Not from the case-control ratio alone
+& Yes, with suitable follow-up \\
+
+Main concerns
+& Undercoverage, nonresponse, inaccurate answers
+& Control selection, recall bias, confounding
+& Confounding, loss to follow-up, time and cost \\
+
+\bottomrule
+\end{tabularx}
+
+\medskip
+\scriptsize
+These categories can overlap: surveys may collect data within
+cohort or case-control studies.
 \end{frame}
 
-\begin{frame}{A Consistent Study-Design Workflow}
-A first-year analysis of study design becomes easier when the same questions are asked in a consistent order.
-\begin{enumerate}
-  \item What is the scientific question
-  \item What is the target population
-  \item What are the explanatory and response variables
-  \item Is the design observational or experimental
-  \item If sampling is used, what frame and selection method were used
-  \item Could bias or confounding affect the conclusion
-  \item Does the final conclusion match what the design can support
-\end{enumerate}
+% SLIDE 48
+\begin{frame}{From Observational Studies to Experiments}
+Suppose researchers observe that fertilized seedlings grow more than unfertilized seedlings.
+
+\begin{block}{Observational Study: What Else Might Explain the Difference?}
+The groups may also differ in sunlight, soil, or watering. Researchers must consider these alternative explanations before attributing the difference to fertilizer.
+\end{block}
+
+\begin{block}{Randomized Experiment: Create Comparable Groups}
+Researchers randomly assign seedlings to receive fertilizer or water alone and keep other growing conditions comparable.
+
+Random assignment helps balance other characteristics between the groups, strengthening the causal comparison.
+\end{block}
+
 \end{frame}
+
 
 \end{document}

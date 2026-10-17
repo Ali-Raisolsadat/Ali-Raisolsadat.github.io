@@ -1,0 +1,357 @@
+---
+title: "STAT $1210$"
+subtitle: "Chapter $6$ Homework: Samples and Observational Studies"
+author: "Fall $2026$"
+date: ""
+output:
+  html_document:
+    self_contained: true
+    toc: false
+    number_sections: false
+    theme: flatly
+    highlight: tango
+---
+
+<style>
+:root {
+  --ink: #263746;
+  --muted: #667786;
+  --blue: #294d73;
+  --blue-dark: #183a5c;
+  --blue-soft: #edf3f8;
+  --line: #d8e1e8;
+  --paper: #ffffff;
+  --page: #eef2f5;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+
+.main-container {
+  max-width: 980px !important;
+  margin-top: 28px;
+  margin-bottom: 42px;
+  padding: 42px 58px 56px;
+  background: var(--paper);
+  border: 1px solid #dde5eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(31, 50, 67, 0.10);
+}
+
+h1, h2, h3 { color: var(--blue-dark); }
+
+h1.title {
+  margin-bottom: 4px;
+  font-weight: 750;
+}
+
+h3.subtitle {
+  margin-top: 0;
+  color: var(--blue);
+  font-weight: 500;
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 1.28em;
+  line-height: 1.35;
+}
+
+.intro-box {
+  margin: 1.2em 0 1.8em;
+  padding: 1em 1.2em;
+  border-left: 5px solid var(--blue);
+  border-radius: 6px;
+  background: var(--blue-soft);
+}
+
+.question-card {
+  margin: 1.55em 0 2em;
+  padding: 1.3em 1.45em 1.1em;
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--blue);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(35, 54, 74, 0.07);
+}
+
+table {
+  width: 100%;
+  margin: 1.1em 0 1.3em;
+  border-collapse: collapse;
+  border: 1px solid var(--line);
+}
+
+thead th {
+  padding: 0.65em 0.75em !important;
+  background: var(--blue);
+  color: white;
+  border: 0 !important;
+}
+
+tbody td {
+  padding: 0.58em 0.75em !important;
+  border-bottom: 1px solid #e5ebf0 !important;
+}
+
+tbody tr:nth-child(even) td { background: #f7f9fb; }
+
+details.solution {
+  margin-top: 1.15em;
+  border: 1px solid #bfd1df;
+  border-radius: 7px;
+  background: #f8fbfd;
+  overflow: hidden;
+}
+
+details.solution summary {
+  padding: 0.72em 0.95em;
+  color: var(--blue-dark);
+  background: var(--blue-soft);
+  cursor: pointer;
+  font-weight: 700;
+  user-select: none;
+}
+
+details.solution summary:hover { background: #e2edf5; }
+
+.solution-body {
+  padding: 0.95em 1.1em 0.75em;
+}
+
+.solution-body ol { margin-bottom: 0.25em; }
+.solution-body li { margin-bottom: 0.75em; }
+
+@media (max-width: 768px) {
+  .main-container {
+    margin-top: 0;
+    padding: 24px 20px 38px;
+    border-radius: 0;
+  }
+}
+
+@media print {
+  body { background: white; font-size: 11pt; }
+  .main-container {
+    max-width: none !important;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+  .question-card { break-inside: avoid; box-shadow: none; }
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  fig.retina = 2,
+  out.width = "88%"
+)
+```
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("details.solution").forEach(function(item) {
+    item.removeAttribute("open");
+  });
+});
+</script>
+
+::: {.question-card}
+### Question $1$: Sleep Habits of First Year Students
+
+A university health centre wants to estimate the proportion of its $2400$ first year students who average at least $7$ hours of sleep per night. Using an up to date enrollment list, the centre randomly selects $200$ first year students and sends each student a confidential questionnaire. Of the selected students, $156$ return the questionnaire and $91$ of the respondents report averaging at least $7$ hours of sleep per night.
+
+1. Identify the population of interest.
+2. What was the sampling frame?
+3. Distinguish between the initially selected sample and the respondent sample.
+4. Identify the variable recorded for the analysis described above. Is it categorical or quantitative?
+5. Describe the population parameter of interest in words.
+6. Calculate the sample statistic that estimates this parameter.
+7. Explain one strength of the sampling method and one possible source of bias.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The population is all $2400$ first year students at the university.</li>
+  <li>The sampling frame is the up to date enrollment list from which the students were selected.</li>
+  <li>The initially selected sample consists of the $200$ students whose names were randomly selected. The respondent sample consists of the $156$ selected students who returned the questionnaire and supplied data.</li>
+  <li>The variable is whether a student averages at least $7$ hours of sleep per night. It is categorical, with the two categories yes and no.</li>
+  <li>The parameter is the true proportion of all $2400$ first-year students who average at least $7$ hours of sleep per night.</li>
+  <li>The sample proportion among respondents is
+  $$
+  \widehat{p}=\frac{91}{156}\approx0.583
+  $$
+  So approximately $58.3\%$ of the respondents reported averaging at least $7$ hours of sleep per night.</li>
+  <li>One strength is that the initial sample was selected randomly from an up to date list, which reduces selection bias and gives every listed first-year student a chance to be selected. A possible source of bias is nonresponse: the $44$ selected students who did not respond may have different sleeping habits from those who responded. Consequently, random selection of the initial sample does not guarantee that the respondent sample is representative.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $2$: Dental Chews and Gingivitis in Dogs
+
+A veterinary researcher wants to determine whether daily use of a dental chew reduces gingivitis in adult dogs. In an initial study, the researcher recruits $180$ dog owners during routine veterinary visits. Each owner reports whether the dog regularly receives a dental chew. A veterinarian then records whether the dog has gingivitis. The dogs that regularly receive dental chews tend to have less gingivitis.
+
+1. Is this an observational study or an experiment? Explain.
+2. Identify the explanatory variable and the response variable.
+3. Give two plausible lurking variables that could help explain the observed association.
+4. Explain how confounding makes it difficult to conclude that the dental chews caused the lower rate of gingivitis.
+5. Describe a randomized experiment that could investigate the causal effect of the dental chew. Include the treatments, the role of random assignment and one variable that should be controlled.
+6. Suppose the dogs in the experiment are volunteers from one veterinary clinic. What conclusion would random assignment support, and what limitation would remain because the dogs were not randomly sampled from a wider population?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>This is an observational study. The researcher observed the dogs' existing dental chew use and did not assign dogs to receive or not receive the chew.</li>
+  <li>The explanatory variable is regular use of a dental chew. The response variable is gingivitis status.</li>
+  <li>Plausible lurking variables include tooth brushing, diet, age, breed, frequency of veterinary dental care and the owner's general attention to the dog's health. Any two reasonable examples are sufficient.</li>
+  <li>Owners who provide dental chews may also brush their dogs' teeth more often or obtain more preventive veterinary care. If these behaviours are related to gingivitis, their effects are mixed with the effect of the chew. The observational data cannot separate these explanations.</li>
+  <li>The researcher could recruit eligible dogs and randomly assign each dog to a dental-chew group or a control group that does not receive the chew. Both groups should otherwise receive the same instructions and be followed for the same length of time. Random assignment tends to balance both known and unknown lurking variables between the groups. Variables such as the dogs' usual diet, tooth-brushing routine or access to other dental products should be held constant or carefully monitored.</li>
+  <li>Random assignment would support a cause and effect conclusion for dogs like those that participated in the experiment, provided the study was carried out properly. Because the dogs were volunteers from one clinic rather than a random sample from a clearly defined wider population, the results may not generalize to all adult dogs.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $3$: Sampling Dairy Cows
+
+A veterinary epidemiologist wants to estimate the prevalence of hoof lesions among $1200$ dairy cows distributed across several farms. The registry contains $600$ Holstein cows, $360$ Jersey cows and $240$ Ayrshire cows. Consider the following four proposed sampling plans.
+
+- **Plan A:** Randomly select $60$ individual cow identification numbers from the complete registry.
+- **Plan B:** Randomly select $30$ Holsteins, $18$ Jerseys and $12$ Ayrshires.
+- **Plan C:** Randomly select $6$ farms and examine every cow on each selected farm.
+- **Plan D:** Randomly select $6$ farms and then randomly select $10$ cows from each selected farm.
+
+1. Identify each plan as a simple random sample, stratified random sample, cluster sample or multistage sample.
+2. Under Plan A, what is the probability that a particular cow is included in the sample?
+3. Show that the numbers selected under Plan B are proportional to the breed composition of the registry.
+4. Which plan guarantees that every breed is represented? Explain.
+5. Explain the fundamental difference between the roles played by breeds in Plan B and farms in Plan C.
+6. Give one practical advantage and one possible statistical disadvantage of Plan C compared with Plan A.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Plan A is a simple random sample. Plan B is a stratified random sample with breed defining the strata. Plan C is a cluster sample with farms defining the clusters. Plan D is a multistage sample because farms are selected first and cows are then selected within the chosen farms.</li>
+  <li>In a simple random sample (SRS) of $60$ cows from $1200$ each cow has inclusion probability
+  $$
+  \frac{60}{1200}=0.05
+  $$
+  So each cow has a $5\%$ chance of being selected.</li>
+  <li>The breed proportions in the population are
+  $$
+  \frac{600}{1200}=0.50 \qquad \frac{360}{1200}=0.30 \qquad \frac{240}{1200}=0.20
+  $$
+
+  The corresponding sample proportions are
+  $$
+  \frac{30}{60}=0.50 \qquad \frac{18}{60}=0.30 \qquad \frac{12}{60}=0.20
+  $$
+
+  Therefore, Plan B uses proportional allocation.</li>
+  <li>Plan B guarantees representation from all three breeds because a specified number of cows is sampled from every breed stratum.</li>
+  <li>In Plan B, every breed stratum contributes sampled cows. In Plan C, only some farm clusters are selected, but every cow in each selected farm is examined. Stratified sampling deliberately samples from every group, whereas cluster sampling selects only some groups and studies all individuals within those selected groups.</li>
+  <li>A practical advantage of Plan C is that it may reduce travel time and cost because examinations are concentrated at only $6$ farms. A possible disadvantage is that cows on the same farm may be similar because they share housing, management and environmental conditions. If the selected farms differ from other farms, the cluster sample may contain less information than an SRS of the same number of cows and may produce greater sampling variability.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $4$: A City Survey of Access to Health Care
+
+A city health department wants to estimate residents' satisfaction with access to primary health care. It selects $3000$ adults from a directory of residential landline telephone numbers. After one telephone call to each selected number, $840$ adults complete the survey. The calls are made by employees of local health clinics.
+
+The questionnaire begins with three questions about positive experiences with local clinics. It then asks:
+
+> Considering the excellent services offered by our local clinics, how satisfied are you with your access to primary health care?
+
+1. Calculate the response rate.
+2. Identify and explain one source of undercoverage.
+3. Identify and explain the potential for nonresponse bias.
+4. Identify two features that could create response bias or otherwise influence the answers. Name the relevant survey problem in each case.
+5. Explain why selecting a much larger sample from the same landline directory would not necessarily remove the main biases.
+6. Propose three specific changes that would improve the survey design.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The response rate is
+
+  $$
+  \frac{840}{3000}=0.28
+  $$
+
+  Therefore the response rate is $28\%$.</li>
+  <li>The sampling frame includes residential landline numbers rather than all adult city residents. Adults who use only mobile phones, have unlisted numbers or do not have telephone access are omitted. This is undercoverage because some parts of the target population have little or no chance of selection.</li>
+  <li>There are $3000-840=2160$ selected adults who did not complete the survey. Nonresponse bias could occur if their satisfaction with health-care access differs systematically from the satisfaction of respondents. For example, adults who have difficulty accessing care may be either especially motivated to respond or too busy and discouraged to participate.</li>
+  <li>The phrase "excellent services" is leading wording because it encourages a favourable response. Asking several positive questions first may create an order effect by shaping how respondents think about the final question. In addition, respondents may be reluctant to criticize care when clinic employees administer the survey, producing interviewer or social-desirability response bias.</li>
+  <li>A larger sample can reduce sampling variability, but it does not repair a sampling frame that systematically excludes some residents. It also does not force nonrespondents to participate or remove leading wording and interviewer effects. A very large biased sample can produce a precise estimate of the wrong quantity.</li>
+  <li>Possible improvements include using an address-based or broader population frame that covers households without landlines; offering several response modes such as web, mail and telephone; making repeated contact attempts at different times; using neutral wording; randomizing or carefully designing question order; and collecting responses anonymously through an organization independent of the clinics. Any three well-explained improvements are sufficient.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $5$: Lawn-Pesticide Exposure and Canine Lymphoma
+
+Veterinary epidemiologists investigate whether residential lawn pesticide exposure is associated with canine lymphoma, a relatively uncommon cancer. They consider two studies.
+
+**Study A:** The researchers identify $120$ dogs recently diagnosed with lymphoma and select $240$ dogs without lymphoma from the same veterinary practices. Owners are asked about the dogs' past exposure to lawn pesticides.
+
+**Study B:** The researchers enrol $4000$ dogs that do not have lymphoma at the beginning of the study. At enrolment, $2000$ dogs are classified as exposed to residential lawn pesticides and $2000$ as unexposed. The dogs are followed for $8$ years. During follow-up, $36$ exposed dogs and $12$ unexposed dogs develop lymphoma.
+
+1. Classify Study A and Study B as case-control or cohort studies. Explain your choices.
+2. In Study A, identify the cases and the controls. Why can this design be useful for studying an uncommon disease?
+3. A reader calculates $\frac{120}{(120+240)}=0.333$ and claims that $33.3\%$ of dogs have lymphoma. Explain why this is not a valid estimate of lymphoma prevalence.
+4. For Study B, calculate the $8$-year incidence proportion of lymphoma in the exposed group and in the unexposed group. Compare the two values in context.
+5. Which study establishes the time order between recorded exposure and the development of lymphoma more clearly? Explain.
+6. Give one important possible source of bias or confounding in each study.
+7. Can either study, by itself, prove that lawn-pesticide exposure causes canine lymphoma? Explain.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Study A is a case-control study because dogs are selected according to disease status and their earlier exposure is then investigated. Study B is a cohort study because dogs without the disease are grouped by exposure status and followed forward to observe new cases.</li>
+  <li>The $120$ dogs diagnosed with lymphoma are the cases. The $240$ dogs without lymphoma are the controls. A case-control study can be efficient for an uncommon disease because researchers deliberately include enough cases for comparison rather than following a very large disease-free group until a small number develop the disease.</li>
+  <li>The researchers chose the numbers of cases and controls as part of the study design. The fraction $120/360$ therefore reflects the constructed sample, not the proportion of dogs with lymphoma in the source population. A case-control study cannot estimate population prevalence directly from the sampled case fraction.</li>
+  <li>For the exposed group, the incidence proportion is
+
+  $$
+  \frac{36}{2000}=0.018=1.8\%
+  $$
+
+  For the unexposed group, it is
+
+  $$
+  \frac{12}{2000}=0.006=0.6\%
+  $$
+
+  In this cohort, lymphoma developed in $1.8\%$ of exposed dogs and $0.6\%$ of unexposed dogs during the $8$-year follow-up. The observed incidence proportion was therefore three times as large in the exposed group.</li>
+  <li>Study B establishes the time order more clearly because exposure is recorded when the dogs are free of lymphoma, and the researchers then observe which dogs develop the disease. In Study A, owners reconstruct earlier exposure after the disease status is already known.</li>
+  <li>Study A may be affected by recall bias if owners of dogs with lymphoma remember or report pesticide exposure differently from owners of control dogs. It may also be affected by inappropriate control selection. Study B may be affected by loss to follow-up if dogs that leave the study differ between exposure groups. Either study may be confounded by variables such as age, breed, geographic region, time spent outdoors or other chemical exposures.</li>
+  <li>No. Both are observational studies, so the exposed and unexposed dogs may differ in ways other than pesticide exposure. The results can provide evidence of an association, especially if the study is carefully designed, but they cannot by themselves rule out bias, confounding and alternative explanations sufficiently to prove causation.</li>
+</ol>
+</div>
+</details>
+:::
