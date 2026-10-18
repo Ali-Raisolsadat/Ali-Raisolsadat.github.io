@@ -10,11 +10,14 @@
 \usepackage{array}
 \usepackage{ragged2e}
 \usepackage{bm}
+\usepackage{tikz}     % drawing support
+\usepackage{pgfplots} % plots
+\pgfplotsset{compat=1.18}
 
 \title[Chapter 13: Sampling Distributions]{\textbf{Chapter 13: Sampling Distributions}}
-\subtitle{School of Mathematical and Computational Sciences//University of Prince Edward Island}
+\subtitle{The Practice of Statistics in the Life Sciences \\ by Brigitte Baldi and David S. Moore}
 \author{Instructor: Ali Raisolsadat}
-\date{Part III: Foundations of Inference}
+\date{Part III: Foundations of Statistical Inference}
 
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{itemize items}[circle]
@@ -47,51 +50,56 @@
 
 \begin{document}
 
+% SECTION 1
+\section{Parameters and Statistics}
+
+% SLIDE 1
 \begin{frame}
   \titlepage
 \end{frame}
 
+% SLIDE 2
 \begin{frame}{Why This Chapter Matters}
-A random sample gives information about a population, but a different random sample usually gives a different answer.
+Statistical inference uses information from a \textbf{sample} to learn about a larger \textbf{population}.
 
 \vspace{0.2cm}
-Chapter 13 explains how that natural variation behaves. This idea is the bridge from descriptive statistics to statistical inference.
+However, different random samples from the same population generally produce different values of a statistic. This natural sample to sample variation is called \textbf{sampling variability}.
 
-\vspace{0.2cm}
-By the end of the chapter, the main questions should be clear.
+\begin{block}{Central Idea}
+Chapter 13 examines how statistics vary across repeated random samples. Understanding this variation allows us to judge how reliably a sample statistic estimates a population parameter.
+\end{block}
+
+By the end of the chapter, you should be able to answer the following questions:
 \begin{itemize}
-  \item What is the difference between a parameter and a statistic
-  \item What is a sampling distribution
-  \item Why do larger samples give more stable results
-  \item When can a Normal model be used for a sample mean or a sample proportion
+  \item What is the difference between a parameter and a statistic?
+  \item What is a sampling distribution?
+  \item Why do larger samples generally produce more stable statistics?
+  \item When can a Normal model be used for a sample mean or a sample proportion?
 \end{itemize}
 \end{frame}
 
-%\begin{frame}{Chapter Roadmap}
-%The material in this chapter follows a natural progression.
-%\begin{enumerate}
-%  \item Parameters and statistics
-%  \item Population distributions, sample distributions and sampling distributions
-%  \item The sampling distribution of $\bar{x}$
-%  \item The effect of sample size
-%  \item The Central Limit Theorem
-%  \item The sampling distribution of $\hat{p}$
-%  \item The Law of Large Numbers
-%  \item Probability examples that prepare for statistical inference
-%\end{enumerate}
-%\end{frame}
-
-\section{Parameters and Statistics}
-
+% SLIDE 3
 \begin{frame}{Parameters and Statistics}
 A \textbf{parameter} is a numerical characteristic of a population.
+\begin{itemize}
+  \item It is fixed for a particular population
+  \item It is often unknown because measuring the entire population may be impractical
+\end{itemize}
 
-\vspace{0.2cm}
+\vspace{0.15cm}
 A \textbf{statistic} is a numerical characteristic calculated from sample data.
+\begin{itemize}
+  \item It can be calculated once the sample has been observed
+  \item Its value may change when a different random sample is selected
+\end{itemize}
 
-\vspace{0.25cm}
+\vspace{0.15cm}
+
 \begin{center}
-\begin{tabular}{>{\RaggedRight\arraybackslash}p{0.28\linewidth} >{\centering\arraybackslash}p{0.26\linewidth} >{\centering\arraybackslash}p{0.26\linewidth}}
+\begin{tabular}{
+  >{\RaggedRight\arraybackslash}p{0.27\linewidth}
+  >{\centering\arraybackslash}p{0.27\linewidth}
+  >{\centering\arraybackslash}p{0.27\linewidth}}
 \toprule
 Measure & Sample statistic & Population parameter \\
 \midrule
@@ -101,704 +109,711 @@ Proportion & $\hat{p}$ & $p$ \\
 \end{tabular}
 \end{center}
 
-\vspace{0.2cm}
-The symbols matter because they tell us whether a number comes from the sample or from the full population.
+A statistic is used to estimate or learn about the corresponding population parameter.
 \end{frame}
 
-\begin{frame}{Population, Sample and Sampling Distribution}
-Three related ideas appear throughout this chapter.
-\begin{itemize}
-  \item The \textbf{population distribution} describes values for individuals in the population
-  \item The \textbf{sample distribution} describes the observations in one particular sample
-  \item The \textbf{sampling distribution} describes the values of a statistic across many possible samples
-\end{itemize}
+% SLIDE 4
+\begin{frame}{Three Different Distributions}
+Three related but distinct distributions appear throughout this chapter.
 
-\vspace{0.2cm}
-The most common confusion in this chapter is mixing up the distribution of individual observations with the distribution of a statistic such as $\bar{x}$.
+\begin{block}{Population Distribution}
+The distribution of a variable for all individuals in the population
+\end{block}
+
+\begin{block}{Sample Distribution}
+The distribution of the observed values for individuals in one particular sample
+\end{block}
+
+\begin{block}{Sampling Distribution}
+The distribution of a statistic calculated from all possible random samples of the same size from the population
+\end{block}
+
+\textbf{Note}: Population and sample distributions describe \textbf{individual observations}. A sampling distribution describes the possible values of a \textbf{statistic}.
 \end{frame}
 
-\begin{frame}{Population, Sample and Sampling Distribution}
-  \centering
-  \lectureimagefull{fig_ch13_three_distributions.png}
+% SLIDE 5
+\begin{frame}{Connecting the Three Distributions}
+\begin{center}
+\lectureimage[0.9\linewidth]{fig_ch13_three_distributions.png}
+\end{center}
+
+\vspace{0.1cm}
+We begin with a population, select a random sample and calculate a statistic. Repeating this process many times produces the sampling distribution of that statistic.
 \end{frame}
 
-\begin{frame}{Example 13.1: A Population Parameter}
+% SLIDE 6
+\begin{frame}{Example 13.1: Identifying Population Parameters}
 \begin{block}{Question}
-A national registration system contains birth records for every birth in the population of interest during one year. The records show that 8\% of births were low birth weight and that the mean age at first birth was 26.3 years. Are these values parameters or statistics
+A national registration system contains complete records for every birth in the population of interest during one year. Among all registered births, $8\%$ were classified as low birth weight. Among all people giving birth for the first time during that year, the mean age was $26.3$ years. Are these values parameters or statistics? Give the appropriate notation.
 \end{block}
-
-\pause
-
-\begin{block}{Explanation}
-These values were calculated from the entire population defined for the study rather than from a sample.
-\end{block}
-
-\pause
 
 \begin{block}{Solution}
-Both values are \textbf{parameters}.
-\[
-p = 0.08
-\]
-\[
-\mu = 26.3
-\]
+Both values describe entire populations defined by the study rather than samples. Therefore, both are \textbf{parameters}. 
+
+The population proportion of low-birth-weight births is $p=0.08$
+
+The population mean age at first birth is $\mu=26.3$
 \end{block}
+
+Whether a value is a parameter or a statistic depends on where the data came from, not on the size of the numerical value.
 \end{frame}
 
-\begin{frame}{Example 13.2: A Sample Statistic}
+% SLIDE 7
+\begin{frame}{Example 13.2: Identifying Sample Statistics}
 \begin{block}{Question}
-A polling organization interviews a random sample of 1023 adults. In the sample, 19\% report smoking cigarettes during the previous week. Among the sampled smokers, the mean number of cigarettes per day is 12. Are these values parameters or statistics
+A polling organization selects a random sample of $1023$ adults. In the sample, $19\%$ report smoking cigarettes during the previous week. Among the sampled adults who reported smoking, the mean number of cigarettes smoked per day is $12$. Are these values parameters or statistics? Give the appropriate notation.
 \end{block}
-
-\pause
-
-\begin{block}{Explanation}
-The values were computed from a sample rather than from every adult in the target population.
-\end{block}
-
-\pause
 
 \begin{block}{Solution}
-Both values are \textbf{statistics}.
-\[
-\hat{p} = 0.19
-\]
-\[
-\bar{x} = 12
-\]
+Both values were calculated from sample data. Therefore, both are \textbf{statistics}.
+
+The sample proportion reporting cigarette use is $\hat{p}=0.19$
+
+The sample mean number of cigarettes smoked per day among the sampled smokers is $\bar{x}=12$
 \end{block}
+
+These statistics describe the observed sample and may be used to estimate corresponding parameters in the target population.
 \end{frame}
 
+% SECTION 2
 \section{The Sampling Distribution of \texorpdfstring{$\bar{x}$}{xbar}}
 
+% SLIDE 8
 \begin{frame}{Repeated Sampling and the Sampling Distribution}
-A sample mean is not fixed before the sample is selected. It depends on which individuals happen to be chosen.
+A statistic is not fixed before a random sample is selected. Its value depends on which individuals happen to be included in the sample.
 
 \vspace{0.2cm}
-A \textbf{sampling distribution} answers a repeated-sampling question.
+If we repeatedly select random samples of the same size, the value of the statistic will vary from sample to sample.
+
 \begin{block}{Sampling Distribution}
-The sampling distribution of a statistic is the probability distribution of that statistic over all possible random samples of the same size drawn under the same sampling process.
+The sampling distribution of a statistic is the probability distribution of that statistic over all possible random samples of the same size selected using the same sampling process.
 \end{block}
 
-A computer simulation can approximate this idea by drawing many samples and calculating the statistic each time.
+\textbf{Note}: The observations in a sampling distribution are \textbf{statistics calculated from samples}, not measurements from individual members of the population.
+\end{frame}
+
+% SLIDE 9
+\begin{frame}{Examples 13.3 and 13.4: Simulating Sample Means}
+\begin{block}{Setting}
+Individual IQ scores are modelled by a Normal distribution with $\mu=100$ and  $\sigma=15$. A resaercher uses R to select $500$ random samples, each containing $n=25$ IQ scores.
+\end{block}
+
+For each simulated sample, the following process is used:
+\begin{enumerate}
+  \item Select $25$ IQ scores from the population
+  \item Calculate the sample mean $\bar{x}$
+  \item Record the value of $\bar{x}$
+  \item Repeat the process until $500$ sample means have been obtained
+\end{enumerate}
+
+The $500$ recorded sample means approximate the sampling distribution of $\bar{x}$ for samples of size $25$.
+\end{frame}
+
+
+% SLIDE 10
+\begin{frame}{Examples 13.3 and 13.4: Simulating Sample Means}
+\begin{center}
+\lectureimage[0.68\linewidth]{fig_ch13_sampling_dist.png}
+\end{center}
 \end{frame}
 
 \begin{frame}{Examples 13.3 and 13.4: Simulating Sample Means}
-\begin{block}{Question}
-Individual IQ scores are modelled by a Normal distribution with mean $\mu = 100$ and standard deviation $\sigma = 15$. What happens if 500 random samples of size $n = 25$ are selected and the sample mean is calculated for each sample
-\end{block}
+The simulated sampling distribution has three important features:
+\begin{itemize}
+  \item It is centred near the population mean of $100$
+  \item It has an approximately Normal shape
+  \item It has considerably less spread than the distribution of individual IQ scores
+\end{itemize}
 
-\pause
-
-\begin{block}{Explanation}
-Each sample contributes one number to the sampling distribution, namely its sample mean.
-
-Because the population is Normal, the sampling distribution of $\bar{x}$ is also Normal.
-\[
-\mu_{\bar{x}} = 100
-\]
-\[
-\sigma_{\bar{x}} = \frac{15}{\sqrt{25}} = 3
-\]
-\end{block}
+Individual IQ scores have a standard deviation of $15$, but the $500$ sample means have a standard deviation close to $4$. Sample means vary less than individual observations.
 \end{frame}
 
-\begin{frame}{Examples 13.3 and 13.4: Simulating Sample Means}
-\begin{block}{Solution}
-The histogram of the 500 simulated means is centred near 100 and has much less spread than the distribution of individual IQ scores.
-\end{block}
-\end{frame}
-
-\begin{frame}{Examples 13.3 and 13.4: Simulated Sampling Distribution}
-\centering
-\lectureimagefull{fig_ch13_sampling_dist.png}
-\end{frame}
-
+% SLIDE 11
 \begin{frame}{The Sampling Distribution of $\bar{x}$}
-If a random sample of size $n$ is drawn from a population with mean $\mu$ and standard deviation $\sigma$, then the sampling distribution of $\bar{x}$ has two key properties.
+Suppose a random sample of size $n$ is selected from a population with mean $\mu$ and standard deviation $\sigma$.
 
-\vspace{0.2cm}
-\textbf{Centre}
-\[
-\mu_{\bar{x}} = \mu
-\]
+\small
+\begin{block}{Centre}
+The mean of the sampling distribution equals the population mean
+$$\mu_{\bar{x}}=\mu$$
+Therefore, $\bar{x}$ is an \textbf{unbiased estimator} of $\mu$. Unbiased does not mean that every sample mean equals $\mu$. It means that the sample means are centred at $\mu$ over repeated random samples.
+\end{block}
 
-\textbf{Spread}
-\[
-\sigma_{\bar{x}} = \frac{\sigma}{\sqrt{n}}
-\]
-
-\vspace{0.2cm}
-The sample mean is therefore an \textbf{unbiased estimator} of the population mean. Larger samples make the sampling distribution narrower.
+\begin{block}{Spread}
+The standard deviation of the sampling distribution is
+$$\sigma_{\bar{x}}=\frac{\sigma}{\sqrt{n}}$$
+This quantity describes the typical sample-to-sample variation in $\bar{x}$.
+\end{block}
 \end{frame}
 
-\begin{frame}{The Effect of Sample Size}
-  \centering
-  \lectureimagefull{fig_ch13_sample_size.png}
+% SLIDE 12
+\begin{frame}{How Sample Size Affects the Sample Mean}
+\begin{columns}[T,onlytextwidth]
+% Left column: image
+\begin{column}{0.55\textwidth}
+\centering
+\lectureimage[0.85\linewidth]{fig_ch13_sample_size.png}
+\end{column}
+
+% Right column: explanation
+\begin{column}{0.40\textwidth}
+As the sample size increases:
+\begin{itemize}
+	\item The centre of the sampling distribution remains at $\mu$
+	\item The spread of the sampling distribution decreases
+	\item The sample mean is more likely to fall close to the population mean
+\end{itemize}
+
+\vspace{0.15cm}
+\begin{block}{Main Idea}
+Larger random samples produce more stable and more precise estimates of the population mean.
+\end{block}
+\end{column}
+\end{columns}
 \end{frame}
 
-\begin{frame}{Why the Square Root Relationship Matters}
+% SLIDE 13
+\begin{frame}{Why the Square-Root Relationship Matters}
 The standard deviation of the sample mean is
-\[
-\sigma_{\bar{x}} = \frac{\sigma}{\sqrt{n}}
-\]
+$$\sigma_{\bar{x}}=\frac{\sigma}{\sqrt{n}}$$
+Therefore, the improvement in precision depends on the \textbf{square root} of the sample size. If the sample size is multiplied by $4$, then
+$$\frac{\sigma}{\sqrt{4n}}=\frac{1}{2}\frac{\sigma}{\sqrt{n}}$$
+The standard deviation of $\bar{x}$ is divided by $2$. If the sample size is multiplied by $100$, then
+$$\frac{\sigma}{\sqrt{100n}}=\frac{1}{10}\frac{\sigma}{\sqrt{n}}$$
+The standard deviation of $\bar{x}$ is divided by $10$.
 
-\pause
-
-If the sample size is multiplied by 4, then
-\[
-\frac{\sigma}{\sqrt{4n}} = \frac{1}{2}\frac{\sigma}{\sqrt{n}}
-\]
-
-\pause
-
-If the sample size is multiplied by 100, then
-\[
-\frac{\sigma}{\sqrt{100n}} = \frac{1}{10}\frac{\sigma}{\sqrt{n}}
-\]
-
-\pause
-
-A larger sample improves precision, but the improvement is slower than many students expect.
+\textbf{Note}: To reduce the standard deviation of $\bar{x}$ by a factor of $c$, the sample size must be multiplied by $c^2$. Larger samples improve precision but the improvement becomes increasingly expensive.
 \end{frame}
 
+% SECTION 3
 \section{Shape and the Central Limit Theorem}
 
-\begin{frame}{When Is the Sampling Distribution Normal}
-The shape of the sampling distribution of $\bar{x}$ depends on the population and the sample size.
+% SLIDE 15
+\begin{frame}{When Is the Sampling Distribution Normal?}
+The shape of the sampling distribution of $\bar{x}$ depends on both the shape of the population distribution and the sample size.
+\begin{enumerate}
+	\item The Population is Normal: If the population distribution is Normal, then the sampling distribution of $\bar{x}$ is \textbf{exactly Normal} for every sample size $n$.
+	\item The Population is not Normal: If the population distribution is not Normal, the Central Limit Theorem tells us that the sampling distribution of $\bar{x}$ becomes \textbf{approximately Normal} as the sample size increases.
+\end{enumerate}
 
-\vspace{0.2cm}
-Two important cases appear in first-year statistics.
-\begin{itemize}
-  \item If the population is Normal, then the sampling distribution of $\bar{x}$ is exactly Normal for any sample size
-  \item If the population is not Normal, the Central Limit Theorem tells us that the sampling distribution of $\bar{x}$ becomes approximately Normal when the sample size is sufficiently large
-\end{itemize}
+There is no single sample-size requirement that works for every population. Strong skewness and extreme outliers generally require a larger sample.
 \end{frame}
 
+% SLIDE 16
 \begin{frame}{Example 13.5: Population Values and Sample Means}
 \begin{block}{Question}
-Individual IQ scores are modelled by a Normal distribution with $\mu = 100$ and $\sigma = 15$. Random samples of size $n = 25$ are selected. How does the population distribution compare with the sampling distribution of $\bar{x}$
+Individual IQ scores are modelled by a Normal distribution with mean $\mu=100$ and standard deviation $\sigma=15$. Random samples of size $n=25$ are selected. How does the population distribution of individual IQ scores compare with the sampling distribution of $\bar{x}$?
 \end{block}
 
-\pause
+\begin{center}
+\begin{tabular}{
+  >{\RaggedRight\arraybackslash}p{0.27\linewidth}
+  >{\centering\arraybackslash}p{0.27\linewidth}
+  >{\centering\arraybackslash}p{0.30\linewidth}}
+\toprule
+Feature & Individual IQ score & Sample mean $\bar{x}$ \\
+\midrule
+Centre & $\mu=100$ & $\mu_{\bar{x}}=100$ \\[1mm]
+Standard deviation & $\sigma=15$ &
+$\displaystyle \sigma_{\bar{x}}
+=\frac{15}{\sqrt{25}}=3$ \\[3mm]
+Shape & Normal & Exactly Normal \\
+\bottomrule
+\end{tabular}
+\end{center}
 
-\begin{block}{Explanation}
-Both distributions are centred at 100. The difference is the spread.
-\[
-\sigma = 15
-\]
-\[
-\sigma_{\bar{x}} = \frac{15}{\sqrt{25}} = 3
-\]
-\end{block}
+The two distributions have the same centre and the same general shape, but the sample means have much less variability than individual IQ scores.
 \end{frame}
 
+% SLIDE 17
 \begin{frame}{Example 13.5: Population Values and Sample Means}
-\begin{block}{Solution}
-The sampling distribution of sample means is much narrower than the population distribution of individual scores.
-\end{block}
+\begin{columns}[T,onlytextwidth]
+
+% Left column: image
+\begin{column}{0.65\textwidth}
+  \centering
+  \lectureimage[0.95\linewidth]{fig_ch13_pop_vs_samp.png}
+\end{column}
+
+% Right column: explanation
+\begin{column}{0.35\textwidth}
+
+\textbf{Individual IQ scores}
+\begin{itemize}
+  \item Centred at $100$
+  \item Standard deviation of $15$
+  \item Considerable variation among individuals
+\end{itemize}
+
+\vspace{0.1cm}
+\textbf{Sample means for $n=25$}
+\begin{itemize}
+  \item Also centred at $100$
+  \item Standard deviation of $3$
+  \item Much more concentrated around the population mean
+\end{itemize}
+\textbf{Note}: Averages are less variable than individual observations.
+\end{column}
+\end{columns}
 \end{frame}
 
-\begin{frame}{Example 13.5: Population and Sampling Distributions}
-\centering
-\lectureimagefull{fig_ch13_pop_vs_samp.png}
-\end{frame}
-
+% SLIDE 18
 \begin{frame}{The Central Limit Theorem}
 \begin{block}{Central Limit Theorem}
-For independent observations from a population with finite mean $\mu$ and finite standard deviation $\sigma$, the sampling distribution of $\bar{x}$ becomes approximately Normal as the sample size becomes large.
+Suppose independent observations are selected from a population with finite mean $\mu$ and finite standard deviation $\sigma$. As the sample size $n$ increases, the sampling distribution of $\bar{x}$ becomes approximately Normal, with
+$$\mu_{\bar{x}}=\mu \qquad\text{and}\qquad \sigma_{\bar{x}}=\frac{\sigma}{\sqrt{n}}$$
 \end{block}
 
-\vspace{0.2cm}
-The theorem does \textbf{not} say that the raw observations in one large sample become Normal.
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.48\textwidth}
+\begin{alertblock}{What the Theorem Says}
+The distribution of \textbf{sample means across repeated samples} becomes more nearly Normal as $n$ increases.
+\end{alertblock}
+\end{column}
 
-\vspace{0.2cm}
-The theorem does say that the distribution of \textbf{sample means across repeated samples} becomes more nearly Normal as $n$ increases.
+\begin{column}{0.48\textwidth}
+\begin{alertblock}{What It Does Not Say}
+The theorem does not say that the population or the observations within one large sample become Normal.
+\end{alertblock}
+\end{column}
+\end{columns}
 \end{frame}
 
+% SLIDE 19
 \begin{frame}{Example 13.6: The Central Limit Theorem in Action}
 \begin{block}{Question}
-A population is strongly right-skewed. How does the shape of the sampling distribution of $\bar{x}$ change as the sample size increases
+Suppose a population distribution is strongly right-skewed. How does the sampling distribution of $\bar{x}$ change as the sample size increases?
 \end{block}
 
-\pause
-
-\begin{block}{Explanation}
-A sample mean averages several observations. As more observations are included, the distribution of the mean becomes less skewed.
-\end{block}
-\end{frame}
-
-\begin{frame}{Example 13.6: The Central Limit Theorem in Action}
-\begin{block}{Solution}
-The population remains right-skewed. The sampling distribution of the sample mean becomes more symmetric and more nearly Normal as the sample size grows.
-\end{block}
-\end{frame}
-
-\begin{frame}{Example 13.6: The Central Limit Theorem in Action}
-\centering
-\lectureimagefull{fig_ch13_clt_action.png}
-\end{frame}
-
-\begin{frame}{Assessing Whether a Normal Approximation Is Reasonable}
-A practical first-year approach is to consider three things together.
+A sample mean combines information from several observations. As more observations are included in each mean, the effect of individual unusually large values becomes less dominant. As the sample size increases
 \begin{itemize}
-  \item The shape of the population or sample histogram
-  \item The sample size
-  \item Whether severe outliers or strong skewness are present
+	\item The sampling distribution becomes less right-skewed
+  	\item Its shape becomes more nearly Normal
+  	\item Its centre remains at $\mu$
+  	\item Its standard deviation decreases according to
+  	$$\sigma_{\bar{x}}=\frac{\sigma}{\sqrt{n}}$$
+\end{itemize}
+The population remains right-skewed. It is the sampling distribution of $\bar{x}$ that becomes approximately Normal.
+\end{frame}
+
+% SLIDE 20
+\begin{frame}{Assessing Whether a Normal Approximation Is Reasonable}
+There is no universal minimum sample size that guarantees an appropriate Normal approximation for every population. The assessment should consider the following features together:
+\begin{itemize}
+	\item The available information about the shape of the population distribution
+  	\item The size of the random sample
+  	\item The presence of substantial skewness or unusual observations
 \end{itemize}
 
-\vspace{0.2cm}
-A mild departure from symmetry often requires less averaging than a severe departure from symmetry.
+\begin{block}{General Guidance}
+\begin{itemize}
+	\item A population that is approximately symmetric and has no substantial outliers may require less averaging
+  	\item A population with substantial skewness or outliers may require a larger sample before the sampling distribution of $\bar{x}$ is approximately Normal
+\end{itemize}
+\end{block}
+
+Sample size should not be considered by itself. The shape of the population distribution also affects how quickly the Normal approximation becomes reasonable.
 \end{frame}
 
-\begin{frame}{Illustrative Shapes for CLT Discussion}
-  \centering
-  \lectureimagefull{fig_ch13_practical.png}
+% SLIDE 21
+\begin{frame}{Break Time}
+\centering
+\lectureimage[0.65\linewidth]{meme_1.jpg}
 \end{frame}
 
+% SECTION 4
 \section{The Sampling Distribution of \texorpdfstring{$\hat{p}$}{phat}}
 
+% SLIDE 22
 \begin{frame}{The Sample Proportion}
-For a categorical variable with two outcomes, the statistic of interest is often the sample proportion.
+For a categorical variable with two possible outcomes, the statistic of interest is often the \textbf{sample proportion}. Let
+\begin{itemize}
+  \item $n$ represent the sample size
+  \item $X$ represent the number of observations in the category of interest
+\end{itemize}
 
-\vspace{0.2cm}
-If $X$ is the number of successes in a sample of size $n$, then
-\[
-\hat{p} = \frac{X}{n}
-\]
-
-\vspace{0.2cm}
-The word success is only a label for the outcome being counted.
+The sample proportion is
+$$\hat{p}=\frac{X}{n}$$
+\begin{block}{Population and Sample Notation}
+\begin{itemize}
+	\item $p$ represents the proportion in the population
+  	\item $\hat{p}$ represents the proportion observed in the sample
+\end{itemize}
+\end{block}
 \end{frame}
 
+
+% SLIDE 23
 \begin{frame}{The Sampling Distribution of $\hat{p}$}
-The sampling distribution of $\hat{p}$ has properties similar to the sampling distribution of $\bar{x}$.
+Suppose a random sample of size $n$ is selected from a population in which the proportion belonging to the category of interest is $p$.
 
-\vspace{0.2cm}
-\textbf{Centre}
-\[
-\mu_{\hat{p}} = p
-\]
+\textbf{Centre}: The mean of the sampling distribution is
+$$\mu_{\hat{p}}=p$$
 
-\textbf{Spread}
-\[
-\sigma_{\hat{p}} = \sqrt{\frac{p(1-p)}{n}}
-\]
+\textbf{Spread}: The standard deviation is
+$$\sigma_{\hat{p}}=\sqrt{\frac{p(1-p)}{n}}$$
 
-\vspace{0.2cm}
-A Normal approximation is typically used when both expected counts are at least 10.
-\[
-np \ge 10
-\]
-\[
-n(1-p) \ge 10
-\]
+\textbf{Conditions}: The observations should be obtained through an appropriate random process. When sampling without replacement, a common condition is
+$$n\leq 0.10N$$
+
+\textbf{Normal Approximation}: The sampling distribution of $\hat{p}$ is approximately Normal when
+$$np\geq10 \qquad n(1-p)\geq10$$
 \end{frame}
 
+% SLIDE 24
 \begin{frame}{Example 13.8: Contact Lens Practices}
 \begin{block}{Question}
-A random sample of 281 contact-lens users contains 139 people who do not consistently wash their hands before handling their lenses. What is the sample proportion
+A random sample of $281$ contact-lens users contains $139$ people who report that they do not consistently wash their hands before handling their lenses. What is the sample proportion?
 \end{block}
 
-\pause
-
-\begin{block}{Explanation}
-The count of successes is $X = 139$ and the sample size is $n = 281$. The sample proportion is the count divided by the sample size.
-\end{block}
-
-\pause
-
-\begin{block}{Solution}
-\[
-\hat{p} = \frac{139}{281}
-\]
-\[
-\hat{p} \approx 0.495
-\]
-The sample proportion is about 49.5\%.
-\end{block}
+Define a success as a sampled person reporting that they do not consistently wash their hands before handling their contact lenses. The number of successes and the sample size are
+$$X=139\qquad\text{and}\qquad n=281$$
+Therefore
+$$\hat{p}=\frac{X}{n}=\frac{139}{281}\approx0.495$$
+Approximately $49.5\%$ of the people in the sample reported that they did not consistently wash their hands before handling their contact lenses.
 \end{frame}
 
+% SLIDE 25
 \begin{frame}{Examples 13.9 and 13.10: Blood Type O}
 \begin{block}{Question}
-Suppose the population proportion with blood type O is $p = 0.45$. A random sample of $n = 1000$ records is selected. What is the probability that the sample proportion is 0.42 or lower
+Suppose the population proportion of people with blood type O is $p=0.45$. A random sample of $n=1000$ records is selected from a large national registry. What is the probability that the sample proportion with blood type O is $0.42$ or lower?
 \end{block}
 
-\pause
-
-\begin{block}{Step 1: Identify the Sampling Distribution}
-The centre is
-\[
-\mu_{\hat{p}} = 0.45
-\]
+Step 1 -- Identify the Sampling Distribution: The centre is
+$$\mu_{\hat{p}}=p=0.45$$
 The standard deviation is
-\[
-\sigma_{\hat{p}} = \sqrt{\frac{0.45(0.55)}{1000}} \approx 0.01573
-\]
-The success-failure condition is satisfied because $np = 450$ and $n(1-p) = 550$.
-\end{block}
+$$\sigma_{\hat{p}}=\sqrt{\frac{p(1-p)}{n}}=\sqrt{\frac{0.45(0.55)}{1000}}\approx0.01573$$
+The expected counts are
+$$np=1000(0.45)=450$$
+$$n(1-p)=1000(0.55)=550$$
+Both are greater than $10$ so a Normal approximation is appropriate.
 \end{frame}
 
+% SLIDE 26
 \begin{frame}{Examples 13.9 and 13.10: Blood Type O}
-\begin{block}{Step 2: Convert the Question to a Probability}
-The probability of interest is
-\[
-P(\hat{p} \le 0.42)
-\]
-\end{block}
+Step 2 -- Express the Probability: The probability of interest is
+$$P(\hat{p}\leq0.42)$$
 
-\pause
+Step 3 -- Standardize: The corresponding standardized value is
+$$z=\frac{\hat{p}-p}{\sigma_{\hat{p}}}=\frac{0.42-0.45}{0.01573}\approx-1.907$$
 
-\begin{block}{Step 3: Standardize}
-\[
-z = \frac{0.42 - 0.45}{0.01573} \approx -1.91
-\]
-\end{block}
+Step 4 -- Calculate and Interpret: Using the standard Normal distribution
+$$P(\hat{p}\leq0.42)=P(Z\leq-1.907)\approx0.0283$$
 
-\pause
-
-\begin{block}{Solution}
-Using the Normal model gives
-\[
-P(\hat{p} \le 0.42) \approx 0.0283
-\]
-This is about 2.83\%.
-\end{block}
+There is approximately a $2.83\%$ probability that a random sample of $1000$ records contains a sample proportion of $0.42$ or lower when the population proportion is $0.45$.
 \end{frame}
 
-\begin{frame}[fragile]{Examples 13.9 and 13.10: R Code}
-The same probability can be calculated in R with \texttt{pnorm()}.
-
-\scriptsize
+% SLIDE 27
+\begin{frame}[fragile]{Examples 13.9 and 13.10: Blood Type O}
+\begin{block}{R Code}
+\small
 \begin{verbatim}
 # Population proportion and sample size
-p_type_o <- 0.45
-n_type_o <- 1000
+p <- 0.45
+n <- 1000
 
-# Standard deviation of the sampling distribution of p-hat
-sd_type_o <- sqrt(p_type_o * (1 - p_type_o) / n_type_o)
+# Standard deviation of the sampling distribution
+sd_p_hat <- sqrt(p * (1 - p) / n)
 
-# Lower-tail probability P(p-hat <= 0.42)
-prob_type_o <- pnorm(
-  q = 0.42,
-  mean = p_type_o,
-  sd = sd_type_o
-)
+# Calculate P(p-hat <= 0.42)
+pnorm(q = 0.42, mean = p, sd = sd_p_hat)
 
-print(round(prob_type_o, 4))
+# [1] 0.02826514
 \end{verbatim}
-\normalsize
+\end{block}
 \end{frame}
 
+% SLIDE 28
 \begin{frame}{Sampling Distribution of $\hat{p}$}
+\begin{columns}[T,onlytextwidth]
+% Left column: figure
+\begin{column}{0.60\textwidth}
   \centering
-  \lectureimagefull{fig_ch13_phat_dist.png}
+  \lectureimage[0.98\linewidth]{fig_ch13_phat_dist.png}
+\end{column}
+
+% Right column: interpretation
+\begin{column}{0.36\textwidth}
+The graph represents the possible values of $\hat{p}$ across repeated random samples of size $1000$.
+\begin{itemize}
+	\item The distribution is centred at $p=0.45$
+  	\item Its standard deviation is approximately $0.01573$
+	\item The shaded region represents sample proportions at or below $0.42$
+\end{itemize}
+
+\begin{block}{Shaded Area}
+The area of the shaded region is $P(\hat{p}\leq0.42)\approx0.0283$
+\end{block}
+\end{column}
+\end{columns}
 \end{frame}
 
+% SECTION 5
 \section{The Law of Large Numbers}
 
+% SLIDE 29
 \begin{frame}{The Law of Large Numbers}
 \begin{block}{Law of Large Numbers}
-For independent observations with a finite expected value, the sample mean converges to the population mean as the sample size increases. For independent Bernoulli observations, the sample proportion converges to the population probability.
+For independent observations from a population with a finite mean $\mu$, the sample mean approaches the population mean as the sample size increases
+$$\bar{x}_n \longrightarrow \mu$$
+
+For independent Bernoulli observations with a common probability $p$, the sample proportion approaches the population proportion
+$$\hat{p}_n \longrightarrow p$$
 \end{block}
 
-\vspace{0.2cm}
-This is a long-run idea. It does not say that every new observation brings the statistic closer to the parameter. It says that the overall tendency is toward the true population value.
+\textbf{Note}: The Law of Large Numbers describes an overall long-run tendency. It does not state that each additional observation must move the statistic closer to the parameter.
 \end{frame}
 
+% SLIDE 30
 \begin{frame}{The Law of Large Numbers in Action}
-  \centering
-  \lectureimagefull{fig_ch13_lln.png}
+\centering
+\lectureimage[0.98\linewidth]{fig_ch13_lln.png}
 \end{frame}
 
+% SLIDE 31
 \begin{frame}{Why the Law of Large Numbers Matters}
-The Law of Large Numbers explains why averages become more stable in large collections of observations.
+The Law of Large Numbers provides a mathematical explanation for why averages and proportions tend to become more stable as the number of observations increases.
 
-\vspace{0.2cm}
-Examples include
+\vspace{0.15cm}
+This long run stability is relevant in settings such as:
 \begin{itemize}
-  \item Long-run average claim costs in insurance portfolios
-  \item Long-run average outcomes in repeated physical or biological measurements
-  \item Stabilization of a running proportion or a running mean in simulation studies
+	\item Summarizing repeated physical or biological measurements and/or simulations
+  	\item Estimating average claim costs across a large insurance portfolio
 \end{itemize}
 
-In the life sciences, sample sizes are often limited by cost, time or ethics, which is why sampling distributions are so important.
+\begin{block}{Connection to Sampling Distributions}
+The Law of Large Numbers describes what happens as the sample size becomes very large. A sampling distribution describes how much a statistic varies for a particular finite sample size.
+\end{block}
 \end{frame}
 
-\section{Practice Examples}
-
-\begin{frame}{Practice Example: Sampling Distribution of $\bar{x}$}
-\begin{block}{Question}
-A genetic strain of laboratory mice has population mean gestation period $\mu = 20$ days and population standard deviation $\sigma = 1.5$ days. A random sample contains $n = 15$ mice. What are the mean and standard deviation of the sampling distribution of $\bar{x}$
-\end{block}
-
-\pause
-
-\begin{block}{Explanation}
-The centre of the sampling distribution equals the population mean. The spread is the population standard deviation divided by the square root of the sample size.
-\end{block}
+% SLIDE 32
+\begin{frame}{Example 13.11: Repeated Laboratory Measurements}
+A laboratory repeatedly measures the protein concentration of a reference sample. The reference concentration is $50$ micrograms per millilitre. Suppose each measurement can be represented as
+$$M_i=50+\varepsilon_i$$
+where the measurement errors $\varepsilon_i$ are independent, have mean $0$ and have standard deviation $0.8$ micrograms per millilitre. What happens to the running mean
+$$\bar{M}_n=\frac{M_1+M_2+\cdots+M_n}{n}$$
+as the number of measurements increases?
 
 \pause
 
 \begin{block}{Solution}
-\[
-\mu_{\bar{x}} = 20
-\]
-\[
-\sigma_{\bar{x}} = \frac{1.5}{\sqrt{15}} \approx 0.387
-\]
+Because the measurement process is centred at $50$
+$$\bar{M}_n\longrightarrow50$$
+as $n$ increases.
 \end{block}
 \end{frame}
 
-\begin{frame}{Practice Example: Normal Population Probability}
-\begin{block}{Question}
-Blood cholesterol levels in healthy adult Golden Retrievers are modelled as Normal with mean $\mu = 200$ mg/dL and standard deviation $\sigma = 15$ mg/dL. A random sample contains $n = 9$ dogs. What is the probability that the sample mean exceeds 210 mg/dL
-\end{block}
 
-\pause
+% SLIDE 33
+\begin{frame}{Example 13.11: Repeated Laboratory Measurements}
 
-\begin{block}{Step 1: Describe the Sampling Distribution}
-Because the population is Normal, the sampling distribution of $\bar{x}$ is Normal.
-\[
-\mu_{\bar{x}} = 200
-\]
-\[
-\sigma_{\bar{x}} = \frac{15}{\sqrt{9}} = 5
-\]
-\end{block}
-\end{frame}
+\begin{columns}[T,onlytextwidth]
+% Left column: plot
+\begin{column}{0.60\textwidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=\linewidth,
+  height=5.5cm,
+  axis lines=left,
+  xmin=0,
+  xmax=520,
+  ymin=49.7,
+  ymax=50.3,
+  xtick={0,100,200,300,400,500},
+  ytick={49.8,49.9,50.0,50.1,50.2,50.3},
+  xlabel={Number of measurements},
+  ylabel={Running mean},
+  grid=major,
+  grid style={gray!25},
+  tick label style={font=\scriptsize},
+  label style={font=\small}
+]
 
-\begin{frame}{Practice Example: Normal Population Probability}
-\begin{block}{Step 2: State the Probability}
-\[
-P(\bar{x} > 210)
-\]
-\end{block}
+\addplot[
+  blue!70!black,
+  mark=*,
+  mark size=2pt,
+  line width=1.2pt
+]
+coordinates {
+  (1,50.204)
+  (5,49.821)
+  (10,49.863)
+  (25,49.868)
+  (50,50.007)
+  (100,50.083)
+  (200,50.079)
+  (300,50.022)
+  (400,50.028)
+  (500,50.021)
+};
 
-\pause
+\addplot[
+  black,
+  dashed,
+  line width=1pt,
+  domain=0:520
+]
+{50};
 
-\begin{block}{Solution}
-Using the Normal model gives
-\[
-P(\bar{x} > 210) \approx 0.0228
-\]
-This is about 2.28\%.
-\end{block}
-\end{frame}
+\end{axis}
+\end{tikzpicture}
 
-\begin{frame}[fragile]{Practice Example: Normal Population Probability R Code}
-\scriptsize
-\begin{verbatim}
-# Sampling standard deviation for x-bar
-sampling_sd <- 15 / sqrt(9)
+\end{column}
 
-# Upper-tail probability P(x-bar > 210)
-prob_cholesterol <- pnorm(
-  q = 210,
-  mean = 200,
-  sd = sampling_sd,
-  lower.tail = FALSE
-)
-
-print(round(prob_cholesterol, 4))
-\end{verbatim}
-\normalsize
-\end{frame}
-
-\begin{frame}{Practice Example: CLT Probability}
-\begin{block}{Question}
-A population of viral-load measurements is strongly right-skewed with mean $\mu = 1000$ particles/mL and standard deviation $\sigma = 300$ particles/mL. A random sample contains $n = 50$ patients. What is the approximate probability that the sample mean is below 900 particles/mL
-\end{block}
-
-\pause
-
-\begin{block}{Explanation}
-The population is not Normal, but the sample size is reasonably large. The Central Limit Theorem supports an approximate Normal model for $\bar{x}$.
-\[
-\mu_{\bar{x}} = 1000
-\]
-\[
-\sigma_{\bar{x}} = \frac{300}{\sqrt{50}} \approx 42.43
-\]
-\end{block}
-\end{frame}
-
-\begin{frame}{Practice Example: CLT Probability}
-\begin{block}{Solution}
-The probability of interest is
-\[
-P(\bar{x} < 900)
-\]
-Using the approximate Normal model gives
-\[
-P(\bar{x} < 900) \approx 0.0092
-\]
-This is about 0.92\%.
-\end{block}
-\end{frame}
-
-\begin{frame}[fragile]{Practice Example: CLT Probability R Code}
-\scriptsize
-\begin{verbatim}
-# Approximate sampling standard deviation from the CLT
-sampling_sd_viral <- 300 / sqrt(50)
-
-# Lower-tail probability P(x-bar < 900)
-prob_viral <- pnorm(
-  q = 900,
-  mean = 1000,
-  sd = sampling_sd_viral
-)
-
-print(round(prob_viral, 4))
-\end{verbatim}
-\normalsize
-\end{frame}
-
-\begin{frame}{Practice Example: Sample Proportion Probability}
-\small
-\begin{block}{Question}
-An antibiotic has cure probability $p = 0.80$. A random sample contains $n = 200$ infected patients. What is the approximate probability that fewer than 75\% of the patients are cured
-\end{block}
-
-\pause
-
-\begin{block}{Step 1: Check Conditions and Describe the Sampling Distribution}
-The Normal approximation is appropriate because
-\[
-np = 160
-\]
-\[
-n(1-p) = 40
-\]
-The centre and spread are
-\[
-\mu_{\hat{p}} = 0.80
-\]
-\[
-\sigma_{\hat{p}} = \sqrt{\frac{0.80(0.20)}{200}} \approx 0.0283
-\]
-\end{block}
-\end{frame}
-
-\begin{frame}{Practice Example: Sample Proportion Probability}
-\begin{block}{Step 2: State the Probability}
-\[
-P(\hat{p} < 0.75)
-\]
-\end{block}
-
-\pause
-
-\begin{block}{Solution}
-Using the Normal model gives
-\[
-P(\hat{p} < 0.75) \approx 0.0385
-\]
-This is about 3.85\%.
-\end{block}
-\end{frame}
-
-\begin{frame}[fragile]{Practice Example: Sample Proportion Probability R Code}
-\scriptsize
-\begin{verbatim}
-# Model parameters for the sample proportion
-p_cure <- 0.80
-n_cure <- 200
-sd_cure <- sqrt(p_cure * (1 - p_cure) / n_cure)
-
-# Lower-tail probability P(p-hat < 0.75)
-prob_cure <- pnorm(
-  q = 0.75,
-  mean = p_cure,
-  sd = sd_cure
-)
-
-print(round(prob_cure, 4))
-\end{verbatim}
-\normalsize
-\end{frame}
-
-\begin{frame}{Preview of Statistical Inference}
-\begin{block}{Question}
-A baseline model gives mean recovery time $\mu = 14$ days with standard deviation $\sigma = 3$ days. A random sample of $n = 100$ patients receiving a new treatment has mean recovery time $\bar{x} = 13.1$ days. If the baseline model were still true, how unusual would a sample mean of 13.1 days or lower be
-\end{block}
-
-\pause
-
-\begin{block}{Explanation}
-Under the baseline model, the sampling distribution of $\bar{x}$ has
-\[
-\mu_{\bar{x}} = 14
-\]
-\[
-\sigma_{\bar{x}} = \frac{3}{\sqrt{100}} = 0.30
-\]
-\end{block}
-\end{frame}
-
-\begin{frame}{Preview of Statistical Inference}
-\begin{block}{Solution}
-The probability of interest is
-\[
-P(\bar{x} \le 13.1)
-\]
-Using the Normal model gives
-\[
-P(\bar{x} \le 13.1) \approx 0.0013
-\]
-\end{block}
-
-\pause
-
-A small probability means that the observed sample mean would be unusual if the baseline model were true. This repeated-sampling logic is the basis of formal hypothesis testing in later chapters.
-\end{frame}
-
-\begin{frame}[fragile]{Preview of Statistical Inference R Code}
-\scriptsize
-\begin{verbatim}
-# Baseline model for the sampling distribution of x-bar
-baseline_mean <- 14
-population_sd <- 3
-sample_size <- 100
-sampling_sd_recovery <- population_sd / sqrt(sample_size)
-
-# Lower-tail probability P(x-bar <= 13.1)
-prob_recovery <- pnorm(
-  q = 13.1,
-  mean = baseline_mean,
-  sd = sampling_sd_recovery
-)
-
-print(round(prob_recovery, 4))
-\end{verbatim}
-\normalsize
-\end{frame}
-
-\begin{frame}{R Functions Used in This Lecture}
-Several R functions appear in the notes and examples.
+% Right column: explanation
+\begin{column}{0.4\textwidth}
+Each point represents the mean of the first $n$ simulated measurements.
 \begin{itemize}
-  \item \texttt{pnorm()} for Normal probabilities
-  \item \texttt{sqrt()} for square roots in standard-deviation formulas
-  \item \texttt{round()} for rounded numerical output
-  \item \texttt{rnorm()} for simulated Normal data in the notes
-  \item \texttt{rbinom()} for simulated binomial counts in the notes
+	\item The first measurement was $50.204$
+  	\item After $5$ measurements, the running mean was $49.821$
+	\item After $500$ measurements, it was $50.021$
 \end{itemize}
 
-\vspace{0.2cm}
-The lecture figures in the notes also use \texttt{ggplot()} and related plotting layers to visualize sampling distributions.
+The running mean does not move steadily toward $50$, but its fluctuations become smaller as more measurements are included.
+\end{column}
+\end{columns}
 \end{frame}
 
-\begin{frame}{Chapter Summary}
+% SLIDE 34
+\begin{frame}{Example 13.11: Repeated Laboratory Measurements}
+For independent measurements with mean $50$ and standard deviation $0.8$
+$$E(\bar{M}_n)=50$$
+and
+$$\sigma_{\bar{M}_n}=\frac{0.8}{\sqrt{n}}$$
+
+For $n=25$ measurements
+$$\sigma_{\bar{M}_{25}}=\frac{0.8}{\sqrt{25}}=0.16$$
+
+For $n=500$ measurements
+$$\sigma_{\bar{M}_{500}}=\frac{0.8}{\sqrt{500}}\approx0.0358$$
+
+Averaging more measurements reduces the effect of random measurement error. The exact sequence will differ from one simulation to another, but the running mean tends to stabilize near $50$.
+\end{frame}
+
+% SLIDE 35
+\begin{frame}{Example 13.12: Claim Costs in an Insurance Portfolio}
+An insurance portfolio is a collection of policies. Consider the following illustrative model for the annual claim cost of one automobile policy.
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Annual outcome & Probability & Claim cost \\
+\midrule
+No claim & $0.85$ & $\$0$ \\
+Minor claim & $0.10$ & $\$2000$ \\
+Major claim & $0.04$ & $\$8000$ \\
+High-cost claim & $0.01$ & $\$50000$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The expected annual claim cost per policy is
+$$\mu=0.85(0)+0.10(2000)+0.04(8000)+0.01(50000)=200+320+500=\$1020$$
+
+\begin{block}{Question}
+What happens to the average annual claim cost per policy as the number of policies in the portfolio increases?
+\end{block}
+\end{frame}
+
+% SLIDE 36
+\begin{frame}{Example 13.12: Claim Costs in an Insurance Portfolio}
+\begin{columns}[T,onlytextwidth]
+% Left column: plot
+\begin{column}{0.65\textwidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=\linewidth,
+  height=5.5cm,
+  axis lines=left,
+  xmode=log,
+  log basis x=10,
+  xmin=10,
+  xmax=10000,
+  ymin=250,
+  ymax=1250,
+  xtick={10,100,1000,10000},
+  xticklabels={$10$,$100$,$1000$,$10000$},
+  ytick={400,600,800,1000,1200},
+  xlabel={Number of policies},
+  ylabel={Average claim cost (\$)},
+  grid=major,
+  grid style={gray!25},
+  tick label style={font=\scriptsize},
+  label style={font=\small}
+]
+
+\addplot[
+  blue!70!black,
+  mark=*,
+  mark size=2pt,
+  line width=1.2pt
+]
+coordinates {
+  (10,400)
+  (25,640)
+  (50,560)
+  (100,500)
+  (250,1096)
+  (500,932)
+  (1000,1072)
+  (2500,972)
+  (5000,1049.6)
+  (10000,1021.6)
+};
+
+\addplot[
+  black,
+  dashed,
+  line width=1pt,
+  domain=10:10000
+]
+{1020};
+\end{axis}
+\end{tikzpicture}
+\end{column}
+
+% Right column: explanation
+\begin{column}{0.33\textwidth}
+The dashed line represents the expected claim cost of $\$1{,}020$ per policy.
 \begin{itemize}
-  \item A parameter describes a population and a statistic is calculated from a sample
-  \item A sampling distribution describes how a statistic behaves across repeated random samples
-  \item For a sample mean, the centre is $\mu$ and the spread is $\sigma/\sqrt{n}$
-  \item For a sample proportion, the centre is $p$ and the spread is $\sqrt{p(1-p)/n}$
-  \item The Central Limit Theorem explains why sample means become approximately Normal for large samples
-  \item The Law of Large Numbers explains why sample statistics stabilize near the true population value in the long run
+	\item Small portfolios can have unstable averages
+	\item One high-cost claim can noticeably change the average
+	\item The average becomes more stable as the portfolio grows
 \end{itemize}
+
+For $10000$ simulated policies, the average claim cost was $\$1021.60$
+\end{column}
+\end{columns}
+\end{frame}
+
+% SLIDE 37
+\begin{frame}{Example 13.12: Claim Costs in an Insurance Portfolio}
+Let $C_i$ represent the annual claim cost for policy $i$. Under the illustrative model,
+$$E(C_i)=\$1020$$
+
+If the policy outcomes are independent and follow the same probability model, the Law of Large Numbers gives
+$$\bar{C}_n\longrightarrow\$1020$$
+as the number of policies increases.
+
+\begin{block}{Risk Pooling}
+The cost of an individual policy remains uncertain. However, the average cost per policy becomes more stable when costs are averaged across a large portfolio.
+\end{block}
+\end{frame}
+
+% SLIDE 38
+\begin{frame}{Example 13.12: Claim Costs in an Insurance Portfolio}
+\begin{alertblock}{Important Limitations}
+\begin{itemize}
+	\item The Law of Large Numbers does not guarantee that the average will equal $\$1020$ in a particular year
+	\item Policy outcomes may not be independent when many claims result from the same storm, wildfire or other shared event
+	\item A large portfolio does not correct an inaccurate probability model or systematic changes in claim patterns
+\end{itemize}
+\end{alertblock}
+
+The expected claim cost is only one component of an insurance premium. Administrative expenses, uncertainty and other financial considerations may also be included.
 \end{frame}
 
 \end{document}

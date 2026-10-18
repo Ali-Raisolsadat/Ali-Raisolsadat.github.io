@@ -823,8 +823,8 @@ three_levels <- gridExtra::arrangeGrob(
 ggsave(
   "fig_ch13_three_distributions.png",
   three_levels,
-  width = 11,
-  height = 3.8,
+  width = 12,
+  height = 4,
   units = "in",
   dpi = 300,
   bg = "white"
