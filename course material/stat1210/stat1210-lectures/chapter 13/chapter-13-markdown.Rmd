@@ -1197,6 +1197,80 @@ p_lln <- ggplot(
   lecture_chart_theme
 
 save_plot("fig_ch13_lln.png", p_lln, width = 8, height = 4)
+
+# -------------------------------------------------------------
+# Figure 9: Repeated laboratory measurements and the LLN
+# -------------------------------------------------------------
+
+# These values reproduce the selected running means shown in the slides.
+lab_running_means <- data.frame(
+  n = c(1, 5, 10, 25, 50, 100, 200, 300, 400, 500),
+  running_mean = c(
+    50.204, 49.821, 49.863, 49.868, 50.007,
+    50.083, 50.079, 50.022, 50.028, 50.021
+  )
+)
+
+p_lab_lln <- ggplot(
+  lab_running_means,
+  aes(x = n, y = running_mean)
+) +
+  geom_line(colour = "#4B91C8", linewidth = 0.9) +
+  geom_point(colour = "#4B91C8", size = 2.3) +
+  geom_hline(
+    yintercept = 50,
+    colour = "#C44E52",
+    linewidth = 1,
+    linetype = "dashed"
+  ) +
+  scale_x_continuous(breaks = seq(0, 500, by = 100)) +
+  coord_cartesian(xlim = c(0, 520), ylim = c(49.7, 50.3)) +
+  labs(
+    title = "Repeated Laboratory Measurements",
+    subtitle = "Running mean from one simulated sequence; the dashed line is 50",
+    x = "Number of measurements",
+    y = "Running mean"
+  ) +
+  lecture_chart_theme
+
+save_plot("fig_ch13_lab_lln.png", p_lab_lln, width = 7.5, height = 4.2)
+
+# -------------------------------------------------------------
+# Figure 10: Average claim cost in a growing insurance portfolio
+# -------------------------------------------------------------
+
+# These illustrative running averages correspond to the model in Example 13.12.
+claim_running_means <- data.frame(
+  policies = c(10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000),
+  average_cost = c(400, 640, 560, 500, 1096, 932, 1072, 972, 1049.6, 1021.6)
+)
+
+p_claim_lln <- ggplot(
+  claim_running_means,
+  aes(x = policies, y = average_cost)
+) +
+  geom_line(colour = "#4B91C8", linewidth = 0.9) +
+  geom_point(colour = "#4B91C8", size = 2.3) +
+  geom_hline(
+    yintercept = 1020,
+    colour = "#C44E52",
+    linewidth = 1,
+    linetype = "dashed"
+  ) +
+  scale_x_log10(
+    breaks = c(10, 100, 1000, 10000),
+    labels = c("10", "100", "1,000", "10,000")
+  ) +
+  coord_cartesian(ylim = c(250, 1250)) +
+  labs(
+    title = "Average Claim Cost in a Growing Portfolio",
+    subtitle = "The dashed line is the expected claim cost of \u00241,020 per policy",
+    x = "Number of policies (log scale)",
+    y = "Average annual claim cost (\u0024)"
+  ) +
+  lecture_chart_theme
+
+save_plot("fig_ch13_claim_lln.png", p_claim_lln, width = 7.5, height = 4.2)
 ```
 
 # Chapter 13 {.chapter-root .unlisted}
@@ -1213,17 +1287,24 @@ This repeated-sampling perspective is the foundation of statistical inference. C
 >
 > A statistic such as a sample mean or sample proportion is itself a random variable before the sample is selected. Its sampling distribution describes the values that statistic can take across repeated random samples of the same size.
 
+By the end of the chapter, the following questions should be clear:
+
+- What is the difference between a parameter and a statistic?
+- What is a sampling distribution?
+- Why do larger samples generally produce more stable statistics?
+- When can a Normal model be used for a sample mean or a sample proportion?
+
 ### Parameters and Statistics
 
 A population quantity and a sample quantity play different roles. A **parameter** describes a population. A **statistic** is calculated from a sample.
 
 > **Parameter**
 >
-> A parameter is a numerical characteristic of a population. Population parameters are often unknown because measuring every individual in the population may be impractical or impossible.
+> A parameter is a numerical characteristic of a population. It is fixed for a particular population, although it is often unknown because measuring every individual may be impractical or impossible.
 >
 > **Statistic**
 >
-> A statistic is a numerical characteristic calculated from sample data. A statistic can be used to estimate an unknown population parameter.
+> A statistic is a numerical characteristic calculated from sample data. It can be calculated after the sample has been observed, and its value may change when a different random sample is selected.
 
 The notation helps keep the two roles separate.
 
@@ -1238,7 +1319,7 @@ The letters are not interchangeable. The symbol $\bar{x}$ refers to the mean fro
 
 **Question**
 
-A national registration system contains birth records for every birth in the population of interest during a particular year. The records show that 8% of births were classified as low birth weight and that the mean age at first birth was 26.3 years. Are these values parameters or statistics?
+A national registration system contains complete records for every birth in the population of interest during one year. Among all registered births, 8% were classified as low birth weight. Among all people giving birth for the first time during that year, the mean age was 26.3 years. Are these values parameters or statistics? Give the appropriate notation.
 
 **Explanation**
 
@@ -1258,13 +1339,13 @@ $$
 \mu=26.3
 $$
 
-Both values are parameters because they describe the full population used in the calculation.
+Both values are parameters because they describe the full populations used in the calculations. Whether a value is a parameter or a statistic depends on where the data came from, not on the numerical size of the value.
 
 #### Example 13.2: A Sample Statistic
 
 **Question**
 
-A polling organization interviews a random sample of 1,023 adults. In the sample, 19% report smoking cigarettes during the previous week. Among the sampled smokers, the mean number of cigarettes smoked per day is 12. Are these values parameters or statistics?
+A polling organization selects a random sample of 1,023 adults. In the sample, 19% report smoking cigarettes during the previous week. Among the sampled adults who reported smoking, the mean number of cigarettes smoked per day is 12. Are these values parameters or statistics? Give the appropriate notation.
 
 **Explanation**
 
@@ -1342,23 +1423,23 @@ The simulation should therefore produce a histogram of sample means that is cent
 
 <img src="fig_ch13_sampling_dist.png" alt="Histogram of simulated sample means from samples of size 25 with the theoretical Normal sampling distribution overlaid" />
 
+The repeated-sampling process can be reproduced with a short R simulation.
+
+```{r simulate_iq_sample_means}
+set.seed(123)
+
+sample_means <- replicate(
+  500,
+  mean(rnorm(25, mean = 100, sd = 15))
+)
+
+mean(sample_means)
+sd(sample_means)
+```
+
 The simulated values fluctuate because only 500 samples were generated. The histogram nevertheless reflects the theoretical sampling distribution: the means cluster around 100 and vary much less than individual IQ scores.
 
 The simulation provides evidence consistent with the theory. The unbiasedness of $\bar{x}$ is established mathematically by the fact that its expected value equals $\mu$, not by one simulation.
-
-### The Effect of Sample Size
-
-The sample size controls how much a sample mean varies from sample to sample. Larger samples average over more observations, so unusual individual values have less influence on the final mean.
-
-<img src="fig_ch13_sample_size.png" alt="Four histograms showing narrower sampling distributions of the sample mean as sample size increases" />
-
-The centre remains at the same population mean for every sample size. The spread becomes smaller as $n$ increases.
-
-The reduction follows a square-root relationship. A sample size that is four times as large cuts the standard deviation of the sample mean in half. A sample size that is 100 times as large cuts the standard deviation by a factor of 10.
-
-A larger random sample therefore produces a more precise sample mean in the sense that its sampling distribution is narrower. A larger sample does not correct systematic bias caused by a poor sampling design.
-
----
 
 ## The Sampling Distribution of $\bar{x}$
 
@@ -1395,13 +1476,27 @@ $$
 \sqrt{\frac{N-n}{N-1}}
 $$
 
-When the sample is a small fraction of the population, the correction factor is close to 1. A common conservative condition is that the sample size is no more than 5% of the population.
+When the sample is a small fraction of the population, the correction factor is close to 1. A common condition is that the sample size is no more than 10% of the population.
 
 $$
-n\le0.05N
+n\le0.10N
 $$
 
 Under this condition, the simpler formula $\sigma/\sqrt{n}$ is usually an excellent approximation.
+
+### The Effect of Sample Size
+
+The sample size controls how much a sample mean varies from sample to sample. Larger samples average over more observations, so unusual individual values have less influence on the final mean.
+
+<img src="fig_ch13_sample_size.png" alt="Four histograms showing narrower sampling distributions of the sample mean as sample size increases" />
+
+As the sample size increases, three features should be distinguished:
+
+- The centre of the sampling distribution remains at $\mu$
+- The spread of the sampling distribution decreases
+- The sample mean is more likely to fall close to the population mean
+
+A larger random sample therefore produces a more stable and more precise estimate of the population mean. Precision refers to reduced random sampling variability. It does not mean that a larger sample automatically corrects bias caused by a poor sampling design or inaccurate measurements.
 
 ### Why the Square Root Matters
 
@@ -1427,7 +1522,7 @@ $$
 
 The standard deviation is reduced by a factor of 10.
 
-This square-root relationship is an important practical lesson. Doubling a sample size improves precision, but it does not cut the standard error in half.
+More generally, to reduce the standard deviation of $\bar{x}$ by a factor of $c$, the sample size must be multiplied by $c^2$. This square-root relationship is an important practical lesson. Doubling a sample size improves precision, but it does not cut the standard error in half.
 
 ---
 
@@ -1553,27 +1648,10 @@ $$
 
 The word **success** is only a mathematical label for the outcome being counted.
 
-#### Example 13.8: Contact Lens Practices
+The notation distinguishes the population quantity from the sample quantity:
 
-**Question**
-
-A random sample of 281 contact-lens users contains 139 people who report that they do not consistently wash their hands before handling their lenses. What is the sample proportion?
-
-**Explanation**
-
-The count of interest is $X=139$ and the sample size is $n=281$. The sample proportion is the count divided by the sample size.
-
-**Solution**
-
-$$
-\hat{p}=\frac{139}{281}
-$$
-
-$$
-\hat{p}\approx0.495
-$$
-
-The sample proportion is about 49.5%. This statistic can be used to estimate the corresponding population proportion when the sampling design supports that generalization.
+- $p$ is the proportion in the population
+- $\hat{p}$ is the proportion observed in the sample
 
 ### Centre of the Sampling Distribution
 
@@ -1604,7 +1682,13 @@ $$
 \sqrt{\frac{N-n}{N-1}}
 $$
 
-When the sample is no more than about 5% of the population, the correction factor is close to 1 and the simpler formula is usually used.
+When sampling without replacement, a common condition is that the sample contains no more than 10% of the population.
+
+$$
+n\le0.10N
+$$
+
+Under this condition, the correction factor is close to 1 and the simpler formula is usually used. The random observations should also be independent or approximately independent.
 
 The spread decreases as the sample size increases. The same square-root rule applies: a sample 100 times as large reduces the standard deviation by a factor of 10.
 
@@ -1626,13 +1710,34 @@ $$
 
 These conditions are guidelines rather than mathematical guarantees. When $p$ is close to 0 or 1, a larger sample is required because one of the expected counts can be small.
 
-<img src="fig_ch13_phat_dist.png" alt="Histogram of simulated sample proportions with a Normal approximation for the blood type O example" />
+#### Example 13.8: Contact-Lens Practices
+
+**Question**
+
+A random sample of 281 contact-lens users contains 139 people who report that they do not consistently wash their hands before handling their lenses. What is the sample proportion?
+
+**Explanation**
+
+Define a success as a sampled person reporting that they do not consistently wash their hands before handling their contact lenses. The count of successes is $X=139$ and the sample size is $n=281$.
+
+**Solution**
+
+$$
+\hat{p}
+=
+\frac{X}{n}
+=
+\frac{139}{281}
+\approx0.495
+$$
+
+Approximately 49.5% of the people in the sample reported that they did not consistently wash their hands before handling their contact lenses. This is a description of the observed sample. Generalizing it to a population requires an appropriate sampling design.
 
 ### Examples 13.9 and 13.10: Blood Type O
 
 **Question**
 
-The population proportion with blood type O is $p=0.45$. A random sample of $n=1000$ records is selected. What is the probability that the sample proportion is 0.42 or lower?
+The population proportion with blood type O is $p=0.45$. A random sample of $n=1000$ records is selected from a large national registry. What is the probability that the sample proportion is 0.42 or lower?
 
 **Explanation**
 
@@ -1680,7 +1785,7 @@ $$
 z
 =
 \frac{0.42-0.45}{0.01573}
-\approx-1.91
+\approx-1.907
 $$
 
 Using the Normal model gives
@@ -1714,6 +1819,16 @@ print(round(prob_type_o, 4))
 ```
 
 The probability is about 0.0283, or 2.83%. Under the model, only a small proportion of random samples of size 1000 would produce a sample proportion of 0.42 or lower.
+
+The figure below shows the sampling distribution and the lower-tail region used in the calculation.
+
+<img src="fig_ch13_phat_dist.png" alt="Histogram of simulated sample proportions with a Normal approximation and the lower tail at 0.42 shaded" />
+
+The horizontal scale contains possible values of $\hat{p}$ from repeated samples, not blood-type outcomes for individual people. The distribution is centred at $p=0.45$, and the shaded area represents
+
+$$
+P(\hat{p}\le0.42)\approx0.0283
+$$
 
 ---
 
@@ -1751,15 +1866,151 @@ The same idea applies to a running sample mean.
 
 The graph shows considerable early fluctuation. As more rolls are included, the running average becomes more stable around the theoretical mean of 3.5.
 
-### Applications of the Long-Run Principle
+### Why the Law of Large Numbers Matters
 
-The Law of Large Numbers is useful whenever many comparable independent outcomes are averaged.
+The Law of Large Numbers provides a mathematical explanation for why averages and proportions tend to become more stable as the number of observations increases. It is relevant when summarizing repeated measurements, studying simulation output and estimating average costs across a large collection of risks.
 
-Insurance provides one example. Individual claims can be highly uncertain, but average claim costs across a large portfolio tend to be more stable than the cost for one policyholder. This stability supports risk estimation. It does not guarantee profitability because premiums, expenses, dependence between risks and model error also matter.
+The Law of Large Numbers and a sampling distribution answer related but different questions:
 
-Games of chance provide another mathematical example. Individual outcomes can be highly variable, while long-run averages tend toward the expected value under a stable probability model. This example illustrates the theorem rather than providing a strategy for participation.
+- The Law of Large Numbers describes what happens to a statistic as the sample size becomes very large
+- A sampling distribution describes how much a statistic varies at a particular finite sample size
 
-In the life sciences, researchers often cannot collect extremely large samples because of cost, time, ethics or limited populations. Sampling distributions are therefore essential because they quantify uncertainty at realistic sample sizes.
+A larger sample reduces random sampling variability. It does not automatically correct systematic bias, poor measurement or an inappropriate sampling method.
+
+#### Example 13.11: Repeated Laboratory Measurements
+
+**Question**
+
+A laboratory repeatedly measures the protein concentration of a reference sample. The reference concentration is 50 micrograms per millilitre. Suppose each measurement can be represented as
+
+$$
+M_i=50+\varepsilon_i
+$$
+
+where the measurement errors $\varepsilon_i$ are independent, have mean 0 and have standard deviation 0.8 micrograms per millilitre. What happens to the running mean
+
+$$
+\bar{M}_n
+=
+\frac{M_1+M_2+\cdots+M_n}{n}
+$$
+
+as the number of measurements increases?
+
+**Explanation**
+
+The zero mean for the errors means that the measurement process is centred at the reference concentration:
+
+$$
+E(M_i)=50
+$$
+
+The Law of Large Numbers therefore predicts
+
+$$
+\bar{M}_n\longrightarrow50
+$$
+
+**One simulated sequence**
+
+<img src="fig_ch13_lab_lln.png" alt="Selected running means from repeated laboratory measurements stabilizing near the reference concentration of 50" />
+
+The path is not monotonic. The first simulated measurement was 50.204, the running mean after 5 measurements was 49.821 and the running mean after 500 measurements was 50.021. A new measurement can temporarily move the running mean toward or away from 50. The overall fluctuations become smaller as more measurements are included.
+
+The sampling-distribution formula explains the increasing stability. For independent measurements,
+
+$$
+E(\bar{M}_n)=50
+$$
+
+and
+
+$$
+\sigma_{\bar{M}_n}
+=
+\frac{0.8}{\sqrt{n}}
+$$
+
+For 25 measurements,
+
+$$
+\sigma_{\bar{M}_{25}}
+=
+\frac{0.8}{\sqrt{25}}
+=
+0.16
+$$
+
+For 500 measurements,
+
+$$
+\sigma_{\bar{M}_{500}}
+=
+\frac{0.8}{\sqrt{500}}
+\approx
+0.0358
+$$
+
+Averaging more measurements reduces the effect of random measurement error. The exact path will differ from one sequence to another, but the running mean tends to stabilize near 50 under the stated model.
+
+> **Random error and systematic error**
+>
+> Repetition can reduce the effect of random error. It does not remove systematic error. If an instrument is consistently miscalibrated, the running mean may stabilize around an incorrect value.
+
+#### Example 13.12: Claim Costs in an Insurance Portfolio
+
+An insurance portfolio is a collection of policies. Consider the following illustrative probability model for the annual claim cost of one automobile policy.
+
+| Annual outcome | Probability | Claim cost |
+|:--|--:|--:|
+| No claim | $0.85$ | $\$0$ |
+| Minor claim | $0.10$ | $\$2{,}000$ |
+| Major claim | $0.04$ | $\$8{,}000$ |
+| High-cost claim | $0.01$ | $\$50{,}000$ |
+
+The expected annual claim cost per policy is
+
+$$
+\begin{aligned}
+\mu
+&=0.85(0)+0.10(2000)+0.04(8000)+0.01(50000)\\
+&=200+320+500\\
+&=\$1{,}020
+\end{aligned}
+$$
+
+**Question**
+
+What happens to the average annual claim cost per policy as the number of policies in the portfolio increases?
+
+**One simulated portfolio**
+
+<img src="fig_ch13_claim_lln.png" alt="Average annual claim cost per policy stabilizing near the expected cost of 1020 dollars as the portfolio grows" />
+
+The horizontal axis uses a logarithmic scale so that both small and large portfolios can be displayed. Small portfolios can have unstable averages because one high-cost claim can substantially change the average. In this simulation, the average cost was $\$400$ after 10 policies and $\$1{,}096$ after 250 policies. After 10,000 policies, the average was $\$1{,}021.60$, close to the expected value of $\$1{,}020$.
+
+Let $C_i$ represent the annual claim cost for policy $i$. Under the illustrative model,
+
+$$
+E(C_i)=\$1{,}020
+$$
+
+If policy outcomes are independent and follow the same stable probability model, the Law of Large Numbers gives
+
+$$
+\bar{C}_n\longrightarrow\$1{,}020
+$$
+
+The claim cost for an individual policy remains uncertain. The average cost per policy becomes more stable when costs are averaged across a large portfolio. This stabilization is one mathematical component of **risk pooling**.
+
+Several limitations remain important:
+
+- The Law of Large Numbers does not guarantee that the average will equal $\$1{,}020$ in a particular year
+- Policy outcomes may not be independent when many claims result from the same storm, wildfire or other shared event
+- A large portfolio does not correct an inaccurate probability model or systematic changes in claim patterns
+- Expected claim cost is only one component of an insurance premium; administrative expenses, uncertainty and other financial considerations may also be included
+
+In the life sciences, very large samples may be limited by cost, time, ethics or the size of the available population. Sampling distributions are therefore essential because they quantify uncertainty at realistic finite sample sizes.
 
 ---
 
