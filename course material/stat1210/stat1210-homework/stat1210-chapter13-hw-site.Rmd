@@ -1,0 +1,957 @@
+---
+title: "STAT $1210$"
+subtitle: "Chapter $13$ Homework: Sampling Distributions"
+author: "Fall $2026$"
+date: ""
+output:
+  html_document:
+    self_contained: true
+    toc: false
+    number_sections: false
+    theme: flatly
+    highlight: tango
+---
+
+<style>
+:root {
+  --ink: #263746;
+  --muted: #667786;
+  --blue: #294d73;
+  --blue-dark: #183a5c;
+  --blue-soft: #edf3f8;
+  --line: #d8e1e8;
+  --paper: #ffffff;
+  --page: #eef2f5;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+
+.main-container {
+  max-width: 980px !important;
+  margin-top: 28px;
+  margin-bottom: 42px;
+  padding: 42px 58px 56px;
+  background: var(--paper);
+  border: 1px solid #dde5eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(31, 50, 67, 0.10);
+}
+
+h1, h2, h3 { color: var(--blue-dark); }
+
+h1.title {
+  margin-bottom: 4px;
+  font-weight: 750;
+}
+
+h3.subtitle {
+  margin-top: 0;
+  color: var(--blue);
+  font-weight: 500;
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 1.28em;
+  line-height: 1.35;
+}
+
+.intro-box {
+  margin: 1.2em 0 1.8em;
+  padding: 1em 1.2em;
+  border-left: 5px solid var(--blue);
+  border-radius: 6px;
+  background: var(--blue-soft);
+}
+
+.question-card {
+  margin: 1.55em 0 2em;
+  padding: 1.3em 1.45em 1.1em;
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--blue);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(35, 54, 74, 0.07);
+}
+
+table {
+  width: 100%;
+  margin: 1.1em 0 1.3em;
+  border-collapse: collapse;
+  border: 1px solid var(--line);
+}
+
+thead th {
+  padding: 0.65em 0.75em !important;
+  background: var(--blue);
+  color: white;
+  border: 0 !important;
+}
+
+tbody td {
+  padding: 0.58em 0.75em !important;
+  border-bottom: 1px solid #e5ebf0 !important;
+}
+
+tbody tr:nth-child(even) td { background: #f7f9fb; }
+
+details.solution {
+  margin-top: 1.15em;
+  border: 1px solid #bfd1df;
+  border-radius: 7px;
+  background: #f8fbfd;
+  overflow: hidden;
+}
+
+details.solution summary {
+  padding: 0.72em 0.95em;
+  color: var(--blue-dark);
+  background: var(--blue-soft);
+  cursor: pointer;
+  font-weight: 700;
+  user-select: none;
+}
+
+details.solution summary:hover { background: #e2edf5; }
+
+.solution-body {
+  padding: 0.95em 1.1em 0.75em;
+}
+
+.solution-body ol { margin-bottom: 0.25em; }
+.solution-body li { margin-bottom: 0.75em; }
+
+@media (max-width: 768px) {
+  .main-container {
+    margin-top: 0;
+    padding: 24px 20px 38px;
+    border-radius: 0;
+  }
+}
+
+@media print {
+  body { background: white; font-size: 11pt; }
+  .main-container {
+    max-width: none !important;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+  .question-card { break-inside: avoid; box-shadow: none; }
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  fig.retina = 2,
+  out.width = "88%"
+)
+```
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("details.solution").forEach(function(item) {
+    item.removeAttribute("open");
+  });
+});
+</script>
+
+::: {.question-card}
+### Question $1$
+
+A provincial wildlife registry contains records for all $12480$ known bald eagle nesting pairs in the province. The registry shows that $31.0\%$ of the pairs successfully raised at least two chicks during the most recent breeding season. A biologist then selects a random sample of $250$ nesting pairs and finds that $71$ successfully raised at least two chicks.
+
+1. Identify the population and the sample.
+2. Identify the population parameter and write its value using appropriate notation.
+3. Calculate the sample statistic and write it using appropriate notation.
+4. Explain why the sample statistic could have a different value if another random sample of $250$ nesting pairs were selected.
+5. Which value is fixed for this population and which value varies from sample to sample?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The population is all $12480$ known bald eagle nesting pairs in the provincial registry. The sample is the $250$ randomly selected nesting pairs.</li>
+  <li>The population parameter is the proportion of all registered nesting pairs that successfully raised at least two chicks. Because the entire registry gives this value,
+  $$
+  p=0.310
+  $$
+  </li>
+  <li>The sample statistic is
+  $$
+  \hat p=\frac{71}{250}=0.284
+  $$
+  So $28.4\%$ of the sampled nesting pairs successfully raised at least two chicks.</li>
+  <li>A different random sample would usually contain a different collection of nesting pairs. The number that raised at least two chicks, and therefore the sample proportion, could change. This natural change is called sampling variability.</li>
+  <li>The population parameter $p=0.310$ is fixed for the defined population and breeding season. The statistic $\hat p$ varies across possible random samples.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $2$
+
+A fisheries scientist is studying the body lengths of approximately $30000$ adult brook trout in a large lake. The scientist selects one simple random sample of $40$ trout and records each length. The scientist also imagines repeating this sampling process many times and calculating the sample mean length for every sample.
+
+For each description below, state whether it refers to the **population distribution**, the **sample distribution** or the **sampling distribution of $\bar x$**.
+
+1. The distribution of the lengths of all adult brook trout in the lake.
+2. The distribution of the $40$ observed lengths in the one selected sample.
+3. The distribution of the sample means obtained from all possible random samples of $40$ trout.
+4. Which distribution describes individual fish and which distribution describes values of a statistic?
+5. Explain why the sampling distribution usually has less spread than the population distribution.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>This is the <strong>population distribution</strong>. Its observational units are all adult brook trout in the lake.</li>
+  <li>This is the <strong>sample distribution</strong>. It describes the $40$ measurements in the particular sample that was selected.</li>
+  <li>This is the <strong>sampling distribution of $\bar x$</strong>. Each possible sample contributes one value, its sample mean length.</li>
+  <li>The population and sample distributions describe individual fish lengths. The sampling distribution describes possible values of the statistic $\bar x$.</li>
+  <li>A sample mean averages several observations. High and low individual values tend to offset one another, so sample means vary less than individual measurements. In particular,
+  $$
+  \sigma_{\bar x}=\frac{\sigma}{\sqrt{n}}
+  $$
+  which is smaller than $\sigma$ whenever $n>1$.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $3$
+
+A small controlled laboratory population contains four turtle eggs with incubation times of $50$, $52$, $54$ and $56$ days. A random sample of $2$ different eggs is selected without replacement, and the mean incubation time $\bar x$ is calculated.
+
+1. List all possible unordered samples of size $2$.
+2. Calculate the sample mean for each possible sample.
+3. Construct the sampling distribution of $\bar x$ by listing each possible value of $\bar x$ and its probability.
+4. Calculate the mean of the sampling distribution. Compare it with the population mean $\mu$.
+5. Calculate the standard deviation of this sampling distribution using
+$$
+\sigma_{\bar x}=\sqrt{\sum(\bar x-\mu_{\bar x})^2P(\bar x)}
+$$
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>There are
+  $$
+  \binom{4}{2}=6
+  $$
+  equally likely unordered samples:
+  $$
+  (50,52),\ (50,54),\ (50,56),\ (52,54),\ (52,56),\ (54,56)
+  $$
+  </li>
+  <li>The corresponding sample means are
+  $$
+  51,\ 52,\ 53,\ 53,\ 54,\ 55
+  $$
+  </li>
+  <li>The value $53$ occurs for two of the six samples. Every other listed mean occurs once.
+| $\bar x$ | $51$ | $52$ | $53$ | $54$ | $55$ |
+|:--|--:|--:|--:|--:|--:|
+| $P(\bar x)$ | $1/6$ | $1/6$ | $2/6$ | $1/6$ | $1/6$ |
+  The probabilities sum to $1$.</li>
+  <li>The mean of the sampling distribution is
+  $$
+  \mu_{\bar x}=51\left(\frac16\right)+52\left(\frac16\right)+53\left(\frac26\right)+54\left(\frac16\right)+55\left(\frac16\right)=53
+  $$
+  The population mean is
+  $$
+  \mu=\frac{50+52+54+56}{4}=53
+  $$
+  Therefore, $\mu_{\bar x}=\mu$. This illustrates that $\bar x$ is an unbiased estimator of $\mu$.</li>
+  <li>The variance of the sampling distribution is
+  $$
+  \begin{aligned}
+  \sigma_{\bar x}^2
+  &=(51-53)^2\left(\frac16\right)+(52-53)^2\left(\frac16\right)\\
+  &\quad +(53-53)^2\left(\frac26\right)+(54-53)^2\left(\frac16\right)+(55-53)^2\left(\frac16\right)\\
+  &=\frac{4+1+0+1+4}{6}=\frac{10}{6}
+  \end{aligned}
+  $$
+
+  Therefore
+  $$
+  \sigma_{\bar x}=\sqrt{\frac{10}{6}}\approx1.291\text{ days}
+  $$
+  </li>
+</ol>
+```{r q3-exact-sampling-distribution, echo=TRUE}
+population <- c(50, 52, 54, 56)
+
+# Use combn() to generate all combinations of n elements, taken m at a time
+samples <- combn(population, 2)
+samples
+
+sample_means <- colMeans(samples)
+sample_means
+
+mean(sample_means)
+sqrt(mean((sample_means - mean(sample_means))^2))
+```
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $4$
+
+The concentration of a blood biomarker in a healthy adult population has mean $72$ units and standard deviation $12$ units. Random samples of $36$ adults are selected and the sample mean biomarker concentration is calculated for each sample.
+
+1. State the mean of the sampling distribution of $\bar x$.
+2. Calculate the standard deviation of the sampling distribution of $\bar x$.
+3. Interpret both values in context.
+4. Is a particular sample mean guaranteed to equal $72$ units? Explain.
+5. Explain what it means to say that $\bar x$ is an unbiased estimator of $\mu$.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The sampling distribution is centred at the population mean:
+  $$
+  \mu_{\bar x}=\mu=72\text{ units}
+  $$
+  </li>
+  <li>Its standard deviation is
+  $$
+  \sigma_{\bar x}=\frac{\sigma}{\sqrt n}=\frac{12}{\sqrt{36}}=\frac{12}{6}=2\text{ units}
+  $$
+  </li>
+  <li>Across many random samples of $36$ adults, the sample means would be centred at $72$ units. Their typical distance from $72$ would be about $2$ units.</li>
+  <li>No. Sampling variability causes individual sample means to fall above or below $72$. The value $72$ is the long-run centre of the possible sample means, not a guarantee for every sample.</li>
+  <li>Unbiasedness means that the mean of the sampling distribution of $\bar x$ equals the population mean. Over all possible random samples of the same size, $\bar x$ does not systematically overestimate or underestimate $\mu$.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $5$
+
+The standard deviation of individual daily sodium measurements in a population is $12$ millimoles. Consider random samples of different sizes.
+
+1. Calculate $\sigma_{\bar x}$ when $n=16$, $n=64$ and $n=144$.
+2. By what factor does the standard deviation of $\bar x$ change when the sample size increases from $16$ to $64$?
+3. By what factor must the sample size be multiplied to reduce $\sigma_{\bar x}$ by a factor of $3$?
+4. Find the smallest sample size required to make $\sigma_{\bar x}$ no greater than $0.75$ millimoles.
+5. Explain why doubling the sample size does not cut the standard deviation of $\bar x$ in half.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Using $\sigma_{\bar x}=\sigma/\sqrt n$
+  $$
+  \sigma_{\bar x}=\frac{12}{\sqrt{16}}=3
+  $$
+  $$
+  \sigma_{\bar x}=\frac{12}{\sqrt{64}}=1.5
+  $$
+  $$
+  \sigma_{\bar x}=\frac{12}{\sqrt{144}}=1
+  $$
+  </li>
+  <li>The sample size is multiplied by $4$, from $16$ to $64$, and the standard deviation is divided by $\sqrt4=2$. It decreases from $3$ to $1.5$.</li>
+  <li>To divide the standard deviation by $3$, the sample size must be multiplied by
+  $$
+  3^2=9
+  $$
+  </li>
+  <li>We require
+  $$
+  \frac{12}{\sqrt n}\leq0.75
+  $$
+  Solving gives
+  $$
+  \sqrt n\geq\frac{12}{0.75}=16
+  $$
+  $$
+  n\geq16^2=256
+  $$
+  The smallest required sample size is $256$.</li>
+  <li>The standard deviation depends on the square root of the sample size. Doubling $n$ divides the standard deviation by $\sqrt2$, not by $2$. To cut the standard deviation in half, the sample size must be multiplied by $4$.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $6$
+
+Systolic blood pressure in a population of healthy adult dogs is Normally distributed with mean $125$ mmHg and standard deviation $18$ mmHg. A veterinary researcher selects a random sample of $9$ dogs.
+
+1. State the distribution of an individual dog's systolic blood pressure.
+2. State the distribution of the sample mean $\bar x$ including its mean and standard deviation.
+3. Calculate the probability that the sample mean exceeds $134$ mmHg.
+4. Calculate the probability that one randomly selected dog has a systolic blood pressure above $134$ mmHg.
+5. Explain why the answers to Parts $3$ and $4$ differ.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>If $X$ represents an individual dog's systolic blood pressure then
+  $$
+  X\sim N(125,18)
+  $$
+  where the second value denotes the standard deviation.</li>
+  <li>Because the population is Normal, the sampling distribution of $\bar x$ is exactly Normal for any sample size. Its standard deviation is
+  $$
+  \sigma_{\bar x}=\frac{18}{\sqrt9}=6\text{ mmHg}
+  $$
+  Therefore
+  $$
+  \bar X\sim N(125,6)
+  $$
+  </li>
+  <li>For the sample mean
+  $$
+  z=\frac{134-125}{6}=1.50
+  $$
+  Thus
+  $$
+  P(\bar X>134)=P(Z>1.50)=1-0.9332=0.0668
+  $$
+  </li>
+  <li>For one individual dog, the relevant standard deviation is $18$, not $6$:
+  $$
+  z=\frac{134-125}{18}=0.50
+  $$
+  Therefore
+  $$
+  P(X>134)=P(Z>0.50)=1-0.6915=0.3085
+  $$
+  </li>
+  <li>Individual measurements have standard deviation $18$ mmHg, whereas means of $9$ measurements have standard deviation $6$ mmHg. Sample means are more concentrated around $125$, so a sample mean above $134$ is less common than an individual value above $134$.</li>
+</ol>
+```{r q6-dog-blood-pressure, echo=TRUE}
+pnorm(134, mean = 125, sd = 18 / sqrt(9), lower.tail = FALSE)
+pnorm(134, mean = 125, sd = 18, lower.tail = FALSE)
+```
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $7$
+
+The fork length of adult Atlantic salmon returning to a river is approximately Normally distributed with mean $62$ cm and standard deviation $8$ cm. Independent random samples of $16$ returning salmon are considered.
+
+1. Find the mean and standard deviation of the sampling distribution of $\bar x$.
+2. Calculate $P(60\leq\bar X\leq65)$ by standardizing both boundaries.
+3. If researchers independently collected $200$ samples of $16$ salmon, approximately how many sample means would be expected to fall between $60$ cm and $65$ cm?
+4. Would the same Normal calculation be exact if the population distribution were strongly skewed? Explain.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The centre and spread are
+  $$
+  \mu_{\bar x}=62\text{ cm}
+  $$
+  $$
+  \sigma_{\bar x}=\frac{8}{\sqrt{16}}=2\text{ cm}
+  $$
+  </li>
+  <li>The standardized lower boundary is
+  $$
+  z_{60}=\frac{60-62}{2}=-1.00
+  $$
+  The standardized upper boundary is
+  $$
+  z_{65}=\frac{65-62}{2}=1.50
+  $$
+  Therefore
+  $$
+  \begin{aligned}
+  P(60\leq\bar X\leq65)
+  &=P(-1.00\leq Z\leq1.50)\\
+  &=P(Z\leq1.50)-P(Z\leq-1.00)\\
+  &=0.9332-0.1587\\
+  &=0.7745
+  \end{aligned}
+  $$
+  </li>
+  <li>The expected number is
+  $$
+  200(0.7745)=154.9
+  $$
+  Approximately $155$ of the $200$ sample means would be expected to fall in this interval.</li>
+  <li>No. With a strongly skewed population and a sample size of only $16$, the sampling distribution may not be sufficiently close to Normal. The exact calculation is justified here because the population itself is modelled as Normal.</li>
+</ol>
+```{r q7-salmon-means, echo=TRUE}
+probability <- pnorm(65, mean = 62, sd = 2) - pnorm(60, mean = 62, sd = 2)
+
+probability
+200 * probability
+```
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $8$
+
+For each study below, assess whether a Normal model for the sampling distribution of $\bar x$ is reasonable. Explain the role of both the population shape and the sample size.
+
+1. Body temperature is approximately Normal and a random sample of $5$ healthy horses is selected.
+2. Daily milk production is moderately right-skewed with no substantial outliers and a random sample of $80$ dairy cows is selected.
+3. Veterinary emergency costs are strongly right-skewed and contain several extreme values and a random sample of $15$ cases is selected.
+4. Explain why there is no single sample size rule that works for every population shape.
+5. Does the Central Limit Theorem say that the raw observations in a large sample become Normally distributed? Explain.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>A Normal model is reasonable and is exact under the stated population model. If the population is Normal, the sampling distribution of $\bar x$ is Normal even when $n=5$.</li>
+  <li>A Normal approximation is likely reasonable. The sample size of $80$ provides substantial averaging, and the population has only moderate skewness with no substantial outliers.</li>
+  <li>A Normal approximation may not be reliable. The sample is small, while the population is strongly skewed and contains extreme values. A larger sample would be needed before relying on the Central Limit Theorem.</li>
+  <li>The amount of averaging required depends on the population. A nearly symmetric population may require only a modest sample size, while severe skewness or extreme outliers may require a much larger sample. The sampling process and independence also matter.</li>
+  <li>No. The Central Limit Theorem concerns the distribution of sample means across repeated samples. It does not say that the individual observations in one large sample become Normal.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $9$
+
+Parasite egg counts in livestock are strongly right-skewed. In a large population of untreated sheep, the mean count is $240$ eggs per gram of feces and the standard deviation is $150$ eggs per gram. A simple random sample of $100$ sheep is selected.
+
+1. Explain why the distribution of individual egg counts should not be modelled as Normal from the information given.
+2. Explain why a Normal approximation for the sampling distribution of $\bar x$ may nevertheless be reasonable.
+3. Find the mean and standard deviation of the sampling distribution of $\bar x$.
+4. Calculate the probability that the sample mean is below $210$ eggs per gram.
+5. Interpret the probability in context.
+6. If the $100$ sheep were all selected from the same small pen and exposed to the same contaminated feeding area, which assumption could be questionable?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The individual counts are described as strongly right-skewed. A Normal distribution is symmetric, so it would not appropriately represent the stated population shape.</li>
+  <li>The sample size is large, with $n=100$. If the observations are independent and the population has finite mean and standard deviation, the Central Limit Theorem indicates that the sampling distribution of $\bar x$ should be approximately Normal even though individual counts are skewed.</li>
+  <li>The centre is
+  $$
+  \mu_{\bar x}=\mu=240
+  $$
+  The standard deviation is
+  $$
+  \sigma_{\bar x}=\frac{150}{\sqrt{100}}=15
+  $$
+  </li>
+  <li>Standardizing $210$ gives
+  $$
+  z=\frac{210-240}{15}=-2.00
+  $$
+  Therefore
+  $$
+  P(\bar X<210)=P(Z<-2.00)=0.0228
+  $$
+  </li>
+  <li>If the population mean and standard deviation are $240$ and $150$, approximately $2.28\%$ of random samples of $100$ sheep would have a sample mean below $210$ eggs per gram.</li>
+  <li>The independence assumption could be questionable. Sheep sharing one small environment may have related exposures and therefore correlated parasite counts. Increasing the number of sheep in that one pen would not necessarily create independent observations.</li>
+</ol>
+
+```{r q9-parasite-means, echo=TRUE}
+standard_error <- 150 / sqrt(100)
+pnorm(210, mean = 240, sd = standard_error)
+```
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $10$
+
+A veterinary surveillance program randomly tests $320$ honeybee colonies for a particular pathogen. Of the tested colonies, $72$ produce a positive laboratory result.
+
+1. Define a success for this study.
+2. Calculate the sample proportion $\hat p$ of colonies that tested positive.
+3. Identify the population parameter that $\hat p$ is intended to estimate.
+4. Is the response for one colony categorical or quantitative? Explain.
+5. Explain why the statistical label **success** does not mean that a positive pathogen result is desirable.
+6. If the study were repeated with a new random sample of $320$ colonies, would the new value of $\hat p$ necessarily equal the value found here?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>A success is a tested colony producing a positive laboratory result for the pathogen.</li>
+  <li>The sample proportion is
+  $$
+  \hat p=\frac{X}{n}=\frac{72}{320}=0.225
+  $$
+  So $22.5\%$ of the sampled colonies tested positive.</li>
+  <li>The parameter $p$ is the true proportion of all colonies in the target population that would test positive under the same testing procedure.</li>
+  <li>The response is categorical. Each colony is classified into one of two categories: positive or not positive.</li>
+  <li>In probability models, success is simply the outcome being counted. It does not imply a favourable medical or biological outcome.</li>
+  <li>No. A different random sample would generally contain different colonies, so its number of positive results and its sample proportion could differ because of sampling variability.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $11$
+
+In a region containing approximately $10000$ dogs, the long-run proportion carrying a tick borne infection is modelled as $p=0.18$. A simple random sample of $400$ dogs is selected and $\hat p$ is the proportion in the sample that test positive.
+
+1. Find the mean and standard deviation of the sampling distribution of $\hat p$.
+2. Check the expected count condition for using a Normal approximation.
+3. Check the $10\%$ condition used to support approximate independence when sampling without replacement.
+4. Use a Normal approximation to calculate $P(\hat p\geq0.22)$.
+5. Interpret the probability in context.
+6. Explain how the spread of the sampling distribution would change if the sample size increased while the population proportion remained the same.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The mean is
+  $$
+  \mu_{\hat p}=p=0.18
+  $$
+  The standard deviation is
+  $$
+  \sigma_{\hat p}=\sqrt{\frac{p(1-p)}{n}}
+  =\sqrt{\frac{0.18(0.82)}{400}}
+  \approx0.01921
+  $$
+  </li>
+  <li>The expected numbers of positive and negative results are
+  $$
+  np=400(0.18)=72
+  $$
+  $$
+  n(1-p)=400(0.82)=328
+  $$
+  Both are at least $10$, so the expected-count condition is satisfied.</li>
+  <li>Ten percent of the population is
+  $$
+  0.10(10000)=1000
+  $$
+  Since $400\leq1000$, the sample is no more than $10\%$ of the population. Treating the sampled outcomes as approximately independent is reasonable under simple random sampling.</li>
+  <li>Standardizing $0.22$ gives
+  $$
+  z=\frac{0.22-0.18}{0.01921}\approx2.082
+  $$
+  Therefore
+  $$
+  P(\hat p\geq0.22)\approx P(Z\geq2.082)\approx0.0187
+  $$
+  </li>
+  <li>If the true infection proportion is $0.18$, approximately $1.87\%$ of random samples of $400$ dogs would have at least $22\%$ positive results.</li>
+  <li>The standard deviation $\sqrt{p(1-p)/n}$ decreases as $n$ increases. The sampling distribution becomes narrower, so $\hat p$ tends to fall closer to $p$.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $12$
+
+A public health researcher expects approximately $40\%$ of adults in a target population to meet a physical activity guideline. The researcher wants the standard deviation of the sampling distribution of $\hat p$ to be no greater than $0.02$.
+
+1. Using $p=0.40$, solve for the smallest sample size that meets the desired precision.
+2. If no planning value for $p$ were available, explain why $p=0.50$ gives a conservative sample size calculation.
+3. Using $p=0.50$, find the conservative sample size required for a standard deviation no greater than $0.02$.
+4. Calculate $\sigma_{\hat p}$ for $n=150$ and for $n=600$ using $p=0.40$.
+5. Explain the square-root relationship shown by the two sample sizes in Part $4$.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>We require
+  $$
+  \sqrt{\frac{0.40(0.60)}{n}}\leq0.02
+  $$
+  Squaring both sides gives
+  $$
+  \frac{0.24}{n}\leq0.0004
+  $$
+  Therefore
+  $$
+  n\geq\frac{0.24}{0.0004}=600
+  $$
+  The smallest required sample size is $600$.</li>
+  <li>The product $p(1-p)$ determines the variance. This product is largest when $p=0.50$:
+  $$
+  0.50(1-0.50)=0.25
+  $$
+  Using the largest possible variance avoids choosing a sample that is too small when $p$ is unknown.</li>
+  <li>Using $p=0.50$,
+  $$
+  \sqrt{\frac{0.25}{n}}\leq0.02
+  $$
+  $$
+  \frac{0.25}{n}\leq0.0004
+  $$
+  $$
+  n\geq\frac{0.25}{0.0004}=625
+  $$
+  The conservative sample size is $625$.</li>
+  <li>For $n=150$
+  $$
+  \sigma_{\hat p}=\sqrt{\frac{0.40(0.60)}{150}}=0.04
+  $$
+  For $n=600$
+  $$
+  \sigma_{\hat p}=\sqrt{\frac{0.40(0.60)}{600}}=0.02
+  $$
+  </li>
+  <li>The sample size increases by a factor of $4$, from $150$ to $600$, while the standard deviation is divided by $\sqrt4=2$. Four times as many observations are required to cut the sampling standard deviation in half.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $13$
+
+A laboratory repeatedly measures the protein concentration of a stable reference sample. Assume the measurements are independent, with mean $50.0$ mg/L and standard deviation $0.8$ mg/L. The laboratory tracks the running mean as additional measurements are collected.
+
+1. According to the Law of Large Numbers, what value should the running mean approach?
+2. Find the standard deviation of the mean after $25$ measurements and after $400$ measurements.
+3. Compare the stability of the two sample means.
+4. Does every new measurement have to move the running mean closer to $50.0$ mg/L? Explain.
+5. Suppose the measuring device has a systematic calibration error of $+0.4$ mg/L. What value would the running mean tend to approach?
+6. Explain why collecting more measurements reduces random variability but does not remove systematic measurement bias.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Under the stated model, the running mean should approach the population mean of $50.0$ mg/L as the number of independent measurements increases.</li>
+  <li>After $25$ measurements,
+
+  $$
+  \sigma_{\bar x}=\frac{0.8}{\sqrt{25}}=\frac{0.8}{5}=0.16\text{ mg/L}
+  $$
+
+  After $400$ measurements,
+
+  $$
+  \sigma_{\bar x}=\frac{0.8}{\sqrt{400}}=\frac{0.8}{20}=0.04\text{ mg/L}
+  $$
+  </li>
+  <li>The mean of $400$ measurements has one quarter of the sampling standard deviation of the mean of $25$ measurements. It is therefore much more stable across repetitions.</li>
+  <li>No. One new observation can temporarily move the running mean farther from $50.0$. The Law of Large Numbers describes the overall long-run tendency, not a step-by-step guarantee.</li>
+  <li>A systematic error of $+0.4$ mg/L shifts the mean of the recorded measurements to
+
+  $$
+  50.0+0.4=50.4\text{ mg/L}
+  $$
+
+  The running mean would tend to approach $50.4$ mg/L.</li>
+  <li>More independent measurements average out random high and low errors, reducing sampling variability. A systematic error shifts every measurement in the same direction, so averaging more biased observations does not correct the bias.</li>
+</ol>
+
+The following short simulation illustrates one possible running mean. A different random seed would produce a different path, but the same long-run tendency.
+
+```{r q13-law-large-numbers, echo=TRUE}
+set.seed(1210)
+measurements <- rnorm(500, mean = 50, sd = 0.8)
+running_mean <- cumsum(measurements) / seq_along(measurements)
+
+running_mean[c(25, 100, 400, 500)]
+```
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $14$
+
+An insurer uses the following simplified model for the annual claim cost $C$ of one policy. The values are illustrative but reflect a portfolio in which most policyholders have no claim and a small number have expensive claims.
+
+| Annual claim cost $c$ | $\$0$ | $\$2000$ | $\$8000$ | $\$50000$ |
+|:--|--:|--:|--:|--:|
+| Probability $P(C=c)$ | $0.85$ | $0.10$ | $0.04$ | $0.01$ |
+
+1. Calculate the expected annual claim cost for one policy using
+$$
+\mu_C=\sum cP(C=c)
+$$
+
+2. Calculate $E(C^2)$ and then calculate the standard deviation using
+$$
+\sigma_C=\sqrt{E(C^2)-\mu_C^2}
+$$
+
+3. Find the expected total annual claim cost for a portfolio of $5000$ policies.
+4. Assuming independent and identically distributed policy costs, calculate the standard deviation of the **average** claim cost for portfolios of $100$ and $10000$ policies.
+5. Explain how the Law of Large Numbers applies to the average claim cost as the portfolio grows.
+6. Explain why a regional catastrophe affecting many policyholders at once could weaken the independence assumption.
+7. Does a very large portfolio guarantee that the model's expected cost is correct? Explain.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The expected annual cost is
+  $$
+  \begin{aligned}
+  \mu_C
+  &=0(0.85)+2000(0.10)+8000(0.04)+50000(0.01)\\
+  &=0+200+320+500\\
+  &=\$1020
+  \end{aligned}
+  $$
+  </li>
+  <li>First
+  $$
+  \begin{aligned}
+  E(C^2)
+  &=0^2(0.85)+2000^2(0.10)+8000^2(0.04)+50000^2(0.01)\\
+  &=27960000
+  \end{aligned}
+  $$
+
+  Therefore
+  $$
+  \begin{aligned}
+  \sigma_C
+  &=\sqrt{27960000-1020^2}\\
+  &=\sqrt{26919600}\\
+  &\approx\$5188.41
+  \end{aligned}
+  $$
+  The standard deviation is large because the distribution includes rare but expensive claims.</li>
+  <li>The expected total cost is
+  $$
+  5000(\$1020)=\$5100000
+  $$
+  </li>
+  <li>For $100$ policies
+  $$
+  \sigma_{\bar C}=\frac{5188.41}{\sqrt{100}}\approx\$518.84
+  $$
+  For $10000$ policies
+  $$
+  \sigma_{\bar C}=\frac{5188.41}{\sqrt{10000}}\approx\$51.88
+  $$
+  </li>
+  <li>As the number of independent policies increases, the average claim cost tends to stabilize near the expected cost of $\$1020$ per policy. The average becomes more predictable even though individual claim costs remain highly variable.</li>
+  <li>A catastrophe can generate many claims from the same event. The policy costs then move together rather than independently, so the portfolio may contain less effective averaging than its policy count suggests.</li>
+  <li>No. A large portfolio reduces random sampling variability under the model, but it cannot correct an inaccurate model, missing risks, changing claim patterns or biased historical data.</li>
+</ol>
+
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $15$
+
+A provincial wildlife rehabilitation registry contains $10000$ completed cases. Annual treatment cost per case is strongly right-skewed because most cases require routine care while a small number require surgery or lengthy rehabilitation. For this population, the mean cost is $\mu=\$850$ and the standard deviation is $\sigma=\$1200$. A simple random sample of $144$ cases is selected.
+
+1. Check the $10\%$ condition and explain its purpose.
+2. Find the mean and standard deviation of the sampling distribution of $\bar x$.
+3. Explain why an approximately Normal sampling distribution may be reasonable even though individual treatment costs are strongly right-skewed.
+4. Approximate $P(\$700<\bar X<\$1000)$.
+5. Repeat Parts $1$, $2$ and $4$ for a simple random sample of $576$ cases.
+6. Compare the two probabilities and explain the effect of the larger sample size.
+7. Suppose the registry accidentally excludes all cases requiring emergency surgery. Would increasing the sample size make $\bar x$ a reliable estimate of the mean cost for all completed cases? Explain.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>For $n=144$
+  $$
+  144\leq0.10(10000)=1000
+  $$
+  The condition is satisfied. When sampling without replacement, it supports treating the observations as approximately independent because the sample is a small fraction of the population.</li>
+  <li>The centre is
+  $$
+  \mu_{\bar x}=\mu=\$850
+  $$
+  The standard deviation is
+  $$
+  \sigma_{\bar x}=\frac{1200}{\sqrt{144}}=\frac{1200}{12}=\$100
+  $$
+  </li>
+  <li>The population is not Normal, but $n=144$ provides substantial averaging. Under random and approximately independent sampling, the Central Limit Theorem supports an approximately Normal model for $\bar x$. Because the population is strongly skewed, it remains sensible to consider whether extremely large costs are present and whether the sample size is adequate.</li>
+  <li>The standardized boundaries are
+  $$
+  z_{700}=\frac{700-850}{100}=-1.50
+  $$
+  $$
+  z_{1000}=\frac{1000-850}{100}=1.50
+  $$
+  Therefore
+  $$
+  \begin{aligned}
+  P(700<\bar X<1000)
+  &\approx P(-1.50<Z<1.50)\\
+  &=0.9332-0.0668\\
+  &=0.8664
+  \end{aligned}
+  $$
+  </li>
+  <li>For $n=576$, the $10\%$ condition remains satisfied because
+  $$
+  576\leq1000
+  $$
+  The centre remains $\$850$, while the standard deviation becomes
+  $$
+  \sigma_{\bar x}=\frac{1200}{\sqrt{576}}=\frac{1200}{24}=\$50
+  $$
+  The new standardized boundaries are
+  $$
+  z_{700}=\frac{700-850}{50}=-3.00
+  $$
+  $$
+  z_{1000}=\frac{1000-850}{50}=3.00
+  $$
+  Thus
+  $$
+  P(700<\bar X<1000)\approx P(-3.00<Z<3.00)=0.9973
+  $$
+  </li>
+  <li>Increasing the sample size from $144$ to $576$ multiplies $n$ by $4$ and cuts the sampling standard deviation in half. The sample mean is therefore much more likely to lie within $\$150$ of the population mean. The probability increases from about $0.8664$ to about $0.9973$.</li>
+  <li>No. Excluding all emergency-surgery cases creates undercoverage and would tend to bias the estimated mean downward. A larger sample from the same incomplete registry would reduce random variability around the wrong centre, but it would not repair the selection bias.</li>
+</ol>
+
+```{r q15-wildlife-rehabilitation, echo=TRUE}
+mean_cost <- 850
+sd_cost <- 1200
+
+sd_mean_144 <- sd_cost / sqrt(144)
+prob_144 <- pnorm(1000, mean_cost, sd_mean_144) -
+  pnorm(700, mean_cost, sd_mean_144)
+
+sd_mean_576 <- sd_cost / sqrt(576)
+prob_576 <- pnorm(1000, mean_cost, sd_mean_576) -
+  pnorm(700, mean_cost, sd_mean_576)
+
+c(sd_144 = sd_mean_144, probability_144 = prob_144,
+  sd_576 = sd_mean_576, probability_576 = prob_576)
+```
+</div>
+</details>
+:::
