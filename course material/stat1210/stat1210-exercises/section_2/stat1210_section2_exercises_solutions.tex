@@ -1,0 +1,824 @@
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[margin=0.75in]{geometry}
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs,array,longtable}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+
+\definecolor{courseblue}{RGB}{41,77,115}
+\definecolor{coursegray}{RGB}{92,105,117}
+
+\allowdisplaybreaks
+\setlist[enumerate]{leftmargin=1em,itemsep=1pt,topsep=1pt}
+\setlist[itemize]{leftmargin=1em,itemsep=1pt,topsep=1pt}
+\renewcommand{\arraystretch}{1.15}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{STAT 1210-2}
+\rhead{Probability and Distributions Solutions}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\newcommand{\solutionheading}[1]{%
+  \subsection*{Solution #1}
+}
+
+\newenvironment{answer}{%
+  \begin{quote}\small\color{black}
+}{%
+  \end{quote}
+}
+
+\title{\textbf{STAT 1210-2}\\[2mm]
+\large Probability and Distributions Exercise Solutions}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\solutionheading{1}
+\begin{answer}
+\begin{enumerate}
+ 	\item The empirical probability is
+	$$\widehat{P}(\text{fox detection})=\frac{174}{1200}=0.145$$
+  	The estimated probability is 0.145, or 14.5\%.
+	\item By the complement rule
+	$$\widehat{P}(\text{no fox detection})=1-0.145=0.855$$	
+  	\item The expected count is
+	$$500(0.145)=72.5$$
+ 	About 72 or 73 camera-nights would be expected to contain a red-fox detection.
+	\item No. The value 72.5 is a long run average under similar conditions, not a guaranteed result for one future set of 500 nights. Random variation can produce an observed count above or below this value.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{2}
+\begin{answer}
+\begin{enumerate}
+	\item The ordered sample space is: $S=\{(++),(+-),(-+),(--)\}$
+	\item The event that exactly one assay is positive is: $\{(+-),(-+)\}$
+ 	\item The event that at least one assay is positive is: $\{(++),(+-),(-+)\}$
+	\item Its complement is the event that neither assay is positive $\{(--)\}$
+	\item There are two disjoint ways to obtain exactly one positive result. Under independence
+	$$P(\text{exactly one positive})=P(\{+-\})+P(\{-+\})=P(+)P(-) + P(-)P(+)=(0.20)(0.80)+(0.80)(0.20)=0.32$$
+\end{enumerate}
+\end{answer}
+
+\solutionheading{3}
+\begin{answer}
+\begin{enumerate}
+	\item Probabilities in a valid model must sum to 1
+	$$0.10+0.24+0.32+0.22+c=1$$
+  	So
+	$$c=1-0.88=0.12$$
+	\item
+	$$P(X\geq3)=P(X=3)+P(X=4)=0.22+0.12=0.34$$
+  	and
+	$$P(X<2)=P(X=0)+P(X=1)=0.10+0.24=0.34$$
+	\item The mean is
+	$$E(X)=\sum xP(X=x)=0(0.10)+1(0.24)+2(0.32)+3(0.22)+4(0.12)=2.02$$
+	\item First calculate
+	$$E(X^2)=\sum x^2P(X=x)=0^2(0.10)+1^2(0.24)+2^2(0.32)+3^2(0.22)+4^2(0.12)=5.42$$
+	So
+	$$\operatorname{Var}(X)=E(X^2)-[E(X)]^2=5.42-(2.02)^2=1.3396 \qquad \text{and} \qquad \operatorname{SD}(X)=\sqrt{1.3396}\approx1.1574$$
+	\item Over many repetitions of the four seedling experiment, the average number showing measurable growth would approach 2.02. An individual experiment can only produce a whole-number count, but a long-run average need not be a possible individual outcome.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{4}
+\begin{answer}
+The total width of the uniform distribution is
+$$0.6-(-0.6)=1.2$$
+\begin{enumerate}
+	\item If $h$ is the constant height, the total rectangular area must equal 1 $(1.2)h=1$
+	So
+	$$h=\frac{1}{1.2}=\frac56\approx0.8333$$
+  	\item The interval width is $0.3-(-0.2)=0.5$. Therefore
+	$$P(-0.2\leq Y\leq0.3)=(0.5)\left(\frac{1}{1.2}\right)=0.4167$$
+	\item The left interval has width $-0.45-(-0.6)=0.15$, and the right interval has width $0.6-0.50=0.10$. The regions are disjoint, so $$P(Y<-0.45\text{ or }Y>0.50)=\frac{0.15+0.10}{1.2}=0.2083$$
+  	\item A single point has zero width and therefore zero area under a continuous density curve $P(Y=0)=0$
+	\item The only difference between the two events is the single endpoint $Y=0.3$. Because $P(Y=0.3)=0$, including or excluding that endpoint does not change the probability.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{5}
+\begin{answer}
+\begin{enumerate}
+	\item
+	$$
+	\begin{aligned}
+	E(C) 	&=0(0.88)+500(0.08)+3000(0.03)+15000(0.01)\\
+        		&=0+40+90+150\\
+  		&=\$280
+	\end{aligned}
+	$$	
+	\item
+	$$
+	\begin{aligned}
+	E(C^2)
+	&=0^2(0.88)+500^2(0.08)+3000^2(0.03)+15000^2(0.01)\\
+	&=20000+270000+2250000\\
+	&=2540000
+	\end{aligned}
+	 $$
+	\item 
+	$$\operatorname{Var}(C)=2{,}540000-280^2=2461600$$
+	Therefore
+	$$\operatorname{SD}(C)=\sqrt{2{,}461{,}600}\approx\$1568.95$$
+	The standard deviation is large because rare, expensive claims create substantial variability.
+	\item The expected total is
+	$$10000(\$280)=\$2800000$$
+	\item The expected amount remaining before administrative expenses is
+	$$\$350-\$280=\$70$$
+	This is an average over a large portfolio or many years. A particular policy may have no claim or a claim far above the premium.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{6}
+\begin{answer}
+\begin{enumerate}
+	\item $\widehat{P}(\text{reaction})=\frac{37}{2500}=0.0148$	
+	\item $\widehat{P}(\text{no reaction})=1-0.0148=0.9852$
+  	\item There were $2500-37=2463$ animals without the reaction. The odds are
+	$$\frac{37}{2463}\approx0.0150$$
+  	As a ratio, this is
+	$$37:2463\approx1:66.6$$
+  	\item Risk compares reactions with all treated animals. Odds compare reactions with non-reactions. A risk of 0.0148 means about 1.48 reactions per 100 treated animals, whereas odds of approximately $1:66.6$ mean about one reaction for every 66.6 non-reactions.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{7}
+\begin{answer}
+\begin{enumerate}
+	\item
+	$$E(X)=0(0.05)+1(0.15)+2(0.30)+3(0.30)+4(0.20)=2.45$$
+  	Also
+	$$E(X^2)=0+1(0.15)+4(0.30)+9(0.30)+16(0.20)=7.25$$
+	So 
+	$$\operatorname{Var}(X)=7.25-(2.45)^2=1.2475$$
+  	and
+	$$\operatorname{SD}(X)=\sqrt{1.2475}\approx1.1169$$
+ 	 \item For $Y=120+45X$
+	$$E(Y)=120+45E(X)=120+45(2.45)=\$230.25$$
+  	Adding a constant does not change spread, while multiplying by 45 multiplies the standard deviation by 45:
+	$$\operatorname{SD}(Y)=45\operatorname{SD}(X)=45(1.1169)\approx\$50.26$$
+  	\item The inequality $120+45X\geq255$ is equivalent to $X\geq3$. Therefore,
+	$$P(Y\geq255)=P(X\geq3)=0.30+0.20=0.50$$
+	\item Across many litters governed by this model, the average rehabilitation cost would approach \$230.25 per litter. It is not a guarantee for one litter.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{8}
+\begin{answer}
+\begin{enumerate}
+	\item Vaccinated and infected: $V\cap I$
+  	\item Vaccinated or infected, including both: $V\cup I$
+  	\item Vaccinated but not infected: $V\cap I^c$
+  	\item Neither vaccinated nor infected: $V^c\cap I^c=(V\cup I)^c$
+	\item At least one of the two characteristics: $V\cup I$
+\end{enumerate}
+\end{answer}
+
+\solutionheading{9}
+\begin{answer}
+\begin{enumerate}
+	\item 
+	$$P(A)=\frac{145}{400}=0.3625$$
+ 	$$P(B)=\frac{92}{400}=0.2300$$
+	$$P(A\cap B)=\frac{55}{400}=0.1375$$
+  	\item The general addition rule gives
+	$$
+  	\begin{aligned}
+  	P(A\cup B)
+  	&=P(A)+P(B)-P(A\cap B)\\
+  	&=0.3625+0.2300-0.1375\\
+  	&=0.4550
+  	\end{aligned}
+	$$
+  	Equivalently $145+92-55=182$ birds have at least one characteristic and $182/400=0.455$.
+  	\item
+	$$P(\text{neither})=1-P(A\cup B)=1-0.455=0.545$$
+	\item There are $145-55=90$ birds with plastic ingestion but not low body mass
+	$$P(A\cap B^c)=\frac{90}{400}=0.225$$
+  	\item Direct addition would count the 55 birds in $A\cap B$ twice. Subtracting the intersection once corrects the double counting.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{10}
+\begin{answer}
+\begin{enumerate}
+	\item Independence gives
+	$$P(A\cap B)=P(A)P(B)=(0.08)(0.12)=0.0096$$
+	\item
+	$$
+	\begin{aligned}
+  	P(A\cup B)
+  	&=P(A)+P(B)-P(A\cap B)\\
+  	&=0.08+0.12-0.0096\\
+  	&=0.1904
+  	\end{aligned}
+	$$
+	\item Using complements and independence
+	$$P(A^c\cap B^c)=(1-0.08)(1-0.12)=(0.92)(0.88)=0.8096$$
+  	This also equals $1-P(A\cup B)$.
+	\item No. Disjoint events cannot occur together, but carrying both markers has probability 0.0096. Independence does not mean mutual exclusivity.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{11}
+\begin{answer}
+\begin{enumerate}
+	\item
+	$$P(I\cap D)=\frac{48}{300}=0.1600$$
+  	\item Conditioning on diarrhea restricts the denominator to the 84 dogs with diarrhea
+	$$P(I\mid D)=\frac{48}{84}=0.5714$$
+	Among dogs with diarrhea, approximately 57.14\% had a parasitic infection.
+	\item Conditioning on infection restricts the denominator to the 80 infected dogs
+	$$P(D\mid I)=\frac{48}{80}=0.6000$$
+  	Among infected dogs, 60\% had diarrhea.
+	\item Both conditional probabilities use the same 48 dogs in the intersection, but the conditioning events create different reference groups. The first denominator is 84 dogs with diarrhea; the second is 80 infected dogs.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{12}
+\begin{answer}
+\begin{enumerate}
+	\item
+	$$P(L)=\frac{50}{300}=0.1667 $$
+	and
+	$$P(L\mid E)=\frac{30}{100}=0.3000$$
+	\item If $E$ and $L$ were independent, then $P(L\mid E)$ would equal $P(L)$. Since $0.3000\neq0.1667$, the events are not independent in these data.
+	\item
+ 	$$P(E\cap L)=\frac{30}{300}=0.1000$$
+  	whereas
+	$$P(E)P(L)=\left(\frac{100}{300}\right)\left(\frac{50}{300}\right)=0.0556$$
+  	The values are not equal, again showing a lack of independence.
+	\item No. The table shows an association, but an observational study may be affected by confounding, selection effects or differences in animal health and habitat. Association alone does not establish causation.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{13}
+\begin{answer}
+Among 10000 plants, the expected number carrying the pathogen is $10000(0.04)=400$ and the expected number without the pathogen is $10000(0.96)=9600$.
+\begin{enumerate}
+	\item The expected counts are
+	$$\text{true positives}=400(0.92)=368$$
+	$$\text{false negatives}=400(0.08)=32$$
+	$$\text{false positives}=9600(0.05)=480$$
+	$$\text{true negatives}=9600(0.95)=9120$$
+	\item There are $368+480=848$ expected positive results:
+	$$P(+)=\frac{848}{10{,}000}=0.0848$$
+  	The same result follows from total probability:
+	$$P(+)=P(+\mid D)P(D)+P(+\mid D^c)P(D^c)$$
+	$$P(+)=(0.92)(0.04)+(0.05)(0.96)=0.0848$$
+	\item
+	$$P(D\mid+)=\frac{368}{848}\approx0.4340$$
+  	Approximately 43.40\% of plants with positive results are expected to carry the pathogen under this model.
+  	\item There are $32+9120=9152$ negative results
+	$$P(D\mid-)=\frac{32}{9152}\approx0.0035$$
+ 	 Approximately 0.35\% of plants with negative results are expected to carry the pathogen.
+  	\item Because the pathogen is uncommon, the non-infected group is much larger than the infected group. Even a 5\% false positive rate applied to 9600 non-infected plants produces more false positives than the number of true positives produced from 400 infected plants.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{14}
+\begin{answer}
+\begin{enumerate}
+	\item The expected number of coincidental matches is
+	$$100000\left(\frac{1}{10000}\right)=10$$
+	\item $P(\text{match}\mid\text{innocent})$ is the probability that an innocent person has the matching profile. By contrast, $P(\text{innocent}\mid\text{match})$ is the probability that a person is innocent after a match has been observed. The conditioning events are reversed, so the probabilities answer different questions.
+	\item No. The calculation also requires information about the prior probability that the person is guilty, the probability of a match if guilty and other evidence that affects the pool of plausible suspects. Bayes' rule combines these ingredients.
+	\item The prosecutor's fallacy treats a small probability of evidence given innocence as though it were the probability of innocence given the evidence. Symbolically, it incorrectly treats
+$$P(\text{match}\mid\text{innocent})$$
+as if it were
+$$P(\text{innocent}\mid\text{match})$$
+\end{enumerate}
+\end{answer}
+
+\solutionheading{15}
+\begin{answer}
+\begin{enumerate}
+	\item
+	$$P(\text{all vaccinated})=\frac{8}{12}\cdot\frac{7}{11}\cdot\frac{6}{10}=\frac{14}{55}\approx0.2545$$
+	\item Using the complement
+	$$P(\text{at least one not vaccinated})=1-\frac{14}{55}=\frac{41}{55}\approx0.7455$$
+  	\item Using combinations
+	$$P(\text{exactly two vaccinated})=\frac{\binom82\binom41}{\binom{12}{3}}=\frac{112}{220}\approx0.5091$$
+  	\item After two vaccinated cats have been selected, 6 vaccinated cats remain among 10 cats:
+	$$P(\text{third vaccinated}\mid\text{first two vaccinated})=\frac{6}{10}=0.6000$$
+	\item Each selection changes the composition of the remaining group. For example, the initial probability of selecting a vaccinated cat is $8/12$, but after selecting one vaccinated cat it becomes $7/11$. Therefore, the selection outcomes are dependent.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{16}
+\begin{answer}
+Use
+$$z=\frac{x-\mu}{\sigma}$$
+\begin{enumerate}
+	\item
+	$$z=\frac{52-40}{6}=2.00$$		
+	\item
+	$$ z=\frac{34-40}{6}=-1.00$$
+	\item A heart rate of 52 is 2 standard deviations above the population mean. A heart rate of 34 is 1 standard deviation below the population mean.
+	\item The value 52 is more unusual because its absolute $z$-score is larger
+	$$|2.00|>|-1.00|$$
+	Note: The sign ``$|x|$" is the aboslute value of $x$. It means taking the positive value of $x$, even if $x$ is a negative value. Basically you are comparing the magnitude of $x$.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{17}
+\begin{answer}
+\begin{enumerate}
+	\item
+	$$
+	\begin{aligned}
+	P(-1.25<Z<0.80)
+	&=P(Z<0.80)-P(Z<-1.25)\\
+	&=0.7881-0.1056\\
+	&=0.6825
+	\end{aligned}
+	$$
+  	\item
+	$$P(Z>1.65)=1-P(Z\leq1.65)=1-0.9505=0.0495$$
+  	\item By symmetry
+	$$
+	\begin{aligned}
+  	P(|Z|>2.00)
+ 	&=P(Z<-2.00)+P(Z>2.00)\\
+  	&=2(0.0228)\\
+  	&=0.0456
+  	\end{aligned}
+	$$
+ 	More precise software gives approximately 0.0455.
+	\item The first sketch shades the region between $-1.25$ and $0.80$. The second shades the right tail beyond $1.65$. The third shades both tails below $-2.00$ and above $2.00$.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{18}
+\begin{answer}
+Here
+$$X\sim N(50,6)$$
+where 6 cm is the standard deviation.
+\begin{enumerate}
+	\item
+	$$z=\frac{44-50}{6}=-1.00$$
+	Therefore
+	$$P(X<44)=P(Z<-1.00)=0.1587$$
+  	\item
+	$$z=\frac{59-50}{6}=1.50$$
+ 	 Therefore
+	$$P(X>59)=P(Z>1.50)=1-0.9332=0.0668$$
+  	\item The two standardized boundaries are
+	$$z_{47}=\frac{47-50}{6}=-0.50$$
+  	and
+	$$z_{56}=\frac{56-50}{6}=1.00$$
+  	Thus
+	$$
+  	\begin{aligned}
+  	P(47<X<56)
+  	&=P(-0.50<Z<1.00)\\
+  	&=0.8413-0.3085\\
+  	&=0.5328
+  	\end{aligned}
+	$$
+  	\item
+	$$800(0.0668)=53.44$$
+ 	Approximately 53 salmon would be expected to exceed 59 cm.
+	\item The calculation gives a long-run expected count. The actual count in one group of 800 varies randomly and need not equal 53 exactly.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{19}
+\begin{answer}
+Here
+$$X\sim N(120,15)$$
+
+\begin{enumerate}
+	\item The 90th percentile of the standard Normal distribution is approximately $z=1.2816$. Therefore,
+  	$$x=\mu+z\sigma=120+1.2816(15)\approx139.22$$
+  	\item The fifth percentile corresponds to $z\approx-1.6449$
+	$$x=120-1.6449(15)\approx95.33$$
+	\item The central 95\% leaves 2.5\% in each tail, so the $z$-values are approximately $-1.96$ and $1.96$
+	$$120-1.96(15)=90.60$$
+	$$120+1.96(15)=149.40$$
+  	The central 95\% interval is approximately $(90.60,149.40)$ units.
+ 	 \item Approximately 90\% of healthy-population measurements fall at or below 139.22 units, and approximately 10\% fall above it.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{20}
+\begin{answer}
+\begin{enumerate}
+	\item For the dog's glucose
+	$$z_G=\frac{135-100}{15}=2.3333$$
+	For the cat's creatinine,
+	$$z_C=\frac{2.1-1.4}{0.35}=2.0000$$
+	\item The glucose measurement is farther above its population mean because $2.3333>2.0000$.
+	\item For glucose
+	$$P(Z>2.3333)\approx0.0098$$
+	For creatinine
+	$$P(Z>2.0000)\approx0.0228$$
+	So the glucose value has the smaller upper-tail probability and is more extreme relative to its reference distribution.
+	\item The measurements use different variables, units, centres and standard deviations. Standardization places both values on a common scale of standard deviations from their respective population means.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{21}
+\begin{answer}
+The mean is 82 cm and the standard deviation is 4 cm.
+\begin{enumerate}
+	\item Approximately 68\% lie within one standard deviation
+ 	$$82\pm4=(78,86)\text{ cm}$$
+	\item Approximately 95\% lie within two standard deviations:
+	$$82\pm2(4)=(74,90)\text{ cm}$$
+	\item Approximately 99.7\% lie within three standard deviations
+	$$82\pm3(4)=(70,94)\text{ cm}$$
+	\item Approximately 5\% lie outside the 95\% interval
+	$$2000(0.05)=100$$
+	\item The upper tail beyond 90 cm contains approximately half of the 5\% outside the two-standard-deviation interval:
+	$$2000(0.025)=50$$
+\end{enumerate}
+\end{answer}
+
+\solutionheading{22}
+\begin{answer}
+Here
+$$X\sim N(50,8)$$
+\begin{enumerate}
+	\item
+	$$z_{60}=\frac{60-50}{8}=1.25$$	
+  	Hence
+ 	$$P(X>60)=P(Z>1.25)=1-0.8944=0.1056$$
+  	\item
+	$$z_{45}=\frac{45-50}{8}=-0.625$$
+  	Therefore
+ 	$$P(X>45)=P(Z>-0.625)\approx0.7340$$
+  	\item Since $\{X>60\}\subset\{X>45\}$; that is $P(X > 60 \text{ and } X>45) = P(X>60)$
+ 	$$P(X>60\mid X>45)=\frac{P(X>60)}{P(X>45)}=\frac{0.1056}{0.7340}\approx0.1439$$
+  	\item The slowest 10\% begin at the 90th percentile. Using $z_{0.90}\approx1.2816$
+	$$x=50+1.2816(8)\approx60.25\text{ minutes}$$
+	\item The unconditional probability uses all animals as the reference group. The conditional probability restricts attention to animals already known to have recovery times above 45 minutes, so the fraction exceeding 60 minutes is larger within that restricted group.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{23}
+\begin{answer}
+\begin{enumerate}
+	\item \textbf{Binomial.} There is a fixed number of 20 trials, each patient has two outcome categories, the reaction probability is constant and independence is assumed.
+	\item \textbf{Poisson.} The variable counts occurrences during a fixed time interval under a stable-rate and independence model.
+	\item \textbf{Neither, exactly.} The fish are drawn without replacement from a small population, so the trials are dependent and the tagged-fish probability changes after each draw. The count follows a hypergeometric rather than a binomial distribution.
+	\item \textbf{Neither.} The number of trials is not fixed in advance; sampling continues until the first success.
+	\item \textbf{Poisson.} The variable counts occurrences in a fixed area under a stable average rate and spatial independence model.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{24}
+\begin{answer}
+\begin{enumerate}
+	\item
+	$$X\sim\operatorname{Bin}(12,0.80)$$
+  	\item
+	$$P(X=10)=\binom{12}{10}(0.80)^{10}(0.20)^2\approx0.2835$$
+	\item
+	$$P(X=12)=\binom{12}{12}(0.80)^{12}(0.20)^0=(0.80)^{12}\approx0.0687$$
+  	\item
+	$$\mu_X=np=12(0.80)=9.6$$
+	$$\sigma_X=\sqrt{np(1-p)}=\sqrt{12(0.80)(0.20)}\approx1.3856$$
+	\item Over many independent groups of 12 animals under this model, the average number producing a protective response would approach 9.6 animals per group. A particular group must have a whole-number count.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{25}
+\begin{answer}
+\begin{enumerate}
+	\item
+	$$X\sim\operatorname{Bin}(20,0.04)$$
+	\item
+	$$P(X=0)=\binom{20}{0}(0.04)^0(0.96)^{20}\approx0.4420$$
+  	and
+	$$P(X=1)=\binom{20}{1}(0.04)(0.96)^{19}\approx0.3683$$
+	\item
+	$$P(X\geq2)=1-P(X\leq1)=1-[P(X=0)+P(X=1)]=1-(0.4420+0.3683)\approx0.1897$$
+  	\item
+	$$\mu_X=np=20(0.04)=0.8$$
+	$$\sigma_X=\sqrt{20(0.04)(0.96)}\approx0.8764$$
+	\item The value 0.8 is a long-run average over many groups of 20 cartridges. A particular group can contain only a whole-number count such as 0, 1 or 2 defective cartridges.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{26}
+\begin{answer}
+\begin{enumerate}
+	\item Since $E(X)=np$
+	$$5=50p$$
+  	Therefore
+	$$p=0.10$$
+  	\item
+	$$\sigma_X=\sqrt{50(0.10)(0.90)}=\sqrt{4.5}\approx2.1213$$
+  	\item
+	$$P(X=0)=(0.90)^{50}\approx0.0052$$
+  	\item
+	$$P(X\leq2)=\sum_{k=0}^{2}\binom{50}{k}(0.10)^k(0.90)^{50-k}\approx0.1117$$
+	\item A shared storm can cause several claims through the same event, making claim indicators positively associated rather than independent. The binomial model's independence condition would then be questionable.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{27}
+\begin{answer}
+\begin{enumerate}
+	\item The rate must be scaled to two days:
+	$$\lambda=3.6\left(\frac{2}{7}\right)\approx1.0286$$
+  	\item
+	$$P(X=0)=e^{-1.0286}\frac{1.0286^0}{0!}\approx0.3575$$
+  	\item
+	$$P(X=1)=e^{-1.0286}\frac{1.0286^1}{1!}\approx0.3677$$
+  	\item
+	$$P(X\geq2)=1-P(X\leq1)=1-P(X=0)-P(X=1)\approx1-0.3575-0.3677=0.2748$$
+  	\item For a Poisson random variable
+	$$\mu_X=\lambda\approx1.0286$$
+  	and
+	$$\sigma_X=\sqrt{\lambda}=\sqrt{1.0286}\approx1.0142$$
+\end{enumerate}
+\end{answer}
+
+\solutionheading{28}
+\begin{answer}
+Here $X\sim\operatorname{Pois}(2)$
+\begin{enumerate}
+	\item
+	$$P(X\leq1)=P(X=0)+P(X=1)=e^{-2}+2e^{-2}=3e^{-2}\approx0.4060$$
+	\item
+	$$P(X\geq7)=1-P(X\leq6)\approx0.0045$$
+	\item Checking successive upper tails gives
+	$$P(X\geq6)\approx0.0166$$
+  	and
+	$$P(X\geq7)\approx0.0045$$
+  	Therefore, the smallest such value is
+	$$k=7$$
+	\item Seven or more deaths would be unusual if the baseline Poisson model were appropriate. The calculation indicates that the count warrants investigation, but it does not prove a particular cause. Disease, weather, pollution, increased search effort or failure of the constant-rate assumption could all be relevant.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{29}
+\begin{answer}
+\begin{enumerate}
+	\item Three hundred metres is three times the original exposure, so
+	$$\lambda=3(1.5)=4.5$$
+  	\item
+	$$P(X=5)=e^{-4.5}\frac{4.5^5}{5!}\approx0.1708$$
+  	\item
+	$$P(X\geq8)=1-P(X\leq7)\approx0.0866$$
+	\item For $X\sim\operatorname{Pois}(4.5)$
+	$$\mu_X=4.5$$
+	$$\operatorname{Var}(X)=4.5$$
+	$$\sigma_X=\sqrt{4.5}\approx2.1213$$
+	\item Ticks may cluster around suitable vegetation or host animals, causing counts in nearby portions of the transect to be dependent and the rate to vary with location. Either feature could make the Poisson model inappropriate.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{30}
+\begin{answer}
+Let $D$ denote infection and $+$ denote a positive result.
+\begin{enumerate}
+	\item The false-positive probability is $1-0.95=0.05$. By total probability,
+	$$P(+)=P(+\mid D)P(D)+P(+\mid D^c)P(D^c)=(0.90)(0.12)+(0.05)(0.88)=0.108+0.044=0.152$$
+	\item Under the stated independent-sampling model, each animal has the same positive-test probability 0.152. Therefore,
+	$$Y\sim\operatorname{Bin}(15,0.152)$$
+	\item
+	$$P(Y\geq3)=1-P(Y\leq2)=1-\sum_{k=0}^{2}\binom{15}{k}(0.152)^k(0.848)^{15-k}\approx0.4045$$
+  	\item
+	$$\mu_Y=np=15(0.152)=2.28$$
+	$$\sigma_Y=\sqrt{15(0.152)(0.848)}\approx1.3905$$
+  	\item By Bayes' rule
+	$$P(D\mid+)=\frac{P(+\mid D)P(D)}{P(+)}=\frac{(0.90)(0.12)}{0.152}\approx0.7105$$
+	\item Sensitivity is $P(+\mid D)$, the probability of a positive result among infected animals. The value in Part 5 is $P(D\mid+)$, the probability of infection among animals with positive results. It also depends on prevalence and the false-positive rate, so it need not equal sensitivity.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{31}
+\begin{answer}
+\begin{enumerate}
+	\item By the general addition rule
+	$$P(R\cup T)=P(R)+P(T)-P(R\cap T)=0.62+0.80-0.54=0.88$$
+ 	\item Conditioning on a functioning transmitter gives
+	$$P(R\mid T)=\frac{P(R\cap T)}{P(T)}=\frac{0.54}{0.80}=0.675$$
+  	Among salmon whose transmitters are functioning, 67.5\% are expected to have returned to the river.
+  	\item The event that neither occurs is $(R\cup T)^c$. Therefore
+	$$P(R^c\cap T^c)=1-P(R\cup T)=1-0.88=0.12$$
+	\item The events are not disjoint because
+	$$P(R\cap T)=0.54>0$$
+  	A salmon can return while its transmitter is still functioning.
+	\item If the events were independent, their intersection probability would be
+	$$P(R)P(T)=(0.62)(0.80)=0.496$$
+  	Since $0.496\neq0.54$, the events are not independent. Equivalently, $P(R\mid T)=0.675\neq0.62=P(R)$.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{32}
+\begin{answer}
+\begin{enumerate}
+	\item The probabilities must sum to 1, so $0.10+0.25+0.35+0.20+c=1$ and
+	$$c=1-0.90=0.10$$
+	\item
+	$$P(X\geq2)=0.35+0.20+0.10=0.65$$
+	Also
+	$$P(1\leq X<4)=0.25+0.35+0.20=0.80$$
+	\item The mean is
+	$$E(X)=\sum xP(X=x)=0(0.10)+1(0.25)+2(0.35)+3(0.20)+4(0.10)=1.95$$
+  	\item First
+	$$E(X^2)=0^2(0.10)+1^2(0.25)+2^2(0.35)+3^2(0.20)+4^2(0.10)=5.05$$
+  	Therefore
+	$$\operatorname{Var}(X)=E(X^2)-[E(X)]^2=5.05-(1.95)^2=1.2475$$
+  	and
+	$$\operatorname{SD}(X)=\sqrt{1.2475}\approx1.1169$$
+	\item Over many comparable two-hour periods, the average number of emergency patients would approach 1.95 per period. The mean is a long-run average and does not imply that 1.95 patients can arrive during one particular period.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{33}
+\begin{answer}
+The total width of the uniform distribution is $0.5-(-0.3)=0.8$.
+\begin{enumerate}
+	\item If $h$ is the constant density height, the rectangular area must equal 1, so $(0.8)h=1$ and
+	$$h=\frac{1}{0.8}=1.25$$
+	\item The requested interval has width $0.2-(-0.1)=0.3$. Its area is
+	$$P(-0.1\leq Y\leq0.2)=(0.3)(1.25)=0.375$$
+	\item The left interval has width $-0.2-(-0.3)=0.1$, and the right interval has width $0.5-0.35=0.15$. Since the intervals are disjoint
+	$$P(Y<-0.2\text{ or }Y>0.35)=(0.1+0.15)(1.25)=0.3125$$
+	\item Given $Y>-0.1$, the possible conditional range has width $0.5-(-0.1)=0.6$. The portion also satisfying $Y<0.1$ has width $0.1-(-0.1)=0.2$. Hence
+	$$P(Y<0.1\mid Y>-0.1)=\frac{0.2}{0.6}=\frac13\approx0.3333$$
+	\item A single point has zero width and therefore zero area under a continuous density curve
+	$$P(Y=0.1)=0$$
+\end{enumerate}
+\end{answer}
+
+\solutionheading{34}
+\begin{answer}
+\begin{enumerate}
+	\item The policy payment is zero when $C=0$ or $C=400$, equals $700$ when $C=1200$, and equals $3500$ when $C=4000$. Combining outcomes that produce the same payment gives
+	\begin{center}
+	\begin{tabular}{crrr}
+	\toprule
+	Payment $y$ & \$0 & \$700 & \$3500 \\
+	\midrule
+	$P(Y=y)$ & 0.80 & 0.15 & 0.05 \\
+	\bottomrule
+	\end{tabular}
+	\end{center}	
+	\item
+	$$E(C)=0(0.55)+400(0.25)+1200(0.15)+4000(0.05)=100+180+200=\$480$$
+	\item
+	$$E(Y)=0(0.80)+700(0.15)+3500(0.05)=105+175\\=\$280$$
+	\item Since $C-Y$ is the owner's out-of-pocket amount
+	$$E(C-Y)=E(C)-E(Y)=480-280=\$200$$
+  	The same result follows directly from the possible out-of-pocket amounts
+	$$0(0.55)+400(0.25)+500(0.15)+500(0.05)=\$200$$
+	\item The expected payment is an average over a large collection of similar policies or many years. For an individual policy, the insurer pays one of the possible amounts $0$, $700$ or $3500$, not necessarily $280$.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{35}
+\begin{answer}
+\begin{enumerate}
+	\item Among substantially exposed birds
+	$$P(L\mid E)=\frac{72}{180}=0.4000$$
+	Among birds without substantial exposure
+	$$P(L\mid E^c)=\frac{48}{320}=0.1500$$
+	\item The risk ratio is
+	$$\frac{P(L\mid E)}{P(L\mid E^c)}=\frac{0.40}{0.15}\approx2.6667$$
+	The observed lesion rate among substantially exposed birds is approximately 2.67 times the rate among birds without substantial exposure.
+	\item Conditioning on the presence of the lesion gives
+	$$P(E\mid L)=\frac{72}{120}=0.6000$$
+	Thus, 60\% of birds with the lesion were in the substantial-exposure group.
+	\item If $E$ and $L$ were independent, then $P(L\mid E)$ would equal $P(L)$. However
+	$$P(L)=\frac{120}{500}=0.2400$$
+	and $0.4000\neq0.2400$. Therefore, exposure status and lesion status are not independent in these data.
+	\item No. This is an observational study, so the association may be partly or entirely explained by other variables, such as age, diet, habitat, exposure to other contaminants or differences in health before exposure. The data show an association but do not establish causation.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{36}
+\begin{answer}
+Let $D$ denote early kidney disease and let $+$ denote a positive test result. Among 10,000 cats, the expected numbers with and without the disease are $10000(0.08)=800$ and
+$10000(0.92)=9200$.
+\begin{enumerate}
+	\item The expected classification counts are
+	$$\text{true positives}=800(0.91)=728$$
+	$$\text{false negatives}=800(0.09)=72$$
+	$$\text{false positives}=9200(0.06)=552$$
+	$$\text{true negatives}=9200(0.94)=8648$$
+	\item The expected number of positive results is $728+552=1280$. Therefore
+	$$P(+)=\frac{1280}{10000}=0.1280$$
+	Equivalently
+	$$P(+)=(0.91)(0.08)+(0.06)(0.92)=0.1280$$
+	\item Among the 1280 expected positive results, 728 are true positives
+	$$P(D\mid+)=\frac{728}{1280}=0.56875\approx0.5688$$
+  	Approximately 56.88\% of cats with positive results are expected to have early kidney disease.
+  	\item There are $72+8648=8720$ expected negative results. Thus
+	$$P(D^c\mid-)=\frac{8648}{8720}\approx0.9917$$
+  	Approximately 99.17\% of cats with negative results are expected not to have early kidney disease.
+	\item Cats without the disease are much more common than cats with the disease. Applying a 6\% false-positive rate to 9200 cats produces 552 false positives, while applying a 9\% false-negative rate to 800 diseased cats produces only 72 false negatives. The group sizes, not only the test percentages, determine the counts.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{37}
+\begin{answer}
+Let $X$ denote daily milk production. Then $X\sim N(31.5,4.2)$ where 4.2 litres is the standard deviation.
+\begin{enumerate}
+	\item The standardized boundaries are
+	$$z_{28}=\frac{28-31.5}{4.2}\approx-0.8333 \quad \text{and} \quad z_{36}=\frac{36-31.5}{4.2}\approx1.0714$$
+	Therefore
+	$$P(28<X<36)=P(-0.8333<Z<1.0714)\approx0.6557$$
+  	A standard Normal table using $z=-0.83$ and $z=1.07$ gives a nearby value because of rounding.
+  	\item The cutoff for the highest 10\% is the 90th percentile. Using $z_{0.90}\approx1.2816$
+	$$x=31.5+1.2816(4.2)\approx36.88\text{ litres}$$
+	\item For 24 litres
+	$$z=\frac{24-31.5}{4.2}\approx-1.7857$$
+  	Hence
+	$$P(X<24)\approx0.0371$$
+  	The expected number is
+	$$800(0.0371)\approx29.7$$
+  	Approximately 30 cows would be expected to produce less than 24 litres.
+  	\item Adding 2.5 litres to every observation increases the mean by 2.5
+	$$\mu_{\text{new}}=31.5+2.5=34.0\text{ litres}$$
+  	The standard deviation remains
+	$$ \sigma_{\text{new}}=4.2\text{ litres}$$
+	\item Adding the same constant shifts every observation and the mean by the same amount. Each observation's distance from the new mean is unchanged, so the standard deviation does not change.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{38}
+\begin{answer}
+\begin{enumerate}
+	\item There are 14 independent trials with a constant response probability of 0.72. Therefore $X\sim\operatorname{Bin}(14,0.72)$.
+  	\item
+	$$P(X=10)=\binom{14}{10}(0.72)^{10}(0.28)^4\approx0.2304$$
+	\item
+	$$P(X\geq11)=\sum_{k=11}^{14}\binom{14}{k}(0.72)^k(0.28)^{14-k}\approx0.4187$$
+	\item
+	$$P(8\leq X\leq12)=\sum_{k=8}^{12}\binom{14}{k}(0.72)^k(0.28)^{14-k}\approx0.8679$$
+  	\item
+	$$\mu_X=np=14(0.72)=10.08$$
+  	and
+	$$\sigma_X=\sqrt{np(1-p)}=\sqrt{14(0.72)(0.28)}=1.68$$
+  	Over many comparable groups of 14 raccoons, the average number developing the intended response would approach 10.08 per group.
+	\item The model requires a fixed number of 14 trials, two outcome categories for each raccoon, the same response probability for every raccoon and independence among the response outcomes. Any two of these assumptions are sufficient.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{39}
+\begin{answer}
+The hourly claim rate is $1.8/8=0.225$ claims per hour.
+\begin{enumerate}
+	\item For three hours $\lambda=3(0.225)=0.675$.
+	\item
+	$$P(X=0)=e^{-0.675}\frac{0.675^0}{0!}=e^{-0.675}\approx0.5092$$
+	\item
+	$$P(X\geq2)=1-P(X=0)-P(X=1)=1-e^{-0.675}-e^{-0.675}(0.675)\approx0.1472$$
+	\item Five complete workdays have parameter
+	$$\lambda=5(1.8)=9$$
+  	Therefore
+	$$P(6\leq X\leq12)=\sum_{k=6}^{12}e^{-9}\frac{9^k}{k!}=e^{-9}\left[\frac{9^6}{6!} + \frac{9^7}{7!} + \frac{9^8}{8!} + \frac{9^9}{9!} + \frac{9^{10}}{10!} + \frac{9^{11}}{11!} + \frac{9^{12}}{12!}\right]\approx0.7601$$
+	\item Claim arrivals may vary systematically by time of day, day of the week, weather or recent events. A storm could also produce several related claims, violating both the constant-rate and independence assumptions.
+\end{enumerate}
+\end{answer}
+
+\solutionheading{40}
+\begin{answer}
+Region B is represented by $A^c$. The false-positive probability is
+$$P(+\mid I^c)=1-0.96=0.04$$
+
+\begin{enumerate}
+	\item By total probability
+	$$P(I)=P(I\mid A)P(A)+P(I\mid A^c)P(A^c)=(0.18)(0.40)+(0.06)(0.60)=0.108$$
+	\item Within Region A
+	$$P(+\mid A)=(0.92)(0.18)+(0.04)(0.82)=0.1984$$
+  	Within Region B
+	$$P(+\mid A^c)=(0.92)(0.06)+(0.04)(0.94)=0.0928$$
+	\item Applying total probability across the two regions
+	$$P(+)=P(+\mid A)P(A)+P(+\mid A^c)P(A^c)=(0.1984)(0.40)+(0.0928)(0.60)=0.13504$$
+	\item By Bayes' Theorem
+	$$P(A\mid+)=\frac{P(+\mid A)P(A)}{P(+)}=\frac{(0.1984)(0.40)}{0.13504}\approx0.5877$$
+	\item The sensitivity is the same in both regions, so
+	$$P(+\cap I)=P(+\mid I)P(I)=(0.92)(0.108)=0.09936$$
+  	Hence
+	$$P(I\mid+)=\frac{P(+\cap I)}{P(+)}=\frac{0.09936}{0.13504}\approx0.7358$$
+  	\item Let $Y$ be the number of positive results among 20 independently selected animals. Each animal has the same overall positive-test probability 0.13504, so
+	$$Y\sim\operatorname{Bin}(20,0.13504)$$
+  	and
+	$$P(Y\geq3)=1-P(Y\leq2)=1-\sum_{k=0}^{2}\binom{20}{k}(0.13504)^k(0.86496)^{20-k}\approx0.5190$$
+  	\item The expected number of positive results is
+	$$E(Y)=np=20(0.13504)=2.7008$$
+ 	Across many groups of 20 animals, the average number of positive results would approach 2.7008 per group.
+\end{enumerate}
+\end{answer}
+
+\end{document}

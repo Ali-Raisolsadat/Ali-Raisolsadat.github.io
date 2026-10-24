@@ -1,0 +1,552 @@
+\documentclass[10pt,letterpaper]{article}
+
+
+\usepackage[margin=0.5in]{geometry}
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs,array,longtable}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+
+\definecolor{courseblue}{RGB}{41,77,115}
+\definecolor{coursegray}{RGB}{92,105,117}
+
+\renewcommand{\arraystretch}{1.15}
+
+
+\newcommand{\questionheading}[1]{%
+  \subsection*{Question #1}
+}
+\newcommand{\solutionheading}[2]{%
+  \subsection*{Solution #1: #2}
+}
+\newenvironment{answer}{%
+  \begin{quote}\small\color{black}
+}{%
+  \end{quote}
+}
+
+\title{\textbf{STAT 1210-2}\\[2mm]
+\large Section 2: Probability and Distributions Exercises}
+\date{}
+\begin{document}
+\maketitle
+\questionheading{1}
+A network of wildlife cameras operated for 1200 camera-nights. A red fox was recorded during 174 of those nights.
+\begin{enumerate}
+	\item Use the observations to estimate the probability that a red fox is recorded during a randomly selected camera-night.
+	\item Estimate the probability that a red fox is not recorded during a randomly selected camera-night.
+	\item If similar conditions apply during another 500 camera-nights, how many nights would be expected to contain a red-fox detection?
+	\item Does the answer to Part 3 guarantee the observed number of detections? Explain using the frequentist interpretation of probability.
+\end{enumerate}
+
+\questionheading{2}
+Two laboratory assays are performed on the same specimen. Each assay is recorded as positive $(+)$ or negative $(-)$, and the order of the assays is retained.
+\begin{enumerate}
+	\item Write the sample space for the two assay results.
+	\item Write the event that exactly one assay is positive.
+	\item Write the event that at least one assay is positive.
+	\item Write the complement of the event in Part 3.
+	\item If each assay has probability $0.20$ of a positive result and the assay results are independent, calculate the probability that exactly one assay is positive.
+\end{enumerate}
+
+\questionheading{3}
+Let $X$ be the number of seedlings, out of four, that show measurable root growth after a laboratory treatment. A proposed probability model is shown below.
+\begin{center}
+\begin{tabular}{c*{5}{r}}
+\toprule
+$x$ & 0 & 1 & 2 & 3 & 4 \\
+\midrule
+$P(X=x)$ & 0.10 & 0.24 & 0.32 & 0.22 & $c$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{enumerate}
+	\item Find $c$ so that the table is a valid probability model.
+	\item Calculate $P(X\geq 3)$ and $P(X<2)$.
+	\item Calculate the mean $\mu_X=E(X) = \sum xP(X=x)$.
+	\item Calculate the variance and standard deviation of $X$. Note that you can also calculate variance using this formula
+	$$\operatorname{Var}(X)=E(X^2)-[E(X)]^2 = \sum x^2P(X=x) - \left(\sum xP(X=x) \right)^2$$
+	\item Interpret the mean in context. Explain why the mean does not have to be a possible observed count.
+\end{enumerate}
+
+\newpage 
+
+\questionheading{4}
+The calibration error $Y$ of a timing sensor is uniformly distributed between $-0.6$ and $0.6$ microseconds.
+\begin{enumerate}
+	\item Find the height of the uniform density curve.
+	\item Use areas to calculate $P(-0.2\leq Y\leq 0.3)$.
+	\item Use areas to calculate $P(Y<-0.45\text{ or }Y>0.50)$.
+	\item Find $P(Y=0)$ and explain the result.
+	\item Explain why $P(Y\leq0.3)=P(Y<0.3)$.
+	\end{enumerate}
+
+\questionheading{5}
+An insurer uses the following simplified probability model for the annual claim cost $C$ of one policy.
+\begin{center}
+\begin{tabular}{c*{4}{r}}
+\toprule
+Claim cost $c$ & \$0 & \$500 & \$3000 & \$15,000 \\
+\midrule
+$P(C=c)$ & 0.88 & 0.08 & 0.03 & 0.01 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{enumerate}
+	\item Calculate the expected annual claim cost $E(C)$.
+	\item Calculate $E(C^2)$.
+	\item Use $\operatorname{Var}(C)=E(C^2)-[E(C)]^2$ to calculate the variance and standard deviation.
+	\item Find the expected total claim cost for 10,000 policies under this model.
+	\item If the insurer collects a premium of \$350 per policy before administrative expenses, calculate the expected amount remaining per policy after claim costs. Explain why this is a long-run average rather than a guaranteed profit on every policy.
+\end{enumerate}
+
+\questionheading{6}
+Among 2500 animals receiving a veterinary medication, 37 experienced a specified adverse reaction.
+\begin{enumerate}
+	\item Calculate the empirical risk of the adverse reaction.
+	\item Calculate the empirical probability of no adverse reaction.
+	\item Calculate the odds of an adverse reaction and express them in the form \`\`about 1 to $k$.''
+	\item Explain the difference between a risk of $0.0148$ and odds of approximately $1:66.6$.
+\end{enumerate}
+
+\questionheading{7}
+Let $X$ be the number of surviving offspring in a four-offspring litter. The probability model is
+\begin{center}
+\begin{tabular}{c*{5}{r}}
+\toprule
+$x$ & 0 & 1 & 2 & 3 & 4 \\
+\midrule
+$P(X=x)$ & 0.05 & 0.15 & 0.30 & 0.30 & 0.20 \\
+\bottomrule
+\end{tabular}
+\end{center}
+A rehabilitation program models the litter's cost, in dollars, as
+\[
+	Y=120+45X
+\]
+\begin{enumerate}
+	\item Calculate $E(X)$ and $\operatorname{SD}(X)$ (Note: SD here means standard deviation).
+	\item Calculate $E(Y)$ and $\operatorname{SD}(Y)$ without constructing a new probability table.
+	\item Calculate $P(Y\geq255)$.
+	\item Interpret $E(Y)$ in context.
+\end{enumerate}
+
+\newpage
+
+\questionheading{8}
+In a population of dogs, let $V$ be the event that a dog is vaccinated and let $I$ be the event that the dog carries a particular infection. Express each statement using set notation.
+\begin{enumerate}
+	\item The dog is vaccinated and infected.
+	 \item The dog is vaccinated or infected, including the possibility of both.
+	\item The dog is vaccinated but not infected.
+	\item The dog is neither vaccinated nor infected.
+	\item The dog has at least one of the two characteristics.
+\end{enumerate}
+
+\questionheading{9}
+Researchers examine 400 seabirds. Of these birds, 145 show evidence of plastic ingestion, 92 have low body mass and 55 have both characteristics. Let $A$ denote plastic ingestion and $B$ denote low body mass.
+\begin{enumerate}
+	\item Calculate $P(A)$, $P(B)$ and $P(A\cap B)$.
+	\item Use the general addition rule to calculate $P(A\cup B)$.
+	\item Calculate the probability that a bird has neither characteristic.
+	\item Calculate the probability that a bird has plastic ingestion but not low body mass.
+	 \item Explain why simply adding $P(A)$ and $P(B)$ would give an incorrect answer for $P(A\cup B)$.
+\end{enumerate}
+
+\questionheading{10}
+In a population, the probability that an individual carries genetic marker $A$ is $0.08$, and the probability of carrying marker $B$ is $0.12$. Assume the two marker events are independent.
+\begin{enumerate}
+	\item Calculate the probability that an individual carries both markers.
+	\item Calculate the probability that an individual carries at least one marker.
+	\item Calculate the probability that an individual carries neither marker.
+	\item Are the events \`\`carries marker $A$'' and \`\`carries marker $B$'' disjoint? Explain.
+\end{enumerate}
+
+\questionheading{11}
+A veterinary hospital records the following results for 300 dogs.
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+	& Diarrhea & No diarrhea & Total \\
+\midrule
+Parasitic infection & 48 & 32 & 80 \\
+No parasitic infection & 36 & 184 & 220 \\
+\midrule
+Total & 84 & 216 & 300 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Let $I$ denote parasitic infection and $D$ denote diarrhea.
+\begin{enumerate}
+	\item Calculate $P(I\cap D)$.	
+	\item Calculate and interpret $P(I\mid D)$.
+	\item Calculate and interpret $P(D\mid I)$.
+	\item Explain why $P(I\mid D)$ and $P(D\mid I)$ are different even though both use the same intersection count.
+\end{enumerate}
+
+\newpage
+
+\questionheading{12}
+A wildlife health study records environmental exposure and skin lesions in 300 animals.
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+	& Lesion & No lesion & Total \\
+\midrule
+Exposed & 30 & 70 & 100 \\
+Not exposed & 20 & 180 & 200 \\
+\midrule
+Total & 50 & 250 & 300 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Let $E$ denote exposure and $L$ denote a lesion.
+\begin{enumerate}
+	\item Calculate $P(L)$ and $P(L\mid E)$.
+	\item Based on these probabilities, are $E$ and $L$ independent? Explain.
+	\item Check independence a second way by comparing $P(E\cap L)$ with $P(E)P(L)$.
+	\item Does the observed association prove that the exposure caused the lesions? Explain briefly.
+\end{enumerate}
+
+\questionheading{13}
+In a population of plants, 4\% carry a pathogen. A screening test has sensitivity 92\% and specificity 95\%. Consider 10,000 plants representative of this population.
+\begin{enumerate}
+	\item Construct the expected counts of true positives, false negatives, false positives and true negatives.
+	\item Calculate the overall probability of a positive result.
+	\item Calculate $P(\text{pathogen}\mid +)$ and interpret it.
+	\item Calculate $P(\text{pathogen}\mid -)$ and interpret it.
+	\item Explain why high sensitivity and specificity do not necessarily produce a positive predictive value near 100\% when prevalence is low.
+\end{enumerate}
+
+\questionheading{14}
+Suppose a DNA profile would match a randomly selected innocent person with probability $1/10{,}000$. A city contains approximately 100,000 people who could not initially be excluded as possible suspects.
+\begin{enumerate}
+	\item Among 100,000 innocent people, how many coincidental matches would be expected under this simplified model?	
+	\item Explain the difference between
+	\[
+	P(\text{match}\mid\text{innocent}) \quad\text{and}\quad P(\text{innocent}\mid\text{match})
+	\]
+	\item Can the second probability be calculated from the match probability alone? Explain what additional information is needed.
+	\item State the error made in the prosecutor's fallacy.
+\end{enumerate}
+
+\questionheading{15}
+An animal shelter has 12 cats, of which 8 are vaccinated and 4 are not vaccinated. Three different cats are selected at random without replacement.
+\begin{enumerate}
+	\item Calculate the probability that all three selected cats are vaccinated.
+	\item Calculate the probability that at least one selected cat is not vaccinated.
+	 \item Calculate the probability that exactly two selected cats are vaccinated.
+	\item Given that the first two selected cats are vaccinated, calculate the probability that the third is vaccinated.
+	\item Explain why the three selection outcomes are not independent.
+\end{enumerate}
+
+\newpage
+
+\questionheading{16}
+Resting heart rates in a population of healthy adult horses are approximately Normal with mean 40 beats per minute and standard deviation 6 beats per minute.
+\begin{enumerate}
+\item Find the $z$-score for a horse with a resting heart rate of 52 beats per minute.
+\item Find the $z$-score for a horse with a resting heart rate of 34 beats per minute.
+\item Interpret both $z$-scores in context.
+\item Which observation is more unusual relative to the population distribution? Explain.
+\end{enumerate}
+
+\questionheading{17}
+Let $Z$ have the standard Normal distribution. Use a standard Normal table to calculate each probability.
+\begin{enumerate}
+\item $P(-1.25<Z<0.80)$
+\item $P(Z>1.65)$
+\item $P(|Z|>2.00)$
+\item Sketch a standard Normal curve and shade the region corresponding to each probability.
+\end{enumerate}
+
+\questionheading{18}
+The fork length $X$ of adult Atlantic salmon returning to a river is approximately Normally distributed with mean 50 cm and standard deviation 6 cm.
+\begin{enumerate}
+\item Calculate $P(X<44)$.
+\item Calculate $P(X>59)$.
+\item Calculate $P(47<X<56)$.
+\item In a group of 800 returning salmon, approximately how many would be expected to exceed 59 cm?
+\item Explain why the expected count in Part 4 need not equal the observed count exactly.
+\end{enumerate}
+
+\questionheading{19}
+An enzyme measurement in a healthy population is approximately Normal with mean 120 units and standard deviation 15 units.
+\begin{enumerate}
+\item Find the 90th percentile of the distribution.
+\item Find the value that separates the lowest 5\% of measurements from the remaining 95\%.
+\item Find the two values that contain the central 95\% of measurements.
+\item Interpret the 90th percentile in context.
+\end{enumerate}
+
+\questionheading{20}
+A dog's fasting glucose measurement is 135 mg/dL. In the relevant healthy dog population, glucose has mean 100 mg/dL and standard deviation 15 mg/dL. A cat's creatinine measurement is 2.1 mg/dL. In the relevant healthy cat population, creatinine has mean 1.4 mg/dL and standard deviation 0.35 mg/dL. Assume both reference distributions are approximately Normal.
+\begin{enumerate}
+\item Calculate the $z$-score for each measurement.
+\item Which measurement is farther above its population mean in standard-deviation units?
+\item Calculate the upper-tail probability associated with each value.
+\item Explain why the raw measurements cannot be compared directly.
+\end{enumerate}
+
+\newpage
+
+\questionheading{21}
+The wing span of a bird species is approximately Normal with mean 82 cm and standard deviation 4 cm.
+\begin{enumerate}
+	\item Use the 68--95--99.7 rule to give the interval containing approximately 68\% of wing spans.
+	\item Give the interval containing approximately 95\% of wing spans.
+	\item Give the interval containing approximately 99.7\% of wing spans.
+	\item Among 2000 birds, approximately how many would be expected to have wing spans outside the 95\% interval?
+	\item Approximately how many would be expected to have wing spans greater than 90 cm?
+\end{enumerate}
+
+\questionheading{22}
+Recovery time $X$ after a veterinary procedure is approximately Normal with mean 50 minutes and standard deviation 8 minutes.
+\begin{enumerate}
+	\item Calculate $P(X>60)$.
+	\item Calculate $P(X>45)$.
+	\item Among animals whose recovery time exceeds 45 minutes, calculate the probability that recovery exceeds 60 minutes.
+	\item Find the recovery time that marks the slowest 10\% of recoveries.
+	\item Explain the difference between the unconditional probability in Part 1 and the conditional probability in Part 3.
+\end{enumerate}
+
+\questionheading{23}
+For each setting, state whether the count is reasonably modelled as binomial, Poisson or neither. Give a brief reason.
+\begin{enumerate}
+	\item The number of 20 independently treated patients who experience an adverse reaction, when each patient has the same reaction probability.
+	\item The number of emergency calls received during one hour, assuming a stable average rate and independent occurrences.
+	\item The number of tagged fish in a sample of 10 fish drawn without replacement from a small tank containing 15 tagged and 15 untagged fish.
+	\item The number of patients treated until the first successful response occurs.
+	\item The number of bacterial colonies appearing on a fixed-area plate, assuming colonies arise independently at a stable average rate across the plate.
+\end{enumerate}
+
+\questionheading{24}
+Each of 12 independently treated animals has probability 0.80 of producing a protective immune response. Let $X$ be the number producing a protective response.
+\begin{enumerate}
+	\item State the probability distribution of $X$.
+	\item Calculate $P(X=10)$ using the binomial formula.
+	\item Calculate the probability that all 12 animals produce a protective response.
+	\item Find the mean and standard deviation of $X$.
+	\item Interpret the mean in context.
+\end{enumerate}
+
+\newpage
+
+\questionheading{25}
+A manufacturer reports that each diagnostic cartridge has probability 0.04 of being defective. Assume cartridge outcomes are independent. A laboratory receives 20 cartridges, and $X$ is the number that are defective.
+\begin{enumerate}
+	\item State the binomial model for $X$.
+	\item Calculate $P(X=0)$ and $P(X=1)$.
+	\item Calculate $P(X\geq2)$ using a complement.
+	\item Find the mean and standard deviation of $X$.
+	\item Explain why the mean does not imply that a box can contain 0.8 of a defective cartridge.
+\end{enumerate}
+
+\questionheading{26}
+The number $X$ of policyholders making a specified type of claim in a group of 50 independent policyholders is modelled as binomial. The expected number of claims is 5.
+\begin{enumerate}
+	\item Use the binomial mean to find the claim probability $p$.
+	\item Find the standard deviation of $X$.
+	\item Calculate the probability of no claims.
+		\item Calculate the probability of at most two claims.
+	\item Explain what assumption would be questionable if a single storm could cause many of the policyholders to claim at the same time.
+\end{enumerate}
+
+\questionheading{27}
+Wildlife--vehicle collisions on a rural highway are modelled by a Poisson process with an average of 3.6 collisions per week. Let $X$ be the number of collisions during a two-day period.
+\begin{enumerate}
+	\item Find the appropriate value of $\lambda$ for two days.
+	\item Calculate $P(X=0)$.
+	\item Calculate $P(X=1)$.
+	\item Calculate $P(X\geq2)$.
+	\item State the mean and standard deviation of the two-day count.
+\end{enumerate}
+
+\questionheading{28}
+Under a baseline model, the monthly number $X$ of seabird deaths found along a monitored coastline follows a Poisson distribution with $\lambda=2$.
+\begin{enumerate}
+	\item Calculate $P(X\leq1)$.
+	\item Calculate $P(X\geq7)$.
+	\item Find the smallest whole number $k$ for which $P(X\geq k)<0.01$.
+	\item If seven deaths are observed, explain what the small probability does and does not establish.
+\end{enumerate}
+
+\newpage
+
+\questionheading{29}
+The number of ticks collected along a 100-metre forest transect is modelled as Poisson with mean 1.5. Assume the same rate applies along a comparable 300-metre transect.
+\begin{enumerate}
+	\item Find the Poisson parameter for the 300-metre transect.
+	\item Calculate the probability of exactly five ticks along 300 metres.
+	\item Calculate the probability of at least eight ticks along 300 metres.
+	\item Find the mean, variance and standard deviation of the 300-metre count.
+	\item Identify one real-world feature that could make the Poisson model inappropriate.
+\end{enumerate}
+
+\questionheading{30}
+In a population of animals, 12\% carry an infection. A screening test has sensitivity 90\% and specificity 95\%. Fifteen animals are independently selected from the population and tested. Let $Y$ be the number of positive test results.
+\begin{enumerate}
+	\item Use the law of total probability to find the probability that one randomly selected animal tests positive.
+	\item State an appropriate probability model for $Y$.
+	\item Calculate $P(Y\geq3)$.
+	\item Find the mean and standard deviation of $Y$.
+	\item Given that one randomly selected animal tests positive, calculate the probability that it actually carries the infection.
+	\item Explain why the probability in Part 5 differs from the sensitivity.
+\end{enumerate}
+
+\questionheading{31}
+A marine research team tags Atlantic salmon before migration. Let $R$ be the event that a tagged salmon returns to the river the following year, and let $T$ be the event that its transmitter is still functioning when it returns. Suppose
+\[
+	P(R)=0.62, \qquad P(T)=0.80, \qquad P(R\cap T)=0.54
+\]
+\begin{enumerate}
+	\item Calculate $P(R\cup T)$.
+	\item Calculate $P(R\mid T)$ and interpret the result in context.
+	\item Calculate the probability that neither event occurs.
+	\item Are $R$ and $T$ disjoint? Explain.
+	\item Are $R$ and $T$ independent? Support your answer with a calculation.
+\end{enumerate}
+
+\questionheading{32}
+Let $X$ be the number of emergency patients arriving at a veterinary clinic during a randomly selected two-hour period. The proposed probability model is shown below.
+
+\begin{center}
+\begin{tabular}{c*{5}{r}}
+\toprule
+$x$ & 0 & 1 & 2 & 3 & 4 \\
+\midrule
+$P(X=x)$ & 0.10 & 0.25 & 0.35 & 0.20 & $c$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{enumerate}
+\item Find $c$ so that this is a valid probability model.
+\item Calculate $P(X\geq2)$ and $P(1\leq X<4)$.
+\item Calculate the mean $E(X)$.
+\item Calculate the variance and standard deviation of $X$.
+\item Interpret $E(X)$ in the context of many two-hour periods.
+\end{enumerate}
+
+\newpage
+
+\questionheading{33}
+A current meter used in an oceanography experiment has a measurement error $Y$, in centimetres per second, that is uniformly distributed between $-0.3$ and $0.5$.
+\begin{enumerate}
+	\item Find the height of the uniform density curve.
+	\item Calculate $P(-0.1\leq Y\leq0.2)$ using the area under the density curve.
+	\item Calculate $P(Y<-0.2\text{ or }Y>0.35)$.
+	\item Calculate $P(Y<0.1\mid Y>-0.1)$.
+	\item What is $P(Y=0.1)$? Explain using the geometry of a continuous probability distribution.
+\end{enumerate}
+
+\questionheading{34}
+An insurance company uses the following simplified model for a pet owner's eligible veterinary expenses $C$ during one year.
+\begin{center}
+\begin{tabular}{c*{4}{r}}
+\toprule
+Eligible expenses $c$ & \$0 & \$400 & \$1200 & \$4000 \\
+\midrule
+$P(C=c)$ & 0.55 & 0.25 & 0.15 & 0.05 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The policy has a \$500 annual deductible and pays all eligible expenses above the deductible. The insurer's payment is therefore $Y=\max(C-500,0)$.
+\begin{enumerate}
+	\item Construct the probability distribution of $Y$.
+	\item Calculate the expected annual eligible expense $E(C)$.
+	\item Calculate the insurer's expected annual payment $E(Y)$.
+	\item Calculate the owner's expected annual out-of-pocket amount $E(C-Y)$.
+	\item Explain why the expected payment is not the amount the insurer will pay for every policy.
+\end{enumerate}
+
+\questionheading{35}
+A wildlife health study records whether each of 500 seabirds had substantial exposure to an environmental contaminant and whether a particular liver lesion was present.
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+ & Lesion present & Lesion absent & Total \\
+\midrule
+Substantial exposure & 72 & 108 & 180 \\
+No substantial exposure & 48 & 272 & 320 \\
+\midrule
+Total & 120 & 380 & 500 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Let $E$ denote substantial exposure and let $L$ denote the presence of the lesion.
+\begin{enumerate}
+	\item Calculate $P(L\mid E)$ and $P(L\mid E^c)$.
+	\item Calculate the risk ratio $P(L\mid E)/P(L\mid E^c)$ and interpret it.
+	\item Calculate $P(E\mid L)$.
+	\item Are $E$ and $L$ independent? Support your answer numerically.
+	\item Can this observational study establish that the contaminant caused the lesion? Explain one limitation.
+\end{enumerate}
+
+\newpage
+
+\questionheading{36}
+In a population of cats, 8\% have early kidney disease. A screening test has sensitivity 91\% and specificity 94\%.
+\begin{enumerate}
+	\item For a hypothetical population of 10,000 cats, find the expected numbers of true positives, false negatives, false positives and true negatives.
+	\item Calculate the probability that a randomly selected cat tests positive.
+	\item Given a positive result, calculate the probability that the cat has early kidney disease.
+	\item Given a negative result, calculate the probability that the cat does not have early kidney disease.
+	\item Explain why false positives may outnumber false negatives even though the test has high sensitivity and specificity.
+\end{enumerate}
+
+\questionheading{37}
+Daily milk production for cows in a particular herd is approximately Normally distributed with mean 31.5 litres and standard deviation 4.2 litres.
+\begin{enumerate}
+	\item Calculate the probability that a randomly selected cow produces between 28 and 36 litres in one day.
+	\item Find the daily production level that separates the highest 10\% of cows from the remaining 90\%.
+	\item Among 800 cows, approximately how many would be expected to produce less than 24 litres in one day?
+	\item If 2.5 litres are added to every recorded value because of a calibration correction, state the new mean and standard deviation.
+	\item Explain why the calculation in Part 4 changes the mean but not the standard deviation.
+\end{enumerate}
+
+\questionheading{38}
+A wildlife vaccination program distributes oral vaccine baits. Under similar field conditions, each of 14 independently monitored raccoons has probability 0.72 of developing the intended immune response. Let $X$ be the number that develop the response.
+\begin{enumerate}
+	\item State the probability distribution of $X$ and identify its parameters.
+	\item Calculate $P(X=10)$.
+	\item Calculate $P(X\geq11)$.
+	\item Calculate $P(8\leq X\leq12)$.
+	\item Find the mean and standard deviation of $X$ and interpret the mean.
+	\item Identify two assumptions required for the binomial model to be appropriate.
+\end{enumerate}
+
+\questionheading{39}
+An insurance claims office receives an average of 1.8 new claims during an eight-hour workday. Assume that claims arrive according to a Poisson process at a constant rate.
+\begin{enumerate}
+	\item Find the Poisson parameter for a three-hour period.
+	\item Calculate the probability of receiving no claims during a three-hour period.
+	\item Calculate the probability of receiving at least two claims during a three-hour period.
+	\item Find the Poisson parameter for five complete workdays and calculate the probability of receiving between 6 and 12 claims, inclusive.
+	\item Identify one realistic feature of claim arrivals that could violate the constant-rate assumption.
+\end{enumerate}
+
+\newpage
+
+\questionheading{40}
+A wildlife disease program monitors animals from two regions. Region A contains 40\% of the monitored population and has infection prevalence 18\%. Region B contains the remaining 60\% and has infection prevalence 6\%. A diagnostic test has sensitivity 92\% and specificity 96\% in both regions. Let $A$ denote selection from Region A, let $I$ denote infection and let $+$ denote a positive test result.
+\begin{enumerate}
+	\item Use the law of total probability to calculate $P(I)$.
+	\item Calculate $P(+\mid A)$ and $P(+\mid A^c)$.
+	\item Calculate the overall probability $P(+)$.
+	\item Given a positive result, calculate $P(A\mid +)$.
+	\item Given a positive result, calculate $P(I\mid +)$.
+	\item If 20 animals are independently selected from this mixed population and tested, state a probability model for the number of positive results and calculate the probability of at least three positive results.
+	\item Find the expected number of positive results among the 20 tests.
+\end{enumerate}
+
+
+\end{document}
