@@ -1,0 +1,443 @@
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{booktabs,longtable,array}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlength{\emergencystretch}{3em}
+\setlist[itemize]{leftmargin=1.5em,itemsep=1pt,topsep=2pt}
+\setlist[enumerate]{leftmargin=1.7em,itemsep=2pt,topsep=2pt}
+\renewcommand{\arraystretch}{1.08}
+
+\lstset{
+  language=R,
+  basicstyle=\ttfamily\small,
+  frame=single,
+  breaklines=true,
+  showstringspaces=false,
+  columns=fullflexible,
+  keepspaces=true
+}
+
+\title{STAT 1210: Assignment 2 Solutions\\[4pt]\large Part II: Probability and Distributions}
+\author{Fall 2026 Semester}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Grading Scheme}
+
+\begin{center}
+\begin{tabular}{lr@{\qquad}lr}
+\toprule
+Question & Marks & Question & Marks\\
+\midrule
+1 & 10 & 7 & 8\\
+2 & 8 & 8 & 8\\
+3 & 10 & 9 & 8\\
+4 & 8 & 10 & 10\\
+5 & 10 & 11 & 10\\
+6 & 10 & &\\
+\midrule
+\multicolumn{3}{r}{\textbf{Total}} & \textbf{100}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Bonus Question 1: +3 \\
+Bonus Question 2: +2
+
+\newpage
+
+% =======================================
+% Question 1
+% =======================================
+\section*{Question 1 \hfill [10 marks]}
+
+\textbf{1. [1 marks]}
+
+For a valid probability model
+$$0.18+0.31+0.29+0.16+c=1$$
+$$\boxed{c=0.06}$$
+This follows from the rule that the probabilities of all possible outcomes must sum to \(1\).
+
+\textbf{2. [3 marks]}
+$$P(X\ge2)=0.29+0.16+0.06=\boxed{0.51}$$
+$$P(X<3)=0.18+0.31+0.29=\boxed{0.78}$$
+$$P(X\ne0)=1-0.18=\boxed{0.82}$$
+
+\textbf{3. [3 marks]}
+$$\mu_X=\sum xP(X=x)=0(0.18)+1(0.31)+2(0.29)+3(0.16)+4(0.06)=\boxed{1.61}$$
+$$\sigma_X^2=\sum (x-\mu_X)^2P(X=x)=\boxed{1.2779}$$
+$$\sigma_X=\sqrt{1.2779}=\boxed{1.130442}$$
+
+\textbf{4. [3 marks]}
+
+The R output is
+$$\boxed{\sum p=1.000000}$$
+$$\boxed{\mu_X=1.610000 \qquad \sigma_X^2=1.277900 \qquad \sigma_X=1.130442}$$
+
+% =======================================
+% Question 2
+% =======================================
+\section*{Question 2 \hfill [8 marks]}
+
+\textbf{1. [1 mark]}
+
+The density is a rectangle of width \(8-2=6\). Therefore
+$$6h=1 \rightarrow \boxed{h=\frac16}$$
+
+
+\textbf{2. [2 marks]}
+$$P(3.5\le T\le6.2)=\frac{6.2-3.5}{8-2}=\frac{2.7}{6}=\boxed{0.45}$$
+$$P(T<2.8\text{ or }T>7.4)=\frac{(2.8-2)+(8-7.4)}{6}=\frac{1.4}{6}=\boxed{0.233333}$$
+
+\textbf{3. [2 marks]}
+$$\boxed{P(T=5)=0}$$
+For a continuous random variable, probability is assigned to intervals rather than individual points. A time of exactly \(5\) minutes can occur in practice even though a single point has probability \(0\) under the continuous model.
+
+\textbf{4. [3 marks]}
+$$1200(0.45)=\boxed{540}$$
+Approximately \(540\) calibrations would be expected to fall between \(3.5\) and \(6.2\) minutes. By the Law of Large Numbers, the observed proportion should tend to get closer to \(0.45\) as the number of independent calibrations becomes large.
+
+% =======================================
+% Question 3
+% =======================================
+\section*{Question 3 \hfill [10 marks]}
+
+\textbf{1. [3 marks]}
+$$P(A)=\frac{100}{400}=\boxed{0.25} \qquad P(S)=\frac{150}{400}=\boxed{0.375} \qquad P(A\cap S)=\frac{60}{400}=\boxed{0.15}$$
+
+\textbf{2. [2 marks]}
+$$P(A\mid S)=\frac{60}{150}=\boxed{0.40}$$
+
+This is the probability that a South-region sample is above the threshold.
+$$P(S\mid A)=\frac{60}{100}=\boxed{0.60}$$
+
+This is the probability that an above-threshold sample came from the South region. The denominators differ because the first conditions on South samples and the second conditions on above-threshold samples.
+
+\textbf{3. [1 marks]}
+$$P(S\cup A)=P(S)+P(A)-P(S\cap A)=0.375+0.25-0.15=\boxed{0.475}$$
+
+\textbf{4. [3 marks]}
+$$P(A\mid N)=\frac{16}{100}=\boxed{0.16}$$
+$$P(A\mid C)=\frac{24}{150}=\boxed{0.16}$$
+$$P(A\mid S)=\frac{60}{150}=\boxed{0.40}$$
+The South region has a substantially higher above-threshold rate, providing evidence of an association between region and threshold status in this dataset.
+
+\textbf{5. [1 marks]}
+These are observational data, so other variables may differ among regions and influence contaminant status. Therefore, the observed association alone does not establish that region causes the difference.
+
+% =======================================
+% Question 4
+% =======================================
+\section*{Question 4 \hfill [8 marks]}
+
+\textbf{1. [1 mark]}
+
+No. Since $P(A\cap B)=0.12>0$ the events are not disjoint.
+
+\textbf{2. [1 mark]}
+$$P(A\cup B)=0.32+0.25-0.12=\boxed{0.45}$$
+
+\textbf{3. [1 mark]}
+$$P(A^c\cap B^c)=1-P(A\cup B)=1-0.45=\boxed{0.55}$$
+
+\textbf{4. [3 marks]}
+$$P(A\mid B)=\frac{P(A\cap B)}{P(B)}=\frac{0.12}{0.25}=\boxed{0.48}$$
+Among isolates with the plasmid marker, \(48\%\) are resistant to antibiotic A.
+$$P(B\mid A)=\frac{P(A\cap B)}{P(A)}=\frac{0.12}{0.32}=\boxed{0.375}$$
+Among isolates resistant to antibiotic A, \(37.5\%\) have the plasmid marker.
+
+\textbf{5. [2 marks]}
+
+For independence
+$$P(A\cap B)=P(A)P(B)$$
+but
+$$0.12\ne(0.32)(0.25)=0.08$$
+
+Therefore
+$$\boxed{A\text{ and }B\text{ are not independent}}$$
+
+% =======================================
+% Question 5
+% =======================================
+\section*{Question 5 \hfill [10 marks]}
+
+Let \(D\) denote defective and \(D^c\) denote not defective.
+
+\textbf{1. [2 marks]}
+
+The first branches are $\qquad P(A)=0.65 \qquad P(B)=0.35$
+
+From Supplier A: $\qquad P(D\mid A)=0.03 \qquad P(D^c\mid A)=0.97$
+
+From Supplier B: $\qquad P(D\mid B)=0.08 \qquad P(D^c\mid B)=0.92$
+
+Each pair of outgoing branches sums to \(1\).
+
+\textbf{2. [4 marks]}
+$$P(A\cap D)=0.65(0.03)=\boxed{0.0195}$$
+$$P(A\cap D^c)=0.65(0.97)=\boxed{0.6305}$$
+$$P(B\cap D)=0.35(0.08)=\boxed{0.0280}$$
+$$P(B\cap D^c)=0.35(0.92)=\boxed{0.3220}$$
+
+\textbf{3. [1 marks]}
+$$P(D)=0.0195+0.0280=\boxed{0.0475}$$
+
+\textbf{4. [1 marks]}
+$$P(B\mid D)=\frac{P(B\cap D)}{P(D)}=\frac{0.0280}{0.0475}=\boxed{0.589474}$$
+
+\textbf{5. [2 marks]}
+$$P(A\mid D^c)=\frac{P(A\cap D^c)}{P(D^c)}=\frac{P(A\cap D^c)}{1-P(D)}=\frac{0.6305}{1-0.0475}=\boxed{0.661942}$$
+
+% =======================================
+% Question 6
+% =======================================
+
+\section*{Question 6 \hfill [10 marks]}
+
+Let \(D\) denote that a plant carries the pathogen and \(D^c\) denote that it does not. Let \(+\) denote a positive test result and \(-\) denote a negative test result.
+
+The given probabilities are
+$$P(D)=0.06 \quad P(D^c)=0.94 \quad P(+\mid D)=0.92 \quad P(-\mid D)=0.08 \quad P(-\mid D^c)=0.95 \quad P(+\mid D^c)=0.05$$
+
+\textbf{1. [4 marks]}
+
+Of \(10000\) plants $10000(0.06)=600$ are expected to carry the pathogen and $10000(0.94)=9400$ are expected not to carry the pathogen. 
+
+$E[\text{true positives}] = 10000P(D)P(+\mid D)=10000(0.06)(0.92)=\boxed{552}$
+
+$E[\text{false negatives}] =10000P(D)P(-\mid D)=10000(0.06)(0.08)=\boxed{48}$
+
+$E[\text{false positives}] =10000P(D^c)P(+\mid D^c)=10000(0.94)(0.05)=\boxed{470}$
+
+$E[\text{true negatives}] =10000P(D^c)P(-\mid D^c)=10000(0.94)(0.95)=\boxed{8930}$
+
+\textbf{2. [1 mark]}
+
+Using the law of total probability
+$$P(+)=P(+\mid D)P(D)+P(+\mid D^c)P(D^c)=(0.92)(0.06)+(0.05)(0.94)=\boxed{0.1022}$$
+
+\textbf{3. [1 mark]}
+
+$$P(D\mid +)=\frac{P(+\mid D)P(D)}{P(+)}=\frac{(0.92)(0.06)}{0.1022}=\boxed{0.540117}$$
+
+\textbf{4. [2 marks]}
+$$P(D\mid -)=\frac{P(-\mid D)P(D)}{P(-\mid D)P(D)+P(-\mid D^c)P(D^c)}=\frac{(0.08)(0.06)}{(0.08)(0.06)+(0.95)(0.94)}=\boxed{0.005346}$$
+
+\textbf{5. [2 marks]}
+
+Sensitivity is $P(+\mid D)=0.92$ whereas Part 4 asks for $P(D\mid -)$. These are different conditional probabilities, so the sensitivity is not the answer to Part 4. The prevalence is only \(6\%\), so plants without the pathogen are much more common than plants with the pathogen. As a result, even a relatively small false-positive rate produces many false positives. Therefore, a positive result has $P(D\mid +)\approx0.540$ rather than a probability close to the \(92\%\) sensitivity.
+
+
+% =======================================
+% Question 7
+% =======================================
+\section*{Question 7 \hfill [8 marks]}
+
+\textbf{1. [2 marks]}
+
+Laboratory A: $z=\frac{150-120}{15}=\boxed{2.00}$
+
+Laboratory B: $z=\frac{92-80}{5}=\boxed{2.40}$
+
+\textbf{2. [1 mark]}
+
+The Laboratory B measurement is farther above the centre because $\boxed{2.40>2.00}$.
+
+\textbf{3. [1 mark]}
+
+For Laboratory A
+$$90=120-2(15),\qquad150=120+2(15)$$
+
+By the 68--95--99.7 rule
+$$\boxed{P(90<X<150)\approx0.95}$$
+
+\textbf{4. [4 marks]}
+
+Using R
+$$P(105<X<145)=\boxed{0.793554}$$
+and
+$$P(X>150)=\boxed{0.022750}$$
+
+
+% =======================================
+% Question 8
+% =======================================
+\section*{Question 8 \hfill [8 marks]}
+
+\textbf{1. [3 marks]}
+
+Here $M\sim N(250,3)$. The central \(90\%\) leaves \(5\%\) in each tail, so the cumulative probabilities are \(0.05\) and \(0.95\).
+\begin{lstlisting}
+qnorm(0.05, mean = 250, sd = 3)
+qnorm(0.95, mean = 250, sd = 3)
+\end{lstlisting}
+So the central \(90\%\) is approximately $\boxed{245.065\text{ g}<M<254.935\text{ g}}$.
+
+\textbf{2. [2 marks]}
+
+The heaviest \(1\%\) begins at the \(99\)th percentile.
+
+\begin{lstlisting}
+qnorm(0.99, mean = 250, sd = 3)
+\end{lstlisting}
+$$\boxed{256.979\text{ g}}$$
+
+\textbf{3. [1 mark]}
+$$2000(0.01)=\boxed{20}$$
+
+\textbf{4. [2 marks]}
+
+Approximately \(90\%\) of package masses are modelled to lie between \(245.065\) g and \(254.935\) g. \\
+Approximately \(1\%\) are modelled to exceed \(256.979\) g.
+
+% =======================================
+% Question 9
+% =======================================
+\section*{Question 9 \hfill [8 marks]}
+
+\textbf{1. [2 marks]}
+
+\textbf{Binomial}\\
+There are \(20\) fixed independent trials, two outcomes per trial, and constant success probability \(p=0.08\).
+
+\textbf{2. [2 marks]}
+
+\textbf{Poisson}\\
+The problem specifies independent occurrences at a stable average rate over equal areas.
+
+\textbf{3. [2 marks]}
+
+\textbf{Neither without additional assumptions}\\
+Sampling without replacement from a small finite collection does not give independent trials with constant success probability. A Binomial model could become reasonable with replacement or approximately reasonable if the population were much larger than the sample.
+
+\textbf{4. [2 marks]}
+
+\textbf{Neither without additional assumptions}\\
+A single homogeneous Poisson model is not appropriate when the rate changes substantially. A Poisson model could be used within time periods for which the average rate is approximately stable.
+
+% =======================================
+% Question 10
+% =======================================
+\section*{Question 10 \hfill [10 marks]}
+
+\textbf{1. [2 marks]}
+
+The four Binomial conditions are satisfied: there are \(12\) fixed trials, each sensor has pass/fail outcomes, the outcomes are independent, and the pass probability is constant at \(0.85\). 
+$$\boxed{X\sim\operatorname{Binomial}(12,0.85)}$$
+
+\textbf{2. [4 marks]}
+
+Using the Binomial formula
+$$P(X=10)=\binom{12}{10}(0.85)^{10}(0.15)^2=\boxed{0.292358}$$
+
+In R
+\begin{lstlisting}
+dbinom(10, size = 12, prob = 0.85)
+pbinom(9, size = 12, prob = 0.85, lower.tail = FALSE)
+\end{lstlisting}
+
+So
+$$\boxed{P(X=10)=0.292358}$$
+$$\boxed{P(X\ge10)=0.735818}$$
+
+\textbf{3. [2 marks]}
+
+$$\mu=np=12(0.85)=\boxed{10.2}$$
+
+$$\sigma=\sqrt{np(1-p)}=\sqrt{12(0.85)(0.15)}=\boxed{1.236932}$$
+
+\textbf{4. [2 marks]}
+
+Across many repeated groups of \(12\) sensors, the number passing would average about \(10.2\) sensors per group. The number passing would typically vary by about \(1.24\) sensors around that mean.
+
+% =======================================
+% Question 11
+% =======================================
+\section*{Question 11 \hfill [10 marks]}
+
+\textbf{1. [2 marks]}
+
+A Poisson model is appropriate because defects are counted over a fixed length, with a stable rate and independent counts in non-overlapping lengths.
+
+For \(250\) metres
+$$\lambda=2.4\left(\frac{250}{100}\right)=\boxed{6}$$
+
+Thus
+$$\boxed{Y\sim\operatorname{Poisson}(6)}$$
+
+\textbf{2. [4 marks]}
+
+In R
+\begin{lstlisting}
+dpois(4, lambda = 6)
+ppois(2, lambda = 6)
+1 - dpois(0, lambda = 6)
+\end{lstlisting}
+
+Therefore
+$$\boxed{P(Y=4)=0.133853}$$
+$$\boxed{P(Y\le2)=0.061969}$$
+$$\boxed{P(Y\ge1)=0.997521}$$
+
+\textbf{3. [2 marks]}
+
+For a Poisson random variable
+$$\mu=\lambda,\qquad \sigma^2=\lambda$$
+so
+$$\boxed{\mu=6,\qquad \sigma^2=6,\qquad \sigma=\sqrt6\approx2.449490}$$
+
+\textbf{4. [2 marks]}
+
+For \(50\) metres
+$$\lambda=2.4\left(\frac{50}{100}\right)=\boxed{1.2}$$
+
+\newpage
+
+% =======================================
+% Bonus Question 1
+% =======================================
+\section*{Bonus Question 1 \hfill [3 bonus marks]}
+
+$$80p(1-p)=12.8$$
+$$\boxed{p^2-p+0.16=0}$$
+$$p=\frac{1\pm\sqrt{1-0.64}}{2}=\frac{1\pm0.6}{2}$$
+
+So
+$$p=0.20\quad\text{or}\quad p=0.80$$
+
+Since \(p<0.50\)
+$$p=0.20$$
+$$\mu=np=80(0.20)=\boxed{16}$$
+$$\sigma=\sqrt{np(1-p)}=\sqrt{12.8}=\boxed{3.577709}$$
+$$P(14\le X\le18)=P(X\le18)-P(X\le13)$$
+
+\begin{lstlisting}
+pbinom(18, 80, 0.20) - pbinom(13, 80, 0.20)
+\end{lstlisting}
+$$\boxed{P(14\le X\le18)=0.515065}$$
+
+\begin{lstlisting}
+pbinom(24, 80, 0.20, lower.tail = FALSE)
+\end{lstlisting}
+$$\boxed{P(X\ge25)=0.011484}$$
+
+A count of \(25\) or more would be unusual under this model because the probability is about \(1.15\%\), assuming the Binomial model assumptions are reasonable.
+
+% =======================================
+% Bonus Question 2
+% =======================================
+\section*{Bonus Question 2 \hfill [2 bonus marks]}
+
+No single numerical solution is required. Award up to \(2\) marks for completing one option with appropriate effort, originality, and a clear explanation of the relevant probability ideas while satisfying the stated length requirements.
+
+\end{document}
