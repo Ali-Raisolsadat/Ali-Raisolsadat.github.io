@@ -1,5 +1,5 @@
 ---
-title: "Chapter 15: Inference in Practice"
+title: "Chapter 15: Probability and Inference in Practice"
 subtitle: "The Practice of Statistics in the Life Sciences<br>by Brigitte Baldi and David S. Moore"
 author: "Instructor: Ali Raisolsadat"
 date: "Part III: Foundations of Inference"
@@ -962,6 +962,64 @@ p_power_sample <- ggplot(
   ) +
   lecture_chart_theme
 
+# Figure 7: Exact binomial null distribution with the observed lower tail
+binomial_values <- 0:60
+binomial_tail_data <- data.frame(
+  x = binomial_values,
+  probability = dbinom(binomial_values, size = 60, prob = 0.80),
+  region = ifelse(binomial_values <= 41, "Observed or lower", "Other outcomes")
+)
+
+p_binomial_tail <- ggplot(
+  subset(binomial_tail_data, x >= 30),
+  aes(x = x, y = probability, fill = region)
+) +
+  geom_col(width = 0.82) +
+  scale_fill_manual(
+    values = c(
+      "Observed or lower" = "#C44E52",
+      "Other outcomes" = "#8FA8BF"
+    )
+  ) +
+  labs(
+    title = "Exact Binomial Null Distribution",
+    subtitle = "X ~ Bin(60, 0.80); the shaded lower tail is P(X <= 41)",
+    x = "Number of Treatment Responses",
+    y = "Probability",
+    fill = "Region"
+  ) +
+  lecture_chart_theme +
+  theme(legend.position = "bottom")
+
+# Figure 8: Exact Poisson null distribution with the observed upper tail
+poisson_values <- 0:30
+poisson_tail_data <- data.frame(
+  x = poisson_values,
+  probability = dpois(poisson_values, lambda = 12),
+  region = ifelse(poisson_values >= 20, "Observed or higher", "Other outcomes")
+)
+
+p_poisson_tail <- ggplot(
+  poisson_tail_data,
+  aes(x = x, y = probability, fill = region)
+) +
+  geom_col(width = 0.82) +
+  scale_fill_manual(
+    values = c(
+      "Observed or higher" = "#C44E52",
+      "Other outcomes" = "#8FA8BF"
+    )
+  ) +
+  labs(
+    title = "Exact Poisson Null Distribution",
+    subtitle = "X ~ Pois(12); the shaded upper tail is P(X >= 20)",
+    x = "Number of Confirmed Cases in One Month",
+    y = "Probability",
+    fill = "Region"
+  ) +
+  lecture_chart_theme +
+  theme(legend.position = "bottom")
+
 # Save the figures used in both the notes and the lecture slides.
 save_plot(
   "fig_ch15_margin_sample_size.png",
@@ -994,6 +1052,16 @@ save_plot(
   "fig_ch15_power_sample_size.png",
   p_power_sample
 )
+
+save_plot(
+  "fig_ch15_binomial_tail.png",
+  p_binomial_tail
+)
+
+save_plot(
+  "fig_ch15_poisson_tail.png",
+  p_poisson_tail
+)
 ```
 
 # Chapter 15 {.chapter-root .unlisted}
@@ -1015,6 +1083,109 @@ The conclusions from a statistical procedure depend on several connected questio
 > Statistical methods are trustworthy when the assumptions fit the study and the conclusions remain within the limits of the design.
 
 This chapter develops the practical judgment needed to use confidence intervals and hypothesis tests responsibly. The principles apply far beyond the one-sample $z$ procedures studied in Chapter 14.
+
+## Probability as the Foundation of Inference
+
+The probability chapters and the inference chapters address different stages of the same reasoning process.
+
+- A **probability model** starts with a proposed population or chance mechanism and describes possible outcomes.
+- A **sampling distribution** describes how a statistic would vary across repeated samples drawn by the same method.
+- **Statistical inference** starts with observed sample data and uses the sampling distribution to evaluate possible population values.
+
+The direction of the reasoning changes, but the probability rules do not. Complements, disjoint-event addition, conditional probability, independence and distributional models all appear in inferential calculations.
+
+> **Probability-to-inference connection**
+>
+> Probability asks what data could occur under a model. Inference asks whether the observed data are reasonably compatible with that model.
+
+### Parameters and Statistics
+
+A population parameter is fixed for the population being studied, although its value is usually unknown. A sample statistic depends on the selected observations and therefore changes from sample to sample.
+
+| Scientific quantity | Population parameter | Sample statistic |
+|:--|:--:|:--:|
+| Mean of a quantitative variable | $\mu$ | $\bar{x}$ |
+| Probability of a binary outcome | $p$ | $\hat p$ |
+| Event rate per unit of exposure | $\lambda$ | Observed rate or event count |
+
+Before the sample is selected, the statistic is a random variable. After the sample has been observed, the statistic becomes a known number. Inference uses the observed value while accounting for the statistic's pre-sampling variability.
+
+### Population Distributions and Sampling Distributions
+
+The population distribution and the sampling distribution describe different objects.
+
+- The **population distribution** describes individual values or outcomes.
+- The **sample distribution** describes the observations in one collected sample.
+- The **sampling distribution** describes a statistic across all possible samples of the same size drawn by the same process.
+
+For example, individual body temperatures may have population standard deviation $\sigma$. The sample mean of $n$ independent temperatures has standard deviation
+
+$$
+\sigma_{\bar X}=\frac{\sigma}{\sqrt{n}}
+$$
+
+This smaller standard deviation is the standard error of the sample mean under the model. It measures the sample-to-sample variation relevant to inference.
+
+### Probability Rules Used in Inference
+
+Several familiar probability rules appear directly in confidence intervals and tests.
+
+1. **Complement rule**
+
+   $$
+   P(Z\ge z)=1-P(Z<z)
+   $$
+
+   Upper-tail probabilities often use this form.
+
+2. **Addition of disjoint events**
+
+   A two-sided test combines probability from two non-overlapping tails.
+
+3. **Conditional probability**
+
+   A $P$-value has the form
+
+   $$
+   P(\text{result at least as extreme as observed}\mid H_0)
+   $$
+
+   This probability is not the reverse conditional probability $P(H_0\mid\text{data})$.
+
+4. **Independence**
+
+   Standard errors and exact binomial or Poisson probabilities usually rely on observations or events behaving independently under the model.
+
+### Matching the Distribution to the Response
+
+The response variable and study design guide the choice of a probability model.
+
+| Response | Possible model | Parameter of interest |
+|:--|:--|:--|
+| Continuous measurement | Normal population model or an approximately Normal sampling distribution | Mean $\mu$ |
+| Number of successes in $n$ trials | Binomial model | Success probability $p$ |
+| Number of events in fixed exposure | Poisson model | Event rate $\lambda$ |
+
+The model describes more than the shape of a distribution. A binomial model assumes a fixed number of trials, two possible outcomes, independent trials and a common success probability. A Poisson model assumes a stable event rate over the defined exposure and an event process without unexplained clustering.
+
+### Exact Probabilities and Normal Approximations
+
+An inferential probability may be calculated directly from a discrete model or approximated using a Normal distribution.
+
+- An **exact binomial or Poisson calculation** retains the original discrete model.
+- A **Normal approximation** replaces the discrete or non-Normal sampling distribution with a Normal model when the approximation conditions are adequate.
+
+The word *exact* refers to the calculation under the assumed probability model. If the model does not fit the study process, an exact calculation can still give a misleading conclusion.
+
+For a binomial count, the common first-year condition for a Normal approximation is
+
+$$
+np\ge10
+\qquad\text{and}\qquad
+n(1-p)\ge10
+$$
+
+For a sample mean, the population shape and the sample size determine whether the Central Limit Theorem provides an adequate approximation.
 
 ### The One-Sample $z$ Procedures
 
@@ -1094,6 +1265,26 @@ The resulting conclusion depends on subject-matter reasoning:
 - Could the measurement setting affect the recorded values?
 
 There is no formula that repairs a biased sampling process. When random selection is absent, uncertainty extends beyond the reported standard error.
+
+### Independence of Observations
+
+Many introductory formulas assume that the observations are independent. Independence means that learning one observation does not determine the value of another observation under the model.
+
+Dependence can arise when
+
+- Several measurements come from the same individual
+- Animals come from the same litter or enclosure
+- Patients receive care in the same clinic
+- Measurements come from nearby locations or adjacent times
+- Participants influence one another's responses
+
+When a simple random sample is drawn without replacement from a finite population, the observations are technically dependent. The dependence is usually small enough to ignore when the sample represents no more than $10\%$ of the population:
+
+$$
+n\le0.10N
+$$
+
+This guideline is often called the **10% condition**. It does not address clustering or repeated measurements. Those forms of dependence require a method that represents the group or repeated-measure structure.
 
 ### Problems That Can Arise After a Good Design
 
@@ -1196,7 +1387,7 @@ The sampling method is similar in the two studies, but the plausibility of broad
 >
 > Whether a convenience sample can support a broader conclusion depends partly on how the selection process could relate to the variable being studied.
 
-### Example 15.2: Is It Really an SRS?
+### Additional Study-Design Examples
 
 Three studies from Chapter 14 illustrate different relationships between the sample and the intended population.
 
@@ -1245,6 +1436,55 @@ Three quantities determine the margin of error:
 - The confidence level through the critical value $z^*$
 - The population variability through $\sigma$
 - The sample size through $n$
+
+### From the Sampling Distribution to a Confidence Interval
+
+The interval formula follows from a probability statement about the sample mean. Under the one-sample $z$ model,
+
+$$
+Z
+=
+\frac{\bar X-\mu}{\sigma/\sqrt{n}}
+\sim N(0,1)
+$$
+
+The central $95\%$ of the Standard Normal distribution lies between approximately $-1.96$ and $1.96$:
+
+$$
+P\left(
+-1.96
+\le
+\frac{\bar X-\mu}{\sigma/\sqrt{n}}
+\le
+1.96
+\right)
+=0.95
+$$
+
+Rearranging the inequalities places $\mu$ in the centre:
+
+$$
+P\left(
+\bar X-1.96\frac{\sigma}{\sqrt{n}}
+\le
+\mu
+\le
+\bar X+1.96\frac{\sigma}{\sqrt{n}}
+\right)
+=0.95
+$$
+
+Before sampling, the endpoints are random because they depend on $\bar X$. The parameter $\mu$ is fixed.
+
+### Long-Run Coverage
+
+A $95\%$ confidence procedure has a long-run coverage rate of $95\%$ under the stated model. If the same sampling process were repeated many times, approximately $95\%$ of the resulting intervals would contain the true parameter and approximately $5\%$ would miss it.
+
+After one sample has been collected, the calculated interval is fixed. The usual frequentist interpretation refers to the reliability of the procedure rather than a probability assigned to the fixed parameter.
+
+> **Suitable interpretation**
+>
+> We are $95\%$ confident that the population parameter lies between the reported endpoints because the method captures the true parameter in approximately $95\%$ of repeated samples under the model conditions.
 
 ### Confidence and Precision
 
@@ -1319,7 +1559,7 @@ p_margin
 
 The curve becomes flatter as $n$ increases. When a study already has a large sample, obtaining the same absolute reduction in margin of error may require many additional observations.
 
-### Example 15.3: Confidence Level and Margin of Error
+### Example 15.4: Confidence Level and Margin of Error
 
 The IQ study has
 
@@ -1419,7 +1659,7 @@ data.frame(
 )
 ```
 
-### Example 15.3: Doubling the Sample Size
+### Example 15.4 (continued): Doubling the Sample Size
 
 The original $95\%$ margin of error is
 
@@ -1522,6 +1762,34 @@ $$
 
 The P-value is the probability, calculated under the null hypothesis and model conditions, of obtaining a test statistic at least as extreme as the observed statistic in the direction specified by the alternative hypothesis.
 
+### From the Null Model to a P-Value
+
+The test statistic locates the observed result within the null sampling distribution.
+
+For the one-sample $z$ statistic,
+
+$$
+z
+=
+\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}
+$$
+
+the numerator is the observed difference from the null value and the denominator is the standard error expected from random sampling. A value such as $z=2.4$ means that the observed sample mean is $2.4$ standard errors above the null mean.
+
+The alternative hypothesis determines which outcomes count as at least as extreme:
+
+- An upper-tail alternative uses probability to the right of $z_{\text{obs}}$
+- A lower-tail alternative uses probability to the left of $z_{\text{obs}}$
+- A two-sided alternative combines equally extreme outcomes in both tails
+
+Thus, the $P$-value has the conditional form
+
+$$
+P(\text{test statistic at least as extreme as observed}\mid H_0)
+$$
+
+It does not have the reverse form $P(H_0\mid\text{observed statistic})$.
+
 ### Evidence Is Continuous
 
 Smaller P-values indicate that the observed data are less compatible with the null model. Evidence does not change abruptly at a conventional threshold.
@@ -1603,6 +1871,209 @@ For a symmetric sampling distribution, a one-sided P-value is often one-half of 
 
 The direction must be justified by the scientific question and existing knowledge before the data are examined. Choosing a one-sided alternative after seeing the sample result makes the evidence appear stronger than the planned analysis permits.
 
+### Example 15.2: Exact Binomial Inference for a Treatment Response
+
+A veterinary study evaluates whether a treatment reaches a proposed response probability of $0.80$. Among $60$ independently treated dogs, $41$ show the response defined in the study protocol.
+
+Let $X$ be the number of dogs that respond. The hypotheses are
+
+$$
+H_0:p=0.80
+$$
+
+$$
+H_a:p<0.80
+$$
+
+Under the null hypothesis,
+
+$$
+X\sim\operatorname{Bin}(60,0.80)
+$$
+
+The P-value is a conditional probability. The notation
+
+$$
+P(X\le41\mid H_0)
+$$
+
+means that the probability is calculated while treating the null model as true. In this example,
+
+$$
+P(X\le41\mid H_0)
+=
+P(X\le41\mid p=0.80)
+$$
+
+Because the alternative concerns a lower response probability, the relevant outcomes are $41$ or fewer responses:
+
+$$
+P(X=x\mid H_0)
+=
+\binom{60}{x}(0.80)^x(0.20)^{60-x}
+$$
+
+$$
+P(X\le41\mid p=0.80)
+=
+\sum_{x=0}^{41}
+\binom{60}{x}(0.80)^x(0.20)^{60-x}
+$$
+
+$$
+P(X\le41\mid p=0.80)
+\approx
+0.0221
+$$
+
+```{r binomial-tail-plot, echo=FALSE, fig.width=7.4, fig.height=4.4}
+p_binomial_tail
+```
+
+If the null model were correct, a response count of $41$ or fewer would occur in approximately $2.21\%$ of comparable studies. At $\alpha=0.05$, the result is statistically significant and provides evidence that the response probability is below $0.80$.
+
+The conclusion depends on the binomial assumptions:
+
+- Each dog has a response or no response according to the stated definition
+- The study includes a fixed number of $60$ trials
+- Outcomes are sufficiently independent
+- The same response probability is reasonable for the population represented by the study
+
+The exact calculation can be obtained in R with one line.
+
+```{r binomial-tail-calculation}
+n_dogs <- 60
+p_null <- 0.80
+x_observed <- 41
+
+p_value <- pbinom(
+  q = x_observed,
+  size = n_dogs,
+  prob = p_null
+)
+
+p_value
+# [1] 0.02206845
+```
+
+The argument `q = 41` includes every possible count from $0$ through $41$, which matches the lower-tail event in the summation.
+
+The Normal approximation conditions are satisfied because
+
+$$
+np=60(0.80)=48
+$$
+
+and
+
+$$
+n(1-p)=60(0.20)=12
+$$
+
+With a continuity correction, the approximate lower-tail probability is
+
+$$
+P(X\le41)
+\approx
+P(Y\le41.5)
+$$
+
+where
+
+$$
+Y\sim N\left(48,\sqrt{60(0.80)(0.20)}\right)
+$$
+
+The exact binomial calculation remains preferable when it is readily available.
+
+### Example 15.3: Exact Poisson Inference for a Disease Count
+
+A wildlife-health program historically records an average of $12$ confirmed cases of a disease per month. During one month, the program records $20$ cases. Researchers want to determine whether this count is unusually high under the historical-rate model.
+
+Let $X$ be the number of confirmed cases in one month. The null model is
+
+$$
+H_0:\lambda=12
+$$
+
+$$
+H_a:\lambda>12
+$$
+
+$$
+X\sim\operatorname{Pois}(12)
+$$
+
+The conditional notation
+
+$$
+P(X\ge20\mid H_0)
+=
+P(X\ge20\mid\lambda=12)
+$$
+
+means that the tail probability is calculated under the historical mean of $12$ cases per month. For any single count $x$,
+
+$$
+P(X=x\mid H_0)
+=
+e^{-12}\frac{12^x}{x!}
+$$
+
+The upper-tail probability is
+
+$$
+P(X\ge20\mid\lambda=12)
+=
+1-P(X\le19\mid\lambda=12)
+$$
+
+$$
+=
+1-
+\sum_{x=0}^{19}
+e^{-12}\frac{12^x}{x!}
+$$
+
+$$
+P(X\ge20\mid\lambda=12)
+\approx
+0.0213
+$$
+
+```{r poisson-tail-plot, echo=FALSE, fig.width=7.4, fig.height=4.4}
+p_poisson_tail
+```
+
+Under the stable-rate model, a monthly count of $20$ or more would occur in approximately $2.13\%$ of months. This result provides evidence against the proposed rate of $12$ cases per month.
+
+The calculation uses the complement rule because R can calculate the cumulative probability through $19$:
+
+```{r poisson-tail-calculation}
+lambda_null <- 12
+x_observed <- 20
+
+p_value <- ppois(
+  q = x_observed - 1,
+  lambda = lambda_null,
+  lower.tail = FALSE
+)
+
+p_value
+# [1] 0.02127977
+```
+
+Because `lower.tail = FALSE`, R calculates $P(X>19)$. For an integer-valued count, $X>19$ is the same event as $X\ge20$. An equivalent calculation is `1 - ppois(19, lambda = 12)`.
+
+Before concluding that the underlying disease rate increased, researchers should consider whether the Poisson assumptions and exposure remained reasonable. Possible concerns include
+
+- Seasonal changes in disease occurrence
+- Increased testing or surveillance effort
+- Clustering within a location or animal group
+- A change in the size of the population at risk
+
+The small tail probability shows tension with the stated Poisson model. It does not identify which assumption or rate changed.
+
 ### Statistical Significance Depends on Sample Size
 
 The $z$ statistic can be viewed as
@@ -1653,7 +2124,7 @@ A P-value does not report the size of an effect. A confidence interval is more i
 
 A difference of $0.2$ units may be important for one outcome and negligible for another. Subject-matter knowledge is necessary to identify a meaningful threshold.
 
-### Example 15.4: Facebook's Large-Scale Experiment
+### Example 15.5: Facebook's Large-Scale Experiment
 
 Facebook conducted a randomized experiment involving $689{,}003$ users. For one week, the platform reduced the amount of positive or negative emotional content from friends that appeared in selected users' News Feeds. The users' subsequent posts were then examined.
 
@@ -1679,7 +2150,7 @@ The estimated effect was approximately one fewer emotional word for every $1000$
 
 The very large sample made the study sensitive to this small average effect. The small P-values show that the observed changes would be unusual under a zero-effect model. They do not show that the changes were large.
 
-### Example 15.5: Is the Effect Important?
+### Example 15.5 (continued): Is the Effect Important?
 
 The Facebook experiment raises questions that cannot be answered by the P-value alone.
 
@@ -1983,7 +2454,7 @@ is considered large enough to matter to consumers. The engineer wants power of a
 
 The question is whether $10$ tasters provide enough power.
 
-### Example 15.8: The Rejection Cutoff
+### Example 15.7 (continued): The Rejection Cutoff
 
 The test is upper-tailed. At $\alpha=0.05$, the critical Standard Normal value is
 
@@ -2019,7 +2490,7 @@ $$
 \bar{x}\geq0.520
 $$
 
-### Example 15.8: Calculating the Power
+### Example 15.7 (continued): Calculating the Power
 
 If the true population mean is $\mu=0.8$, then the sampling distribution of $\bar{X}$ has mean $0.8$ and standard deviation $0.3162$.
 
@@ -2086,7 +2557,7 @@ c(
 )
 ```
 
-### Example 15.9: Type I and Type II Error Probabilities
+### Example 15.7 (continued): Type I and Type II Error Probabilities
 
 The sweetness test uses
 
@@ -2219,6 +2690,15 @@ ceiling(unrounded_n)
 
 Reliable statistical inference requires the procedure, study design and scientific question to fit one another.
 
+### Probability Foundations
+
+- Probability models describe the outcomes that could occur under stated assumptions
+- Sampling distributions connect those models to statistics such as $\bar{x}$, $\hat p$ and event counts
+- Complements, disjoint-event addition, conditional probability and independence appear directly in inferential calculations
+- The response and study design determine whether a Normal, binomial, Poisson or another probability model is appropriate
+- Exact calculations retain the original discrete model; Normal approximations require adequate conditions
+- A P-value has the form $P(\text{data at least as extreme as observed}\mid H_0)$, not $P(H_0\mid\text{data})$
+
 ### Conditions for Inference
 
 - Random sampling supports population generalization
@@ -2295,8 +2775,12 @@ Larger samples increase precision and usually increase power. Statistical planni
 1. Define the population, parameter and scientific question.
 2. Examine how the data were collected.
 3. Assess independence, distributional conditions and unusual observations.
-4. Select a procedure that matches the design.
+4. Select a probability model and inferential procedure that match the response and design.
 5. Report the estimate, confidence interval and exact P-value when appropriate.
 6. Distinguish statistical evidence from practical importance.
 7. Describe limitations and the scope of the conclusion.
 8. Replicate important findings when possible.
+
+
+
+

@@ -1,0 +1,725 @@
+---
+title: "STAT $1210$"
+subtitle: "Chapter $15$ Homework: Probability and Inference in Practice"
+author: "Fall $2026$"
+date: ""
+output:
+  html_document:
+    self_contained: true
+    toc: false
+    number_sections: false
+    theme: flatly
+    highlight: tango
+---
+
+<style>
+:root {
+  --ink: #263746;
+  --muted: #667786;
+  --blue: #294d73;
+  --blue-dark: #183a5c;
+  --blue-soft: #edf3f8;
+  --line: #d8e1e8;
+  --paper: #ffffff;
+  --page: #eef2f5;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+
+.main-container {
+  max-width: 980px !important;
+  margin-top: 28px;
+  margin-bottom: 42px;
+  padding: 42px 58px 56px;
+  background: var(--paper);
+  border: 1px solid #dde5eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(31, 50, 67, 0.10);
+}
+
+h1, h2, h3 { color: var(--blue-dark); }
+
+h1.title {
+  margin-bottom: 4px;
+  font-weight: 750;
+}
+
+h3.subtitle {
+  margin-top: 0;
+  color: var(--blue);
+  font-weight: 500;
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 1.28em;
+  line-height: 1.35;
+}
+
+.intro-box {
+  margin: 1.2em 0 1.8em;
+  padding: 1em 1.2em;
+  border-left: 5px solid var(--blue);
+  border-radius: 6px;
+  background: var(--blue-soft);
+}
+
+.question-card {
+  margin: 1.55em 0 2em;
+  padding: 1.3em 1.45em 1.1em;
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--blue);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(35, 54, 74, 0.07);
+}
+
+table {
+  width: 100%;
+  margin: 1.1em 0 1.3em;
+  border-collapse: collapse;
+  border: 1px solid var(--line);
+}
+
+thead th {
+  padding: 0.65em 0.75em !important;
+  background: var(--blue);
+  color: white;
+  border: 0 !important;
+}
+
+tbody td {
+  padding: 0.58em 0.75em !important;
+  border-bottom: 1px solid #e5ebf0 !important;
+}
+
+tbody tr:nth-child(even) td { background: #f7f9fb; }
+
+details.solution {
+  margin-top: 1.15em;
+  border: 1px solid #bfd1df;
+  border-radius: 7px;
+  background: #f8fbfd;
+  overflow: hidden;
+}
+
+details.solution summary {
+  padding: 0.72em 0.95em;
+  color: var(--blue-dark);
+  background: var(--blue-soft);
+  cursor: pointer;
+  font-weight: 700;
+  user-select: none;
+}
+
+details.solution summary:hover { background: #e2edf5; }
+
+.solution-body {
+  padding: 0.95em 1.1em 0.75em;
+}
+
+.solution-body ol { margin-bottom: 0.25em; }
+.solution-body li { margin-bottom: 0.75em; }
+
+@media (max-width: 768px) {
+  .main-container {
+    margin-top: 0;
+    padding: 24px 20px 38px;
+    border-radius: 0;
+  }
+}
+
+@media print {
+  body { background: white; font-size: 11pt; }
+  .main-container {
+    max-width: none !important;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+  .question-card { break-inside: avoid; box-shadow: none; }
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  fig.retina = 2,
+  out.width = "88%"
+)
+```
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("details.solution").forEach(function(item) {
+    item.removeAttribute("open");
+  });
+});
+</script>
+
+
+::: {.question-card}
+### Question $1$
+
+A university veterinary hospital recruits $80$ dogs receiving rehabilitation after knee surgery. The dogs are randomly assigned to either a new physiotherapy program or the hospital's standard program, with $40$ dogs in each group. The dogs were not randomly sampled from all dogs undergoing knee surgery. After six weeks, the researchers compare mean mobility scores between the groups.
+
+1. Identify the sample and a reasonable population of interest.
+2. Was random sampling used? What does this imply about generalization?
+3. Was random assignment used? What does this contribute to the study?
+4. If the new-program group has a higher mean mobility score, can the study support a causal conclusion for the participating dogs? State one condition that remains important.
+5. Explain why a valid causal conclusion for the participants does not automatically justify a conclusion about every dog undergoing knee surgery.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The sample consists of the $80$ dogs treated at the university veterinary hospital and enrolled in the study. A possible population of interest is all dogs undergoing comparable knee surgery, although the sampling method may support conclusions only for dogs similar to those treated at this hospital.</li>
+  <li>Random sampling was not used. The researchers recruited dogs from one hospital, so the sample may differ systematically from dogs treated elsewhere. Generalization to all dogs undergoing knee surgery therefore requires caution.</li>
+  <li>Random assignment was used to determine the rehabilitation program. Random assignment tends to balance both known and unknown pre-treatment variables between the groups, which strengthens a causal comparison of the two programs.</li>
+  <li>Yes, the randomized design can support a causal conclusion for the participating dogs if the groups were treated similarly apart from the rehabilitation program. Important remaining conditions include adequate compliance, reliable measurement and no treatment-related loss to follow-up.</li>
+  <li>Random assignment and random sampling serve different purposes. Random assignment supports a causal comparison within the study, whereas random sampling supports generalization to a population. The dogs came from one hospital rather than from a probability sample of all eligible dogs.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $2$
+
+A marine research group studies the operating life of satellite tags attached to sea turtles. A random sample of $64$ tags from the current production process has mean operating life $\bar{x}=18.4$ months. For this exercise, treat the population standard deviation as known at $\sigma=4.8$ months.
+
+1. Calculate the standard error of the sample mean.
+2. Construct a $90\%$ confidence interval for the population mean operating life using $z^*=1.645$.
+3. Construct a $95\%$ confidence interval using $z^*=1.960$.
+4. Construct a $99\%$ confidence interval using $z^*=2.576$.
+5. Compare the three intervals and explain why the interval width changes even though the sample data remain the same.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The standard error is
+
+  $$
+  SE=\frac{\sigma}{\sqrt n}=\frac{4.8}{\sqrt{64}}=\frac{4.8}{8}=0.6\text{ months}
+  $$
+  </li>
+  <li>The $90\%$ margin of error is
+
+  $$
+  m=1.645(0.6)=0.987
+  $$
+
+  Therefore, the interval is
+
+  $$
+  18.4\pm0.987=(17.413,\ 19.387)\text{ months}
+  $$
+  </li>
+  <li>The $95\%$ margin of error is
+
+  $$
+  m=1.960(0.6)=1.176
+  $$
+
+  Therefore, the interval is
+
+  $$
+  18.4\pm1.176=(17.224,\ 19.576)\text{ months}
+  $$
+  </li>
+  <li>The $99\%$ margin of error is
+
+  $$
+  m=2.576(0.6)=1.5456
+  $$
+
+  Therefore, the interval is
+
+  $$
+  18.4\pm1.5456=(16.8544,\ 19.9456)\text{ months}
+  $$
+  </li>
+  <li>All three intervals have centre $18.4$ months because they use the same sample mean. A higher confidence level requires a larger critical value, so it produces a wider interval. Greater long-run confidence is obtained at the cost of lower precision.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $3$
+
+A veterinary researcher wants to estimate the population mean recovery time after a routine procedure. Previous studies suggest that the population standard deviation is approximately $18$ minutes.
+
+1. Find the smallest sample size required for a $95\%$ confidence interval with margin of error no greater than $4$ minutes.
+2. Find the smallest sample size required if the desired margin of error is reduced to $2$ minutes.
+3. Compare the answers to Parts $1$ and $2$. Explain the square-root relationship.
+4. Find the smallest sample size required for a $99\%$ confidence interval with margin of error no greater than $4$ minutes. Use $z^*=2.576$.
+5. Use the R code in the solution to verify the three sample sizes. Why must every result be rounded up?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>For a desired margin of error $m$,
+
+  $$
+  n=\left(\frac{z^*\sigma}{m}\right)^2
+  $$
+
+  At $95\%$ confidence with $m=4$,
+
+  $$
+  n=\left(\frac{1.960(18)}{4}\right)^2=77.7924
+  $$
+
+  Therefore, the researcher needs at least
+
+  $$
+  \boxed{n=78}
+  $$
+  </li>
+  <li>For $m=2$,
+
+  $$
+  n=\left(\frac{1.960(18)}{2}\right)^2=311.1696
+  $$
+
+  Therefore,
+
+  $$
+  \boxed{n=312}
+  $$
+  </li>
+  <li>Cutting the margin of error from $4$ minutes to $2$ minutes requires approximately four times as many observations. Because $m$ is proportional to $1/\sqrt n$, dividing $m$ by $2$ requires multiplying $n$ by $2^2=4$.</li>
+  <li>At $99\%$ confidence,
+
+  $$
+  n=\left(\frac{2.576(18)}{4}\right)^2=134.3745
+  $$
+
+  Therefore,
+
+  $$
+  \boxed{n=135}
+  $$
+
+  The higher confidence level requires a larger sample when the desired margin of error remains fixed.</li>
+  <li>The calculations are verified below. Each value is rounded up because rounding down would produce a margin of error larger than the stated target.</li>
+</ol>
+
+```{r q3-sample-size-planning, echo=TRUE}
+sigma <- 18
+
+n_95_margin_4 <- ceiling((qnorm(0.975) * sigma / 4)^2)
+n_95_margin_2 <- ceiling((qnorm(0.975) * sigma / 2)^2)
+n_99_margin_4 <- ceiling((qnorm(0.995) * sigma / 4)^2)
+
+c(
+  n_95_margin_4 = n_95_margin_4,
+  n_95_margin_2 = n_95_margin_2,
+  n_99_margin_4 = n_99_margin_4
+)
+```
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $4$
+
+A municipal public-health office randomly selects $5000$ residents and invites them to complete an online survey. Only $9\%$ of those selected respond. The survey asks, “Do you support the responsible plan to improve community health services?” Among respondents, $62\%$ answer yes. A report presents the result as $62\%\pm3\%$.
+
+1. What source of uncertainty does the reported margin of error attempt to measure?
+2. Identify two important problems that the margin of error does not measure.
+3. Explain why selecting the original $5000$ residents randomly does not remove the concern created by the low response rate.
+4. Could the reported interval be narrow but still miss the true population proportion by more than $3$ percentage points? Explain.
+5. Describe two changes that would improve the credibility of the study.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The margin of error attempts to measure random sample-to-sample variation under the assumed sampling model. It describes how much the sample proportion could vary because different residents might have been selected.</li>
+  <li>The margin does not measure nonresponse bias. Respondents may have different opinions from nonrespondents. It also does not measure response bias caused by the favourable wording “responsible plan.” Other concerns include inaccurate responses and limited internet access.</li>
+  <li>Random selection identifies a probability sample at the invitation stage, but most selected residents did not respond. The final respondent group may no longer resemble the selected sample or the population if the decision to respond is related to opinions about the plan.</li>
+  <li>Yes. A narrow interval describes precision under the assumed model. Systematic bias can move the entire interval away from the true population value, and the ordinary sampling margin does not quantify that bias.</li>
+  <li>The office could use neutral wording and follow up with selected nonrespondents through several contact methods. It should also report the response rate, compare respondents with the sampling frame when possible and describe any weighting or adjustment used for nonresponse.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $5$
+
+A wildlife rehabilitation centre states that $75\%$ of rehabilitated seals survive for at least $30$ days after release. Researchers independently track $40$ comparable released seals, and $23$ survive for at least $30$ days. Let $X$ be the number that survive.
+
+1. State suitable null and alternative hypotheses for investigating whether the survival probability is below $0.75$.
+2. State the null distribution of $X$ and list the main binomial conditions.
+3. Write the exact conditional probability that gives the P-value, and calculate it.
+4. At $\alpha=0.05$, what conclusion should the researchers draw? Interpret the P-value in context.
+5. Use `pbinom()` in R to verify the probability.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The hypotheses are
+
+  $$
+  H_0:p=0.75
+  $$
+
+  $$
+  H_a:p<0.75
+  $$
+  </li>
+  <li>Under the null hypothesis,
+
+  $$
+  X\sim\operatorname{Bin}(40,0.75)
+  $$
+
+  The study has a fixed number of $40$ trials, each seal is classified as surviving or not surviving, the probability is treated as common across comparable seals and the outcomes must be sufficiently independent.</li>
+  <li>The lower-tail P-value is
+
+  $$
+  \begin{aligned}
+  P(X\leq23\mid H_0)
+  &=P(X\leq23\mid p=0.75)\\
+  &=\sum_{x=0}^{23}\binom{40}{x}(0.75)^x(0.25)^{40-x}\\
+  &\approx0.0116
+  \end{aligned}
+  $$
+  </li>
+  <li>Because $0.0116<0.05$, the result is statistically significant at the $5\%$ level. The researchers reject $H_0$ and conclude that the data provide evidence that the population survival probability is below $0.75$. If the true probability were $0.75$, observing $23$ or fewer survivors among $40$ releases would occur in about $1.16\%$ of comparable studies.</li>
+  <li>The R calculation is</li>
+</ol>
+
+```{r q5-exact-binomial, echo=TRUE}
+pbinom(q = 23, size = 40, prob = 0.75)
+```
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $6$
+
+A wildlife-monitoring program historically records an average of $10$ bird collisions per month near a group of wind turbines. During one month, investigators record $18$ collisions. Let $X$ denote the monthly collision count.
+
+1. State suitable hypotheses for investigating whether the monthly event rate has increased.
+2. Under the historical-rate model, state the probability distribution of $X$.
+3. Use the complement rule to write and calculate the exact upper-tail P-value.
+4. State the conclusion at $\alpha=0.05$ and identify two practical assumptions that should be investigated before attributing the result to a higher underlying collision rate.
+5. Use `ppois()` in R to verify the probability. Explain why the R calculation uses $17$ rather than $18$ as its value of `q`.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The hypotheses are
+
+  $$
+  H_0:\lambda=10
+  $$
+
+  $$
+  H_a:\lambda>10
+  $$
+  </li>
+  <li>Under $H_0$,
+
+  $$
+  X\sim\operatorname{Pois}(10)
+  $$
+  </li>
+  <li>The probability of $18$ or more collisions is
+
+  $$
+  \begin{aligned}
+  P(X\geq18\mid H_0)
+  &=1-P(X\leq17\mid\lambda=10)\\
+  &=1-\sum_{x=0}^{17}e^{-10}\frac{10^x}{x!}\\
+  &\approx0.0143
+  \end{aligned}
+  $$
+  </li>
+  <li>Because $0.0143<0.05$, the observed count provides evidence against the stable historical rate of $10$ collisions per month. Before attributing the result to a higher underlying rate, investigators should assess whether monitoring effort and exposure remained comparable. They should also consider seasonality, migration, changes in turbine operation and clustering of events during one incident.</li>
+  <li>With `lower.tail = FALSE`, R calculates $P(X>q)$. Setting `q = 17` therefore gives $P(X>17)=P(X\geq18)$ for an integer-valued count.</li>
+</ol>
+
+```{r q6-exact-poisson, echo=TRUE}
+ppois(q = 17, lambda = 10, lower.tail = FALSE)
+```
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $7$
+
+A laboratory compares the population mean level of a blood biomarker with a reference value $\mu_0$. In two independent studies, the observed sample mean is $0.30$ unit above the reference value. Treat the population standard deviation as known at $\sigma=2.4$ units. Study A has $n=25$, whereas Study B has $n=400$.
+
+1. State the hypotheses for a two-sided test.
+2. Calculate the standard error, test statistic and P-value for Study A.
+3. Calculate the standard error, test statistic and P-value for Study B.
+4. Compare the statistical conclusions at $\alpha=0.05$. Why do the conclusions differ when the estimated effect is the same?
+5. Does Study B show that a difference of $0.30$ unit is biologically important? What additional information is needed?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The hypotheses are
+
+  $$
+  H_0:\mu=\mu_0
+  $$
+
+  $$
+  H_a:\mu\ne\mu_0
+  $$
+  </li>
+  <li>For Study A,
+
+  $$
+  SE_A=\frac{2.4}{\sqrt{25}}=0.48
+  $$
+
+  $$
+  z_A=\frac{0.30}{0.48}=0.625
+  $$
+
+  The two-sided P-value is
+
+  $$
+  2P(Z\geq0.625)\approx0.5320
+  $$
+  </li>
+  <li>For Study B,
+
+  $$
+  SE_B=\frac{2.4}{\sqrt{400}}=0.12
+  $$
+
+  $$
+  z_B=\frac{0.30}{0.12}=2.50
+  $$
+
+  The two-sided P-value is
+
+  $$
+  2P(Z\geq2.50)\approx0.0124
+  $$
+  </li>
+  <li>Study A fails to reject $H_0$, whereas Study B rejects $H_0$ at $\alpha=0.05$. The larger sample in Study B produces a smaller standard error, so the same estimated effect lies farther from the null value in standard-error units.</li>
+  <li>No. The P-value measures compatibility with the null model, not biological importance. Researchers need the effect estimate, a confidence interval, measurement units, natural biological variation and a scientifically meaningful threshold. Costs, risks and consequences may also matter.</li>
+</ol>
+
+The two P-values can be verified in R.
+
+```{r q7-sample-size-and-significance, echo=TRUE}
+effect <- 0.30
+sigma <- 2.4
+
+z_A <- effect / (sigma / sqrt(25))
+z_B <- effect / (sigma / sqrt(400))
+
+p_A <- 2 * pnorm(-abs(z_A))
+p_B <- 2 * pnorm(-abs(z_B))
+
+c(z_A = z_A, p_A = p_A, z_B = z_B, p_B = p_B)
+```
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $8$
+
+A wildlife genetics study tests $20$ independent genetic markers. Each test uses significance level $\alpha=0.05$. Assume that every null hypothesis is true.
+
+1. What is the probability that one particular test does not produce a false positive?
+2. Calculate the probability that none of the $20$ tests produces a false positive.
+3. Calculate the probability of at least one false positive among the $20$ tests.
+4. What is the expected number of false positives? Explain why selective reporting of only significant results would be misleading.
+5. A simple Bonferroni approach uses $\alpha/20$ for each test. What per-test significance level would be used, and what trade-off does this introduce?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>For one test with a true null hypothesis,
+
+  $$
+  P(\text{no false positive})=1-0.05=0.95
+  $$
+  </li>
+  <li>Under the stated independence assumption,
+
+  $$
+  P(\text{no false positives in }20\text{ tests})=(0.95)^{20}\approx0.3585
+  $$
+  </li>
+  <li>Using the complement rule,
+
+  $$
+  \begin{aligned}
+  P(\text{at least one false positive})
+  &=1-(0.95)^{20}\\
+  &\approx0.6415
+  \end{aligned}
+  $$
+  </li>
+  <li>The expected number is
+
+  $$
+  20(0.05)=1
+  $$
+
+  Reporting only the significant markers hides the number of tests that were performed and makes chance findings appear more convincing than they are.</li>
+  <li>The Bonferroni per-test level is
+
+  $$
+  \frac{0.05}{20}=0.0025
+  $$
+
+  This stricter threshold reduces the probability of false positives across the family of tests, but it also reduces power and may increase false negatives.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $9$
+
+A veterinary trial studies the mean reduction in a pain score produced by a new treatment. Let positive values represent improvement. The planned one-sided test is
+
+$$
+H_0:\mu=0
+\qquad
+H_a:\mu>0
+$$
+
+The population standard deviation is treated as known at $\sigma=1.2$ points. The test uses $\alpha=0.05$ and $n=20$. A mean reduction of $0.7$ point is considered scientifically meaningful.
+
+1. Find the critical sample mean above which the test rejects $H_0$.
+2. Assuming that the true mean reduction is $0.7$ point, standardize the critical sample mean under this alternative distribution.
+3. Calculate the power of the test against $\mu=0.7$.
+4. Calculate $\beta$ at $\mu=0.7$ and describe the Type I and Type II errors in context.
+5. Use R to verify the power for $n=20$ and calculate the power if the sample size increases to $n=30$. Explain the change.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The standard error under the null model is
+
+  $$
+  SE=\frac{1.2}{\sqrt{20}}\approx0.2683
+  $$
+
+  For an upper-tail test with $\alpha=0.05$, $z_{0.95}=1.645$. The critical sample mean is
+
+  $$
+  \bar{x}_{\mathrm{crit}}=0+1.645(0.2683)\approx0.4414
+  $$
+
+  The test rejects $H_0$ when $\bar{x}>0.4414$.</li>
+  <li>When the true mean is $0.7$,
+
+  $$
+  z=\frac{0.4414-0.7}{0.2683}\approx-0.964
+  $$
+  </li>
+  <li>The power is the probability of falling above the rejection cutoff when $\mu=0.7$:
+
+  $$
+  \begin{aligned}
+  \text{Power}
+  &=P(\bar X>0.4414\mid\mu=0.7)\\
+  &=P(Z>-0.964)\\
+  &\approx0.8325
+  \end{aligned}
+  $$
+  </li>
+  <li>The Type II error probability at $\mu=0.7$ is
+
+  $$
+  \beta=1-0.8325=0.1675
+  $$
+
+  A Type I error means concluding that the treatment produces a positive population mean reduction when the true mean reduction is $0$. A Type II error at $\mu=0.7$ means failing to detect improvement when the true population mean reduction is $0.7$ point.</li>
+  <li>Increasing the sample size from $20$ to $30$ increases the power from approximately $0.8325$ to $0.9395$. The larger sample reduces the standard error, creating greater separation between the null and alternative sampling distributions.</li>
+</ol>
+
+```{r q9-power-calculation, echo=TRUE}
+alpha <- 0.05
+sigma <- 1.2
+meaningful_mean <- 0.7
+
+calculate_power <- function(n) {
+  standard_error <- sigma / sqrt(n)
+  critical_mean <- qnorm(1 - alpha) * standard_error
+
+  pnorm(
+    critical_mean,
+    mean = meaningful_mean,
+    sd = standard_error,
+    lower.tail = FALSE
+  )
+}
+
+c(power_n20 = calculate_power(20), power_n30 = calculate_power(30))
+```
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $10$
+
+Researchers study a nutritional supplement for dairy cows. They recruit $800$ cows from four conveniently selected farms and randomly assign the cows within each farm to the supplement or a control diet. The researchers examine $18$ outcomes but report only the significant results. For milk production, they report an estimated mean increase of $0.12$ litre per cow per day, a $95\%$ confidence interval of $(0.04,0.20)$ litre and $P=0.003$. During the study, $22\%$ of cows in the supplement group and $4\%$ of cows in the control group leave the study.
+
+1. What aspect of the design supports a causal comparison? What feature limits generalization?
+2. Explain how the unequal loss of cows from the two groups threatens the causal interpretation even though the original assignment was random.
+3. Interpret the confidence interval and P-value correctly. What does neither quantity establish?
+4. If all $18$ null hypotheses were true and the tests were independent at $\alpha=0.05$, calculate the probability of at least one false positive.
+5. Evaluate whether the reported evidence is sufficient to recommend the supplement. Identify at least three additional pieces of information or analysis that should be reported.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Random assignment within each farm supports a causal comparison of the diets for the cows who remain appropriately represented in the analysis. The four farms were conveniently selected, so the study may not generalize to farms with different breeds, management systems, climates or feeding practices.</li>
+  <li>Differential attrition can destroy the comparability created by random assignment. If cows leave the supplement group because of adverse effects, poor response or other outcome-related reasons, the remaining supplement group may no longer be comparable with the remaining control group.</li>
+  <li>The interval indicates that the procedure estimates the population mean increase for the study population to be between $0.04$ and $0.20$ litre per cow per day, under the model assumptions. The P-value means that a result at least as extreme as the observed result would have probability $0.003$ under the null model. Neither quantity establishes broad generalizability, absence of bias or practical importance.</li>
+  <li>The family-level probability is
+
+  $$
+  \begin{aligned}
+  P(\text{at least one false positive})
+  &=1-(1-0.05)^{18}\\
+  &=1-(0.95)^{18}\\
+  &\approx0.6028
+  \end{aligned}
+  $$
+  </li>
+  <li>The reported evidence is not sufficient by itself. The mean increase is small and must be compared with a meaningful production threshold, costs and animal-health consequences. The report should include all $18$ tested outcomes, the pre-specified analysis plan, an adjustment or discussion for multiple testing, reasons for attrition, an analysis that preserves the original randomization when appropriate, adverse events and confidence intervals for the main effects. Independent replication on a broader set of farms would strengthen the evidence.</li>
+</ol>
+</div>
+</details>
+:::
