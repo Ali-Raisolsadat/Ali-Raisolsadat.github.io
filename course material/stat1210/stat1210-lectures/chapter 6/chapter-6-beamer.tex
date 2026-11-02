@@ -106,7 +106,7 @@ Researchers randomly assign the selected seedlings: $30$ receive fertilizer and 
 \end{block}
 
 \small
-A study can use one, both, or neither. Random assignment does not guarantee that the study participants represent a wider population.
+A study can use one, both, or neither. 
 \end{frame}
 
 % SLIDE 6
@@ -116,12 +116,8 @@ A well-designed randomized experiment strengthens causal interpretation but rese
 \begin{itemize}
 	\item \textbf{An experiment would be unethical.} Researchers should not assign people to smoke cigarettes to investigate long-term health outcomes.
 	\item \textbf{The condition cannot be assigned.} Researchers studying age and memory must observe people of different ages.
-	\item \textbf{The research concerns existing conditions.} Ecologists may compare wildlife populations in habitats that have already experienced different levels of disturbance.
+	\item \textbf{The research concerns existing conditions.} Ecologists often compare wildlife populations across habitats that have already experienced different levels of disturbance, such as logging, pollution, wildfire, or urban development. Researchers observe and measure these existing conditions rather than deciding which habitats will be disturbed. Therefore, differences in wildlife populations may be associated with disturbance but they may also be influenced by other habitat characteristics.
 \end{itemize}
-
-\begin{block}{How Can Researchers Strengthen the Evidence?}
-They can measure other relevant variables, compare similar groups and examine alternative explanations for the association.
-\end{block}
 \end{frame}
 
 % SECTION 2
@@ -136,13 +132,11 @@ Suppose an observational study finds that fertilized seedlings grow more than un
   	\item The response variable is \textbf{seedling growth}.
 \end{itemize}
 
-However, growers who use fertilizer might also place their seedlings in sunnier locations. The researchers did not record sunlight exposure.
+However, growers who use fertilizer might also place their seedlings in locations with more sunglight. The researchers did not record sunlight exposure.
 
 \begin{block}{Lurking Variable}
 A lurking variable is a variable omitted from the analysis that may help explain the observed relationship. Here, \textbf{sunlight exposure} is a possible lurking variable.
 \end{block}
-
-Greater growth could reflect fertilizer, sunlight or both.
 \end{frame}
 
 % SLIDE 8
@@ -157,7 +151,7 @@ Confounding occurs when the effects of different explanatory variables on the re
 \end{block}
 
 \begin{alertblock}{How the Ideas Differ}
-``Lurking'' describes a variable's omission from the analysis. ``Confounding'' describes the difficulty of separating effects. Even a recorded variable can be involved in confounding.
+A \textbf{lurking variable} is a relevant variable that was not measured or included in the analysis. Because it remains hidden, it may help explain an observed association \textbf{Confounding} occurs when the effects of two or more explanatory variables are mixed together, making it difficult to determine which variable is responsible for changes in the response. Confounding describes a problem with separating effects, not whether a variable was recorded.
 \end{alertblock}
 \end{frame}
 
@@ -207,7 +201,9 @@ Some observational studies have reported that health outcomes differ among moder
 \begin{itemize}
 	\item The observational association does not by itself establish a causal effect of beverage type.
 	\item Potential confounders provide alternative explanations for the observed difference.
-	\item A scientifically appropriate conclusion is that beverage preference and health are associated in the observed data after considering the study design. A stronger causal claim would require stronger evidence and careful control of competing explanations.
+	\item A scientifically appropriate conclusion is:
+
+Beverage preference and health are associated in the observed data after considering the study design. A stronger causal claim would require stronger evidence and careful control of competing explanations.
 \end{itemize}
 \end{frame}
 
@@ -273,17 +269,17 @@ The \textbf{sample} provides the data. If some selected students do not respond,
 
 % SLIDE 18
 \begin{frame}{Parameter versus Statistic}
-\begin{block}{Parameter: Describes the Population}
-Let $p$ be the proportion of \textbf{all first year students} at this university who meet the sleep criterion. This population proportion is unknown.
-\end{block}
+For this study, a student \textbf{meets the sleep criterion} if their reported average sleep over the previous $7$ nights is at least $7$ hours.
+$$\text{Meets criterion: average}\geq7\qquad\text{Does not meet criterion: average}<7$$
+
+Let $p$ be the proportion of \textbf{all currently enrolled first year students} at the university who report an average of at least $7$ hours of sleep per night. This population proportion is unknown.
 
 \begin{block}{Statistic: Calculated from the Sample}
-Suppose all $200$ selected students respond, and $124$ meet the sleep criterion. The sample proportion is
+Suppose all $200$ selected students respond and $124$ report an average of at least $7$ hours of sleep. The sample proportion is
 $$\hat{p}=\frac{124}{200}=0.62$$
-Another sample could produce a different value of $\hat{p}$.
+Therefore, $62\%$ of the sampled students meet the sleep criterion.
 \end{block}
-
-\textbf{Statistical inference} uses the observed $62\%$ to estimate $p$ and describe the uncertainty in that estimate.
+Statistical inference uses the sample proportion $\hat{p}=0.62$ to estimate the unknown population proportion $p$ while accounting for sampling uncertainty.
 \end{frame}
 
 % SLIDE 19
