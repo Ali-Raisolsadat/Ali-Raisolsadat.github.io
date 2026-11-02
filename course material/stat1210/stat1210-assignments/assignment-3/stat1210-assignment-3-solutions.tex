@@ -1,4 +1,5 @@
 \documentclass[10pt,letterpaper]{article}
+
 \usepackage{fontspec}
 \setmainfont{Latin Modern Roman}
 \usepackage{amsmath,amssymb}
@@ -6,260 +7,334 @@
 \usepackage{booktabs,array}
 \usepackage{enumitem}
 \usepackage[hidelinks]{hyperref}
+
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{5pt}
 \setlength{\emergencystretch}{3em}
-\setlist[enumerate]{leftmargin=1.7em,itemsep=8pt,topsep=5pt}
+\setlist[itemize]{leftmargin=1.5em,itemsep=2pt,topsep=4pt}
 \renewcommand{\arraystretch}{1.15}
 
-\title{STAT 1210: Assignment 3 Solutions\\[4pt]\large Part III: Foundations of Inference}
+\newcommand{\partmarks}[1]{\hfill\textbf{[#1 marks]}}
+\newcommand{\allocation}[1]{\par\smallskip\textit{Suggested allocation: #1}\par}
+
+\title{STAT 1210: Assignment 3 Solutions\\[4pt]
+\large Part III: Foundations of Inference}
 \author{Fall 2026 Semester}
 \date{}
 
 \begin{document}
+
 \maketitle
 
-\section*{Suggested Grading}
-
 \begin{center}
-\begin{tabular}{cllr}
+\begin{tabular}{lr}
 \toprule
-\textbf{Question} & \textbf{Marks by part} & \textbf{Chapter focus} & \textbf{Total} \\
+\textbf{Question} & \textbf{Marks} \\
 \midrule
-Question 1 & $4+4+4+4+4$ & Study design & $20$ \\
-Question 2 & $4+4+4+4+4$ & Sampling distributions & $20$ \\
-Question 3 & $4+4+4+4+4$ & Confidence intervals & $20$ \\
-Question 4 & $4+4+4+4+4$ & Hypothesis testing & $20$ \\
-Question 5 & $4+4+4+4+4$ & Inference in practice & $20$ \\
+Question 1 & 10 \\
+Question 2 & 20 \\
+Question 3 & 20 \\
+Question 4 & 25 \\
+Question 5 & 25 \\
 \midrule
-\multicolumn{3}{r}{\textbf{Total}} & \textbf{$100$} \\
+\textbf{Total} & \textbf{100} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\newpage
-\section*{Question 1}
-
-\begin{enumerate}
-\item The individuals are the $600$ participating adult dogs. The intended population is all adult dogs in Prince Edward Island. The sample consists of the $600$ dogs whose owners participated at the five volunteer clinics during the two-week period.
-
-The two variables are daily activity group and obesity status. Both are categorical because the recorded values are categories rather than numerical measurements.
-
-\item For dogs with at least $60$ minutes of activity,
-\[
-\frac{18}{150}=0.120
-\]
-For dogs with less than $60$ minutes of activity,
-\[
-\frac{126}{450}=0.280
-\]
-The obesity proportion is $0.160$, or $16$ percentage points, higher in the lower-activity group. The sample therefore shows an association between lower activity and obesity.
-
-\item This is an observational study because the researchers recorded existing characteristics without assigning a treatment. Random sampling was not used because clinics volunteered, the dogs were limited to appointment attendees and owners chose whether to participate. Random assignment was not used because dogs were not assigned to activity levels.
-
-\item Two plausible confounders are age and diet. Older dogs may be less active and may also have a greater obesity risk. Dogs receiving more food or high-calorie treats may have fewer exercise opportunities, while greater calorie intake directly increases obesity risk. Other reasonable answers include breed, illness, medication, neuter status and owner lifestyle.
-
-\item Volunteer clinics may differ from nonparticipating clinics, and dogs that rarely receive veterinary care are undercovered. Owner participation can also create voluntary-response or nonresponse bias.
-
-The study cannot establish causation because there was no random assignment and confounding remains possible. It also cannot be confidently generalized to all adult dogs in Prince Edward Island because neither clinics nor dogs were selected through probability sampling.
-\end{enumerate}
 
 \newpage
-\section*{Question 2}
 
-\begin{enumerate}
-\item The population parameter is $p=0.42$, the probability that a tagged juvenile Atlantic salmon survives the specified route under similar conditions. The statistic is
-\[
-\hat p=\frac{\text{number of sampled salmon that survive}}{400}
-\]
-One salmon's outcome is categorical because it is survival or no survival. The sample proportion is quantitative because it is a numerical summary between $0$ and $1$.
+% =======================================
+% Question 1
+% =======================================
+\section*{Question 1 \hfill [10 marks]}
+\textbf{1. Proportions and association} \partmarks{5}
 
-\item The sampling-distribution mean is
-\[
-\mu_{\hat p}=p=0.42
-\]
-The standard deviation is
-\[
-\sigma_{\hat p}
-=\sqrt{\frac{0.42(0.58)}{400}}
-\approx0.02468
-\]
-Across repeated random samples of $400$ salmon, the sample proportions are centred at $0.42$ and typically vary from $0.42$ by about $0.0247$.
+Among dogs receiving at least $60$ minutes of activity per day, the sample proportion classified as obese is
+$$\widehat{P}(\text{obese}\mid\text{at least 60 minutes})=\frac{18}{150}=0.120$$
+Therefore, $12.0\%$ of the dogs in the higher-activity group were classified as obese. Among dogs receiving less than $60$ minutes of activity per day, the sample proportion classified as obese is
+$$\widehat{P}(\text{obese}\mid\text{less than 60 minutes})=\frac{126}{450}=0.280$$
+Therefore, $28.0\%$ of the dogs in the lower-activity group were classified as obese. The difference between the sample proportions is
+$$0.280-0.120=0.160$$
+The obesity percentage was therefore $16$ percentage points higher in the lower-activity group. Equivalently, the observed obesity proportion in the lower-activity group was
+$$\frac{0.280}{0.120}\approx2.333$$
+times the proportion in the higher-activity group. The sample shows an association between lower reported daily activity and a higher obesity proportion.
 
-\item The expected counts are
-\[
-np=400(0.42)=168
-\qquad
-n(1-p)=400(0.58)=232
-\]
-Both are at least $10$. Together with the stated independence condition, this supports the Normal approximation.
+\allocation{1 mark for each correct conditional proportion, 1 mark for converting the results to percentages, and 2 marks for an accurate contextual comparison.}
 
-\item The standardized value is
-\[
-z=\frac{0.38-0.42}{0.02468}\approx-1.621
-\]
-Therefore,
-\[
-P(\hat p\leq0.38)
-\approx P(Z\leq-1.621)
-\approx0.0525
-\]
+\textbf{2. Study design and limitations} \partmarks{5}
 
-\item The standardized boundaries are
-\[
-z_L=\frac{0.40-0.42}{0.02468}\approx-0.810
-\qquad
-z_U=\frac{0.46-0.42}{0.02468}\approx1.621
-\]
-Thus,
-\[
-P(0.40\leq\hat p\leq0.46)
-\approx\Phi(1.621)-\Phi(-0.810)
-\approx0.7386
-\]
-Because $\sigma_{\hat p}$ is proportional to $1/\sqrt n$, halving it requires four times the sample size:
-\[
-n_{\text{new}}=4(400)=1600
-\]
-\end{enumerate}
+This is an \textbf{observational study}. The researchers recorded activity and obesity status but did not assign dogs to activity groups. 
+
+Random sampling was not used. The five clinics volunteered, and participation was limited to owners who visited those clinics during the two-week recruitment period and agreed to participate. Random assignment was also not used because owners and dogs were not assigned by chance to activity levels.
+
+One plausible confounding variable is diet. Dogs receiving higher-calorie diets may be more likely to become obese and may also be less active. Other reasonable examples include age, breed, existing illness, medication use and owner lifestyle.
+
+One possible source of selection bias is that dogs visiting the volunteer clinics may differ from adult dogs that did not receive veterinary care during the recruitment period. Voluntary participation by owners could also create voluntary-response or nonresponse bias if participating owners differ systematically from those who decline.
+
+Because there was no random assignment, the observed association could be explained partly or entirely by confounding. The study therefore cannot establish that low activity \emph{causes} obesity. Because the dogs were not randomly sampled from all adult dogs in Prince Edward Island, the results also cannot be confidently generalized to that full population.
+
+\allocation{1 mark for identifying an observational study, 1 mark for the random-sampling assessment, 1 mark for the random-assignment assessment, 1 mark for a plausible confounder and source of selection bias, and 1 mark for the causal and generalizability conclusions.}
 
 \newpage
-\section*{Question 3}
+% =======================================
+% Question 2
+% =======================================
 
-\begin{enumerate}
-\item The parameter $\mu$ is the population mean recovery time for all adult dogs receiving the routine procedure in the hospital network during the period of interest. Its point estimate is $\bar x=47.8$ minutes.
+\section*{Question 2 \hfill [20 marks]}
+\textbf{1. Parameter, statistic, centre and spread} \partmarks{5}
 
-\item The sample is described as a simple random sample, and recovery times from different dogs must be sufficiently independent. Since the population exceeds $1000$ dogs,
-\[
-64<0.10(1000)=100
-\]
-so the $10\%$ condition is satisfied. With $n=64$, the Central Limit Theorem generally supports an approximately Normal sampling distribution unless the population is extremely skewed or has severe outliers. Those features cannot be checked without the observations or a graph.
+The population parameter is
+$$p=0.42$$
+the population proportion of tagged juvenile Atlantic salmon that would survive the migration route under the stated conditions. The sample statistic is $\hat p$, the proportion of the $400$ sampled salmon that survive. The mean of the sampling distribution is
+$$\mu_{\hat p}=p=0.42$$
+So across many random samples of $400$ salmon, the average value of $\hat p$ would be $0.42$. This shows that $\hat p$ is an unbiased estimator of $p$. The standard deviation is
+$$\sigma_{\hat p}=\sqrt{\frac{p(1-p)}{n}} =\sqrt{\frac{(0.42)(0.58)}{400}} =\sqrt{\frac{0.2436}{400}} =\sqrt{0.000609} \approx0.024678$$
+Across repeated random samples of $400$ salmon, the sample survival proportion typically differs from $0.42$ by approximately $0.0247$, or $2.47$ percentage points.
 
-\item The standard error and margin of error are
-\[
-SE=\frac{12}{\sqrt{64}}=1.5
-\]
-\[
-m=1.960(1.5)=2.94
-\]
-The $95\%$ confidence interval is
-\[
-\boxed{47.8\pm2.94=(44.86,\ 50.74)\text{ minutes}}
-\]
+\allocation{1 mark for the parameter and statistic, 1 mark for the centre, 2 marks for the standard-deviation calculation, and 1 mark for the interpretations.}
 
-\item We are $95\%$ confident that the population mean recovery time for adult dogs receiving this procedure in the hospital network is between approximately $44.86$ and $50.74$ minutes. The interval concerns the population mean, not the recovery times of $95\%$ of individual dogs.
+\textbf{2. Conditions and approximate sampling distribution} \partmarks{5}
 
-\item For $99\%$ confidence,
-\[
-m_{99}=2.576(1.5)=3.864
-\]
-\[
-\boxed{47.8\pm3.864=(43.936,\ 51.664)\text{ minutes}}
-\]
-The $95\%$ interval has width $5.88$ minutes, whereas the $99\%$ interval has width $7.728$ minutes. Greater confidence requires a larger critical value and therefore a wider interval.
-\end{enumerate}
+The expected number of surviving salmon is
+$$np=400(0.42)=168$$
+The expected number of salmon that do not survive is
+$$n(1-p)=400(0.58)=232$$
+Both expected counts are greater than $10$, so the success--failure condition is satisfied. The problem also states that the outcomes may be treated as independent and that the population is sufficiently large relative to the sample. Therefore, the sampling distribution of $\hat p$ is approximately Normal, with
+$$\mu_{\hat p}=0.42 \qquad\text{and}\qquad \sigma_{\hat p}\approx0.024678$$
+In notation that explicitly identifies the standard deviation
+$$\hat p\ \text{is approximately Normal with mean }0.42 \text{ and standard deviation }0.024678$$
+
+\allocation{1 mark for each expected count, 1 mark for confirming the condition, and 2 marks for correctly stating the approximate distribution.}
+
+\textbf{3. Calculating $P(\hat p\leq0.38)$} \partmarks{5}
+
+The standardized value is
+$$z=\frac{\hat p-p}{\sqrt{p(1-p)/n}} =\frac{0.38-0.42}{0.024678} \approx-1.621$$
+Using $z=-1.62$ in the Standard Normal table gives
+$$P(\hat p\leq0.38) \approx P(Z\leq-1.62) =1-P(Z\leq1.62) =1-0.9474 =\boxed{0.0526}$$
+Thus, if the population survival probability is $0.42$, approximately $5.26\%$ of random samples of $400$ salmon would have a sample survival proportion of $0.38$ or lower.
+
+\allocation{2 marks for standardization, 2 marks for using the correct Normal-table area, and 1 mark for the contextual interpretation.}
+
+\textbf{4. Calculating $P(0.40\leq\hat p\leq0.46)$} \partmarks{5}
+
+The lower standardized boundary is
+$$z_L=\frac{0.40-0.42}{0.024678} \approx-0.810$$
+The upper standardized boundary is
+$$z_U=\frac{0.46-0.42}{0.024678} \approx1.621$$
+Using the rounded table values $z_L=-0.81$ and $z_U=1.62$ gives
+$$P(0.40\leq\hat p\leq0.46) \approx P(-0.81\leq Z\leq1.62) =P(Z\leq1.62)-P(Z\leq-0.81) =0.9474-0.2090 =\boxed{0.7384}$$
+Using unrounded standardized values gives approximately $0.7386$. Either answer is acceptable when the calculation is shown consistently.
+
+\allocation{1 mark for each standardized boundary, 2 marks for subtracting the correct cumulative probabilities, and 1 mark for the final probability.}
 
 \newpage
-\section*{Question 4}
+% =======================================
+% Question 3
+% =======================================
 
-\begin{enumerate}
-\item The parameter $\mu$ is the population mean resting respiratory rate for adult harbour seals recovering under the revised protocol. The hypotheses are
-\[
-H_0:\mu=18
-\qquad
-H_a:\mu\ne18
-\]
-The alternative is two-sided because rates below or above $18$ may both be clinically important.
+\section*{Question 3 \hfill [20 marks]}
 
-\item The observations sum to $503$, so
-\[
-\bar x=\frac{503}{25}=20.12
-\]
+\textbf{1. Parameter and point estimate} \partmarks{5}
+
+Let $\mu$ denote the population mean recovery time for all adult dogs in the hospital network who underwent the routine procedure during the study period. The point estimate of $\mu$ is the sample mean
+$$\bar x=47.8\text{ minutes}$$
+
+\allocation{3 marks for defining the population mean with the correct population and measurement, and 2 marks for identifying the sample mean as the point estimate.}
+
+\textbf{2. Conditions for a one-sample $z$ interval} \partmarks{5}
+
+\begin{itemize}
+	\item \textbf{Random sampling:} The problem states that a simple random sample of $64$ dogs was selected.
+	\item \textbf{Independence:} A simple random sample supports independence. The $10\%$ condition provides additional support when sampling without replacement.
+	\item \textbf{$10\%$ condition:} The network treated more than $1000$ dogs, and
+	$$64<0.10(1000)=100$$
+	Therefore, the sample includes less than $10\%$ of the population.
+	\item \textbf{Sampling-distribution shape:} The population shape and raw data are not provided, so skewness and outliers cannot be checked directly. However, $n=64$ is sufficiently large for the Central Limit Theorem to support an approximately Normal sampling distribution of $\bar x$, provided the population has finite variability and is not dominated by extreme observations.
+	\item \textbf{Known population standard deviation:} The problem states that the population standard deviation is treated as known at $\sigma=12$ minutes, so a $z$ interval is appropriate under the stated model.
+\end{itemize}
+
+\allocation{1 mark for each condition or assumption assessed correctly.}
+
+\textbf{3. The $95\%$ confidence interval} \partmarks{5}
 The standard error is
-\[
-SE=\frac{4}{\sqrt{25}}=0.8
-\]
-The test statistic is
-\[
-z=\frac{20.12-18}{0.8}=2.650
-\]
-The sample mean is $2.65$ standard errors above the null value.
+$$SE=\frac{\sigma}{\sqrt{n}} =\frac{12}{\sqrt{64}} =\frac{12}{8} =1.5\text{ minutes}$$
+For a $95\%$ confidence interval
+$$z^*=1.960$$
+The margin of error is
+$$m=z^*SE =1.960(1.5) =2.940\text{ minutes}$$
+The confidence interval is
+$$\bar x\pm m=47.8\pm2.94 =(47.8-2.94,\ 47.8+2.94) =\boxed{(44.86,\ 50.74)\text{ minutes}}$$
+We are $95\%$ confident that the population mean recovery time for adult dogs undergoing this procedure in the hospital network during the study period is between $44.86$ and $50.74$ minutes. The confidence level describes the long-run success rate of the interval procedure, not a probability attached to the fixed parameter after this interval has been calculated.
 
-\item From the Standard Normal table,
-\[
-P(Z\geq2.65)\approx0.0040
-\]
-The two-sided P-value is
-\[
-2P(Z\geq2.65)\approx2(0.0040)=0.0080
-\]
-Since $0.0080<0.05$, reject $H_0$. The data provide statistically significant evidence that the population mean respiratory rate under the revised protocol differs from $18$ breaths per minute.
+\allocation{1 mark for the standard error, 1 mark for the critical value and margin of error, 1 mark for the endpoints, and 2 marks for an accurate contextual interpretation.}
 
-\item A Type I error means concluding that the revised-protocol mean differs from $18$ when the true mean is $18$. A Type II error means failing to detect a genuine difference. A Type II error may be especially serious if an unsafe protocol is retained, although a Type I error could also matter if a safe protocol is abandoned. Either choice is acceptable with a clear animal-safety justification.
+\textbf{4. The $99\%$ confidence interval and comparison} \partmarks{5}
 
-\item The $95\%$ interval is
-\[
-20.12\pm1.960(0.8)
-\]
-\[
-\boxed{(18.552,\ 21.688)\text{ breaths per minute}}
-\]
-The null value $18$ is outside the interval, agreeing with rejection by the corresponding two-sided test. Statistical significance does not establish clinical importance; the team should also consider the estimated effect size, a clinically meaningful threshold, adverse events and other recovery outcomes.
-\end{enumerate}
+For a $99\%$ confidence interval
+$$z^*=2.576$$
+The margin of error is
+$$m_{99}=2.576(1.5) =3.864\text{ minutes}$$
+Therefore
+$$47.8\pm3.864=(47.8-3.864,\ 47.8+3.864) =\boxed{(43.936,\ 51.664)\text{ minutes}}$$
+The width of the $95\%$ interval is
+$$2(2.940)=5.880\text{ minutes}$$
+The width of the $99\%$ interval is
+$$2(3.864)=7.728\text{ minutes}$$
+The $99\%$ interval is wider because a higher confidence level requires a larger critical value. With the sample size and population standard deviation unchanged, the larger critical value produces a larger margin of error.
+
+\allocation{2 marks for the margin of error and endpoints, 1 mark for each width, and 1 mark for explaining the confidence--precision trade-off.}
 
 \newpage
-\section*{Question 5}
+% =======================================
+% Question 4
+% =======================================
 
-\begin{enumerate}
-\item The parameter $\mu$ is the population mean portable-meter reading minus reference-laboratory reading for canine blood samples in the population represented by the study. The standard error and test statistic are
-\[
-SE=\frac{2.4}{\sqrt{400}}=0.12
-\qquad
-z=\frac{0.30}{0.12}=2.500
-\]
+\section*{Question 4 \hfill [25 marks]}
+
+\textbf{1. Parameter and hypotheses} \partmarks{5}
+
+Let $\mu$ denote the population mean resting respiratory rate during recovery for adult harbour seals treated with the revised protocol. The hypotheses are
+$$H_0:\mu=18$$
+$$H_a:\mu\ne18$$
+The alternative is two-sided because respiratory rates below or above $18$ breaths per minute may both be clinically important.
+
+\allocation{1 mark for the parameter, 1 mark for $H_0$, 1 mark for $H_a$, and 2 marks for explaining the two-sided alternative.}
+
+\textbf{2. Sample mean, standard error and test statistic} \partmarks{5}
+
+The sum of the $25$ measurements is
+$$\sum_{i=1}^{25}x_i=503$$
+The sample mean is
+$$\bar x=\frac{\sum x_i}{n} =\frac{503}{25} =20.12\text{ breaths per minute}$$
+Under the null model, the standard error is
+$$SE=\frac{\sigma}{\sqrt{n}} =\frac{4}{\sqrt{25}} =\frac{4}{5} =0.8\text{ breaths per minute}$$
+The test statistic is
+$$z=\frac{\bar x-\mu_0}{\sigma/\sqrt{n}} =\frac{20.12-18}{0.8} =\frac{2.12}{0.8} =\boxed{2.65}$$
+The positive sign indicates that the observed sample mean is above the null value. Its magnitude indicates that the sample mean is $2.65$ standard errors above $18$ breaths per minute.
+
+\allocation{2 marks for the sample mean, 1 mark for the standard error, 1 mark for the test statistic, and 1 mark for its interpretation.}
+
+\textbf{3. P-value, decision and conclusion} \partmarks{5}
+
+Because the alternative hypothesis is two-sided, equally extreme results in both tails must be included. The Standard Normal table gives
+$$P(Z\leq2.65)=0.9960$$
+So the upper-tail area is
+$$P(Z\geq2.65)=1-0.9960=0.0040$$
 The two-sided P-value is
-\[
-2P(Z\geq2.50)=2(0.0062)\approx0.0124
-\]
-Since $0.0124<0.05$, reject $H_0$. The sample provides statistically significant evidence of a nonzero population mean difference.
+$$P\text{-value}=2P(Z\geq2.65) =2(0.0040) =\boxed{0.0080}$$
+Because
+$$0.0080<0.05$$
+we reject $H_0$. At the $5\%$ significance level, the data provide statistically significant evidence that the population mean resting respiratory rate under the revised protocol differs from $18$ breaths per minute. The sample result suggests that the mean is higher than $18$, although the test was designed to detect differences in either direction.
 
-\item The $95\%$ margin of error is
-\[
-m_{95}=1.960(0.12)=0.2352
-\]
+\allocation{2 marks for the two-sided P-value, 1 mark for comparison with $\alpha$, 1 mark for the decision, and 1 mark for the contextual conclusion.}
+
+\textbf{4. Type I and Type II errors} \partmarks{5}
+
+A \textbf{Type I error} would occur if the team concluded that the population mean respiratory rate under the revised protocol differs from $18$ breaths per minute when the true population mean is actually $18$.
+
+A \textbf{Type II error} would occur if the team failed to detect a difference from $18$ breaths per minute when the revised protocol actually produces a population mean that is different from $18$.
+
+From an animal-safety perspective, a Type II error may be more serious if it allows a genuinely unsafe protocol to remain in use. A Type I error could also have costs, such as rejecting a safe and useful protocol. Full credit should be given for either choice when the clinical consequences are explained clearly.
+
+\allocation{2 marks for each error stated in context and 1 mark for a justified comparison of their consequences.}
+
+\textbf{5. Confidence interval and clinical importance} \partmarks{5}
+
+The $95\%$ margin of error is
+$$m=1.960\left(\frac{4}{\sqrt{25}}\right) =1.960(0.8) =1.568$$
 The interval is
-\[
-\boxed{0.30\pm0.2352=(0.0648,\ 0.5352)\text{ mg/dL}}
-\]
-The interval excludes $0$, agreeing with rejection by the two-sided test at $\alpha=0.05$.
+$$\bar x\pm m=20.12\pm1.568 =(20.12-1.568,\ 20.12+1.568) =\boxed{(18.552,\ 21.688)\text{ breaths per minute}}$$
+The null value $18$ does not lie in this interval. This agrees with rejection of the two-sided null hypothesis at $\alpha=0.05$ because a two-sided $5\%$ test corresponds to a $95\%$ confidence interval under the same model.
 
-\item The finding is statistically significant, but the point estimate is only $0.30$ mg/dL and the entire $95\%$ interval lies between $-1.0$ and $1.0$ mg/dL. According to the laboratory's threshold, the plausible mean biases are too small to be practically important.
+Statistical significance alone does not establish clinical importance. The estimated increase and the interval endpoints must be compared with clinically meaningful respiratory-rate thresholds and animal-health outcomes.
 
-A possible source of systematic error is miscalibration of the reference instrument, sample degradation during storage or undercoverage from using only archived network samples. The margin of error measures random sampling variability, not systematic measurement or selection bias.
+\allocation{1 mark for the margin of error, 2 marks for the endpoints, 1 mark for the connection to the test, and 1 mark for distinguishing statistical from clinical importance.}
 
-\item For $99\%$ confidence,
-\[
-m_{99}=2.576(0.12)=0.30912
-\]
-\[
-\boxed{0.30\pm0.30912=(-0.00912,\ 0.60912)\text{ mg/dL}}
-\]
-The interval is wider and includes $0$. The corresponding test at $\alpha=0.01$ fails to reject $H_0$, consistent with $0.0124>0.01$.
+\newpage
 
-\item The required sample size is
-\[
-n=
-\left(
+% =======================================
+% Question 5
+% =======================================
+
+\section*{Question 5 \hfill [25 marks]}
+
+\textbf{1. Test statistic, P-value and decision} \partmarks{5}
+
+Let $\mu$ denote the population mean of portable-meter reading minus reference-laboratory reading for canine blood samples in the target setting. The standard error is
+$$SE=\frac{\sigma}{\sqrt{n}} =\frac{2.4}{\sqrt{400}} =\frac{2.4}{20} =0.12\text{ mg/dL}$$
+The test statistic is
+$$z=\frac{\bar x-\mu_0}{\sigma/\sqrt{n}} =\frac{0.30-0}{0.12} =\boxed{2.50}$$
+
+The two-sided P-value is
+$$P\text{-value}=2P(Z\geq2.50) =2\{1-P(Z\leq2.50)\} =2(1-0.9938) =\boxed{0.0124}$$
+
+Because $0.0124<0.05$, we reject $H_0$. At the $5\%$ significance level, the sample provides statistically significant evidence that the population mean difference is not zero.
+
+\allocation{1 mark each for the parameter, standard error, test statistic, P-value and decision.}
+
+\textbf{2. The $95\%$ confidence interval} \partmarks{5}
+
+The margin of error is
+$$m_{95}=z^*SE =1.960(0.12) =0.2352\text{ mg/dL}$$
+The interval is
+$$\bar x\pm m_{95}=0.30\pm0.2352 =(0.30-0.2352,\ 0.30+0.2352) =\boxed{(0.0648,\ 0.5352)\text{ mg/dL}}$$
+The null value $0$ is outside the $95\%$ interval. Therefore, the corresponding two-sided test rejects $H_0:\mu=0$ at $\alpha=0.05$, which agrees with the P-value decision in Part 1.
+
+\allocation{1 mark for the margin of error, 2 marks for the endpoints, and 2 marks for explaining the confidence-interval and test connection.}
+
+\textbf{3. Statistical significance, practical importance and nonsampling error} \partmarks{5}
+
+The result is statistically significant at $\alpha=0.05$ because the P-value is $0.0124$ and the $95\%$ confidence interval excludes $0$. However, the laboratory defines biases with magnitude below $1.0$ mg/dL as too small to be practically important. Every value in the $95\%$ interval
+$$(0.0648,\ 0.5352)$$
+has magnitude below $1.0$ mg/dL. The data therefore support a small positive population mean bias, but the estimated bias is not practically important according to the laboratory's stated criterion.
+
+The margin of error describes random sampling variability only. It does not include systematic errors such as calibration drift in the reference instrument, temperature-related measurement bias, inconsistent sample handling or degradation caused by storage. Any one relevant example earns credit.
+
+\allocation{1 mark for identifying statistical significance, 1 mark for the practical threshold, 2 marks for using the interval to compare the two concepts, and 1 mark for a valid source of systematic error.}
+
+\textbf{4. The $99\%$ confidence interval and the $1\%$ test} \partmarks{5}
+
+The $99\%$ margin of error is
+$$m_{99}=2.576(0.12) =0.30912\text{ mg/dL}$$
+The interval is
+$$0.30\pm0.30912=(0.30-0.30912,\ 0.30+0.30912) =\boxed{(-0.00912,\ 0.60912)\text{ mg/dL}}$$
+The $99\%$ interval is wider than the $95\%$ interval because the larger critical value is required to obtain greater long-run coverage. The $99\%$ interval contains $0$, so the corresponding two-sided test does not reject $H_0$ at $\alpha=0.01$. This agrees with the P-value because
+$$0.0124>0.01$$
+The result is significant at the $5\%$ level but not at the $1\%$ level.
+
+\allocation{1 mark for the margin of error, 2 marks for the endpoints, 1 mark for the width comparison, and 1 mark for the decision at $\alpha=0.01$.}
+
+\textbf{5. Sample size for $90\%$ power} \partmarks{5}
+
+For the planned upper-tailed test
+$$z_{1-\alpha}=1.645 \qquad\text{and}\qquad z_{\text{power}}=1.282$$
+Substituting the given quantities into the planning formula gives
+
+\begin{align*}
+n
+&=\left(
+\frac{(z_{1-\alpha}+z_{\text{power}})\sigma}{\delta}
+\right)^2 \\
+&=\left(
 \frac{(1.645+1.282)(2.4)}{0.6}
-\right)^2
-\approx137.077
-\]
-Therefore,
+\right)^2 \\
+&=\left(
+\frac{(2.927)(2.4)}{0.6}
+\right)^2 \\
+&=\left(2.927\times4\right)^2 \\
+&=(11.708)^2 \\
+&\approx137.077
+\end{align*}
+
+The sample size must be a whole number and must provide at least the requested power. Rounding down to $137$ could give slightly less than $90\%$ power, so the result must be rounded up:
+
 \[
-\boxed{n=138}
+\boxed{n=138\text{ canine blood samples}}
 \]
-The value is rounded up so that the planned power is at least $90\%$.
-\end{enumerate}
+
+\allocation{2 marks for correct substitution, 2 marks for the arithmetic, and 1 mark for rounding up with an appropriate explanation.}
 
 \end{document}
-
