@@ -363,20 +363,6 @@ The two distributions have the same centre and the same general shape, but the s
 Suppose independent observations are selected from a population with finite mean $\mu$ and finite standard deviation $\sigma$. As the sample size $n$ increases, the sampling distribution of $\bar{x}$ becomes approximately Normal, with
 $$\mu_{\bar{x}}=\mu \qquad\text{and}\qquad \sigma_{\bar{x}}=\frac{\sigma}{\sqrt{n}}$$
 \end{block}
-
-\begin{columns}[T,onlytextwidth]
-\begin{column}{0.48\textwidth}
-\begin{alertblock}{What the Theorem Says}
-The distribution of \textbf{sample means across repeated samples} becomes more nearly Normal as $n$ increases.
-\end{alertblock}
-\end{column}
-
-\begin{column}{0.48\textwidth}
-\begin{alertblock}{What It Does Not Say}
-The theorem does not say that the population or the observations within one large sample become Normal.
-\end{alertblock}
-\end{column}
-\end{columns}
 \end{frame}
 
 % SLIDE 19
@@ -397,25 +383,6 @@ The population remains right-skewed. It is the sampling distribution of $\bar{x}
 \end{frame}
 
 % SLIDE 20
-\begin{frame}{Assessing Whether a Normal Approximation Is Reasonable}
-There is no universal minimum sample size that guarantees an appropriate Normal approximation for every population. The assessment should consider the following features together:
-\begin{itemize}
-	\item The available information about the shape of the population distribution
-  	\item The size of the random sample
-  	\item The presence of substantial skewness or unusual observations
-\end{itemize}
-
-\begin{block}{General Guidance}
-\begin{itemize}
-	\item A population that is approximately symmetric and has no substantial outliers may require less averaging
-  	\item A population with substantial skewness or outliers may require a larger sample before the sampling distribution of $\bar{x}$ is approximately Normal
-\end{itemize}
-\end{block}
-
-Sample size should not be considered by itself. The shape of the population distribution also affects how quickly the Normal approximation becomes reasonable.
-\end{frame}
-
-% SLIDE 21
 \begin{frame}{Break Time}
 \centering
 \lectureimage[0.65\linewidth]{meme_1.jpg}
@@ -424,7 +391,7 @@ Sample size should not be considered by itself. The shape of the population dist
 % SECTION 4
 \section{The Sampling Distribution of \texorpdfstring{$\hat{p}$}{phat}}
 
-% SLIDE 22
+% SLIDE 21
 \begin{frame}{The Sample Proportion}
 For a categorical variable with two possible outcomes, the statistic of interest is often the \textbf{sample proportion}. Let
 \begin{itemize}
@@ -443,7 +410,7 @@ $$\hat{p}=\frac{X}{n}$$
 \end{frame}
 
 
-% SLIDE 23
+% SLIDE 22
 \begin{frame}{The Sampling Distribution of $\hat{p}$}
 Suppose a random sample of size $n$ is selected from a population in which the proportion belonging to the category of interest is $p$.
 
@@ -460,7 +427,7 @@ $$n\leq 0.10N$$
 $$np\geq10 \qquad n(1-p)\geq10$$
 \end{frame}
 
-% SLIDE 24
+% SLIDE 23
 \begin{frame}{Example 13.8: Contact Lens Practices}
 \begin{block}{Question}
 A random sample of $281$ contact-lens users contains $139$ people who report that they do not consistently wash their hands before handling their lenses. What is the sample proportion?
@@ -473,7 +440,7 @@ $$\hat{p}=\frac{X}{n}=\frac{139}{281}\approx0.495$$
 Approximately $49.5\%$ of the people in the sample reported that they did not consistently wash their hands before handling their contact lenses.
 \end{frame}
 
-% SLIDE 25
+% SLIDE 24
 \begin{frame}{Examples 13.9 and 13.10: Blood Type O}
 \begin{block}{Question}
 Suppose the population proportion of people with blood type O is $p=0.45$. A random sample of $n=1000$ records is selected from a large national registry. What is the probability that the sample proportion with blood type O is $0.42$ or lower?
@@ -489,7 +456,7 @@ $$n(1-p)=1000(0.55)=550$$
 Both are greater than $10$ so a Normal approximation is appropriate.
 \end{frame}
 
-% SLIDE 26
+% SLIDE 25
 \begin{frame}{Examples 13.9 and 13.10: Blood Type O}
 Step 2 -- Express the Probability: The probability of interest is
 $$P(\hat{p}\leq0.42)$$
@@ -503,7 +470,7 @@ $$P(\hat{p}\leq0.42)=P(Z\leq-1.907)\approx0.0283$$
 There is approximately a $2.83\%$ probability that a random sample of $1000$ records contains a sample proportion of $0.42$ or lower when the population proportion is $0.45$.
 \end{frame}
 
-% SLIDE 27
+% SLIDE 26
 \begin{frame}[fragile]{Examples 13.9 and 13.10: Blood Type O}
 \begin{block}{R Code}
 \small
@@ -523,7 +490,7 @@ pnorm(q = 0.42, mean = p, sd = sd_p_hat)
 \end{block}
 \end{frame}
 
-% SLIDE 28
+% SLIDE 27
 \begin{frame}{Sampling Distribution of $\hat{p}$}
 \begin{columns}[T,onlytextwidth]
 % Left column: figure
@@ -551,7 +518,7 @@ The area of the shaded region is $P(\hat{p}\leq0.42)\approx0.0283$
 % SECTION 5
 \section{The Law of Large Numbers}
 
-% SLIDE 29
+% SLIDE 28
 \begin{frame}{The Law of Large Numbers}
 \begin{block}{Law of Large Numbers}
 For independent observations from a population with a finite mean $\mu$, the sample mean approaches the population mean as the sample size increases
@@ -564,13 +531,13 @@ $$\hat{p}_n \longrightarrow p$$
 \textbf{Note}: The Law of Large Numbers describes an overall long-run tendency. It does not state that each additional observation must move the statistic closer to the parameter.
 \end{frame}
 
-% SLIDE 30
+% SLIDE 20
 \begin{frame}{The Law of Large Numbers in Action}
 \centering
 \lectureimage[0.98\linewidth]{fig_ch13_lln.png}
 \end{frame}
 
-% SLIDE 31
+% SLIDE 30
 \begin{frame}{Why the Law of Large Numbers Matters}
 The Law of Large Numbers provides a mathematical explanation for why averages and proportions tend to become more stable as the number of observations increases.
 
@@ -586,7 +553,7 @@ The Law of Large Numbers describes what happens as the sample size becomes very 
 \end{block}
 \end{frame}
 
-% SLIDE 32
+% SLIDE 31
 \begin{frame}{Example 13.11: Repeated Laboratory Measurements}
 A laboratory repeatedly measures the protein concentration of a reference sample. The reference concentration is $50$ micrograms per millilitre. Suppose each measurement can be represented as
 $$M_i=50+\varepsilon_i$$
@@ -604,7 +571,7 @@ as $n$ increases.
 \end{frame}
 
 
-% SLIDE 33
+% SLIDE 32
 \begin{frame}{Example 13.11: Repeated Laboratory Measurements}
 
 \begin{columns}[T,onlytextwidth]
