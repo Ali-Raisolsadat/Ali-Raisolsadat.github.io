@@ -1,0 +1,167 @@
+---
+title: "STAT 1210 - Quiz 3 Solutions"
+subtitle: "Part III: Foundations of Statistical Inference"
+author: "Fall 2026"
+date: ""
+output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: false
+    number_sections: false
+geometry: margin=0.8in
+fontsize: 10pt
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{array}
+  - \usepackage{enumitem}
+  - \setlist[itemize]{itemsep=0.15em,topsep=0.25em}
+  - \setlength{\parindent}{0pt}
+  - \setlength{\parskip}{0.45em}
+---
+
+## Question 1: Wireworm Damage in PEI Potato Fields (7 marks)
+
+**Part 1.** The population is all $4000$ registered potato fields on Prince Edward Island this season. The variable recorded for each field (damaged or not damaged) is **categorical**.
+
+**Part 2.** Plan A is a **convenience sample**. Plan B is a **stratified random sample** with counties as strata. Plan C is a **simple random sample**.
+
+The county proportions in the registry are
+$$
+\frac{1800}{4000}=0.45 \qquad \frac{1200}{4000}=0.30 \qquad \frac{1000}{4000}=0.25
+$$
+and the corresponding sample proportions in Plan B are
+$$
+\frac{90}{200}=0.45 \qquad \frac{60}{200}=0.30 \qquad \frac{50}{200}=0.25
+$$
+The proportions match, so Plan B uses proportional allocation.
+
+**Part 3.** The sampling distribution of $\hat p$ has
+$$
+\mu_{\hat p}=p=0.15
+$$
+$$
+\sigma_{\hat p}=\sqrt{\frac{p(1-p)}{n}}=\sqrt{\frac{0.15(0.85)}{200}}=\sqrt{0.0006375}\approx0.025
+$$
+
+Expected count condition:
+$$
+np=200(0.15)=30\geq10 \qquad n(1-p)=200(0.85)=170\geq10
+$$
+
+$10\%$ condition:
+$$
+n=200\leq0.10(4000)=400
+$$
+Both conditions are satisfied, so the sampling distribution of $\hat p$ is approximately Normal and sampling without replacement does not materially affect independence.
+
+**Part 4.** Using the results from Part 3,
+$$
+z=\frac{\hat p-p}{\sigma_{\hat p}}=\frac{0.20-0.15}{0.02525}\approx1.98
+$$
+$$
+P(\hat p\geq0.20)=P(Z\geq1.98)=1-0.9761=0.0239
+$$
+
+If $15\%$ of all registered fields truly have wireworm damage, only about $2.39\%$ of simple random samples of $200$ fields would show $20\%$ or more damaged fields. A sample proportion of $0.20$ or higher would therefore be unusual under $p=0.15$.
+
+**Part 5.** This is an **observational study**. The farmers chose whether to use a three-year rotation; the department only recorded what was already happening and did not assign rotation schedules to fields. Because rotation was not randomly assigned, the survey shows an association only and cannot by itself establish that crop rotation causes less damage.
+
+\newpage
+
+## Question 2: Shell Length of Cultured Mussels in Malpeque Bay (7 marks)
+
+**Part 1.** The parameter $\mu$ is the population mean shell length, in mm, of all cultured blue mussels on this Malpeque Bay lease at harvest this season.
+$$
+SE(\bar x)=\frac{\sigma}{\sqrt n}=\frac{6}{\sqrt{49}}=\frac{6}{7}\approx0.857\text{ mm}
+$$
+
+**Part 2.** The margin of error is
+$$
+m=z^*\,SE=1.960\left(\frac{6}{7}\right)=1.680\text{ mm}
+$$
+The $95\%$ confidence interval is
+$$
+\bar x\pm m=58.1\pm1.680=(56.420,\ 59.780)\text{ mm}
+$$
+
+**Part 3.** We are $95\%$ confident that the population mean shell length of all cultured blue mussels on this lease this season is between $56.420$ mm and $59.780$ mm. The $95\%$ refers to the method: in repeated random samples of $49$ mussels, about $95\%$ of intervals built this way would capture the true mean $\mu$.
+
+**Part 4.** Hypotheses:
+$$
+H_0:\mu=60\text{ mm} \qquad H_a:\mu\ne60\text{ mm}
+$$
+
+Test statistic:
+$$
+z=\frac{\bar x-\mu_0}{\sigma/\sqrt n}=\frac{58.1-60}{0.857}\approx-2.22
+$$
+
+Two-sided p-value from the table:
+$$
+\text{p-value}=2P(Z\leq-2.22)=2(0.0132)=0.0264
+$$
+
+Because $0.0264<0.05$, we reject $H_0$. The data provide evidence, at the $5\%$ level, that the population mean shell length on the lease this season differs from the historical mean of $60$ mm; the sample suggests mussels are shorter this season.
+
+**Part 5.** A two-sided test at $\alpha=0.05$ corresponds to a $95\%$ confidence interval: the interval contains exactly those values of $\mu_0$ that would **not** be rejected. The null value $60$ mm lies **outside** the interval $(56.420,\ 59.780)$, so $60$ is not a plausible value for $\mu$ and the test rejects $H_0$. Both methods give the same decision.
+
+\newpage
+
+## Question 3: Emergency Department Wait Times on PEI (6 marks)
+
+**Part 1.** The sample-size formula is
+$$
+n=\left(\frac{z^*\sigma}{m}\right)^2
+$$
+
+(a) At $95\%$ confidence:
+$$
+n=\left(\frac{1.960(40)}{8}\right)^2=(9.8)^2=96.04
+$$
+Round up: $n=97$.
+
+(b) At $99\%$ confidence:
+$$
+n=\left(\frac{2.576(40)}{8}\right)^2=(12.88)^2=165.894
+$$
+Round up: $n=166$.
+
+Results are rounded **up** so the margin of error does not exceed $8$ minutes.
+
+**Part 2.**
+$$
+n=\left(\frac{1.960(40)}{4}\right)^2=(19.6)^2=384.16
+$$
+Round up: $n=385$.
+
+Compared with Part 1(a), halving the margin of error from $8$ to $4$ minutes requires about four times as many patients ($384.16=4\times96.04$). Because $m\propto1/\sqrt n$, dividing $m$ by $2$ requires multiplying $n$ by $2^2=4$.
+
+**Part 3.** **Undercoverage** (selection bias). Evening, overnight and weekend visits have no chance of being selected, and their wait times may differ systematically from weekday daytime waits. The margin of error only measures random sampling variability, so it does not capture this bias.
+
+**Part 4.** The small p-value ($0.002$) means that a decrease as large as $1.2$ minutes would be unlikely if the triage system had no effect, so the result is **statistically significant**. With $15000$ visits, the standard error is very small, so even a tiny change can be detected.
+
+**Practical importance** asks whether the effect is large enough to matter. A $1.2$-minute reduction is likely negligible to patients and staff when individual waits vary by about $40$ minutes. Statistical significance does not imply practical importance.
+
+**Part 5.** Using the complement rule with $10$ independent tests:
+$$
+P(\text{at least one false positive})=1-(1-0.05)^{10}=1-(0.95)^{10}\approx1-0.5987=0.4013
+$$
+There is about a $40\%$ chance of at least one statistically significant result even though no outcome is truly affected.
+
+```{r verify, include=FALSE}
+# Verification of numerical answers (not shown in the PDF)
+# Q1
+sd_phat <- sqrt(0.15 * 0.85 / 200)            # 0.02525
+(0.20 - 0.15) / sd_phat                       # 1.980
+pnorm(0.20, 0.15, sd_phat, lower.tail = FALSE) # 0.0238 (table: 0.0239)
+# Q2
+se <- 6 / sqrt(49)                            # 0.857
+58.1 + c(-1, 1) * 1.960 * se                  # 56.42 59.78
+(58.1 - 60) / se                              # -2.217
+2 * pnorm((58.1 - 60) / se)                   # 0.0266 (table: 0.0264)
+# Q3
+(1.960 * 40 / 8)^2; ceiling((1.960 * 40 / 8)^2) # 96.04, 97
+(2.576 * 40 / 8)^2; ceiling((2.576 * 40 / 8)^2) # 165.894, 166
+(1.960 * 40 / 4)^2; ceiling((1.960 * 40 / 4)^2) # 384.16, 385
+1 - 0.95^10                                   # 0.4013
+```

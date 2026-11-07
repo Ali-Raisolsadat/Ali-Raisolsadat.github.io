@@ -1,0 +1,132 @@
+---
+title: "STAT 1210 - Quiz 3 Grading Guide"
+subtitle: "Part III: Foundations of Statistical Inference"
+author: "Fall 2026"
+date: ""
+output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: false
+    number_sections: false
+geometry: margin=0.8in
+fontsize: 10pt
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{array}
+  - \usepackage{enumitem}
+  - \setlist[itemize]{itemsep=0.15em,topsep=0.25em}
+  - \setlength{\parindent}{0pt}
+  - \setlength{\parskip}{0.45em}
+---
+
+## Marking Notes
+
+- The quiz is out of $20$ marks: Question 1 ($7$), Question 2 ($7$), Question 3 ($6$).
+- Half marks may be awarded as indicated in each part.
+- Accept small rounding differences (for example, $z$-table values versus exact software values).
+- Follow-through: if a student makes an early numerical error but uses the correct method afterwards, award the later method marks.
+- Explanations must refer to the context of the question to receive full marks.
+- Key answers are listed for quick reference; see the Solutions document for full working.
+
+\begin{center}
+\begin{tabular}{lcccccc}
+\toprule
+ & Part 1 & Part 2 & Part 3 & Part 4 & Part 5 & Total \\
+\midrule
+Question 1 & 1 & 1.5 & 2 & 1.5 & 1 & 7 \\
+Question 2 & 1 & 1.5 & 1 & 2.5 & 1 & 7 \\
+Question 3 & 2 & 1 & 1 & 1 & 1 & 6 \\
+\midrule
+ & & & & & & \textbf{20} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+## Question 1: Wireworm Damage in PEI Potato Fields (7 marks)
+
+**Part 1 (1 mark).** *Key:* all $4000$ registered PEI potato fields; categorical.
+
+- $0.5$ for the population (all $4000$ registered PEI potato fields).
+- $0.5$ for identifying the variable as categorical.
+
+**Part 2 (1.5 marks).** *Key:* A convenience, B stratified (proportional), C SRS; $0.45, 0.30, 0.25$ in both.
+
+- $0.25$ for each correct design ($0.75$ total).
+- $0.75$ for showing the population and sample proportions (or equivalently $200\times0.45=90$, etc.) and stating that they match.
+
+**Part 3 (2 marks).** *Key:* $\mu_{\hat p}=0.15$, $\sigma_{\hat p}\approx0.025$; $np=30$, $n(1-p)=170$; $200\leq400$.
+
+- $0.5$ for the mean $\mu_{\hat p}=0.15$.
+- $0.5$ for the standard deviation $\approx0.025$.
+- $0.5$ for the expected count condition, showing both $np=30$ and $n(1-p)=170$ are at least $10$. Award $0.25$ if only one is checked.
+- $0.5$ for the $10\%$ condition, showing $200\leq400$.
+
+**Part 4 (1.5 marks).** *Key:* $z\approx1.98$, $P\approx0.0239$.
+
+- $0.5$ for the correct $z$-score $\approx1.98$.
+- $0.5$ for the probability $\approx0.024$ (accept $0.0238$ to $0.0239$). Award $0.25$ if $P(Z\leq1.98)=0.9761$ is reported instead of the upper tail.
+- $0.5$ for a correct contextual interpretation referring to repeated simple random samples of $200$ fields when $p=0.15$.
+
+**Part 5 (1 mark).** *Key:* observational study.
+
+- $0.5$ for identifying it as an observational study.
+- $0.5$ for the reason: no treatment (rotation) was imposed or randomly assigned by the researchers.
+
+## Question 2: Shell Length of Cultured Mussels in Malpeque Bay (7 marks)
+
+**Part 1 (1 mark).** *Key:* $\mu$ = population mean shell length; $SE\approx0.857$ mm.
+
+- $0.5$ for defining $\mu$ as a **population** mean in context (not the sample mean).
+- $0.5$ for the standard error $\approx0.857$ mm.
+
+**Part 2 (1.5 marks).** *Key:* $m=1.680$; $(56.420,\ 59.780)$ mm.
+
+- $0.5$ for the correct formula $\bar x\pm z^*\sigma/\sqrt n$.
+- $0.5$ for the margin of error $\approx1.680$.
+- $0.5$ for the correct interval endpoints (accept $56.42$ and $59.78$, or $56.4$ and $59.8$).
+
+**Part 3 (1 mark).**
+
+- $0.5$ for a statement about the **population mean** shell length, in context, with the endpoints and units.
+- $0.5$ for a correct meaning of "$95\%$ confident" (refers to the long-run success rate of the method). Award $0$ for this half if the student says there is a $95\%$ probability that $\mu$ is in this particular interval, or that $95\%$ of individual mussels fall in the interval.
+
+**Part 4 (2.5 marks).** *Key:* $H_0:\mu=60$ vs $H_a:\mu\ne60$; $z\approx-2.22$; p-value $\approx0.0264$; reject $H_0$.
+
+- $0.5$ for correct hypotheses about $\mu$ (two-sided). Deduct $0.25$ if written in terms of $\bar x$.
+- $0.5$ for the test statistic $z\approx-2.22$.
+- $0.75$ for the two-sided p-value $\approx0.0264$. Award $0.25$ if the one-sided value $0.0132$ is given.
+- $0.25$ for the correct decision (reject $H_0$) based on comparing the p-value with $\alpha$.
+- $0.5$ for a conclusion in context (accept "does not prove" style language if correct).
+
+**Part 5 (1 mark).** *Key:* $60$ is outside $(56.420,\ 59.780)$, so reject.
+
+- $0.5$ for noting that $60$ lies outside the $95\%$ interval.
+- $0.5$ for linking this to the test: a $95\%$ interval matches a two-sided test at $\alpha=0.05$, so a null value outside the interval is rejected, the same decision as Part 4.
+
+## Question 3: Emergency Department Wait Times on PEI (6 marks)
+
+**Part 1 (2 marks).** *Key:* (a) $96.04\to97$; (b) $165.894\to166$.
+
+- $0.5$ for the correct formula $n=(z^*\sigma/m)^2$ or equivalent setup.
+- $0.5$ for $96.04$ in (a) and $0.5$ for $165.894$ in (b).
+- $0.5$ for rounding **up** to $n=97$ and $n=166$. Award $0$ for this item if the student rounds down ($96$, $165$).
+
+**Part 2 (1 mark).** *Key:* $384.16\to385$; about $4$ times Part 1(a).
+
+- $0.5$ for $n=385$.
+- $0.5$ for the comparison: about $4$ times the sample size in Part 1(a) (explanation via the square-root relationship is encouraged but not required).
+
+**Part 3 (1 mark).** *Key:* undercoverage / selection bias.
+
+- $1$ for naming undercoverage or selection bias (a brief justification is welcome but not required, since the question asks only to name the error).
+- $0.5$ for naming a valid non-sampling error not tied to the weekday daytime restriction (for example, nonresponse or measurement error in recorded arrival times).
+
+**Part 4 (1 mark).**
+
+- $0.5$ for explaining statistical significance (small p-value; the large sample makes even a small effect detectable).
+- $0.5$ for explaining that practical importance concerns the size of the effect, with a contextual judgement that $1.2$ minutes is small.
+
+**Part 5 (1 mark).** *Key:* $1-(0.95)^{10}\approx0.401$.
+
+- $0.5$ for the correct complement-rule setup $1-(0.95)^{10}$.
+- $0.5$ for the value $\approx0.401$.

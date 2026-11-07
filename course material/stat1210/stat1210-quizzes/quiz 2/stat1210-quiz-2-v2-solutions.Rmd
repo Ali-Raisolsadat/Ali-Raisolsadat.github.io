@@ -1,0 +1,95 @@
+---
+title: "STAT 1210 - Quiz 2 Solutions - Version 2"
+subtitle: "Part II: Probability and Distributions"
+author: "Fall 2026"
+date: ""
+output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: false
+    number_sections: false
+geometry: margin=0.8in
+fontsize: 10pt
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{array}
+  - \usepackage{enumitem}
+  - \usepackage{pgfplots}
+  - \pgfplotsset{compat=1.18}
+  - \setlist[enumerate]{itemsep=0.35em,topsep=0.35em}
+  - \setlength{\parindent}{0pt}
+---
+
+
+## Question 1: Calibration Time for a Laboratory Instrument (4 marks)
+
+1. The possible calibration times extend from $3$ to $10$ minutes, so the total width of the uniform distribution is
+$$10-3=7\text{ minutes}$$
+The uniform density forms a rectangle with total area $1$. If $h$ is its height, then
+$$7h=1 \qquad \boxed{h=\frac{1}{7}}$$
+
+2. The interval from $4.5$ to $7.3$ minutes has width
+$$7.3-4.5=2.8\text{ minutes}$$
+The required probability is the area of the rectangle over this interval:
+$$P(4.5\leq T\leq7.3)=(\text{width})(\text{height})=(2.8)\left(\frac{1}{7}\right)=\boxed{0.400}$$
+
+3. The two relevant intervals are disjoint. Their widths are
+$$4.0-3=1.0\text{ minute} \qquad \text{and} \qquad 10-9.2=0.8\text{ minutes}$$
+Therefore
+$$P(T<4.0\text{ or }T>9.2)=(1.0)\left(\frac{1}{7}\right)+(0.8)\left(\frac{1}{7}\right)=\frac{1.8}{7}\approx\boxed{0.257}$$
+
+## Question 2: Parasitic Infection in Dogs (6 marks)
+
+Let $I$ denote parasitic infection and let $D$ denote diarrhea.
+
+1. The marginal and joint probabilities are
+$$P(I)=\frac{100}{320}=\boxed{0.3125}$$
+$$P(D)=\frac{104}{320}=\boxed{0.325}$$
+$$P(I\cap D)=\frac{58}{320}=\boxed{0.18125}$$
+2. Conditioning on diarrhea restricts the denominator to the $104$ dogs with diarrhea. Therefore
+$$P(I\mid D)=\frac{P(I\cap D)}{P(D)}=\frac{0.18125}{0.325}=\boxed{0.5577}$$
+3. Conditioning on infection restricts the denominator to the $100$ infected dogs. Therefore
+$$P(D\mid I)=\frac{P(D\cap I)}{P(I)}=\frac{0.18125}{0.3125}=\boxed{0.58}$$
+The probabilities $P(I\mid D)$ and $P(D\mid I)$ both use the $58$ dogs in the intersection, but they use different denominators. The first conditions on the $104$ dogs with diarrhea whereas the second conditions on the $100$ dogs with an infection.
+
+
+## Question 3: Recovery Time After Veterinary Anaesthesia (6 marks)
+
+1. The recovery time is approximately Normal with
+$$\mu=50\text{ minutes}\qquad\text{and}\qquad\sigma=5\text{ minutes}$$
+The standardized values of the two boundaries are
+$$z_{44}=\frac{44-50}{5}=-1.20 \qquad \text{and} \qquad z_{58}=\frac{58-50}{5}=1.60$$
+Therefore
+$$P(44<R<58)=P(z_{44}<Z<z_{58})=P(-1.20<Z<1.60)=P(Z\leq1.60)-P(Z\leq-1.20)=N(1.60)-N(-1.20)$$
+The standard Normal table gives
+$$P(Z\leq-1.20)=N(-1.20)=1-N(1.20)=1-0.8849=0.1151 \qquad \text{and} \qquad P(Z\leq1.60)=0.9452$$
+The probability between the two boundaries is
+$$P(44<R<58)=N(1.60)-N(-1.20)=0.9452-0.1151=\boxed{0.8301}$$
+
+2. From the standardization and table values calculated above
+$$P(R<44)=P(Z<-1.20)=N(-1.20)=1-N(1.20)=1-0.8849=\boxed{0.1151}$$
+For the upper-tail probability
+$$P(R>58)=P(Z>1.60)=1-P(Z\leq1.60)=1-N(1.60)=1-0.9452=\boxed{0.0548}$$
+
+3. The expected number of recovery times between $44$ and $58$ minutes is
+$$500(0.8301)=\boxed{415.05}$$
+Approximately $415$ of the $500$ recovery times would be expected to fall within this interval.
+
+\vspace{0.25cm}
+
+## Question 4: Calibration Failures in Radiation Sensors (4 marks)
+
+1. There are $12$ independent trials, each sensor is classified as either failing or not failing and the probability of failure is $0.07$ for every sensor. Therefore
+$$X\sim\operatorname{Bin}(12,0.07)$$
+The phrase “no more than one sensor fails” means
+$$\boxed{P(X\leq1)}$$
+
+2. The probability that no sensors fail is
+$$P(X=0)=\binom{12}{0}(0.07)^0(0.93)^{12}=(0.93)^{12}\approx \boxed{0.419}$$
+
+3. The probability that exactly one sensor fails is
+$$P(X=1)=\binom{12}{1}(0.07)^1(0.93)^{11}=12(0.07)(0.93)^{11}\approx \boxed{0.378}$$
+
+4. The events $X=0$ and $X=1$ are disjoint, so
+$$P(X\leq1)=P(X=0)+P(X=1)\approx0.418596+0.378087\approx \boxed{0.797}$$
+Under this model, there is approximately a $79.7\%$ probability that no more than one of the $12$ radiation sensors fails its calibration test.
