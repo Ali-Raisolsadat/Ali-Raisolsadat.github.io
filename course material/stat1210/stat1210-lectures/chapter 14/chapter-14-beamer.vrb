@@ -1,0 +1,24 @@
+\frametitle{Example 14.10: Confidence Interval in R}
+\scriptsize
+\begin{verbatim}
+# Sample information
+x_bar <- 98.25
+n <- 130
+
+# Known population standard deviation
+sigma <- 0.6
+
+# Standard error and 95% critical value
+standard_error <- sigma / sqrt(n)
+z_star <- qnorm(0.975)
+
+# Margin of error
+margin_error <- z_star * standard_error
+
+# Confidence interval
+confidence_interval <- c(lower = x_bar - margin_error, upper = x_bar + margin_error)
+round(confidence_interval, 2)
+
+lower upper
+98.15 98.35
+\end{verbatim}

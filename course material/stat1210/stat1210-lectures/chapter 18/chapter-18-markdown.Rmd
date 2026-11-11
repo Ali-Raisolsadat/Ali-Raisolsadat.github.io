@@ -1,0 +1,1510 @@
+---
+title: "Chapter 18: Comparing Two Means"
+subtitle: "The Practice of Statistics in the Life Sciences<br>by Brigitte Baldi and David S. Moore"
+author: "Instructor: Ali Raisolsadat"
+date: "Part IV: Specific Inference Procedures"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+    number_sections: true
+    toc_depth: 4
+    theme: flatly
+    highlight: tango
+    code_folding: show
+    self_contained: true
+    pandoc_args:
+      - "--number-offset=17"
+---
+
+<style>
+:root {
+  --toc-width: 300px;
+  --toc-collapsed-gutter: 72px;
+  --chapter-width: 1100px;
+  --ink: #23364a;
+  --accent: #2c3e50;
+  --line: #d8dee4;
+  --toc-background: #f7f9fb;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+
+.main-container { max-width: var(--chapter-width) !important; }
+.section.chapter-root > h1 { display: none !important; }
+
+#TOC li:has(> a[href="#chapter-18"]) > a[href="#chapter-18"] {
+  display: none !important;
+}
+
+#TOC li:has(> a[href="#chapter-18"]) { margin-top: 0 !important; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+#toc-toggle {
+  position: fixed;
+  top: 16px;
+  left: calc(var(--toc-width) + 14px);
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid #c7d0d9;
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--ink);
+  box-shadow: 0 2px 8px rgba(24, 39, 55, 0.13);
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+  z-index: 1200;
+  transition: left 0.25s ease, background-color 0.2s ease;
+}
+
+#toc-toggle:hover { background: #eef3f7; }
+#toc-toggle .menu-icon { display: none; }
+#toc-toggle .close-icon { display: inline; }
+body.toc-collapsed #toc-toggle { left: 14px; }
+body.toc-collapsed #toc-toggle .menu-icon { display: inline; }
+body.toc-collapsed #toc-toggle .close-icon { display: none; }
+
+@media screen and (min-width: 992px) {
+  .main-container {
+    width: 100% !important;
+    max-width: none !important;
+    padding-left: calc(var(--toc-width) + 30px) !important;
+    padding-right: 35px !important;
+    box-sizing: border-box !important;
+    transition: padding-left 0.25s ease;
+  }
+
+  body.toc-collapsed .main-container {
+    padding-left: var(--toc-collapsed-gutter) !important;
+  }
+
+  .main-container > .row-fluid > .col-xs-12.col-sm-4.col-md-3,
+  .main-container > .row > .col-xs-12.col-sm-4.col-md-3 {
+    width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #TOC,
+  #TOC.tocify {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: var(--toc-width) !important;
+    max-height: 100vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 72px 16px 28px 18px !important;
+    background: var(--toc-background) !important;
+    border: 0 !important;
+    border-right: 1px solid var(--line) !important;
+    border-radius: 0 !important;
+    z-index: 1100 !important;
+    transform: translateX(0);
+    transition: transform 0.25s ease;
+  }
+
+  body.toc-collapsed #TOC,
+  body.toc-collapsed #TOC.tocify {
+    transform: translateX(calc(-1 * var(--toc-width)));
+  }
+
+  #TOC a {
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  #TOC .tocify-item { border-radius: 4px; }
+  #TOC .tocify-item a { color: var(--ink); text-decoration: none; }
+  #TOC .tocify-item:hover { background: #e9eef3; }
+  #TOC .tocify-item.active { background: var(--accent) !important; }
+  #TOC .tocify-item.active a { color: #ffffff !important; }
+
+  .toc-content,
+  .toc-content.col-xs-12.col-sm-8.col-md-9 {
+    width: 100% !important;
+    max-width: var(--chapter-width) !important;
+    float: none !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .main-container {
+    width: auto !important;
+    max-width: var(--chapter-width) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 70px 18px 24px !important;
+    box-sizing: border-box !important;
+  }
+
+  #toc-toggle,
+  body.toc-collapsed #toc-toggle { left: 12px; }
+
+  #toc-toggle .menu-icon,
+  body.toc-collapsed #toc-toggle .menu-icon { display: inline; }
+
+  #toc-toggle .close-icon,
+  body.toc-collapsed #toc-toggle .close-icon { display: none; }
+
+  body.toc-mobile-open #toc-toggle .menu-icon { display: none; }
+  body.toc-mobile-open #toc-toggle .close-icon { display: inline; }
+
+  #TOC,
+  #TOC.tocify {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: min(84vw, 320px) !important;
+    max-height: 100vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 72px 18px 28px !important;
+    background: var(--toc-background) !important;
+    border: 0 !important;
+    border-right: 1px solid var(--line) !important;
+    border-radius: 0 !important;
+    z-index: 1100 !important;
+    transform: translateX(-105%);
+    transition: transform 0.25s ease;
+  }
+
+  body.toc-mobile-open #TOC,
+  body.toc-mobile-open #TOC.tocify {
+    transform: translateX(0);
+    box-shadow: 6px 0 18px rgba(24, 39, 55, 0.16);
+  }
+}
+
+h1, h2, h3, h4, h5 { margin-top: 1.6em; }
+h2 { border-bottom: 3px solid var(--accent); padding-bottom: 0.25em; }
+h3 { border-bottom: 1px solid var(--line); padding-bottom: 0.2em; }
+
+blockquote {
+  border-left: 4px solid var(--accent);
+  background: #f7f9fa;
+  padding: 0.7em 1em;
+  margin: 1.2em 0;
+}
+
+table {
+  width: 100%;
+  margin: 1.35em auto;
+  border-collapse: separate !important;
+  border-spacing: 0;
+  background: #ffffff;
+  border: 1px solid #d6dde5;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(24, 39, 55, 0.06);
+}
+
+table thead th {
+  padding: 0.72em 0.9em !important;
+  background: var(--accent);
+  color: #ffffff;
+  border: 0 !important;
+  font-weight: 700;
+}
+
+table tbody td {
+  padding: 0.65em 0.9em !important;
+  border: 0 !important;
+  border-bottom: 1px solid #e5e9ee !important;
+}
+
+table tbody tr:nth-child(even) td { background: #f7f9fb; }
+table tbody tr:hover td { background: #eef4f8; }
+table tbody tr:last-child td { border-bottom: 0 !important; }
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.4em auto;
+  border: 1px solid #e1e4e8;
+  border-radius: 7px;
+}
+
+.math.display { overflow-x: auto; }
+
+.btn-code,
+.code-folding-btn,
+div.btn-group.pull-right {
+  display: none !important;
+}
+</style>
+
+<button id="toc-toggle"
+        type="button"
+        aria-label="Toggle table of contents"
+        aria-expanded="true">
+  <span class="menu-icon" aria-hidden="true">&#9776;</span>
+  <span class="close-icon" aria-hidden="true">&times;</span>
+  <span class="sr-only">Toggle table of contents</span>
+</button>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const button = document.getElementById("toc-toggle");
+  if (!button) return;
+
+  button.addEventListener("click", function () {
+    if (window.innerWidth <= 991) {
+      document.body.classList.toggle("toc-mobile-open");
+      button.setAttribute(
+        "aria-expanded",
+        document.body.classList.contains("toc-mobile-open")
+      );
+    } else {
+      document.body.classList.toggle("toc-collapsed");
+      button.setAttribute(
+        "aria-expanded",
+        !document.body.classList.contains("toc-collapsed")
+      );
+    }
+  });
+});
+</script>
+
+
+```{r setup, include=FALSE, echo=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  error = FALSE,
+  fig.align = "center",
+  fig.width = 7.4,
+  fig.height = 4.4
+)
+
+if (!requireNamespace("ggplot2", quietly = TRUE)) {
+  stop("The ggplot2 package must be installed before this chapter is knitted.")
+}
+
+suppressPackageStartupMessages({
+  library(ggplot2)
+})
+
+lecture_chart_theme <- theme_minimal(base_size = 11) +
+  theme(
+    plot.title = element_text(size = 13, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 10.5, hjust = 0.5),
+    axis.title = element_text(size = 11.5),
+    axis.text = element_text(size = 9.5, colour = "#333333"),
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "white", colour = NA),
+    panel.background = element_rect(fill = "white", colour = NA),
+    plot.margin = margin(8, 10, 8, 10)
+  )
+
+save_plot <- function(filename, plot, width = 7.4, height = 4.4) {
+  ggsave(
+    filename = filename,
+    plot = plot,
+    width = width,
+    height = height,
+    units = "in",
+    dpi = 300,
+    bg = "white"
+  )
+}
+
+lean_activity <- c(
+  511.100, 607.925, 319.212, 584.644, 578.869,
+  543.388, 677.188, 555.656, 374.831, 504.700
+)
+
+obese_activity <- c(
+  260.244, 464.756, 367.138, 413.667, 347.375,
+  416.531, 358.650, 267.344, 410.631, 426.356
+)
+
+activity_data <- data.frame(
+  minutes = c(lean_activity, obese_activity),
+  group = factor(
+    rep(c("Lean", "Mildly obese"), each = 10),
+    levels = c("Lean", "Mildly obese")
+  )
+)
+
+p_activity_dotplot <- ggplot(
+  activity_data,
+  aes(x = minutes, y = group, colour = group)
+) +
+  geom_jitter(height = 0.08, width = 0, size = 3, alpha = 0.9) +
+  scale_colour_manual(
+    values = c("Lean" = "#294D73", "Mildly obese" = "#B23A48")
+  ) +
+  labs(
+    title = "Daily Time Spent Standing or Walking",
+    subtitle = "Ten participants in each group",
+    x = "Minutes per day",
+    y = NULL,
+    colour = NULL
+  ) +
+  lecture_chart_theme +
+  theme(legend.position = "none")
+
+p_activity_boxplot <- ggplot(
+  activity_data,
+  aes(x = group, y = minutes, fill = group)
+) +
+  geom_boxplot(width = 0.55, alpha = 0.8, outlier.shape = 19) +
+  geom_jitter(width = 0.08, size = 2, alpha = 0.7) +
+  scale_fill_manual(
+    values = c("Lean" = "#6D8EA8", "Mildly obese" = "#D98273")
+  ) +
+  labs(
+    title = "Comparing the Two Activity Distributions",
+    x = NULL,
+    y = "Minutes per day"
+  ) +
+  lecture_chart_theme +
+  theme(legend.position = "none")
+
+difference_grid <- seq(-220, 220, length.out = 1000)
+
+p_sampling_difference <- ggplot(
+  data.frame(
+    difference = difference_grid,
+    density = dnorm(difference_grid, mean = 0, sd = 40)
+  ),
+  aes(x = difference, y = density)
+) +
+  geom_area(fill = "#6D8EA8", alpha = 0.3) +
+  geom_line(colour = "#294D73", linewidth = 1) +
+  geom_vline(xintercept = 0, linetype = "dashed", colour = "#333333") +
+  labs(
+    title = "Illustrative Null Sampling Distribution",
+    subtitle = "A difference in sample means centred at zero",
+    x = expression(bar(x)[1] - bar(x)[2]),
+    y = "Density"
+  ) +
+  lecture_chart_theme
+
+chicken_interval <- data.frame(
+  estimate = 0.1535,
+  lower = -1.424,
+  upper = 1.731,
+  study = "Hatching-weight difference"
+)
+
+p_chicken_interval <- ggplot(
+  chicken_interval,
+  aes(x = estimate, y = study)
+) +
+  geom_vline(xintercept = 0, linetype = "dashed", colour = "#555555") +
+  geom_errorbarh(
+    aes(xmin = lower, xmax = upper),
+    height = 0.15,
+    linewidth = 1.1,
+    colour = "#294D73"
+  ) +
+  geom_point(size = 3.2, colour = "#B23A48") +
+  coord_cartesian(xlim = c(-2, 2)) +
+  labs(
+    title = "95% Confidence Interval for Mean Hatching Weight",
+    subtitle = "Transgenic minus commercial chickens",
+    x = "Difference in population means (g)",
+    y = NULL
+  ) +
+  lecture_chart_theme
+
+set.seed(1210)
+
+robustness_two_sample <- rbind(
+  data.frame(
+    value = c(7.2, 7.5, 7.7, 7.9, 8.0, 8.2, 8.4, 8.7, 8.9, 14.8),
+    group = "Group 1",
+    scenario = "Small samples with an outlier"
+  ),
+  data.frame(
+    value = c(6.8, 7.0, 7.3, 7.5, 7.6, 7.8, 8.0, 8.1, 8.3, 8.5),
+    group = "Group 2",
+    scenario = "Small samples with an outlier"
+  ),
+  data.frame(
+    value = rgamma(80, shape = 2.2, scale = 2.2),
+    group = "Group 1",
+    scenario = "Large samples with right skew"
+  ),
+  data.frame(
+    value = rgamma(85, shape = 2.7, scale = 1.9),
+    group = "Group 2",
+    scenario = "Large samples with right skew"
+  )
+)
+
+p_robustness <- ggplot(
+  robustness_two_sample,
+  aes(x = value, fill = group)
+) +
+  geom_histogram(bins = 18, colour = "white", alpha = 0.75) +
+  facet_grid(scenario ~ group, scales = "free") +
+  scale_fill_manual(values = c("Group 1" = "#6D8EA8", "Group 2" = "#D98273")) +
+  labs(
+    title = "Sample Size, Shape and Outliers",
+    subtitle = "Illustrative datasets for assessing two-sample t procedures",
+    x = "Observed value",
+    y = "Frequency"
+  ) +
+  lecture_chart_theme +
+  theme(legend.position = "none")
+
+save_plot("fig_ch18_activity_dotplot.png", p_activity_dotplot, height = 3.8)
+save_plot("fig_ch18_activity_boxplot.png", p_activity_boxplot, height = 4.4)
+save_plot("fig_ch18_null_sampling_distribution.png", p_sampling_difference, height = 4.2)
+save_plot("fig_ch18_chicken_interval.png", p_chicken_interval, height = 3.4)
+save_plot("fig_ch18_robustness.png", p_robustness, height = 6.2)
+```
+
+# Chapter 18 {.chapter-root .unlisted}
+
+## From One Population Mean to Two
+
+Chapter 17 developed confidence intervals and hypothesis tests for one population mean and for the mean of paired differences. Chapter 18 considers a different structure: two separate samples of unrelated individuals.
+
+The main parameter is
+
+$$
+\mu_1-\mu_2
+$$
+
+where $\mu_1$ and $\mu_2$ are the population means for Groups $1$ and $2$. The natural estimate is
+
+$$
+\bar{x}_1-\bar{x}_2
+$$
+
+> **Main transition**
+>
+> A one-sample procedure measures uncertainty in one sample mean. A two-sample procedure must combine uncertainty from two independent sample means.
+
+### Learning Goals
+
+After studying this chapter, you should be able to
+
+1. distinguish independent two-sample data from matched pairs;
+2. identify the response variable, grouping variable and parameter;
+3. assess the design, independence and distributional conditions;
+4. calculate the standard error of a difference in sample means;
+5. construct and interpret a Welch two-sample $t$ confidence interval;
+6. perform and interpret one-sided and two-sided Welch $t$ tests;
+7. reproduce the calculations using R;
+8. assess robustness to skewness and outliers;
+9. explain why the pooled procedure is generally avoided; and
+10. separate statistical evidence, effect size, generalization and causation.
+
+## Recognizing a Two-Sample Problem
+
+A **two-sample problem** compares a quantitative response across two distinct groups. The groups may represent different populations or different treatments.
+
+A two-sample problem has the following structure:
+
+- one sample is available for each group;
+- the same quantitative response is measured in both groups;
+- the observations in one sample are unrelated to the observations in the other;
+- the sample sizes may differ; and
+- the goal is to compare population means.
+
+### Common Study Designs
+
+| Design | How the groups arise | Main inferential strength |
+|:--|:--|:--|
+| Randomized comparative experiment | Experimental units are randomly assigned to two treatments | Supports a causal comparison of treatments |
+| Two separate random samples | One random sample is selected from each population | Supports generalization to both sampled populations |
+| Subgroups within one random sample | One sample is divided using a pre-existing characteristic | Supports population comparison but generally not causation |
+| Two convenience samples | Participants enter each group without random sampling or assignment | Usually supports only a cautious description or association |
+
+The formulas do not determine the scope of a conclusion. The study design does.
+
+### Independent Samples versus Matched Pairs
+
+| Feature | Independent samples | Matched pairs |
+|:--|:--|:--|
+| Observational units | Different, unrelated individuals | Same individual twice or deliberately matched units |
+| Statistic | $\bar{x}_1-\bar{x}_2$ | Mean of the paired differences, $\bar{d}$ |
+| Standard error | Combines two sample variances | Uses the standard deviation of one sample of differences |
+| Procedure | Welch two-sample $t$ | One-sample $t$ applied to differences |
+| Example | Separate treatment and control animals | Measurements before and after treatment on each animal |
+
+Repeated measurements on the same individuals are not independent. They should not be analyzed using a two-sample procedure.
+
+### Quantitative Response and Two-Level Factor
+
+A two-sample problem can be viewed as a bivariate problem:
+
+- the **response variable** is quantitative; and
+- the **explanatory variable** is categorical with two levels.
+
+For example, when comparing hatching weights for transgenic and commercial chickens, hatching weight is the quantitative response and chicken type is the two-level factor.
+
+## Describe the Two Samples First
+
+Inference should begin with data analysis.
+
+For small samples, use dotplots. For larger samples, use boxplots or histograms. Compare
+
+- the centres;
+- the spreads;
+- the shapes;
+- the presence of clusters or gaps;
+- possible outliers; and
+- whether one mean is scientifically meaningful for each distribution.
+
+A test statistic cannot reveal subgroup structure or an influential outlier.
+
+## Conditions for Comparing Two Means
+
+Welch two-sample $t$ procedures rely on the following conditions.
+
+### Random Sampling or Random Assignment
+
+Each sample should represent its population or treatment group through a defensible random process.
+
+Random sampling supports generalization to a population. Random assignment supports causal comparison of treatments. A convenience sample may still be analyzed descriptively, but the population conclusion must be limited.
+
+### Independence within Each Sample
+
+Observations within a sample should not determine one another.
+
+When sampling without replacement, each population should be much larger than its sample. A common guideline is
+
+$$
+n_1\leq0.10N_1
+\qquad\text{and}\qquad
+n_2\leq0.10N_2
+$$
+
+### Independence between the Samples
+
+The two samples must contain unrelated observations. Matching violates this condition.
+
+For example, measurements from the left and right eye of the same animal are related. A matched analysis is required.
+
+### Distributional Condition
+
+The procedure is exact under Normal population models and is approximately reliable for many non-Normal populations when the samples are sufficiently large.
+
+The following issues require attention:
+
+- strong skewness in either group;
+- one or more outliers;
+- a very small sample in one group; and
+- important subgroups or multimodality.
+
+Equal population variances are **not** required for Welch's procedure.
+
+## Population and Sample Notation
+
+### Population Quantities
+
+| Population | Variable | Mean | Standard deviation |
+|:--|--:|--:|--:|
+| Group $1$ | $X_1$ | $\mu_1$ | $\sigma_1$ |
+| Group $2$ | $X_2$ | $\mu_2$ | $\sigma_2$ |
+
+The parameter of interest is usually
+
+$$
+\mu_1-\mu_2
+$$
+
+### Sample Quantities
+
+| Sample | Size | Mean | Standard deviation |
+|:--|--:|--:|--:|
+| Group $1$ | $n_1$ | $\bar{x}_1$ | $s_1$ |
+| Group $2$ | $n_2$ | $\bar{x}_2$ | $s_2$ |
+
+The point estimate is
+
+$$
+\bar{x}_1-\bar{x}_2
+$$
+
+### The Order of Subtraction
+
+The group order must remain consistent.
+
+If Group $1$ is treatment and Group $2$ is control, then $\bar{x}_1-\bar{x}_2$ estimates the treatment mean minus the control mean.
+
+A positive value means Group $1$ has the larger sample mean. Reversing the labels changes the sign of the estimate, interval and test statistic, but it does not change the strength of a two-sided test.
+
+## Sampling Distribution of a Difference in Means
+
+### Centre
+
+Because the sample means are unbiased,
+
+$$
+E(\bar{X}_1-\bar{X}_2)=\mu_1-\mu_2
+$$
+
+The difference in sample means is an unbiased estimator of the difference in population means.
+
+### Why the Variances Add
+
+For independent random variables,
+
+$$
+\operatorname{Var}(\bar{X}_1-\bar{X}_2)
+=
+\operatorname{Var}(\bar{X}_1)
++
+\operatorname{Var}(\bar{X}_2)
+$$
+
+Thus,
+
+$$
+\operatorname{Var}(\bar{X}_1-\bar{X}_2)
+=
+\frac{\sigma_1^2}{n_1}
++
+\frac{\sigma_2^2}{n_2}
+$$
+
+The variances add even though the means are subtracted. Both independent sources of uncertainty contribute to the difference.
+
+### Population Standard Deviation
+
+$$
+\sigma_{\bar{X}_1-\bar{X}_2}
+=
+\sqrt{
+\frac{\sigma_1^2}{n_1}
++
+\frac{\sigma_2^2}{n_2}
+}
+$$
+
+### Estimated Standard Error
+
+Because $\sigma_1$ and $\sigma_2$ are unknown,
+
+$$
+\operatorname{SE}(\bar{x}_1-\bar{x}_2)
+=
+\sqrt{
+\frac{s_1^2}{n_1}
++
+\frac{s_2^2}{n_2}
+}
+$$
+
+Larger sample sizes reduce the standard error. Greater within-group variation increases it.
+
+```{r null-sampling-distribution, echo=FALSE, fig.width=7.4, fig.height=4.2}
+p_sampling_difference
+```
+
+## The Welch Two-Sample $t$ Statistic
+
+To compare the observed difference with a hypothesized difference $\Delta_0$, use
+
+$$
+t
+=
+\frac{
+(\bar{x}_1-\bar{x}_2)-\Delta_0
+}{
+\sqrt{s_1^2/n_1+s_2^2/n_2}
+}
+$$
+
+For the common null hypothesis of equal means,
+
+$$
+H_0:\mu_1-\mu_2=0
+$$
+
+so $\Delta_0=0$.
+
+The statistic tells us how many estimated standard errors the observed difference is from the null difference.
+
+### Welch--Satterthwaite Degrees of Freedom
+
+$$
+df
+=
+\frac{
+\left(
+\dfrac{s_1^2}{n_1}
++
+\dfrac{s_2^2}{n_2}
+\right)^2
+}{
+\dfrac{1}{n_1-1}
+\left(
+\dfrac{s_1^2}{n_1}
+\right)^2
++
+\dfrac{1}{n_2-1}
+\left(
+\dfrac{s_2^2}{n_2}
+\right)^2
+}
+$$
+
+The degrees of freedom may be non-integer. R uses the unrounded value.
+
+The value satisfies
+
+$$
+\min(n_1-1,n_2-1)
+\leq
+df
+\leq
+n_1+n_2-2
+$$
+
+Unequal sample sizes and unequal sample variances can reduce the degrees of freedom.
+
+## Welch Two-Sample Confidence Interval
+
+A level $C$ confidence interval for $\mu_1-\mu_2$ is
+
+$$
+(\bar{x}_1-\bar{x}_2)
+\pm
+t^*
+\sqrt{
+\frac{s_1^2}{n_1}
++
+\frac{s_2^2}{n_2}
+}
+$$
+
+The critical value $t^*$ uses the Welch degrees of freedom and leaves central area $C$ under the reference distribution.
+
+### Four-Step Confidence-Interval Process
+
+1. **State:** Define both populations and the parameter $\mu_1-\mu_2$.
+2. **Plan:** Choose a confidence level and the Welch two-sample $t$ interval.
+3. **Solve:** Graph both samples, assess the conditions and calculate the interval.
+4. **Conclude:** Interpret the endpoints in context and respect the scope of the design.
+
+### Interpretation Template
+
+> We are $C\%$ confident that the population mean for Group $1$ is between the lower and upper reported amounts above the population mean for Group $2$.
+
+If the interval is entirely negative, it is usually clearer to reverse the verbal comparison and describe how much lower Group $1$ is.
+
+## Welch Two-Sample Hypothesis Test
+
+The most common null hypothesis is
+
+$$
+H_0:\mu_1-\mu_2=0
+$$
+
+equivalently,
+
+$$
+H_0:\mu_1=\mu_2
+$$
+
+### Alternative Hypotheses
+
+| Research question | Alternative | $P$-value region |
+|:--|:--:|:--|
+| Is Group $1$ larger on average? | $H_a:\mu_1-\mu_2>0$ | Right tail |
+| Is Group $1$ smaller on average? | $H_a:\mu_1-\mu_2<0$ | Left tail |
+| Do the means differ? | $H_a:\mu_1-\mu_2\neq0$ | Both tails |
+
+The direction must be selected from the scientific question before examining the sample difference.
+
+### Four-Step Test Process
+
+1. **State:** Define $\mu_1$ and $\mu_2$ and state $H_0$ and $H_a$.
+2. **Plan:** Select a Welch two-sample $t$ test and identify the relevant tail.
+3. **Solve:** Check the conditions, calculate $t$ and $df$, and obtain the $P$-value.
+4. **Conclude:** Describe the strength and direction of the evidence in context.
+
+A small $P$-value provides evidence against the null model. It does not measure the size or importance of the population difference.
+
+## Example 18.2: Daily Activity and Body Type
+
+Researchers monitored daily activity for $20$ healthy adults who did not exercise regularly. Ten participants were lean and ten were mildly obese. Sensors recorded the number of minutes per day spent standing or walking.
+
+The question is whether lean adults spend more time standing or walking, on average, than mildly obese adults.
+
+Let
+
+$$
+\mu_1=\text{population mean for lean adults}
+$$
+
+and
+
+$$
+\mu_2=\text{population mean for mildly obese adults}
+$$
+
+The parameter is $\mu_1-\mu_2$.
+
+### Observed Data
+
+| Lean (minutes/day) | Mildly obese (minutes/day) |
+|--:|--:|
+| $511.100$ | $260.244$ |
+| $607.925$ | $464.756$ |
+| $319.212$ | $367.138$ |
+| $584.644$ | $413.667$ |
+| $578.869$ | $347.375$ |
+| $543.388$ | $416.531$ |
+| $677.188$ | $358.650$ |
+| $555.656$ | $267.344$ |
+| $374.831$ | $410.631$ |
+| $504.700$ | $426.356$ |
+
+```{r activity-dotplot, echo=FALSE, fig.width=7.4, fig.height=3.8}
+p_activity_dotplot
+```
+
+```{r activity-boxplot, echo=FALSE, fig.width=7.4, fig.height=4.4}
+p_activity_boxplot
+```
+
+### Conditions and Scope
+
+- The two groups contain different participants and can be treated as independent.
+- The samples are small, but the graphs do not show severe skewness or extreme outliers.
+- The participants were volunteers rather than simple random samples.
+- The results can cautiously describe similar adults, but broad population generalization requires care.
+- Body type was not randomly assigned. The study is observational and cannot establish causation.
+
+### Hypotheses
+
+The researchers suspected in advance that the lean group would spend more time standing or walking:
+
+$$
+H_0:\mu_1-\mu_2=0
+$$
+
+$$
+H_a:\mu_1-\mu_2>0
+$$
+
+### Sample Summaries
+
+```{r activity-summaries}
+c(
+  n_lean = length(lean_activity),
+  mean_lean = mean(lean_activity),
+  sd_lean = sd(lean_activity),
+  n_obese = length(obese_activity),
+  mean_obese = mean(obese_activity),
+  sd_obese = sd(obese_activity)
+)
+```
+
+Rounded summaries are
+
+| Group | $n$ | $\bar{x}$ | $s$ |
+|:--|--:|--:|--:|
+| Lean | $10$ | $525.751$ | $107.121$ |
+| Mildly obese | $10$ | $373.269$ | $67.498$ |
+
+The estimate is
+
+$$
+\bar{x}_1-\bar{x}_2
+=
+525.751-373.269
+=
+152.482
+$$
+
+### Standard Error
+
+$$
+\operatorname{SE}
+=
+\sqrt{
+\frac{107.121^2}{10}
++
+\frac{67.498^2}{10}
+}
+=
+\sqrt{1147.491+455.598}
+\approx
+40.039
+$$
+
+### Degrees of Freedom
+
+$$
+df
+=
+\frac{
+(1147.491+455.598)^2
+}{
+\dfrac{1147.491^2}{9}
++
+\dfrac{455.598^2}{9}
+}
+\approx
+15.17
+$$
+
+### Test Statistic
+
+$$
+t
+=
+\frac{152.482-0}{40.039}
+\approx
+3.808
+$$
+
+### One-Sided $P$-Value
+
+```{r activity-manual-p-value}
+t_activity <- 3.808
+df_activity <- 15.17
+pt(t_activity, df = df_activity, lower.tail = FALSE)
+```
+
+The $P$-value is approximately
+
+$$
+P(T_{15.17}\geq3.808)
+\approx
+0.00084
+$$
+
+If the population means were equal, a difference at least this large in the predicted direction would be very unusual.
+
+### Direct Welch Test in R
+
+```{r activity-welch-test}
+t.test(
+  lean_activity,
+  obese_activity,
+  alternative = "greater",
+  var.equal = FALSE
+)
+```
+
+R uses Welch's procedure by default. The explicit argument `var.equal = FALSE` makes the choice clear.
+
+### Test Conclusion
+
+The data provide very strong evidence that the population mean daily standing or walking time is greater for lean adults than for mildly obese adults similar to those studied.
+
+This is evidence of an association. It is not evidence that body type causes the activity difference.
+
+## Example 18.4: Estimating the Activity Difference
+
+A test addresses evidence against equal population means. A confidence interval estimates the possible size of the difference.
+
+For $df\approx15.17$, the $95\%$ critical value is approximately
+
+$$
+t^*\approx2.129
+$$
+
+The margin of error is
+
+$$
+m
+=
+2.129(40.039)
+\approx
+85.255
+$$
+
+Therefore,
+
+$$
+152.482\pm85.255
+=
+(67.227,\ 237.737)
+$$
+
+### Direct Confidence Interval in R
+
+```{r activity-confidence-interval}
+t.test(
+  lean_activity,
+  obese_activity,
+  alternative = "two.sided",
+  conf.level = 0.95,
+  var.equal = FALSE
+)$conf.int
+```
+
+### Interpretation
+
+We are $95\%$ confident that lean adults similar to those studied spend, on average, between approximately $67$ and $238$ more minutes per day standing or walking than mildly obese adults similar to those studied.
+
+The interval is wide because
+
+- both samples contain only $10$ participants;
+- activity varies substantially among individuals; and
+- both sample variances contribute to the standard error.
+
+Whether this range is biologically or clinically important requires subject-matter judgment.
+
+## Example 18.5: Transgenic Chickens
+
+Researchers compared the hatching weights of $45$ transgenic chickens resistant to avian influenza and $54$ independently selected commercial chickens of the same breed.
+
+Let Group $1$ be transgenic chickens and Group $2$ be commercial chickens.
+
+The two-sided hypotheses are
+
+$$
+H_0:\mu_1-\mu_2=0
+$$
+
+$$
+H_a:\mu_1-\mu_2\neq0
+$$
+
+The sample summaries are
+
+| Group | $n$ | $\bar{x}$ (g) | $s$ (g) |
+|:--|--:|--:|--:|
+| Transgenic | $45$ | $45.14$ | $3.32$ |
+| Commercial | $54$ | $44.99$ | $4.57$ |
+
+### Manual Calculation from Summaries
+
+The estimated difference is
+
+$$
+45.14-44.99=0.15\text{ g}
+$$
+
+The standard error is
+
+$$
+\operatorname{SE}
+=
+\sqrt{
+\frac{3.32^2}{45}
++
+\frac{4.57^2}{54}
+}
+\approx
+0.795\text{ g}
+$$
+
+The Welch degrees of freedom are approximately
+
+$$
+df\approx95.3
+$$
+
+The test statistic is
+
+$$
+t
+=
+\frac{0.15}{0.795}
+\approx
+0.19
+$$
+
+The two-sided $P$-value is approximately
+
+$$
+2P(T_{95.3}\geq0.19)
+\approx
+0.85
+$$
+
+The precise calculation from the unrounded original data gives approximately $0.847$.
+
+### R Calculation from Summary Statistics
+
+```{r chicken-summary-calculation}
+n1 <- 45
+xbar1 <- 45.14
+s1 <- 3.32
+
+n2 <- 54
+xbar2 <- 44.99
+s2 <- 4.57
+
+se <- sqrt(s1^2 / n1 + s2^2 / n2)
+
+df <- (s1^2 / n1 + s2^2 / n2)^2 /
+  ((s1^2 / n1)^2 / (n1 - 1) +
+   (s2^2 / n2)^2 / (n2 - 1))
+
+t_statistic <- (xbar1 - xbar2) / se
+p_value <- 2 * pt(-abs(t_statistic), df = df)
+
+c(SE = se, df = df, t = t_statistic, P_value = p_value)
+```
+
+### Test Conclusion
+
+The data do not provide statistically significant evidence that the two population mean hatching weights differ.
+
+This conclusion does not prove exact equality. The data remain compatible with a negative difference, zero difference or a positive difference.
+
+### Confidence Interval
+
+Using the original unrounded data, the $95\%$ confidence interval for
+
+$$
+\mu_{\text{transgenic}}-\mu_{\text{commercial}}
+$$
+
+is approximately
+
+$$
+(-1.424,\ 1.731)\text{ g}
+$$
+
+```{r chicken-interval-plot, echo=FALSE, fig.width=7.4, fig.height=3.4}
+p_chicken_interval
+```
+
+The interval includes zero and plausible differences in both directions. This agrees with failure to reject the two-sided null hypothesis at $\alpha=0.05$.
+
+## Statistical Significance, Effect Size and Study Design
+
+These ideas answer different questions.
+
+### Statistical Significance
+
+The $P$-value addresses whether the observed difference is unusual under a specified null model.
+
+### Effect Size
+
+The point estimate and confidence interval describe the direction and plausible size of the population difference.
+
+### Generalization
+
+Random sampling determines whether the result can be extended to a broader population.
+
+### Causation
+
+Random assignment determines whether a treatment difference can reasonably be interpreted causally.
+
+A small $P$-value cannot repair confounding, selection bias or poor measurement.
+
+## Robustness of Two-Sample $t$ Procedures
+
+A procedure is **robust** when its confidence level or $P$-value changes little under moderate violations of its distributional conditions.
+
+Welch procedures are often robust to moderate non-Normality, especially when both samples are reasonably large.
+
+```{r robustness-plot, echo=FALSE, fig.width=7.4, fig.height=6.2}
+p_robustness
+```
+
+### Practical Guidelines
+
+Assess each group separately.
+
+- **Small samples:** Both groups should be reasonably symmetric, single-peaked and free of outliers.
+- **Moderate samples:** Mild skewness is usually acceptable, but strong skewness and outliers remain concerning.
+- **Large samples:** Greater skewness can often be tolerated, although influential outliers should still be investigated.
+
+A large sample in one group does not completely compensate for a very small sample in the other group.
+
+### Why Outliers Matter
+
+Both $\bar{x}$ and $s$ are sensitive to extreme observations. An outlier can affect
+
+- the estimated difference;
+- the standard error;
+- the degrees of freedom;
+- the test statistic; and
+- the confidence interval.
+
+A valid unusual observation should not be removed merely because it changes statistical significance. Any exclusion must be scientifically justified and reported.
+
+### Large Samples Do Not Make Every Mean Meaningful
+
+A calculation may be mathematically reliable while the parameter remains scientifically unhelpful.
+
+For example, a bimodal distribution of bee cocoon widths may combine male and female cocoons. One overall mean mixes two biologically distinct groups. A more useful analysis would separate the groups.
+
+## Why Welch's Procedure Is Preferred
+
+Two versions of the two-sample $t$ procedure appear in software.
+
+| Feature | Welch procedure | Pooled procedure |
+|:--|:--|:--|
+| Population variance assumption | Allows $\sigma_1^2\neq\sigma_2^2$ | Requires $\sigma_1^2=\sigma_2^2$ |
+| Variance estimates | Uses $s_1^2$ and $s_2^2$ separately | Combines them into one pooled estimate |
+| Degrees of freedom | Welch--Satterthwaite approximation | $n_1+n_2-2$ |
+| Recommendation | Use routinely | Avoid unless equality is strongly justified |
+
+### The Pooled Variance
+
+The pooled procedure estimates a common population variance using
+
+$$
+s_p^2
+=
+\frac{
+(n_1-1)s_1^2+(n_2-1)s_2^2
+}{
+n_1+n_2-2
+}
+$$
+
+and then uses
+
+$$
+\operatorname{SE}_{\text{pooled}}
+=
+s_p
+\sqrt{
+\frac{1}{n_1}
++
+\frac{1}{n_2}
+}
+$$
+
+The procedure is valid only under the additional equal-variance assumption.
+
+### Why Avoid Pooling
+
+Welch's procedure is preferred because
+
+- equal population variances are rarely known;
+- sample standard deviations that look similar do not prove equality;
+- pooled inference can be inaccurate when sample sizes and variances differ; and
+- Welch's procedure performs well whether or not the variances are equal.
+
+### R Defaults to Welch
+
+```{r welch-and-pooled-r, eval=FALSE}
+# Recommended
+t.test(response ~ group, data = study_data)
+
+# The same choice written explicitly
+t.test(
+  response ~ group,
+  data = study_data,
+  var.equal = FALSE
+)
+
+# Pooled procedure
+t.test(
+  response ~ group,
+  data = study_data,
+  var.equal = TRUE
+)
+```
+
+Do not change `var.equal` to `TRUE` merely because the sample standard deviations appear close.
+
+## Avoid Routine Inference about Standard Deviations
+
+The procedures in this chapter compare means. They do not test whether two population standard deviations are equal.
+
+Classical variance-ratio procedures are highly sensitive to non-Normality. Skewness and outliers can distort them substantially.
+
+If variability is the scientific outcome of interest, the method should be selected specifically for the distribution, measurement scale and study design. An equal-variance test is not needed before applying Welch's procedure.
+
+## Choosing the Correct Procedure
+
+| Data structure | Recommended procedure |
+|:--|:--|
+| One quantitative sample | One-sample $t$ |
+| Same individuals measured twice | Matched pairs $t$ on differences |
+| Two unrelated quantitative samples | Welch two-sample $t$ |
+| Two independent categorical outcomes | A procedure for proportions |
+| More than two independent quantitative groups | A multiple-group method such as ANOVA |
+
+### Decision Checklist
+
+Before using a two-sample $t$ procedure, ask:
+
+1. Is the response quantitative?
+2. Are there exactly two groups?
+3. Are the observations in the two groups independent?
+4. Were the samples or treatments produced using a defensible random process?
+5. Do graphs show skewness, outliers or important subgroups?
+6. Is the order of subtraction clearly defined?
+7. Is Welch's procedure being used?
+8. Does the conclusion respect the study design?
+
+## Common Errors and Corrections
+
+### Treating Paired Data as Independent
+
+**Error:** Applying a two-sample test to before-and-after observations.
+
+**Correction:** Calculate one difference per subject and apply a one-sample $t$ procedure to those differences.
+
+### Assuming the Variances Must Be Equal
+
+**Error:** Performing an equal-variance test before every comparison.
+
+**Correction:** Use Welch's procedure, which does not require equal population variances.
+
+### Losing the Order of Subtraction
+
+**Error:** Calculating Group $1$ minus Group $2$ and interpreting the result as Group $2$ minus Group $1$.
+
+**Correction:** Define the order in words before calculation and maintain it throughout.
+
+### Choosing the Alternative after Seeing the Data
+
+**Error:** Using a one-sided alternative because one sample mean happened to be larger.
+
+**Correction:** Determine the direction from the research question before examining the result.
+
+### Interpreting a Large $P$-Value as Proof of Equality
+
+**Error:** Concluding that the two population means are identical.
+
+**Correction:** State that the data do not provide sufficient evidence of a difference. Examine the confidence interval to see which differences remain plausible.
+
+### Interpreting a Small $P$-Value as a Large Effect
+
+**Error:** Treating strong evidence as evidence of a large or important difference.
+
+**Correction:** Report the estimate and confidence interval and use subject-matter knowledge to assess importance.
+
+### Claiming Causation from an Observational Study
+
+**Error:** Attributing the mean difference to the grouping variable without random assignment.
+
+**Correction:** Describe an association and discuss plausible confounding variables.
+
+## Reporting Templates
+
+### Confidence Interval
+
+> The estimated difference in population means, defined as Group $1$ minus Group $2$, was $\bar{x}_1-\bar{x}_2$. A $C\%$ Welch confidence interval was $(L,U)$. We are $C\%$ confident that the population mean for Group $1$ is between $L$ and $U$ units above the population mean for Group $2$, subject to the sampling and model conditions.
+
+### Hypothesis Test
+
+> A Welch two-sample $t$ test gave $t=\cdots$, $df=\cdots$ and $P=\cdots$. The data provide [little/moderate/strong] evidence that the population mean for Group $1$ is [greater than/less than/different from] the population mean for Group $2$. The conclusion applies to the population supported by the study design and does not imply causation unless treatments were randomly assigned.
+
+## Chapter Summary
+
+### Parameter and Estimate
+
+$$
+\text{Parameter}=\mu_1-\mu_2
+$$
+
+$$
+\text{Estimate}=\bar{x}_1-\bar{x}_2
+$$
+
+### Standard Error
+
+$$
+\operatorname{SE}
+=
+\sqrt{
+\frac{s_1^2}{n_1}
++
+\frac{s_2^2}{n_2}
+}
+$$
+
+### Welch Test Statistic
+
+$$
+t
+=
+\frac{
+(\bar{x}_1-\bar{x}_2)-\Delta_0
+}{
+\operatorname{SE}
+}
+$$
+
+### Confidence Interval
+
+$$
+(\bar{x}_1-\bar{x}_2)
+\pm
+t^*\operatorname{SE}
+$$
+
+### Main Interpretive Principles
+
+- Inspect both samples before inference.
+- Keep the group order consistent.
+- Use Welch's procedure rather than pooling.
+- Report a confidence interval to describe effect size and precision.
+- A large $P$-value does not prove equality.
+- Statistical significance does not establish practical importance.
+- The study design controls generalization and causation.
+
+### Essential R Functions
+
+```{r essential-r-functions, eval=FALSE}
+mean(group1)
+sd(group1)
+length(group1)
+
+t.test(group1, group2)
+t.test(group1, group2, alternative = "greater")
+t.test(response ~ group, data = study_data)
+
+pt(t_value, df = degrees_of_freedom)
+qt(0.975, df = degrees_of_freedom)
+```
+
+### Final Workflow
+
+1. Define both populations and the order of subtraction.
+2. Confirm that the samples are independent.
+3. Graph and summarize both distributions.
+4. Assess randomness, independence, shape and outliers.
+5. Use Welch's standard error and degrees of freedom.
+6. Calculate a test or confidence interval.
+7. Interpret the result in context.
+8. Separate statistical evidence from effect size, generalization and causation.
+
+
+
+
+
+

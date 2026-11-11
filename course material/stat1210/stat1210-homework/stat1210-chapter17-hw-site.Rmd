@@ -1,0 +1,722 @@
+---
+title: "STAT $1210$"
+subtitle: "Chapter $17$ Homework: Inference about a Population Mean"
+author: "Fall $2026$"
+date: ""
+output:
+  html_document:
+    self_contained: true
+    toc: false
+    number_sections: false
+    theme: flatly
+    highlight: tango
+---
+
+<style>
+:root {
+  --ink: #263746;
+  --muted: #667786;
+  --blue: #294d73;
+  --blue-dark: #183a5c;
+  --blue-soft: #edf3f8;
+  --line: #d8e1e8;
+  --paper: #ffffff;
+  --page: #eef2f5;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+
+.main-container {
+  max-width: 980px !important;
+  margin-top: 28px;
+  margin-bottom: 42px;
+  padding: 42px 58px 56px;
+  background: var(--paper);
+  border: 1px solid #dde5eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(31, 50, 67, 0.10);
+}
+
+h1, h2, h3 { color: var(--blue-dark); }
+
+h1.title {
+  margin-bottom: 4px;
+  font-weight: 750;
+}
+
+h3.subtitle {
+  margin-top: 0;
+  color: var(--blue);
+  font-weight: 500;
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 1.28em;
+  line-height: 1.35;
+}
+
+.intro-box {
+  margin: 1.2em 0 1.8em;
+  padding: 1em 1.2em;
+  border-left: 5px solid var(--blue);
+  border-radius: 6px;
+  background: var(--blue-soft);
+}
+
+.question-card {
+  margin: 1.55em 0 2em;
+  padding: 1.3em 1.45em 1.1em;
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--blue);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(35, 54, 74, 0.07);
+}
+
+table {
+  width: 100%;
+  margin: 1.1em 0 1.3em;
+  border-collapse: collapse;
+  border: 1px solid var(--line);
+}
+
+thead th {
+  padding: 0.65em 0.75em !important;
+  background: var(--blue);
+  color: white;
+  border: 0 !important;
+}
+
+tbody td {
+  padding: 0.58em 0.75em !important;
+  border-bottom: 1px solid #e5ebf0 !important;
+}
+
+tbody tr:nth-child(even) td { background: #f7f9fb; }
+
+details.solution {
+  margin-top: 1.15em;
+  border: 1px solid #bfd1df;
+  border-radius: 7px;
+  background: #f8fbfd;
+  overflow: hidden;
+}
+
+details.solution summary {
+  padding: 0.72em 0.95em;
+  color: var(--blue-dark);
+  background: var(--blue-soft);
+  cursor: pointer;
+  font-weight: 700;
+  user-select: none;
+}
+
+details.solution summary:hover { background: #e2edf5; }
+
+.solution-body {
+  padding: 0.95em 1.1em 0.75em;
+}
+
+.solution-body ol { margin-bottom: 0.25em; }
+.solution-body li { margin-bottom: 0.75em; }
+
+@media (max-width: 768px) {
+  .main-container {
+    margin-top: 0;
+    padding: 24px 20px 38px;
+    border-radius: 0;
+  }
+}
+
+@media print {
+  body { background: white; font-size: 11pt; }
+  .main-container {
+    max-width: none !important;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+  .question-card { break-inside: avoid; box-shadow: none; }
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  fig.retina = 2,
+  out.width = "88%"
+)
+```
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("details.solution").forEach(function(item) {
+    item.removeAttribute("open");
+  });
+});
+</script>
+
+<div class="intro-box">
+These problems review the central ideas from Chapter $17$. The questions increase gradually in difficulty from Question $1$ to Question $15$. Show the main mathematical steps, assess the relevant conditions and explain conclusions in context. Selected solutions include short R commands for verification. Unless stated otherwise, round probabilities to four decimal places and other numerical answers to at least three decimal places.
+</div>
+
+::: {.question-card}
+### Question $1$
+
+A wildlife rehabilitation centre records the body mass of a random sample of $25$ adult herring gulls admitted during the migration season. The sample mean is $\bar{x}=412.6$ g and the sample standard deviation is $s=38.5$ g. The population standard deviation is unknown.
+
+1. Define the population parameter $\mu$.
+2. Identify the point estimate of $\mu$.
+3. Calculate the standard error of $\bar{x}$.
+4. State the degrees of freedom for a one-sample $t$ procedure.
+5. Explain what the standard error describes.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The parameter $\mu$ is the population mean body mass of adult herring gulls represented by the rehabilitation centre's sampling process during the migration season.</li>
+  <li>The point estimate is the sample mean, $\bar{x}=412.6$ g.</li>
+  <li>The estimated standard error is
+  $$
+  \operatorname{SE}(\bar{x})
+  =\frac{s}{\sqrt{n}}
+  =\frac{38.5}{\sqrt{25}}
+  =\frac{38.5}{5}
+  =\boxed{7.700\text{ g}}
+  $$
+  </li>
+  <li>The degrees of freedom are
+  $$
+  df=n-1=25-1=\boxed{24}
+  $$
+  </li>
+  <li>Across many independent random samples of $25$ gulls selected in the same way, the sample means would typically vary around the population mean with an estimated standard deviation of approximately $7.7$ g. The value $38.5$ g instead describes variation among individual gulls in this sample.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $2$
+
+Let $T$ have a $t$ distribution with $14$ degrees of freedom.
+
+1. Calculate $P(T\leq-2.10)$.
+2. Calculate $P(T\geq1.75)$.
+3. Find the positive critical value $t^*$ for a $95\%$ confidence interval.
+4. Find the positive critical value $t^*$ for a $99\%$ confidence interval.
+5. Explain why the $99\%$ critical value is larger.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>
+  $$P(T\leq-2.10)=\boxed{0.0272}$$
+  </li>
+  <li>
+  $$P(T\geq1.75)=\boxed{0.0510}$$
+  </li>
+  <li>A $95\%$ interval leaves $0.025$ in each tail, so
+  $$t^*=t_{0.975,14}=\boxed{2.145}$$
+  </li>
+  <li>A $99\%$ interval leaves $0.005$ in each tail, so
+  $$t^*=t_{0.995,14}=\boxed{2.977}$$
+  </li>
+  <li>Higher confidence requires a larger central area under the $t$ curve. The endpoints must therefore move farther from zero, producing a larger critical value and a wider interval.</li>
+</ol>
+
+```{r q2-t-probabilities, echo=TRUE}
+pt(-2.10, df = 14)
+pt(1.75, df = 14, lower.tail = FALSE)
+qt(0.975, df = 14)
+qt(0.995, df = 14)
+```
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $3$
+
+A veterinary cardiology service selects a random sample of $16$ healthy adult cats. Their mean resting heart rate is $\bar{x}=178$ beats per minute with sample standard deviation $s=24$ beats per minute. Assume the distribution is approximately symmetric with no outliers.
+
+1. Calculate the standard error.
+2. Using $t^*=2.131$, calculate the margin of error for a $95\%$ confidence interval.
+3. Construct the interval.
+4. Interpret the interval in context.
+5. Explain why a $t$ critical value is used instead of $z^*=1.960$.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>
+  $$\operatorname{SE}=\frac{24}{\sqrt{16}}=\boxed{6.000\text{ beats/minute}}$$
+  </li>
+  <li>
+  $$m=t^*\operatorname{SE}=2.131(6)=\boxed{12.786}$$
+  </li>
+  <li>
+  $$178\pm12.786$$
+  gives
+  $$\boxed{(165.214,\ 190.786)\text{ beats/minute}}$$
+  </li>
+  <li>We are $95\%$ confident that the population mean resting heart rate of healthy adult cats represented by the sampling process is between approximately $165.214$ and $190.786$ beats per minute.</li>
+  <li>The population standard deviation is unknown and is estimated by the sample standard deviation. This introduces additional uncertainty, which is represented by a $t$ distribution with $15$ degrees of freedom.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $4$
+
+A marine biologist uses a pilot estimate of $s=12$ cm for the standard deviation of fish length.
+
+1. Estimate the standard error of the sample mean when $n=25$.
+2. Estimate the standard error when $n=100$.
+3. By what factor did the sample size increase?
+4. By what factor did the standard error decrease?
+5. Explain why doubling a sample size does not cut the standard error in half.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>
+  $$\operatorname{SE}_{25}=\frac{12}{\sqrt{25}}=\boxed{2.400\text{ cm}}$$
+  </li>
+  <li>
+  $$\operatorname{SE}_{100}=\frac{12}{\sqrt{100}}=\boxed{1.200\text{ cm}}$$
+  </li>
+  <li>The sample size increased by a factor of
+  $$\frac{100}{25}=\boxed{4}$$
+  </li>
+  <li>The standard error decreased by a factor of
+  $$\frac{2.4}{1.2}=\boxed{2}$$
+  </li>
+  <li>The standard error is proportional to $1/\sqrt{n}$ rather than $1/n$. Doubling $n$ multiplies the standard error by $1/\sqrt{2}\approx0.707$, not by $1/2$. A fourfold increase is required to cut the standard error in half.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $5$
+
+A botanist randomly selects $11$ acorns from a coastal oak population. Their volumes, in cm$^3$, are
+
+$$
+3.8,\ 4.0,\ 4.1,\ 4.2,\ 4.3,\ 4.5,\ 4.6,\ 4.7,\ 4.9,\ 5.0,\ 17.2
+$$
+
+1. Describe the most important feature of the distribution.
+2. Is a one-sample $t$ confidence interval appropriate without further investigation? Explain.
+3. Why can the unusual value affect both $\bar{x}$ and $s$?
+4. What should the botanist check before deciding how to proceed?
+5. If $17.2$ is verified as a valid observation, should it be deleted merely because it changes the result?
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Ten observations lie between $3.8$ and $5.0$ cm$^3$, while $17.2$ cm$^3$ is an extreme high outlier. The distribution is therefore strongly right-skewed.</li>
+  <li>No. The sample is small and contains an extreme outlier. One-sample $t$ procedures are not robust to an outlier in a sample of only $11$ observations.</li>
+  <li>The mean is pulled strongly upward by the outlier. The sample standard deviation also increases because the squared distance from the mean is very large. The centre and estimated standard error are therefore both affected.</li>
+  <li>The botanist should verify the unit, decimal placement, data entry and measurement procedure. The botanist should also determine whether the acorn came from the intended population or represents a scientifically distinct subgroup.</li>
+  <li>No. A valid observation should not be removed only to obtain a preferred statistical result. Any exclusion must have a scientific or measurement-based justification and should be reported transparently.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $6$
+
+A wildlife hospital evaluates a new rehabilitation protocol for grey seals. Historically, the population mean rehabilitation time is $46$ days. A random sample of $20$ seals treated under the new protocol has mean time $\bar{x}=42.8$ days and sample standard deviation $s=7.5$ days. The research question was specified in advance as whether the protocol reduces the population mean rehabilitation time.
+
+1. State the null and alternative hypotheses.
+2. Calculate the standard error.
+3. Calculate the test statistic and state its degrees of freedom.
+4. Calculate the one-sided $P$-value.
+5. State the conclusion at $\alpha=0.05$ and explain one limitation.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Let $\mu$ be the population mean rehabilitation time under the new protocol.
+  $$H_0:\mu=46\qquad H_a:\mu<46$$
+  </li>
+  <li>
+  $$\operatorname{SE}=\frac{7.5}{\sqrt{20}}\approx\boxed{1.677\text{ days}}$$
+  </li>
+  <li>
+  $$t=\frac{42.8-46}{7.5/\sqrt{20}}\approx\boxed{-1.908}$$
+  with
+  $$df=20-1=\boxed{19}$$
+  </li>
+  <li>Because the alternative is lower-tailed,
+  $$P=P(T_{19}\leq-1.908)\approx\boxed{0.0358}$$
+  </li>
+  <li>Because $0.0358<0.05$, reject $H_0$. The sample provides statistically significant evidence that the protocol reduces the population mean rehabilitation time for seals represented by the study. The conclusion depends on random sampling or a comparable design, and an observational comparison would not by itself establish that the protocol caused the reduction.</li>
+</ol>
+
+```{r q6-seal-test, echo=TRUE}
+t_value <- (42.8 - 46) / (7.5 / sqrt(20))
+p_value <- pt(t_value, df = 19)
+c(t = t_value, P_value = p_value)
+```
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $7$
+
+A reference source states that the population mean serum thyroxine concentration for healthy adult dogs is $3.0$ $\mu$g/dL. A random sample of $25$ dogs from a regional veterinary network has mean $\bar{x}=2.65$ $\mu$g/dL and sample standard deviation $s=0.75$ $\mu$g/dL. Test whether the regional population mean differs from $3.0$ $\mu$g/dL.
+
+1. State the hypotheses.
+2. Calculate the standard error and test statistic.
+3. Calculate the two-sided $P$-value.
+4. State the conclusion at $\alpha=0.05$.
+5. Construct and interpret a $95\%$ confidence interval using $t^*=2.064$.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>
+  $$H_0:\mu=3.0\qquad H_a:\mu\neq3.0$$
+  </li>
+  <li>
+  $$\operatorname{SE}=\frac{0.75}{\sqrt{25}}=0.150$$
+  and
+  $$t=\frac{2.65-3.0}{0.150}=\boxed{-2.333}$$
+  with $df=24$.</li>
+  <li>
+  $$P=2P(T_{24}\leq-2.333)\approx\boxed{0.0283}$$
+  </li>
+  <li>Because $0.0283<0.05$, reject $H_0$. The data provide statistically significant evidence that the regional population mean thyroxine concentration differs from $3.0$ $\mu$g/dL.</li>
+  <li>The margin of error is
+  $$m=2.064(0.150)=0.3096$$
+  Therefore,
+  $$2.65\pm0.3096=\boxed{(2.340,\ 2.960)\ \mu\text{g/dL}}$$
+  We are $95\%$ confident that the regional population mean lies between approximately $2.340$ and $2.960$ $\mu$g/dL. The interval excludes $3.0$, agreeing with the two-sided test.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $8$
+
+A PEI mussel grower historically harvested mussels with population mean shell length $60$ mm. This season, a random sample of $36$ mussels has mean length $\bar{x}=58.1$ mm and sample standard deviation $s=6.0$ mm. Assume no strong skewness or outliers.
+
+1. Construct a $95\%$ confidence interval using $t^*=2.030$.
+2. Test $H_0:\mu=60$ against $H_a:\mu\neq60$.
+3. Calculate the two-sided $P$-value.
+4. State the test decision at $\alpha=0.05$.
+5. Explain how the confidence interval and test lead to the same decision.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The standard error is
+  $$\operatorname{SE}=\frac{6}{\sqrt{36}}=1.000\text{ mm}$$
+  The margin of error is $2.030(1)=2.030$ mm. Therefore,
+  $$\boxed{(56.070,\ 60.130)\text{ mm}}$$
+  </li>
+  <li>
+  $$t=\frac{58.1-60}{1.000}=\boxed{-1.900}$$
+  with $df=35$.</li>
+  <li>
+  $$P=2P(T_{35}\leq-1.900)\approx\boxed{0.0657}$$
+  </li>
+  <li>Because $0.0657>0.05$, fail to reject $H_0$. The sample does not provide statistically significant evidence at the $5\%$ level that this season's population mean differs from $60$ mm.</li>
+  <li>The null value $60$ mm lies inside the $95\%$ confidence interval. Therefore, $60$ remains a plausible value under the same two-sided model, which is equivalent to failing to reject at $\alpha=0.05$.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $9$
+
+A freshwater ecologist studies dissolved oxygen in a stream where a management benchmark is $8.0$ mg/L. A random sample of $15$ morning measurements has mean $\bar{x}=8.4$ mg/L and sample standard deviation $s=1.1$ mg/L. Before collecting the data, the ecologist planned to test whether the population mean exceeds the benchmark.
+
+1. State the hypotheses.
+2. Calculate the test statistic and degrees of freedom.
+3. Calculate the $P$-value.
+4. State the conclusion at $\alpha=0.05$.
+5. Explain why the alternative should not be changed to two-sided after seeing the sample result.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>
+  $$H_0:\mu=8.0\qquad H_a:\mu>8.0$$
+  </li>
+  <li>
+  $$\operatorname{SE}=\frac{1.1}{\sqrt{15}}\approx0.284$$
+  $$t=\frac{8.4-8.0}{1.1/\sqrt{15}}\approx\boxed{1.408}$$
+  with $df=14$.</li>
+  <li>
+  $$P=P(T_{14}\geq1.408)\approx\boxed{0.0904}$$
+  </li>
+  <li>Because $0.0904>0.05$, fail to reject $H_0$. The data do not provide statistically significant evidence that the population mean dissolved oxygen exceeds $8.0$ mg/L.</li>
+  <li>The alternative represents the scientific question and must be selected before examining the data. Changing the tail after seeing the result changes the testing rule and can distort the Type I error rate.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $10$
+
+A veterinarian measures systolic blood pressure before and after treatment in the same $8$ dogs. Define each paired difference as
+
+$$
+d=\text{after treatment}-\text{before treatment}
+$$
+
+The observed differences, in mmHg, are
+
+$$
+-8,\ -5,\ -11,\ -4,\ -7,\ -9,\ -6,\ -2
+$$
+
+1. Explain why this is a matched pairs problem.
+2. Calculate $\bar{d}$, $s_d$ and the standard error.
+3. Test $H_0:\mu_d=0$ against $H_a:\mu_d<0$.
+4. Calculate the one-sided $P$-value.
+5. Construct a $95\%$ confidence interval using $t^*=2.365$ and interpret it.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>Each after-treatment value is linked to the before-treatment value from the same dog. The observations are not two independent samples. The analysis uses the one sample of eight within-dog differences.</li>
+  <li>
+  $$\bar{d}=\frac{-52}{8}=\boxed{-6.500\text{ mmHg}}$$
+  The sample standard deviation is
+  $$s_d\approx\boxed{2.878\text{ mmHg}}$$
+  and
+  $$\operatorname{SE}=\frac{2.878}{\sqrt{8}}\approx\boxed{1.018\text{ mmHg}}$$
+  </li>
+  <li>
+  $$t=\frac{-6.5-0}{1.018}\approx\boxed{-6.387}$$
+  with $df=7$.</li>
+  <li>
+  $$P=P(T_7\leq-6.387)\approx\boxed{0.0002}$$
+  The data provide very strong evidence that the population mean after-minus-before difference is negative.</li>
+  <li>The margin of error is
+  $$m=2.365(1.018)\approx2.406$$
+  The interval is
+  $$-6.500\pm2.406=\boxed{(-8.906,\ -4.094)\text{ mmHg}}$$
+  We are $95\%$ confident that treatment reduces population mean systolic blood pressure by approximately $4.094$ to $8.906$ mmHg for dogs represented by the study.</li>
+</ol>
+
+```{r q10-dog-paired-test, echo=TRUE}
+difference <- c(-8, -5, -11, -4, -7, -9, -6, -2)
+t.test(difference, mu = 0, alternative = "less")
+```
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $11$
+
+A wildlife physiotherapist measures the increase in stride length for the same $10$ injured foxes after a rehabilitation program. The paired increases, in cm, are
+
+$$
+1.8,\ 2.4,\ 0.9,\ 1.5,\ 2.1,\ 1.2,\ 2.8,\ 1.7,\ 2.0,\ 1.4
+$$
+
+1. Define the population parameter $\mu_d$.
+2. Calculate $\bar{d}$, $s_d$ and the standard error.
+3. Construct a $95\%$ confidence interval using $t^*=2.262$.
+4. Interpret the interval in context.
+5. Would a two-sided test of $H_0:\mu_d=0$ reject at $\alpha=0.05$? Explain using the interval.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The parameter $\mu_d$ is the population mean change in stride length, defined as after rehabilitation minus before rehabilitation, for injured foxes represented by the study.</li>
+  <li>
+  $$\bar{d}=\boxed{1.780\text{ cm}}$$
+  $$s_d\approx\boxed{0.569\text{ cm}}$$
+  $$\operatorname{SE}=\frac{0.569}{\sqrt{10}}\approx\boxed{0.180\text{ cm}}$$
+  </li>
+  <li>The margin of error is
+  $$m=2.262(0.180)\approx0.407$$
+  Therefore,
+  $$1.780\pm0.407=\boxed{(1.373,\ 2.187)\text{ cm}}$$
+  </li>
+  <li>We are $95\%$ confident that the population mean increase in stride length after the rehabilitation program is between approximately $1.373$ and $2.187$ cm.</li>
+  <li>Yes. The null value $0$ lies outside the $95\%$ confidence interval, so the corresponding two-sided test rejects $H_0$ at $\alpha=0.05$.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $12$
+
+For each study, identify whether the data are one sample, matched pairs or two independent samples. State the appropriate $t$ procedure.
+
+1. Blood glucose is measured in $18$ dogs before and after insulin treatment.
+2. Body mass is measured for a random sample of $30$ adult raccoons.
+3. Wing length is compared between unrelated samples of male and female songbirds.
+4. Twelve agricultural fields are divided into matched pairs based on soil type, and the two fertilizers are assigned within each pair.
+5. Two measurements are taken from the same laboratory specimen using different instruments.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The data are matched pairs because each dog contributes two linked measurements. Calculate after-minus-before differences and use a one-sample $t$ procedure on the differences.</li>
+  <li>This is one quantitative sample. Use a one-sample $t$ procedure for the population mean raccoon mass.</li>
+  <li>The male and female birds are unrelated, so these are two independent samples. Use a Welch two-sample $t$ procedure.</li>
+  <li>The fields are deliberately matched. Calculate the within-pair fertilizer differences and use a one-sample $t$ procedure on those differences.</li>
+  <li>The measurements are paired within specimens. Calculate one instrument difference per specimen and use a matched pairs $t$ procedure.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $13$
+
+A researcher is considering one-sample $t$ inference in each situation below. For each situation, decide whether the procedure is reasonably appropriate and explain why.
+
+1. A random sample of $8$ observations is approximately symmetric and contains no outliers.
+2. A random sample of $9$ observations is strongly right-skewed.
+3. A random sample of $22$ observations is mildly right-skewed with no outliers.
+4. A random sample of $45$ observations is strongly right-skewed but contains no isolated extreme values.
+5. A convenience sample of $500$ observations is approximately Normal.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>The procedure can be reasonable. The sample is small, so the approximately symmetric shape and absence of outliers are important.</li>
+  <li>The procedure is not reliable without further justification. Strong skewness is concerning for such a small sample.</li>
+  <li>The procedure is generally reasonable. A moderate sample can tolerate mild skewness when no outliers are present.</li>
+  <li>The procedure is generally reasonable for the sampling distribution of the mean because the sample is large. The researcher should still examine the scientific meaning of the mean and the influence of the largest observations.</li>
+  <li>The Normal shape does not repair the sampling problem. The calculation may describe the observed convenience sample, but population generalization is not justified by the sample size alone.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $14$
+
+A physics laboratory records $n=12$ measurements of a material's breaking strength. The sample mean is $\bar{x}=21.4$ kN and the sample standard deviation is $s=3.6$ kN.
+
+1. Calculate the estimated standard error.
+2. Calculate the margin of error that would result from incorrectly using $z^*=1.960$.
+3. Calculate the correct $95\%$ margin of error using $t^*=2.201$.
+4. Construct the correct $95\%$ confidence interval.
+5. Explain why the $t$ interval is wider.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>
+  $$\operatorname{SE}=\frac{3.6}{\sqrt{12}}\approx\boxed{1.039\text{ kN}}$$
+  </li>
+  <li>The incorrect Normal margin is
+  $$m_z=1.960(1.039)\approx\boxed{2.037\text{ kN}}$$
+  </li>
+  <li>The correct margin is
+  $$m_t=2.201(1.039)\approx\boxed{2.287\text{ kN}}$$
+  </li>
+  <li>
+  $$21.4\pm2.287=\boxed{(19.113,\ 23.687)\text{ kN}}$$
+  </li>
+  <li>The population standard deviation is unknown and is estimated using $s$. The $t$ distribution with $11$ degrees of freedom has heavier tails than the Standard Normal distribution, so its critical value is larger and the interval reflects the additional uncertainty.</li>
+</ol>
+</div>
+</details>
+:::
+
+::: {.question-card}
+### Question $15$
+
+A fisheries laboratory measures serum sodium concentration, in mmol/L, for a random sample of $12$ Atlantic salmon:
+
+$$
+129,\ 134,\ 132,\ 135,\ 131,\ 133,\ 136,\ 128,\ 134,\ 132,\ 137,\ 130
+$$
+
+The reference population mean is $130$ mmol/L.
+
+1. Calculate $\bar{x}$, $s$ and the standard error.
+2. State hypotheses for testing whether the population mean differs from $130$ mmol/L.
+3. Calculate the test statistic and two-sided $P$-value.
+4. Construct a $95\%$ confidence interval using $t^*=2.201$.
+5. State the test conclusion, interpret the interval and identify one condition that should be checked.
+
+<details class="solution">
+<summary>Show solution</summary>
+<div class="solution-body">
+<ol>
+  <li>
+  $$\bar{x}=\boxed{132.583\text{ mmol/L}}$$
+  $$s\approx\boxed{2.778\text{ mmol/L}}$$
+  $$\operatorname{SE}=\frac{2.778}{\sqrt{12}}\approx\boxed{0.802\text{ mmol/L}}$$
+  </li>
+  <li>
+  $$H_0:\mu=130\qquad H_a:\mu\neq130$$
+  </li>
+  <li>
+  $$t=\frac{132.583-130}{0.802}\approx\boxed{3.221}$$
+  with $df=11$. The two-sided probability is
+  $$P=2P(T_{11}\geq3.221)\approx\boxed{0.0081}$$
+  </li>
+  <li>The margin of error is
+  $$m=2.201(0.802)\approx1.765$$
+  so
+  $$132.583\pm1.765=\boxed{(130.818,\ 134.349)\text{ mmol/L}}$$
+  </li>
+  <li>Because $0.0081<0.05$, reject $H_0$. The data provide statistically significant evidence that the population mean differs from $130$ mmol/L. We are $95\%$ confident that the population mean lies between approximately $130.818$ and $134.349$ mmol/L. Since $n=12$ is small, the sample distribution should be reasonably symmetric and free of outliers, and the sampling process should support independence and population representation.</li>
+</ol>
+
+```{r q15-salmon-inference, echo=TRUE}
+sodium <- c(
+  129, 134, 132, 135, 131, 133,
+  136, 128, 134, 132, 137, 130
+)
+
+mean(sodium)
+sd(sodium)
+t.test(sodium, mu = 130, alternative = "two.sided")
+```
+</div>
+</details>
+:::
+
+
+
+

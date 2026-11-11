@@ -1,0 +1,2089 @@
+---
+title: "Chapter 17: Inference about a Population Mean"
+subtitle: "The Practice of Statistics in the Life Sciences<br>by Brigitte Baldi and David S. Moore"
+author: "Instructor: Ali Raisolsadat"
+date: "Part IV: Specific Inference Procedures"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+    number_sections: true
+    toc_depth: 4
+    theme: flatly
+    highlight: tango
+    code_folding: show
+    self_contained: true
+    pandoc_args:
+      - "--number-offset=16"
+---
+
+<style>
+:root {
+  --toc-width: 300px;
+  --toc-collapsed-gutter: 72px;
+  --chapter-width: 1100px;
+  --ink: #23364a;
+  --accent: #2c3e50;
+  --line: #d8dee4;
+  --toc-background: #f7f9fb;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+
+.main-container { max-width: var(--chapter-width) !important; }
+.section.chapter-root > h1 { display: none !important; }
+
+#TOC li:has(> a[href="#chapter-17"]) > a[href="#chapter-17"] {
+  display: none !important;
+}
+
+#TOC li:has(> a[href="#chapter-17"]) { margin-top: 0 !important; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+#toc-toggle {
+  position: fixed;
+  top: 16px;
+  left: calc(var(--toc-width) + 14px);
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid #c7d0d9;
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--ink);
+  box-shadow: 0 2px 8px rgba(24, 39, 55, 0.13);
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+  z-index: 1200;
+  transition: left 0.25s ease, background-color 0.2s ease;
+}
+
+#toc-toggle:hover { background: #eef3f7; }
+#toc-toggle .menu-icon { display: none; }
+#toc-toggle .close-icon { display: inline; }
+body.toc-collapsed #toc-toggle { left: 14px; }
+body.toc-collapsed #toc-toggle .menu-icon { display: inline; }
+body.toc-collapsed #toc-toggle .close-icon { display: none; }
+
+@media screen and (min-width: 992px) {
+  .main-container {
+    width: 100% !important;
+    max-width: none !important;
+    padding-left: calc(var(--toc-width) + 30px) !important;
+    padding-right: 35px !important;
+    box-sizing: border-box !important;
+    transition: padding-left 0.25s ease;
+  }
+
+  body.toc-collapsed .main-container {
+    padding-left: var(--toc-collapsed-gutter) !important;
+  }
+
+  .main-container > .row-fluid > .col-xs-12.col-sm-4.col-md-3,
+  .main-container > .row > .col-xs-12.col-sm-4.col-md-3 {
+    width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #TOC,
+  #TOC.tocify {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: var(--toc-width) !important;
+    max-height: 100vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 72px 16px 28px 18px !important;
+    background: var(--toc-background) !important;
+    border: 0 !important;
+    border-right: 1px solid var(--line) !important;
+    border-radius: 0 !important;
+    z-index: 1100 !important;
+    transform: translateX(0);
+    transition: transform 0.25s ease;
+  }
+
+  body.toc-collapsed #TOC,
+  body.toc-collapsed #TOC.tocify {
+    transform: translateX(calc(-1 * var(--toc-width)));
+  }
+
+  #TOC a {
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  #TOC .tocify-item { border-radius: 4px; }
+  #TOC .tocify-item a { color: var(--ink); text-decoration: none; }
+  #TOC .tocify-item:hover { background: #e9eef3; }
+  #TOC .tocify-item.active { background: var(--accent) !important; }
+  #TOC .tocify-item.active a { color: #ffffff !important; }
+
+  .toc-content,
+  .toc-content.col-xs-12.col-sm-8.col-md-9 {
+    width: 100% !important;
+    max-width: var(--chapter-width) !important;
+    float: none !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .main-container {
+    width: auto !important;
+    max-width: var(--chapter-width) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 70px 18px 24px !important;
+    box-sizing: border-box !important;
+  }
+
+  #toc-toggle,
+  body.toc-collapsed #toc-toggle { left: 12px; }
+
+  #toc-toggle .menu-icon,
+  body.toc-collapsed #toc-toggle .menu-icon { display: inline; }
+
+  #toc-toggle .close-icon,
+  body.toc-collapsed #toc-toggle .close-icon { display: none; }
+
+  body.toc-mobile-open #toc-toggle .menu-icon { display: none; }
+  body.toc-mobile-open #toc-toggle .close-icon { display: inline; }
+
+  #TOC,
+  #TOC.tocify {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: min(84vw, 320px) !important;
+    max-height: 100vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 72px 18px 28px !important;
+    background: var(--toc-background) !important;
+    border: 0 !important;
+    border-right: 1px solid var(--line) !important;
+    border-radius: 0 !important;
+    z-index: 1100 !important;
+    transform: translateX(-105%);
+    transition: transform 0.25s ease;
+  }
+
+  body.toc-mobile-open #TOC,
+  body.toc-mobile-open #TOC.tocify {
+    transform: translateX(0);
+    box-shadow: 6px 0 18px rgba(24, 39, 55, 0.16);
+  }
+}
+
+h1, h2, h3, h4, h5 { margin-top: 1.6em; }
+h2 { border-bottom: 3px solid var(--accent); padding-bottom: 0.25em; }
+h3 { border-bottom: 1px solid var(--line); padding-bottom: 0.2em; }
+
+blockquote {
+  border-left: 4px solid var(--accent);
+  background: #f7f9fa;
+  padding: 0.7em 1em;
+  margin: 1.2em 0;
+}
+
+table {
+  width: 100%;
+  margin: 1.35em auto;
+  border-collapse: separate !important;
+  border-spacing: 0;
+  background: #ffffff;
+  border: 1px solid #d6dde5;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(24, 39, 55, 0.06);
+}
+
+table thead th {
+  padding: 0.72em 0.9em !important;
+  background: var(--accent);
+  color: #ffffff;
+  border: 0 !important;
+  font-weight: 700;
+}
+
+table tbody td {
+  padding: 0.65em 0.9em !important;
+  border: 0 !important;
+  border-bottom: 1px solid #e5e9ee !important;
+}
+
+table tbody tr:nth-child(even) td { background: #f7f9fb; }
+table tbody tr:hover td { background: #eef4f8; }
+table tbody tr:last-child td { border-bottom: 0 !important; }
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.4em auto;
+  border: 1px solid #e1e4e8;
+  border-radius: 7px;
+}
+
+.math.display { overflow-x: auto; }
+
+.btn-code,
+.code-folding-btn,
+div.btn-group.pull-right {
+  display: none !important;
+}
+</style>
+
+<button id="toc-toggle"
+        type="button"
+        aria-label="Toggle table of contents"
+        aria-expanded="true">
+  <span class="menu-icon" aria-hidden="true">&#9776;</span>
+  <span class="close-icon" aria-hidden="true">&times;</span>
+  <span class="sr-only">Toggle table of contents</span>
+</button>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const button = document.getElementById("toc-toggle");
+  if (!button) return;
+
+  button.addEventListener("click", function () {
+    if (window.innerWidth <= 991) {
+      document.body.classList.toggle("toc-mobile-open");
+      button.setAttribute(
+        "aria-expanded",
+        document.body.classList.contains("toc-mobile-open")
+      );
+    } else {
+      document.body.classList.toggle("toc-collapsed");
+      button.setAttribute(
+        "aria-expanded",
+        !document.body.classList.contains("toc-collapsed")
+      );
+    }
+  });
+});
+</script>
+
+```{r setup, include=FALSE, echo=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  error = FALSE,
+  fig.align = "center",
+  fig.width = 7.4,
+  fig.height = 4.4
+)
+
+if (!requireNamespace("ggplot2", quietly = TRUE)) {
+  stop("The ggplot2 package must be installed before this chapter is knitted.")
+}
+
+suppressPackageStartupMessages({
+  library(ggplot2)
+})
+
+lecture_chart_theme <- theme_minimal(base_size = 11) +
+  theme(
+    plot.title = element_text(size = 13, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 10.5, hjust = 0.5),
+    axis.title = element_text(size = 11.5),
+    axis.text = element_text(size = 9.5, colour = "#333333"),
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "white", colour = NA),
+    panel.background = element_rect(fill = "white", colour = NA),
+    plot.margin = margin(8, 10, 8, 10)
+  )
+
+save_plot <- function(filename, plot, width = 7.4, height = 4.4) {
+  ggsave(
+    filename = filename,
+    plot = plot,
+    width = width,
+    height = height,
+    units = "in",
+    dpi = 300,
+    bg = "white"
+  )
+}
+
+# Figure 1: Standard Normal and selected t distributions
+t_grid <- seq(-4.5, 4.5, length.out = 1200)
+
+t_density_data <- rbind(
+  data.frame(
+    value = t_grid,
+    density = dnorm(t_grid),
+    distribution = "Standard Normal"
+  ),
+  data.frame(
+    value = t_grid,
+    density = dt(t_grid, df = 5),
+    distribution = "t, df = 5"
+  ),
+  data.frame(
+    value = t_grid,
+    density = dt(t_grid, df = 10),
+    distribution = "t, df = 10"
+  ),
+  data.frame(
+    value = t_grid,
+    density = dt(t_grid, df = 20),
+    distribution = "t, df = 20"
+  )
+)
+
+t_density_data$distribution <- factor(
+  t_density_data$distribution,
+  levels = c(
+    "Standard Normal",
+    "t, df = 5",
+    "t, df = 10",
+    "t, df = 20"
+  )
+)
+
+p_t_distributions <- ggplot(
+  t_density_data,
+  aes(x = value, y = density, colour = distribution)
+) +
+  geom_line(linewidth = 1) +
+  scale_colour_manual(
+    values = c(
+      "Standard Normal" = "#222222",
+      "t, df = 5" = "#B23A48",
+      "t, df = 10" = "#D08C2F",
+      "t, df = 20" = "#294D73"
+    )
+  ) +
+  labs(
+    title = "The t Distributions Approach the Standard Normal Distribution",
+    x = "Standardized value",
+    y = "Density",
+    colour = "Distribution"
+  ) +
+  lecture_chart_theme +
+  theme(legend.position = "bottom")
+
+# Data for the testosterone confidence-interval example
+testosterone <- c(
+  0.30, 0.24, 0.19, 0.17, 0.18,
+  0.23, 0.24, 0.06, 0.15, 0.17,
+  0.18, 0.17, 0.15, 0.12, 0.25,
+  0.25, 0.25, 0.32, 0.35, 0.37,
+  0.39, 0.46, 0.49, 0.42, 0.36
+)
+
+p_testosterone <- ggplot(
+  data.frame(testosterone = testosterone, row = 1),
+  aes(x = testosterone, y = row)
+) +
+  geom_jitter(
+    height = 0.08,
+    width = 0,
+    size = 2.8,
+    colour = "#294D73",
+    alpha = 0.85
+  ) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(
+    title = "Plasma Testosterone Concentrations",
+    subtitle = "Twenty-five obese adolescent males",
+    x = "Testosterone concentration (nmol/L)"
+  ) +
+  lecture_chart_theme
+
+# Data for the one-sample t-test example
+pwv <- c(
+  18.8, 17.6, 17.5, 16.0, 14.8, 14.1,
+  13.7, 13.1, 12.9, 12.9, 12.4, 10.1,
+  9.3, 9.1, 8.3, 8.3, 7.9, 7.2
+)
+
+p_pwv <- ggplot(
+  data.frame(pwv = pwv, row = 1),
+  aes(x = pwv, y = row)
+) +
+  geom_jitter(
+    height = 0.08,
+    width = 0,
+    size = 2.8,
+    colour = "#7D3C55",
+    alpha = 0.85
+  ) +
+  geom_vline(
+    xintercept = 6.6,
+    linetype = "dashed",
+    colour = "#294D73",
+    linewidth = 0.9
+  ) +
+  annotate(
+    "text",
+    x = 6.75,
+    y = 1.12,
+    label = "Reference value: 6.6",
+    hjust = 0,
+    colour = "#294D73"
+  ) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(
+    title = "Pulse Wave Velocity in Children with Progeria",
+    x = "Pulse wave velocity (m/s)"
+  ) +
+  lecture_chart_theme
+
+# Matched measurements before and after treatment
+before <- c(
+  18.8, 17.6, 17.5, 16.0, 14.8, 14.1,
+  13.7, 13.1, 12.9, 12.9, 12.4, 10.1,
+  9.3, 9.1, 8.3, 7.9, 8.3, 7.2
+)
+
+after <- c(
+  12.6, 10.8, 10.1, 10.1, 9.2, 7.6,
+  10.8, 7.7, 6.8, 7.5, 9.4, 6.4,
+  9.0, 6.2, 7.2, 7.3, 5.7, 9.1
+)
+
+paired_long <- data.frame(
+  child = rep(seq_along(before), each = 2),
+  condition = factor(
+    rep(c("Before treatment", "After treatment"), times = length(before)),
+    levels = c("Before treatment", "After treatment")
+  ),
+  pwv = as.vector(rbind(before, after))
+)
+
+p_before_after <- ggplot(
+  paired_long,
+  aes(x = condition, y = pwv, group = child)
+) +
+  geom_line(colour = "#9AA7B2", linewidth = 0.65, alpha = 0.8) +
+  geom_point(aes(colour = condition), size = 2.5) +
+  scale_colour_manual(
+    values = c(
+      "Before treatment" = "#B23A48",
+      "After treatment" = "#294D73"
+    )
+  ) +
+  labs(
+    title = "Paired Pulse Wave Velocity Measurements",
+    subtitle = "Each line represents one child",
+    x = NULL,
+    y = "Pulse wave velocity (m/s)",
+    colour = NULL
+  ) +
+  lecture_chart_theme +
+  theme(legend.position = "none")
+
+paired_difference <- after - before
+
+p_paired_difference <- ggplot(
+  data.frame(difference = paired_difference, row = 1),
+  aes(x = difference, y = row)
+) +
+  geom_vline(
+    xintercept = 0,
+    linetype = "dashed",
+    colour = "#555555"
+  ) +
+  geom_jitter(
+    height = 0.08,
+    width = 0,
+    size = 2.8,
+    colour = "#294D73",
+    alpha = 0.85
+  ) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(
+    title = "Paired Differences in Pulse Wave Velocity",
+    subtitle = "Difference = after treatment - before treatment",
+    x = "Paired difference (m/s)"
+  ) +
+  lecture_chart_theme
+
+# Illustrative shapes for the practical robustness guidelines
+set.seed(1210)
+
+robustness_data <- rbind(
+  data.frame(
+    value = c(3.4, 3.7, 3.9, 4.0, 4.1, 4.2, 4.3, 4.5, 4.6, 4.8, 11.7),
+    sample = "Small sample with an outlier"
+  ),
+  data.frame(
+    value = c(
+      5.2, 5.5, 5.7, 5.8, 5.9,
+      6.0, 6.1, 6.2, 6.4, 6.5,
+      6.7, 6.9, 7.2, 7.6, 8.1
+    ),
+    sample = "Moderate sample with mild skew"
+  ),
+  data.frame(
+    value = rgamma(120, shape = 2.2, scale = 1.2),
+    sample = "Large sample with strong skew"
+  )
+)
+
+p_robustness <- ggplot(
+  robustness_data,
+  aes(x = value)
+) +
+  geom_histogram(
+    bins = 18,
+    fill = "#6D8EA8",
+    colour = "white"
+  ) +
+  facet_wrap(~ sample, scales = "free", ncol = 1) +
+  labs(
+    title = "Sample Size and Distribution Shape",
+    subtitle = "Illustrative datasets for assessing one-sample t procedures",
+    x = "Observed value",
+    y = "Frequency"
+  ) +
+  lecture_chart_theme
+
+save_plot("fig_ch17_t_distributions.png", p_t_distributions, height = 4.7)
+save_plot("fig_ch17_testosterone_dotplot.png", p_testosterone, height = 3.5)
+save_plot("fig_ch17_pwv_dotplot.png", p_pwv, height = 3.6)
+save_plot("fig_ch17_before_after.png", p_before_after, height = 4.6)
+save_plot("fig_ch17_paired_differences.png", p_paired_difference, height = 3.6)
+save_plot("fig_ch17_robustness.png", p_robustness, height = 7.4)
+```
+
+# Chapter 17 {.chapter-root .unlisted}
+
+## From the $z$ Procedures to the $t$ Procedures
+
+Chapter 14 introduced confidence intervals and hypothesis tests for a population mean $\mu$. Those procedures used the population standard deviation $\sigma$.
+
+The one-sample $z$ standard error is
+
+$$
+\frac{\sigma}{\sqrt{n}}
+$$
+
+In most applications, however, $\sigma$ is unknown. Only the observations in the sample are available, so the population standard deviation must be estimated using the sample standard deviation $s$.
+
+The estimated standard error is
+
+$$
+\frac{s}{\sqrt{n}}
+$$
+
+Replacing $\sigma$ by $s$ introduces additional uncertainty. The Standard Normal distribution no longer describes the standardized sample mean exactly. The appropriate reference distribution is a **Student's $t$ distribution**.
+
+> **Main transition**
+>
+> The logic of confidence intervals and hypothesis tests remains the same. The standard error is estimated from the sample, the reference distribution changes from $z$ to $t$, and the degrees of freedom must be identified.
+
+### Learning Goals
+
+After studying this chapter, you should be able to
+
+1. Assess the conditions for inference about a population mean
+2. Distinguish the population standard deviation, sample standard deviation and standard error
+3. Explain why a $t$ distribution is used when $\sigma$ is unknown
+4. Construct and interpret a one-sample $t$ confidence interval
+5. Conduct and interpret a one-sample $t$ test
+6. Analyze paired measurements through their within-pair differences
+7. Assess whether a $t$ procedure is reasonably robust for a given sample
+8. Use R to check hand calculations and carry out the procedures
+
+---
+
+## Conditions for Inference about a Mean
+
+The mathematical formulas are meaningful only when the data and study design support the procedure.
+
+### Random Sampling or a Comparable Design
+
+The observations should be reasonably viewed as a simple random sample from the population of interest, or as observations produced by a design that supports a similar independence assumption.
+
+This condition determines the scope of the conclusion. A correct calculation cannot make a convenience sample representative of a wider population.
+
+When sampling without replacement from a finite population, a common practical independence condition is that the sample contains no more than $10\%$ of the population:
+
+$$
+n\leq0.10N
+$$
+
+where $N$ is the population size.
+
+The $10\%$ condition is not needed when the observations arise from an effectively infinite process or from independent experimental units.
+
+### Distributional Condition
+
+The one-sample $t$ procedures are exact when the population distribution is Normal. Real populations are rarely perfectly Normal, so the practical question is whether the procedure remains reliable for the observed sample size and shape.
+
+The assessment should consider
+
+- The sample size
+- The degree of skewness
+- The presence of outliers
+- Whether the distribution has one meaningful centre
+
+The Central Limit Theorem improves the sampling distribution of $\bar{X}$ as $n$ increases. It does not remove data-quality problems, make observations independent or make a scientifically unhelpful mean meaningful.
+
+### Independence Is More Important Than Perfect Normality
+
+Moderate non-Normality can often be handled by a sufficiently large sample. Dependence, selection bias or systematic measurement error cannot be repaired by increasing the sample size.
+
+For example, repeatedly measuring the same animal and treating every measurement as if it came from a different animal would underestimate uncertainty. The number of recorded measurements may be large, but the observations are not independent experimental units.
+
+> **Priority of conditions**
+>
+> The sampling or study-design condition is usually more important than having data that look exactly Normal.
+
+---
+
+## Standard Deviation and Standard Error
+
+The sample standard deviation and the standard error answer different questions.
+
+### The Sample Standard Deviation
+
+The sample standard deviation is
+
+$$
+s
+=
+\sqrt{
+\frac{
+\sum_{i=1}^{n}(x_i-\bar{x})^2
+}{
+n-1
+}
+}
+$$
+
+It describes how the **individual observations** vary around the sample mean. It estimates the unknown population standard deviation $\sigma$.
+
+The units of $s$ are the original units of the variable.
+
+### The Standard Error of the Sample Mean
+
+The standard error of $\bar{x}$ is
+
+$$
+\operatorname{SE}(\bar{x})
+=
+\frac{s}{\sqrt{n}}
+$$
+
+It estimates how much **sample means** would vary across repeated random samples of size $n$.
+
+The units of the standard error are also the original units of the variable.
+
+| Quantity | What varies? | What it describes |
+|:--|:--|:--|
+| $s$ | Individual observations | Estimated spread of values in the population |
+| $s/\sqrt{n}$ | Sample means | Estimated sample-to-sample spread of $\bar{x}$ |
+
+### Effect of the Sample Size
+
+For the same sample standard deviation, increasing $n$ reduces the standard error.
+
+If the sample size is multiplied by $4$,
+
+$$
+\frac{s}{\sqrt{4n}}
+=
+\frac{1}{2}\frac{s}{\sqrt{n}}
+$$
+
+The standard error is cut in half. The square-root relationship means that substantially greater precision may require a much larger sample.
+
+### A Frequent Mistake
+
+The following expression is not the standard error:
+
+$$
+\frac{s}{n}
+$$
+
+The correct expression divides by the square root of the sample size:
+
+$$
+\boxed{
+\operatorname{SE}(\bar{x})
+=
+\frac{s}{\sqrt{n}}
+}
+$$
+
+---
+
+## The $t$ Distributions
+
+Suppose an SRS of size $n$ comes from a Normal population with mean $\mu$ and standard deviation $\sigma$.
+
+If $\sigma$ were known, the standardized statistic would be
+
+$$
+z
+=
+\frac{\bar{x}-\mu}{\sigma/\sqrt{n}}
+$$
+
+When $\sigma$ is unknown, it is replaced by $s$:
+
+$$
+t
+=
+\frac{\bar{x}-\mu}{s/\sqrt{n}}
+$$
+
+This statistic follows a $t$ distribution with
+
+$$
+\operatorname{df}=n-1
+$$
+
+degrees of freedom.
+
+### Why the Reference Distribution Changes
+
+The denominator $s/\sqrt{n}$ is random because $s$ changes from sample to sample. This extra uncertainty makes the $t$ distribution more spread out than the Standard Normal distribution.
+
+The heavier tails of the $t$ distribution account for the possibility that the sample standard deviation underestimates or overestimates $\sigma$.
+
+### Properties of the $t$ Family
+
+The $t$ distributions form a family rather than one single curve.
+
+- Every $t$ distribution is symmetric about $0$
+- Every $t$ distribution is single-peaked and bell-shaped
+- A $t$ distribution has heavier tails than the Standard Normal distribution
+- Smaller degrees of freedom produce heavier tails
+- As the degrees of freedom increase, the $t$ distribution approaches $N(0,1)$
+
+```{r t-distribution-plot, echo=FALSE, fig.width=7.4, fig.height=4.7}
+p_t_distributions
+```
+
+For a small sample, $s$ is a less stable estimate of $\sigma$, so the critical value must be larger. With a large sample, $s$ estimates $\sigma$ more accurately and the difference between $t^*$ and $z^*$ becomes small.
+
+### Degrees of Freedom
+
+The degrees of freedom identify the specific member of the $t$ family used in a calculation.
+
+For one-sample inference,
+
+$$
+\operatorname{df}=n-1
+$$
+
+The subtraction of one is connected to estimating the population mean with $\bar{x}$. Once the sample mean is fixed, only $n-1$ deviations from the mean can vary freely because
+
+$$
+\sum_{i=1}^{n}(x_i-\bar{x})=0
+$$
+
+For first-year applications, the essential step is to calculate $n-1$ and use the corresponding distribution.
+
+### William S. Gosset and Student's $t$
+
+William S. Gosset developed the $t$ distribution while working for the Guinness brewery. His goal was to make reliable decisions from small experimental samples used in brewing and agriculture.
+
+Because the company restricted employees from publishing proprietary work, Gosset published under the pen name **Student**. The distribution is therefore often called **Student's $t$ distribution**.
+
+This history reflects the practical purpose of the method: accounting for the extra uncertainty created when the population standard deviation must be estimated from a limited sample.
+
+---
+
+## Probabilities and Critical Values in R
+
+The R functions for a $t$ distribution parallel the Normal-distribution functions.
+
+| Task | Standard Normal | $t$ distribution |
+|:--|:--|:--|
+| Left-tail probability | `pnorm()` | `pt()` |
+| Quantile or critical value | `qnorm()` | `qt()` |
+| Density | `dnorm()` | `dt()` |
+| Random values | `rnorm()` | `rt()` |
+
+Every $t$ calculation must include the degrees of freedom.
+
+### Example 17.1: A Left-Tail Probability
+
+Find the area to the left of $t=-3$ under a $t$ distribution with $10$ degrees of freedom:
+
+$$
+P(T\leq-3)
+$$
+
+```{r t-left-tail}
+pt(q = -3, df = 10)
+```
+
+The probability is approximately
+
+$$
+P(T\leq-3)\approx0.006672
+$$
+
+### Example 17.1: An Upper-Tail Critical Value
+
+Find the point $t^*$ with probability $0.05$ to its right under the $t(10)$ distribution.
+
+Equivalently, the area to its left is
+
+$$
+1-0.05=0.95
+$$
+
+```{r t-upper-critical-value}
+qt(p = 0.95, df = 10)
+```
+
+Therefore,
+
+$$
+t^*\approx1.812
+$$
+
+### Two-Sided Critical Values
+
+For a $95\%$ confidence interval, the central area is $0.95$. The remaining area is
+
+$$
+1-0.95=0.05
+$$
+
+and it is divided equally between the two tails:
+
+$$
+\frac{0.05}{2}=0.025
+$$
+
+The upper critical value therefore has cumulative probability $0.975$:
+
+```{r t-two-sided-critical-values}
+qt(0.975, df = c(4, 9, 19, 49, 199))
+```
+
+The critical values decrease toward $1.960$, the Standard Normal critical value for a $95\%$ confidence interval.
+
+---
+
+## The One-Sample $t$ Confidence Interval
+
+The one-sample $t$ confidence interval estimates an unknown population mean when the population standard deviation is also unknown.
+
+For a sample of size $n$, a level $C$ confidence interval is
+
+$$
+\boxed{
+\bar{x}
+\pm
+t^*\frac{s}{\sqrt{n}}
+}
+$$
+
+where
+
+- $\bar{x}$ is the point estimate
+- $s/\sqrt{n}$ is the estimated standard error
+- $t^*$ is the critical value from the $t(n-1)$ distribution
+- $t^*s/\sqrt{n}$ is the margin of error
+
+The interval is exact for a Normal population and approximately correct for a sufficiently large sample under less restrictive population shapes.
+
+### Four-Step Process
+
+A clear confidence-interval solution should follow the same four-step structure used in Chapter 14.
+
+1. **STATE:** Define the population and the parameter $\mu$
+2. **PLAN:** Select the one-sample $t$ confidence interval and the confidence level
+3. **SOLVE:** Assess the conditions, calculate the interval and show the main steps
+4. **CONCLUDE:** Interpret the interval for the population in context
+
+### Example 17.2: Testosterone Concentrations
+
+A study recorded plasma testosterone concentrations for $25$ obese adolescent males. Measurements are in nanomoles per litre of blood.
+
+|  |  |  |  |  |
+|--:|--:|--:|--:|--:|
+| $0.30$ | $0.24$ | $0.19$ | $0.17$ | $0.18$ |
+| $0.23$ | $0.24$ | $0.06$ | $0.15$ | $0.17$ |
+| $0.18$ | $0.17$ | $0.15$ | $0.12$ | $0.25$ |
+| $0.25$ | $0.25$ | $0.32$ | $0.35$ | $0.37$ |
+| $0.39$ | $0.46$ | $0.49$ | $0.42$ | $0.36$ |
+
+The goal is to estimate the population mean testosterone concentration for obese adolescent males similar to those represented by the study.
+
+```{r testosterone-dotplot, echo=FALSE, fig.width=7.4, fig.height=3.5}
+p_testosterone
+```
+
+The dotplot is single-peaked and does not show an extreme outlier. The sample size is modest, so checking the distribution is important.
+
+### Example 17.2: Conditions and Scope
+
+The participants were recruited through one medical centre rather than selected as a genuine SRS from all obese adolescent males.
+
+The mathematical $t$ interval can still describe uncertainty for a population similar to the observed participants, but the study design limits wider generalization.
+
+This distinction is essential:
+
+- The confidence interval addresses random sample-to-sample variation under the model
+- It does not automatically account for selection bias or systematic differences between the participants and a broader population
+
+### Example 17.2: Summary Statistics
+
+The summary statistics are
+
+$$
+n=25
+$$
+
+$$
+\bar{x}=0.2584
+$$
+
+$$
+s\approx0.1115
+$$
+
+The estimated standard error is
+
+$$
+\operatorname{SE}(\bar{x})
+=
+\frac{0.1115}{\sqrt{25}}
+$$
+
+$$
+\operatorname{SE}(\bar{x})
+\approx
+0.0223
+$$
+
+The degrees of freedom are
+
+$$
+\operatorname{df}=25-1=24
+$$
+
+### Example 17.2: Critical Value and Margin of Error
+
+For a $95\%$ confidence interval with $24$ degrees of freedom,
+
+$$
+t^*
+=
+t^*_{0.975,24}
+\approx
+2.064
+$$
+
+The margin of error is
+
+$$
+m
+=
+t^*\frac{s}{\sqrt{n}}
+$$
+
+$$
+m
+=
+2.064
+\left(
+\frac{0.1115}{\sqrt{25}}
+\right)
+$$
+
+$$
+m
+\approx
+0.0460
+$$
+
+### Example 17.2: Confidence Interval
+
+The interval is
+
+$$
+\bar{x}\pm m
+$$
+
+$$
+0.2584\pm0.0460
+$$
+
+The endpoints are
+
+$$
+0.2584-0.0460=0.2124
+$$
+
+$$
+0.2584+0.0460=0.3044
+$$
+
+Therefore, the $95\%$ confidence interval is
+
+$$
+\boxed{
+(0.2124,\ 0.3044)\text{ nmol/L}
+}
+$$
+
+We are $95\%$ confident that the population mean plasma testosterone concentration for obese adolescent males similar to those represented by the study is between approximately $0.212$ and $0.304$ nmol/L.
+
+The confidence level describes the long-run success rate of the procedure. It is not the probability that this already-computed interval contains the fixed parameter.
+
+### Manual Calculation in R
+
+```{r testosterone-manual-calculation}
+testosterone <- c(
+  0.30, 0.24, 0.19, 0.17, 0.18,
+  0.23, 0.24, 0.06, 0.15, 0.17,
+  0.18, 0.17, 0.15, 0.12, 0.25,
+  0.25, 0.25, 0.32, 0.35, 0.37,
+  0.39, 0.46, 0.49, 0.42, 0.36
+)
+
+n_testosterone <- length(testosterone)
+xbar_testosterone <- mean(testosterone)
+s_testosterone <- sd(testosterone)
+df_testosterone <- n_testosterone - 1
+
+se_testosterone <- (
+  s_testosterone / sqrt(n_testosterone)
+)
+
+t_star_testosterone <- qt(
+  p = 0.975,
+  df = df_testosterone
+)
+
+margin_testosterone <- (
+  t_star_testosterone * se_testosterone
+)
+
+ci_testosterone <- c(
+  lower = xbar_testosterone - margin_testosterone,
+  upper = xbar_testosterone + margin_testosterone
+)
+
+c(
+  n = n_testosterone,
+  mean = xbar_testosterone,
+  standard_deviation = s_testosterone,
+  standard_error = se_testosterone,
+  degrees_of_freedom = df_testosterone,
+  critical_value = t_star_testosterone,
+  margin_of_error = margin_testosterone,
+  ci_testosterone
+)
+```
+
+### The Direct R Method
+
+The `t.test()` function constructs the interval directly from the observations.
+
+```{r testosterone-t-test-confidence-interval}
+testosterone_result <- t.test(
+  x = testosterone,
+  conf.level = 0.95
+)
+
+testosterone_result$estimate
+testosterone_result$conf.int
+```
+
+The stored result contains several components. Selecting `estimate` and `conf.int` reports the quantities relevant to this confidence-interval question without interpreting the function's default test of a zero mean.
+
+> **Reading software output**
+>
+> Software may report more information than the research question requires. Interpret only the components that correspond to the stated analysis.
+
+### Why the $t$ Interval Is Wider Than the Corresponding $z$ Interval
+
+For a $95\%$ interval,
+
+$$
+z^*=1.960
+$$
+
+but with $24$ degrees of freedom,
+
+$$
+t^*\approx2.064
+$$
+
+The larger critical value accounts for the additional uncertainty from estimating $\sigma$ with $s$.
+
+As $n$ increases, the difference between $t^*$ and $z^*$ becomes small. The $t$ procedure remains appropriate because it automatically adjusts to the available degrees of freedom.
+
+---
+
+## The One-Sample $t$ Test
+
+The one-sample $t$ test evaluates a claim about a population mean when $\sigma$ is unknown.
+
+The hypotheses take one of the following forms:
+
+$$
+H_0:\mu=\mu_0
+$$
+
+$$
+H_a:\mu>\mu_0
+$$
+
+or
+
+$$
+H_a:\mu<\mu_0
+$$
+
+or
+
+$$
+H_a:\mu\ne\mu_0
+$$
+
+The direction of the alternative must be chosen from the research question before examining the sample result.
+
+### Test Statistic
+
+The one-sample $t$ statistic is
+
+$$
+\boxed{
+t
+=
+\frac{\bar{x}-\mu_0}{s/\sqrt{n}}
+}
+$$
+
+It measures the distance between the observed sample mean and the null value in estimated standard-error units.
+
+Under $H_0$, the statistic is compared with a $t$ distribution having
+
+$$
+\operatorname{df}=n-1
+$$
+
+### P-Value by Alternative
+
+Let $T$ have a $t(n-1)$ distribution and let $t_{\text{obs}}$ be the observed test statistic.
+
+| Alternative | P-value |
+|:--|:--|
+| $H_a:\mu>\mu_0$ | $P(T\geq t_{\text{obs}})$ |
+| $H_a:\mu<\mu_0$ | $P(T\leq t_{\text{obs}})$ |
+| $H_a:\mu\ne\mu_0$ | $2P(T\geq|t_{\text{obs}}|)$ |
+
+The tail or tails are determined by the alternative hypothesis, not by whether the observed statistic happens to be positive or negative.
+
+### Four-Step Process
+
+1. **STATE:** Define the population mean and the question
+2. **PLAN:** State $H_0$ and $H_a$ and select a one-sample $t$ test
+3. **SOLVE:** Assess the conditions, calculate $t$, determine the P-value and compare it with $\alpha$ when a decision threshold is specified
+4. **CONCLUDE:** Describe the evidence and conclusion in context
+
+### Example 17.3: Pulse Wave Velocity and Progeria
+
+Hutchinson--Gilford progeria syndrome is a rare genetic condition associated with accelerated aging. Pulse wave velocity (PWV) is used as a measure of vascular stiffness.
+
+PWV was measured in $18$ children diagnosed with progeria:
+
+|  |  |  |  |  |  |
+|--:|--:|--:|--:|--:|--:|
+| $18.8$ | $17.6$ | $17.5$ | $16.0$ | $14.8$ | $14.1$ |
+| $13.7$ | $13.1$ | $12.9$ | $12.9$ | $12.4$ | $10.1$ |
+| $9.3$ | $9.1$ | $8.3$ | $8.3$ | $7.9$ | $7.2$ |
+
+Values greater than $6.6$ m/s would be considered abnormal for healthy children. The question is whether the population mean PWV for children with progeria is greater than $6.6$ m/s.
+
+```{r pwv-dotplot, echo=FALSE, fig.width=7.4, fig.height=3.6}
+p_pwv
+```
+
+The plot does not show an obvious outlier or strong departure from a single-peaked distribution.
+
+### Example 17.3: Hypotheses
+
+Let $\mu$ be the population mean PWV for children diagnosed with progeria who are similar to those represented by the study.
+
+The null hypothesis is
+
+$$
+H_0:\mu=6.6
+$$
+
+The alternative hypothesis is
+
+$$
+H_a:\mu>6.6
+$$
+
+The test is upper-tailed because the scientific question asks whether the mean is higher than the reference value.
+
+### Example 17.3: Summary Statistics and Standard Error
+
+The data give
+
+$$
+n=18
+$$
+
+$$
+\bar{x}\approx12.444
+$$
+
+$$
+s\approx3.638
+$$
+
+The standard error is
+
+$$
+\operatorname{SE}(\bar{x})
+=
+\frac{3.638}{\sqrt{18}}
+$$
+
+$$
+\operatorname{SE}(\bar{x})
+\approx
+0.857
+$$
+
+The degrees of freedom are
+
+$$
+\operatorname{df}=18-1=17
+$$
+
+### Example 17.3: Test Statistic
+
+The test statistic is
+
+$$
+t
+=
+\frac{\bar{x}-\mu_0}{s/\sqrt{n}}
+$$
+
+$$
+t
+=
+\frac{12.444-6.6}{3.638/\sqrt{18}}
+$$
+
+$$
+t
+\approx
+6.816
+$$
+
+The observed sample mean is approximately $6.816$ estimated standard errors above the null mean.
+
+### Example 17.3: P-Value
+
+Because the alternative is upper-tailed,
+
+$$
+P\text{-value}
+=
+P(T_{17}\geq6.816)
+$$
+
+In R,
+
+```{r pwv-manual-p-value}
+t_observed <- 6.816273
+pt(
+  q = t_observed,
+  df = 17,
+  lower.tail = FALSE
+)
+```
+
+The P-value is approximately
+
+$$
+1.50\times10^{-6}
+$$
+
+Under the null model, a sample mean at least as high as the observed one would be extremely unusual for a random sample of $18$ children.
+
+The data provide very strong evidence that the population mean PWV for children with progeria similar to those represented by the study is greater than $6.6$ m/s.
+
+### Manual Test Calculation in R
+
+```{r pwv-manual-test}
+pwv <- c(
+  18.8, 17.6, 17.5, 16.0, 14.8, 14.1,
+  13.7, 13.1, 12.9, 12.9, 12.4, 10.1,
+  9.3, 9.1, 8.3, 8.3, 7.9, 7.2
+)
+
+mu_null_pwv <- 6.6
+n_pwv <- length(pwv)
+xbar_pwv <- mean(pwv)
+s_pwv <- sd(pwv)
+se_pwv <- s_pwv / sqrt(n_pwv)
+df_pwv <- n_pwv - 1
+
+t_pwv <- (
+  (xbar_pwv - mu_null_pwv) / se_pwv
+)
+
+p_pwv_upper <- pt(
+  q = t_pwv,
+  df = df_pwv,
+  lower.tail = FALSE
+)
+
+c(
+  mean = xbar_pwv,
+  standard_deviation = s_pwv,
+  standard_error = se_pwv,
+  t_statistic = t_pwv,
+  degrees_of_freedom = df_pwv,
+  p_value = p_pwv_upper
+)
+```
+
+### Direct Test with `t.test()`
+
+```{r pwv-direct-test}
+t.test(
+  x = pwv,
+  mu = 6.6,
+  alternative = "greater"
+)
+```
+
+The value supplied to `alternative` must match the stated research hypothesis.
+
+| Research alternative | R argument |
+|:--|:--|
+| $\mu>\mu_0$ | `alternative = "greater"` |
+| $\mu<\mu_0$ | `alternative = "less"` |
+| $\mu\ne\mu_0$ | `alternative = "two.sided"` |
+
+### Statistical Significance and Effect Size
+
+The test result is statistically significant, but the P-value does not measure the size or clinical importance of the difference.
+
+The observed difference from the reference value is
+
+$$
+12.444-6.6=5.844\text{ m/s}
+$$
+
+A confidence interval can describe the plausible range of the population mean:
+
+```{r pwv-confidence-interval}
+t.test(
+  x = pwv,
+  conf.level = 0.95
+)$conf.int
+```
+
+The interval describes uncertainty about the population mean under the model. Whether the observed elevation is clinically important requires medical expertise and consideration of the reference group, measurement process and patient population.
+
+### What Failure to Reject Would Mean
+
+If the P-value were not small, the appropriate conclusion would be that the data do not provide sufficient evidence against $H_0$.
+
+It would not be correct to claim that
+
+- The null hypothesis has been proved
+- The population mean equals the null value exactly
+- No meaningful difference exists
+
+A nonsignificant result may reflect a small effect, high variability, a small sample or a combination of these factors.
+
+---
+
+## Matched Pairs $t$ Procedures
+
+Many studies measure the same subject twice or match different subjects using relevant characteristics.
+
+Common matched-pairs designs include
+
+- Measurements before and after treatment on the same individual
+- Two treatments applied to the same experimental unit at different times
+- Two individuals matched on age, sex, species, baseline condition or another relevant characteristic
+
+The matching creates dependence between the two observations in each pair.
+
+### Reduce Each Pair to One Difference
+
+For pair $i$, define
+
+$$
+d_i
+=
+\text{response under condition 2}
+-
+\text{response under condition 1}
+$$
+
+The paired analysis then uses the one-sample $t$ procedures on
+
+$$
+d_1,d_2,\ldots,d_n
+$$
+
+The parameter is
+
+$$
+\mu_d
+$$
+
+the population mean paired difference.
+
+The sign of the difference must be defined before the hypotheses are written. Reversing the subtraction reverses the signs of $\bar{d}$ and the test statistic and reverses the direction of a one-sided alternative.
+
+### Conditions for Matched Pairs
+
+The one-sample conditions apply to the **differences**:
+
+1. The pairs should be independent of one another
+2. The pairs should represent the target population or arise from an appropriate randomized design
+3. The distribution of the paired differences should be sufficiently close to Normal for the sample size, with particular attention to outliers
+
+The two observations within a pair are expected to be dependent. That dependence is the reason the paired design is used.
+
+### Example 17.4: Treatment for Progeria
+
+The $18$ children in the PWV study received lonafarnib for two years. PWV was measured before and after treatment.
+
+Define the paired difference as
+
+$$
+d
+=
+\text{after-treatment PWV}
+-
+\text{before-treatment PWV}
+$$
+
+A negative value represents a reduction in PWV.
+
+| Child | Before | After | $d$ | Child | Before | After | $d$ |
+|:--:|--:|--:|--:|:--:|--:|--:|--:|
+| $1$ | $18.8$ | $12.6$ | $-6.2$ | $10$ | $12.9$ | $7.5$ | $-5.4$ |
+| $2$ | $17.6$ | $10.8$ | $-6.8$ | $11$ | $12.4$ | $9.4$ | $-3.0$ |
+| $3$ | $17.5$ | $10.1$ | $-7.4$ | $12$ | $10.1$ | $6.4$ | $-3.7$ |
+| $4$ | $16.0$ | $10.1$ | $-5.9$ | $13$ | $9.3$ | $9.0$ | $-0.3$ |
+| $5$ | $14.8$ | $9.2$ | $-5.6$ | $14$ | $9.1$ | $6.2$ | $-2.9$ |
+| $6$ | $14.1$ | $7.6$ | $-6.5$ | $15$ | $8.3$ | $7.2$ | $-1.1$ |
+| $7$ | $13.7$ | $10.8$ | $-2.9$ | $16$ | $7.9$ | $7.3$ | $-0.6$ |
+| $8$ | $13.1$ | $7.7$ | $-5.4$ | $17$ | $8.3$ | $5.7$ | $-2.6$ |
+| $9$ | $12.9$ | $6.8$ | $-6.1$ | $18$ | $7.2$ | $9.1$ | $1.9$ |
+
+```{r paired-before-after-plot, echo=FALSE, fig.width=7.4, fig.height=4.6}
+p_before_after
+```
+
+The connecting lines preserve the pairing and show that most participants had lower PWV after treatment.
+
+### Example 17.4: Hypotheses
+
+Let $\mu_d$ be the population mean of
+
+$$
+d=\text{after}-\text{before}
+$$
+
+The null hypothesis states that the population mean change is zero:
+
+$$
+H_0:\mu_d=0
+$$
+
+The treatment is expected to reduce PWV, which corresponds to a negative difference:
+
+$$
+H_a:\mu_d<0
+$$
+
+```{r paired-difference-plot, echo=FALSE, fig.width=7.4, fig.height=3.6}
+p_paired_difference
+```
+
+The distribution of differences is mildly skewed but does not contain a severe outlier. With $n=18$, the one-sample $t$ procedure is reasonable.
+
+### Example 17.4: Summary Statistics
+
+For the $18$ paired differences,
+
+$$
+n=18
+$$
+
+$$
+\bar{d}\approx-3.917
+$$
+
+$$
+s_d\approx2.644
+$$
+
+The standard error is
+
+$$
+\operatorname{SE}(\bar{d})
+=
+\frac{s_d}{\sqrt{n}}
+$$
+
+$$
+\operatorname{SE}(\bar{d})
+=
+\frac{2.644}{\sqrt{18}}
+$$
+
+$$
+\operatorname{SE}(\bar{d})
+\approx
+0.623
+$$
+
+### Example 17.4: Test Statistic and P-Value
+
+The test statistic is
+
+$$
+t
+=
+\frac{\bar{d}-0}{s_d/\sqrt{n}}
+$$
+
+$$
+t
+=
+\frac{-3.917-0}{2.644/\sqrt{18}}
+$$
+
+$$
+t
+\approx
+-6.286
+$$
+
+The degrees of freedom are
+
+$$
+\operatorname{df}=18-1=17
+$$
+
+Because the alternative is lower-tailed,
+
+$$
+P\text{-value}
+=
+P(T_{17}\leq-6.286)
+$$
+
+$$
+P\text{-value}
+\approx
+4.10\times10^{-6}
+$$
+
+The data provide very strong evidence that the population mean after-treatment PWV is lower than the population mean before-treatment PWV for comparable children receiving this treatment.
+
+### Manual Paired Calculation in R
+
+```{r paired-manual-calculation}
+before <- c(
+  18.8, 17.6, 17.5, 16.0, 14.8, 14.1,
+  13.7, 13.1, 12.9, 12.9, 12.4, 10.1,
+  9.3, 9.1, 8.3, 7.9, 8.3, 7.2
+)
+
+after <- c(
+  12.6, 10.8, 10.1, 10.1, 9.2, 7.6,
+  10.8, 7.7, 6.8, 7.5, 9.4, 6.4,
+  9.0, 6.2, 7.2, 7.3, 5.7, 9.1
+)
+
+difference <- after - before
+
+n_difference <- length(difference)
+mean_difference <- mean(difference)
+sd_difference <- sd(difference)
+se_difference <- (
+  sd_difference / sqrt(n_difference)
+)
+
+t_difference <- (
+  mean_difference / se_difference
+)
+
+p_difference <- pt(
+  q = t_difference,
+  df = n_difference - 1
+)
+
+c(
+  mean_difference = mean_difference,
+  standard_deviation = sd_difference,
+  standard_error = se_difference,
+  t_statistic = t_difference,
+  p_value = p_difference
+)
+```
+
+### Direct Paired Test in R
+
+```{r paired-direct-test}
+t.test(
+  x = after,
+  y = before,
+  paired = TRUE,
+  alternative = "less"
+)
+```
+
+The argument `paired = TRUE` is essential. It tells R to calculate the within-child differences before performing the one-sample analysis.
+
+An equivalent command is
+
+```{r paired-equivalent-test}
+t.test(
+  x = difference,
+  mu = 0,
+  alternative = "less"
+)
+```
+
+The two commands use the same $18$ differences and therefore produce the same test statistic and P-value.
+
+### Confidence Interval for the Mean Change
+
+A two-sided $95\%$ confidence interval for the mean difference can be obtained with
+
+```{r paired-confidence-interval}
+t.test(
+  x = after,
+  y = before,
+  paired = TRUE,
+  conf.level = 0.95
+)$conf.int
+```
+
+The interval for the mean difference after minus before is approximately
+
+$$
+(-5.231,\ -2.602)\text{ m/s}
+$$
+
+Equivalently, the estimated mean **reduction** before minus after is between approximately
+
+$$
+2.602\text{ and }5.231\text{ m/s}
+$$
+
+The confidence interval describes the plausible size of the population mean change. Whether a reduction in this range is clinically important requires subject-matter judgment and consideration of benefits, adverse effects and study limitations.
+
+### Why the Pairing Must Not Be Ignored
+
+The before and after samples are not independent. Each after-treatment value is connected to the same child's before-treatment value.
+
+An independent two-sample procedure would treat the $36$ measurements as if they came from unrelated individuals. That approach would ignore information about the within-child comparison and use an incorrect independence structure.
+
+> **Design determines analysis**
+>
+> When observations are paired, analyze the paired differences. When samples are genuinely independent, use an independent-samples procedure.
+
+### When Matching Helps
+
+Matching is useful when the two observations within a pair tend to be similar for reasons unrelated to the treatment.
+
+For example, baseline vascular condition varies among children. Comparing each child's post-treatment measurement with that same child's baseline removes much of the between-child variation from the treatment comparison.
+
+Poor or arbitrary matching may provide little benefit. Matching variables should be chosen because they are scientifically related to the response.
+
+---
+
+## Robustness of the $t$ Procedures
+
+A procedure is **robust** when its confidence level or P-value changes little under moderate departures from its mathematical conditions.
+
+The one-sample $t$ procedures are generally robust to moderate non-Normality, particularly as the sample size increases. They are less robust to outliers because both $\bar{x}$ and $s$ are sensitive to extreme observations.
+
+### Why Outliers Matter
+
+An extreme observation can affect
+
+- The sample mean $\bar{x}$
+- The sample standard deviation $s$
+- The estimated standard error $s/\sqrt{n}$
+- The $t$ statistic
+- The confidence-interval endpoints
+
+The effects do not necessarily cancel. An outlier may pull the mean, inflate the standard deviation or do both.
+
+An unusual value should be investigated rather than automatically deleted. Possible explanations include
+
+- Data-entry or measurement error
+- A genuine but rare observation
+- A different population or subgroup
+- A strongly skewed population distribution
+
+Any decision to correct or exclude a value should be documented and justified using information about the observation, not merely because removing it produces a preferred result.
+
+### Practical Guidelines
+
+The following guidelines support first-year applications.
+
+| Sample size | Practical guidance |
+|:--|:--|
+| $n<15$ | Use $t$ procedures only when the data are approximately symmetric, single-peaked and free of outliers |
+| $15\leq n<40$ | Mild or moderate skewness is usually acceptable, but strong skewness and outliers remain concerns |
+| $n\geq40$ | Strong skewness is often manageable, but influential outliers and scientific structure still require attention |
+
+These cutoffs are guidelines rather than automatic rules. The severity of the departure and the purpose of the analysis matter.
+
+```{r robustness-plot, echo=FALSE, fig.width=7.4, fig.height=7.4}
+p_robustness
+```
+
+The figure uses illustrative datasets:
+
+- The small sample contains a clear outlier, so the $t$ procedure is not reliable without further investigation
+- The moderate sample has mild right skewness without an extreme value, so a $t$ procedure is generally reasonable
+- The large sample is strongly right-skewed, but the sampling distribution of the mean can still be approximately Normal
+
+### Example 17.5: Assessing Several Samples
+
+The chapter describes four settings.
+
+| Dataset | Sample size | Assessment |
+|:--|--:|:--|
+| Oak acorn volumes | $11$ | A clear extreme outlier makes a one-sample $t$ analysis unreliable |
+| Aleppo pine needle lengths | $15$ | Mild right skewness without outliers is acceptable |
+| Brown treesnake weights | About $500$ | The large sample handles substantial skewness, but the heaviest observation should still be investigated |
+| Wild bee cocoon widths | About $800$ | Computation is stable, but clear bimodality makes one overall mean scientifically difficult to interpret |
+
+The bee-cocoon example illustrates an important distinction: a method can be mathematically stable while the chosen parameter is scientifically unhelpful.
+
+If the two modes correspond to biologically different groups, such as male and female cocoons, reporting separate group means may be more informative than estimating one combined mean.
+
+### Large Samples Do Not Solve Every Problem
+
+A large $n$ can improve the shape of the sampling distribution of $\bar{x}$. It cannot
+
+- Correct selection bias
+- Create independence
+- Remove confounding
+- Repair systematic measurement error
+- Make a mixture of distinct populations scientifically homogeneous
+- Guarantee practical importance
+
+The Central Limit Theorem is a statement about the sampling distribution of a statistic under a probability model. It is not a general guarantee that all large datasets produce trustworthy conclusions.
+
+### Sensitivity Analysis
+
+When an unusual observation is present, it can be informative to calculate the result both with and without the observation.
+
+This comparison is called a sensitivity analysis. It asks whether the main conclusion depends heavily on one value.
+
+The observation should not be silently removed. Both results and the reason for the comparison should be reported.
+
+A large change indicates that the inferential conclusion is sensitive and should be interpreted cautiously.
+
+---
+
+## Choosing the Correct Procedure
+
+The study design and parameter determine the method.
+
+| Study structure | Parameter | Procedure |
+|:--|:--|:--|
+| One quantitative sample | Population mean $\mu$ | One-sample $t$ interval or test |
+| Same subjects measured twice | Mean paired difference $\mu_d$ | Paired $t$ interval or test |
+| Legitimately matched subjects | Mean paired difference $\mu_d$ | Paired $t$ interval or test |
+| Two unrelated groups | Difference between two population means | Independent two-sample procedure |
+
+The independent two-sample procedure is studied separately. It should not be substituted for a paired procedure when the observations are linked.
+
+### A Decision Checklist
+
+Before using a one-sample or paired $t$ procedure, ask:
+
+1. What is the target population?
+2. What population mean is being estimated or tested?
+3. How were the observations selected or assigned?
+4. Are the observational units independent?
+5. Are the observations paired or unpaired?
+6. What does a graph show about shape, outliers and subgroups?
+7. Is the sample size adequate for the observed shape?
+8. Does the direction of the alternative match the research question?
+9. Are the confidence interval and P-value interpreted for the correct population?
+10. Are statistical significance and practical importance kept separate?
+
+---
+
+## Common Errors and How to Correct Them
+
+### Using a $z$ Procedure When $\sigma$ Is Unknown
+
+If the population standard deviation is unknown and estimated using $s$, the appropriate reference distribution is $t$, not Standard Normal.
+
+The correction is to use
+
+$$
+t
+=
+\frac{\bar{x}-\mu_0}{s/\sqrt{n}}
+$$
+
+with
+
+$$
+\operatorname{df}=n-1
+$$
+
+### Confusing $s$ with the Standard Error
+
+The quantity $s$ describes individual variation. The quantity $s/\sqrt{n}$ describes estimated sample-mean variation.
+
+The denominator of the test statistic is the standard error:
+
+$$
+\frac{s}{\sqrt{n}}
+$$
+
+### Choosing the Tail from the Data
+
+The alternative hypothesis must be chosen from the research question before the sample result is examined.
+
+Changing a two-sided question to a one-sided test after seeing the direction of the data understates the P-value and weakens the validity of the analysis.
+
+### Reporting $P=0$
+
+Software may round a very small P-value to `0.000`. This does not mean the probability is exactly zero.
+
+Report the result as, for example,
+
+$$
+P<0.001
+$$
+
+or report the scientific-notation value when it is available.
+
+### Interpreting a P-Value as an Effect Size
+
+A small P-value indicates incompatibility with the null model. It does not show that the effect is large or important.
+
+Report the estimate and a confidence interval to describe the magnitude and precision of the effect.
+
+### Treating Paired Observations as Independent
+
+The correct sample for a matched-pairs analysis is the set of paired differences.
+
+For $n$ pairs, the degrees of freedom are
+
+$$
+n-1
+$$
+
+There are not $2n-2$ degrees of freedom because the procedure is not treating the two conditions as independent samples.
+
+### Overgeneralizing from the Sample
+
+The scope of the conclusion depends on how the participants or units entered the study.
+
+A precise confidence interval from a convenience sample can still be biased for the intended population. The interval measures random sampling variation under the assumed model, not every source of error.
+
+---
+
+## A Complete Reporting Template
+
+### Confidence Interval
+
+A complete confidence-interval report should include
+
+1. The target population and parameter
+2. The estimate $\bar{x}$
+3. The confidence level
+4. The interval endpoints and units
+5. A contextual interpretation
+6. Important limitations of the design or conditions
+
+A useful sentence structure is:
+
+> We are [confidence level] confident that the population mean [variable] for [population] lies between [lower endpoint] and [upper endpoint] [units], under the stated sampling and model conditions.
+
+### Hypothesis Test
+
+A complete hypothesis-test report should include
+
+1. The parameter and hypotheses
+2. The test statistic and degrees of freedom
+3. The P-value
+4. The decision when $\alpha$ is specified
+5. A conclusion in context
+6. A distinction between statistical and practical importance
+
+A useful sentence structure is:
+
+> The data provide [strength of evidence] that the population mean [variable] is [direction or difference stated in the alternative]. The conclusion applies to [population supported by the design] under the stated conditions.
+
+Avoid saying that the null hypothesis has been proved or that a nonsignificant result shows no effect.
+
+---
+
+## Chapter Summary
+
+### Standard Error and the $t$ Statistic
+
+When $\sigma$ is unknown, estimate it with the sample standard deviation $s$.
+
+The estimated standard error of the sample mean is
+
+$$
+\operatorname{SE}(\bar{x})
+=
+\frac{s}{\sqrt{n}}
+$$
+
+The one-sample $t$ statistic is
+
+$$
+t
+=
+\frac{\bar{x}-\mu}{s/\sqrt{n}}
+$$
+
+For one-sample inference,
+
+$$
+\operatorname{df}=n-1
+$$
+
+### The $t$ Distributions
+
+- The $t$ distributions are symmetric and bell-shaped
+- They have heavier tails than the Standard Normal distribution
+- Smaller degrees of freedom produce greater spread
+- The $t$ distributions approach $N(0,1)$ as the degrees of freedom increase
+- R uses `pt()` for probabilities and `qt()` for critical values
+
+### One-Sample Confidence Interval
+
+A level $C$ confidence interval for a population mean is
+
+$$
+\bar{x}
+\pm
+t^*\frac{s}{\sqrt{n}}
+$$
+
+The method is exact for a Normal population and approximately correct for sufficiently large samples under less restrictive shapes.
+
+### One-Sample Test
+
+To test
+
+$$
+H_0:\mu=\mu_0
+$$
+
+calculate
+
+$$
+t
+=
+\frac{\bar{x}-\mu_0}{s/\sqrt{n}}
+$$
+
+The alternative determines whether the P-value is a left-tail, right-tail or two-tail area under the $t(n-1)$ distribution.
+
+### Matched Pairs
+
+For paired data, define one difference within each pair and apply the one-sample $t$ procedures to those differences.
+
+The parameter is the population mean paired difference
+
+$$
+\mu_d
+$$
+
+The order of subtraction determines the sign of the mean difference and the direction of a one-sided alternative.
+
+### Robustness
+
+- Random sampling or an appropriate design is more important than exact Normality
+- Small samples require data that are approximately symmetric and free of outliers
+- Moderate samples tolerate mild skewness
+- Large samples tolerate stronger skewness, but influential observations still require investigation
+- A large sample does not repair bias, dependence or a scientifically inappropriate summary
+
+### R Functions
+
+| Purpose | R command |
+|:--|:--|
+| Left-tail $t$ probability | `pt(t, df)` |
+| Right-tail $t$ probability | `pt(t, df, lower.tail = FALSE)` |
+| $t$ critical value | `qt(probability, df)` |
+| One-sample interval | `t.test(x, conf.level = C)` |
+| One-sample upper-tail test | `t.test(x, mu = mu0, alternative = "greater")` |
+| One-sample lower-tail test | `t.test(x, mu = mu0, alternative = "less")` |
+| Paired test | `t.test(after, before, paired = TRUE)` |
+
+### Final Workflow
+
+1. Define the population, parameter and research question
+2. Identify whether the data are one-sample, paired or independent
+3. Examine how the observations were obtained
+4. Graph the observations or paired differences
+5. Assess sample size, skewness and outliers
+6. Calculate the standard error and degrees of freedom
+7. Construct the interval or calculate the test statistic and P-value
+8. Interpret the result for the supported population
+9. Report effect size, precision and study limitations
+10. Separate statistical evidence from scientific or clinical importance
