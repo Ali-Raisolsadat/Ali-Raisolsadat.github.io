@@ -1,0 +1,181 @@
+---
+title: "STAT 1210 - Quiz 4"
+subtitle: "Part IV: Inference for Population Means - Version 2"
+author: "Fall 2026"
+date: ""
+output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: false
+    number_sections: false
+geometry: margin=0.8in
+fontsize: 10pt
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{array}
+  - \usepackage{enumitem}
+  - \setlist[enumerate]{itemsep=0.45em,topsep=0.4em}
+  - \setlength{\parindent}{0pt}
+---
+
+
+**Name:** \rule{8.3cm}{0.4pt}  
+**Student number:** \rule{4.4cm}{0.4pt}
+
+\vspace{0.25cm}
+
+## Instructions
+
+- You have 40 minutes to complete the quiz.
+- All solutions must be handwritten on this quiz and the supplied answer pages.
+- Show the calculations needed to support each numerical answer.
+- Explain conclusions in the context of the question.
+- Report numerical answers to at least three decimal places when appropriate.
+- A $t$-distribution table excerpt is provided on the final page.
+- R coding is not required for this quiz.
+
+\vfill
+\newpage
+
+\vfill
+\begin{center}
+\textit{Empty Page}
+\end{center}
+
+\newpage
+
+## Question 1: Shell Length of Cultured PEI Mussels (8 marks)
+
+A mussel grower in Prince Edward Island historically harvested blue mussels with a population mean shell length of $61.5$ mm. This season, the grower selects a random sample of $25$ harvest-ready mussels from a lease containing several thousand mussels. The sample has mean shell length $\bar{x}=59.0$ mm and sample standard deviation $s=6.5$ mm. A dotplot of the sample is approximately symmetric and shows no strong outliers.
+
+The grower wants to determine whether the population mean shell length this season differs from the historical value. Use $\alpha=0.05$.
+
+1. Define the population parameter $\mu$. State the null and alternative hypotheses.
+2. Calculate the standard error, the test statistic and the degrees of freedom. You may use
+$$t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}}$$
+3. Use the $t$-distribution table to give a range for the two-sided P-value.
+4. Construct a $95\%$ confidence interval using $t^*=2.064$. 
+
+\vfill
+\newpage
+
+\vfill
+\begin{center}
+\textit{Answer Page for Question 1}
+\end{center}
+
+\newpage
+
+## Question 2: Potato Yield under Two Disease-Control Programs (12 marks)
+
+An agricultural research station in Prince Edward Island compares two disease-control programs for a potato crop. The researchers randomly assign $34$ similar field plots to either an enhanced program or the current standard program. At harvest, they measure marketable potato yield in tonnes per hectare. The two groups are independent, and the yield distributions are approximately symmetric with no strong outliers.
+
+| Disease-control program | Number of plots $n$ | Mean yield $\bar{x}$ | Standard deviation $s$ |
+|:--|--:|--:|--:|
+| Enhanced | $18$ | $37.1$ tonnes/ha | $4.5$ tonnes/ha |
+| Standard | $16$ | $33.8$ tonnes/ha | $3.9$ tonnes/ha |
+
+The research question specified before the experiment is whether the enhanced program increases the population mean marketable yield. Define the difference as enhanced minus standard and use $\alpha=0.05$.
+
+1. Define $\mu_E$ and $\mu_S$. State the null and alternative hypotheses.
+2. Calculate the point estimate $\bar{x}_E-\bar{x}_S$ and its standard error. You may use
+$$\operatorname{SE}=\sqrt{\frac{s_E^2}{n_E}+\frac{s_S^2}{n_S}}$$
+3. Calculate the Welch degrees of freedom and the test statistic. Use the $t$-distribution table to give a range for the one-sided P-value. State the test decision and conclusion in context. You may use
+$$df=\frac{\left(\dfrac{s_E^2}{n_E}+\dfrac{s_S^2}{n_S}\right)^2}{\dfrac{1}{n_E-1}\left(\dfrac{s_E^2}{n_E}\right)^2+\dfrac{1}{n_S-1}\left(\dfrac{s_S^2}{n_S}\right)^2}$$
+$$t=\frac{(\bar{x}_E-\bar{x}_S)-0}{\sqrt{s_E^2/n_E+s_S^2/n_S}}$$
+4. Construct a two-sided $95\%$ confidence interval for $\mu_E-\mu_S$ using $t^*=2.037$.
+5. Explain what random assignment contributes to the study. Can the results automatically be generalized to every potato field in Prince Edward Island?
+
+\vfill
+\newpage
+
+\vfill
+\begin{center}
+\textit{Answer Page for Question 2}
+\end{center}
+
+\newpage
+
+\vfill
+\newpage
+
+\vfill
+\begin{center}
+\textit{Answer Page for Question 2}
+\end{center}
+
+\newpage
+
+\newpage
+
+\vfill
+\newpage
+
+\vfill
+\begin{center}
+\textit{Answer Page for Question 2}
+\end{center}
+
+\newpage
+
+\thispagestyle{plain}
+\textbf{\large Student's $t$ Critical-Value Table}
+
+
+Each entry is a positive critical value $t^*$ with the indicated probability to its right. For a two-sided P-value, double the corresponding one-sided tail probability. When the calculated degrees of freedom are not listed, use the next lower available value.
+
+\vspace{0.12cm}
+\begin{center}
+\renewcommand{\arraystretch}{1}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}c*{14}{r}@{}}
+\toprule
+& \multicolumn{11}{c}{\textbf{Probability to the right of $t^*$}} \\
+\cmidrule(lr){2-12}
+$df$ & $.250$ & $.200$ & $.150$ & $.100$ & $.050$ & $.025$ & $.010$ & $.005$ & $.0025$ & $.001$ & $.0005$ \\
+\midrule
+$1$ & $1.000$ & $1.376$ & $1.963$ & $3.078$ & $6.314$ & $12.706$ & $31.821$ & $63.657$ & $127.321$ & $318.309$ & $636.619$ \\
+$2$ & $0.816$ & $1.061$ & $1.386$ & $1.886$ & $2.920$ & $4.303$ & $6.965$ & $9.925$ & $14.089$ & $22.327$ & $31.599$ \\
+$3$ & $0.765$ & $0.978$ & $1.250$ & $1.638$ & $2.353$ & $3.182$ & $4.541$ & $5.841$ & $7.453$ & $10.215$ & $12.924$ \\
+$4$ & $0.741$ & $0.941$ & $1.190$ & $1.533$ & $2.132$ & $2.776$ & $3.747$ & $4.604$ & $5.598$ & $7.173$ & $8.610$ \\
+$5$ & $0.727$ & $0.920$ & $1.156$ & $1.476$ & $2.015$ & $2.571$ & $3.365$ & $4.032$ & $4.773$ & $5.893$ & $6.869$ \\
+$6$ & $0.718$ & $0.906$ & $1.134$ & $1.440$ & $1.943$ & $2.447$ & $3.143$ & $3.707$ & $4.317$ & $5.208$ & $5.959$ \\
+$7$ & $0.711$ & $0.896$ & $1.119$ & $1.415$ & $1.895$ & $2.365$ & $2.998$ & $3.499$ & $4.029$ & $4.785$ & $5.408$ \\
+$8$ & $0.706$ & $0.889$ & $1.108$ & $1.397$ & $1.860$ & $2.306$ & $2.896$ & $3.355$ & $3.833$ & $4.501$ & $5.041$ \\
+$9$ & $0.703$ & $0.883$ & $1.100$ & $1.383$ & $1.833$ & $2.262$ & $2.821$ & $3.250$ & $3.690$ & $4.297$ & $4.781$ \\
+$10$ & $0.700$ & $0.879$ & $1.093$ & $1.372$ & $1.812$ & $2.228$ & $2.764$ & $3.169$ & $3.581$ & $4.144$ & $4.587$ \\
+$11$ & $0.697$ & $0.876$ & $1.088$ & $1.363$ & $1.796$ & $2.201$ & $2.718$ & $3.106$ & $3.497$ & $4.025$ & $4.437$ \\
+$12$ & $0.695$ & $0.873$ & $1.083$ & $1.356$ & $1.782$ & $2.179$ & $2.681$ & $3.055$ & $3.428$ & $3.930$ & $4.318$ \\
+$13$ & $0.694$ & $0.870$ & $1.079$ & $1.350$ & $1.771$ & $2.160$ & $2.650$ & $3.012$ & $3.372$ & $3.852$ & $4.221$ \\
+$14$ & $0.692$ & $0.868$ & $1.076$ & $1.345$ & $1.761$ & $2.145$ & $2.624$ & $2.977$ & $3.326$ & $3.787$ & $4.140$ \\
+$15$ & $0.691$ & $0.866$ & $1.074$ & $1.341$ & $1.753$ & $2.131$ & $2.602$ & $2.947$ & $3.286$ & $3.733$ & $4.073$ \\
+$16$ & $0.690$ & $0.865$ & $1.071$ & $1.337$ & $1.746$ & $2.120$ & $2.583$ & $2.921$ & $3.252$ & $3.686$ & $4.015$ \\
+$17$ & $0.689$ & $0.863$ & $1.069$ & $1.333$ & $1.740$ & $2.110$ & $2.567$ & $2.898$ & $3.222$ & $3.646$ & $3.965$ \\
+$18$ & $0.688$ & $0.862$ & $1.067$ & $1.330$ & $1.734$ & $2.101$ & $2.552$ & $2.878$ & $3.197$ & $3.610$ & $3.922$ \\
+$19$ & $0.688$ & $0.861$ & $1.066$ & $1.328$ & $1.729$ & $2.093$ & $2.539$ & $2.861$ & $3.174$ & $3.579$ & $3.883$ \\
+$20$ & $0.687$ & $0.860$ & $1.064$ & $1.325$ & $1.725$ & $2.086$ & $2.528$ & $2.845$ & $3.153$ & $3.552$ & $3.850$ \\
+$21$ & $0.686$ & $0.859$ & $1.063$ & $1.323$ & $1.721$ & $2.080$ & $2.518$ & $2.831$ & $3.135$ & $3.527$ & $3.819$ \\
+$22$ & $0.686$ & $0.858$ & $1.061$ & $1.321$ & $1.717$ & $2.074$ & $2.508$ & $2.819$ & $3.119$ & $3.505$ & $3.792$ \\
+$23$ & $0.685$ & $0.858$ & $1.060$ & $1.319$ & $1.714$ & $2.069$ & $2.500$ & $2.807$ & $3.104$ & $3.485$ & $3.768$ \\
+$24$ & $0.685$ & $0.857$ & $1.059$ & $1.318$ & $1.711$ & $2.064$ & $2.492$ & $2.797$ & $3.091$ & $3.467$ & $3.745$ \\
+$25$ & $0.684$ & $0.856$ & $1.058$ & $1.316$ & $1.708$ & $2.060$ & $2.485$ & $2.787$ & $3.078$ & $3.450$ & $3.725$ \\
+$26$ & $0.684$ & $0.856$ & $1.058$ & $1.315$ & $1.706$ & $2.056$ & $2.479$ & $2.779$ & $3.067$ & $3.435$ & $3.707$ \\
+$27$ & $0.684$ & $0.855$ & $1.057$ & $1.314$ & $1.703$ & $2.052$ & $2.473$ & $2.771$ & $3.057$ & $3.421$ & $3.690$ \\
+$28$ & $0.683$ & $0.855$ & $1.056$ & $1.313$ & $1.701$ & $2.048$ & $2.467$ & $2.763$ & $3.047$ & $3.408$ & $3.674$ \\
+$29$ & $0.683$ & $0.854$ & $1.055$ & $1.311$ & $1.699$ & $2.045$ & $2.462$ & $2.756$ & $3.038$ & $3.396$ & $3.659$ \\
+$30$ & $0.683$ & $0.854$ & $1.055$ & $1.310$ & $1.697$ & $2.042$ & $2.457$ & $2.750$ & $3.030$ & $3.385$ & $3.646$ \\
+$40$ & $0.681$ & $0.851$ & $1.050$ & $1.303$ & $1.684$ & $2.021$ & $2.423$ & $2.704$ & $2.971$ & $3.307$ & $3.551$ \\
+$60$ & $0.679$ & $0.848$ & $1.045$ & $1.296$ & $1.671$ & $2.000$ & $2.390$ & $2.660$ & $2.915$ & $3.232$ & $3.460$ \\
+$80$ & $0.678$ & $0.846$ & $1.043$ & $1.292$ & $1.664$ & $1.990$ & $2.374$ & $2.639$ & $2.887$ & $3.195$ & $3.416$ \\
+$100$ & $0.677$ & $0.845$ & $1.042$ & $1.290$ & $1.660$ & $1.984$ & $2.364$ & $2.626$ & $2.871$ & $3.174$ & $3.390$ \\
+$1000$ & $0.675$ & $0.842$ & $1.037$ & $1.282$ & $1.646$ & $1.962$ & $2.330$ & $2.581$ & $2.813$ & $3.098$ & $3.300$ \\
+$\infty$ & $0.674$ & $0.842$ & $1.036$ & $1.282$ & $1.645$ & $1.960$ & $2.326$ & $2.576$ & $2.807$ & $3.090$ & $3.291$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.08cm}
+
+\small
+For negative test statistics, use symmetry and compare the absolute value $|t|$ with the positive entries in the table.
+

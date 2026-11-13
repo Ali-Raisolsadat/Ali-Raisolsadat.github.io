@@ -1,0 +1,76 @@
+---
+title: "STAT 1210 - Quiz 4 Solutions"
+subtitle: "Part IV: Inference for Population Means - Version 1"
+author: "Fall 2026"
+date: ""
+output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: false
+    number_sections: false
+geometry: margin=0.8in
+fontsize: 10pt
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{array}
+  - \usepackage{enumitem}
+  - \setlist[enumerate]{itemsep=0.45em,topsep=0.4em}
+  - \setlength{\parindent}{0pt}
+---
+
+
+## Question 1: Shell Length of Cultured PEI Mussels (8 marks)
+
+1. **Parameter and hypotheses (2 marks).** Let $\mu$ be the population mean shell length, in millimetres, of all harvest-ready blue mussels in the grower's lease this season. The hypotheses are
+$$H_0:\mu=60$$
+$$H_a:\mu\ne60$$
+The alternative is two-sided because the grower asks whether the current population mean differs from $60$ mm in either direction.
+2. **Standard error, test statistic and degrees of freedom (2 marks).** The estimated standard error is
+$$SE=\frac{s}{\sqrt{n}}=\frac{6.0}{\sqrt{25}}=\frac{6.0}{5}=1.200\text{ mm}$$
+The test statistic is
+$$t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}}=\frac{57.6-60}{1.200}=\frac{-2.4}{1.200}=-2.000$$
+The degrees of freedom are
+$$df=n-1=25-1=24$$
+3. **Table-based P-value range (2 marks).** Use $|t|=2.000$ and the row for $df=24$. The table gives
+$$1.711<2.000<2.064$$
+The corresponding right-tail probabilities are $0.050$ and $0.025$, so the one-sided tail area satisfies
+$$0.025<P(T\ge 2.000)<0.050$$
+The alternative is two-sided, so both tails are included:
+$$\boxed{0.050<P\text{-value}<0.100}$$
+For reference, the exact two-sided P-value is approximately $0.0569$.
+
+4. **Confidence interval (2 marks).** The margin of error is
+$$m=t^*SE=2.064(1.200)=2.4768$$
+Therefore, the $95\%$ confidence interval is
+$$57.6\pm2.4768$$
+$$\boxed{(55.123,\ 60.077)\text{ mm}}$$
+
+
+## Question 2: Potato Yield under Two Disease-Control Programs (12 marks)
+
+1. **Parameters and hypotheses (2 marks).** Let $\mu_E$ be the population mean marketable potato yield, in tonnes per hectare, under the enhanced disease-control program for plots like those studied. Let $\mu_S$ be the corresponding population mean under the standard program. With the difference defined as enhanced minus standard,
+$$H_0:\mu_E-\mu_S=0$$
+$$H_a:\mu_E-\mu_S>0$$
+2. **Point estimate and standard error (2 marks).** The point estimate is
+$$\bar{x}_E-\bar{x}_S=35.8-32.4=3.4\text{ tonnes/ha}$$
+The standard error is
+$$SE=\sqrt{\frac{4.2^2}{18}+\frac{3.6^2}{16}}$$
+$$=\sqrt{\frac{17.64}{18}+\frac{12.96}{16}}=\sqrt{0.980+0.810}=\sqrt{1.790}\approx1.338\text{ tonnes/ha}$$
+3. **Degrees of freedom, test statistic, P-value and conclusion (4 marks).** For the Welch degrees of freedom,
+$$\frac{s_E^2}{n_E}=\frac{4.2^2}{18}=0.980\qquad\frac{s_S^2}{n_S}=\frac{3.6^2}{16}=0.810$$
+Therefore
+$$df=\frac{(0.980+0.810)^2}{\dfrac{0.980^2}{17}+\dfrac{0.810^2}{15}}=\frac{3.2041}{0.056494+0.043740}=\frac{3.2041}{0.100234}\approx31.966$$
+The test statistic is
+$$t=\frac{3.4-0}{1.337909}\approx2.541$$
+The calculated degrees of freedom are not listed, so use the next lower available row, $df=30$. In that row,
+$$2.457<2.541<2.750$$
+The associated right-tail probabilities are $0.010$ and $0.005$. Thus,
+$$\boxed{0.005<P\text{-value}<0.010}$$
+The exact one-sided P-value is approximately $0.0080$. Because the P-value is less than $\alpha=0.05$, reject $H_0$. The data provide statistically significant evidence that the enhanced program increases the population mean marketable potato yield for plots like those in the experiment.
+4. **Confidence interval (2 marks).** The margin of error is
+$$m=t^*SE=2.037(1.337909)\approx2.725$$
+The confidence interval is
+$$3.4\pm2.725$$
+$$\boxed{(0.675,\ 6.125)\text{ tonnes/ha}}$$
+5. **Role of random assignment and generalization (2 marks).** Random assignment tends to balance both known and unknown confounding variables between the treatment groups. It therefore supports a cause-and-effect conclusion about the disease-control programs for the experimental plots under the study conditions. The results cannot automatically be generalized to every potato field in PEI. The plots were randomly assigned to treatments, but they were not described as a random sample of all PEI potato fields. Differences in soil, potato variety, weather, farm management and disease pressure may limit generalization.
+
