@@ -1,0 +1,843 @@
+% =============================================================
+% STAT 1210 - Part III Exercises: Specific Inference Procedures
+% -------------------------------------------------------------
+% One source file, two versions:
+%   \solutionstrue   -> questions with worked solutions
+%   \solutionsfalse  -> questions only (student version)
+% You can also compile the student version without editing:
+%   pdflatex -jobname=Part3_Exercises_Student "\def\nosolutions{}\input{Part3_Exercises}"
+% =============================================================
+\documentclass[11pt]{article}
+
+\usepackage[margin=0.9in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{environ}
+\usepackage[most]{tcolorbox}
+\usepackage{xcolor}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\definecolor{CourseBlue}{RGB}{41,77,115}
+\definecolor{CourseRed}{RGB}{196,78,82}
+\definecolor{CourseGreen}{RGB}{63,125,88}
+\definecolor{CourseGold}{RGB}{190,137,45}
+\definecolor{SolutionBack}{RGB}{246,249,252}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\setlist[enumerate]{itemsep=0.3em,topsep=0.3em}
+
+% ---------- Solutions switch ----------
+\newif\ifsolutions
+\solutionstrue
+\ifdefined\nosolutions \solutionsfalse \fi
+
+\NewEnviron{solution}{%
+  \ifsolutions
+    \begin{tcolorbox}[breakable, enhanced, colback=SolutionBack, colframe=CourseBlue,
+      boxrule=0.6pt, arc=2pt, left=6pt, right=6pt, top=4pt, bottom=4pt,
+      title={\textbf{Solution}}, fonttitle=\small, coltitle=white]
+    \BODY
+    \end{tcolorbox}
+  \fi}
+
+% ---------- Exercise headings ----------
+\newcounter{exercise}
+\newcommand{\exercise}[1]{%
+  \par\medskip
+  \refstepcounter{exercise}%
+  {\large\bfseries\color{CourseBlue} Exercise \theexercise: #1}\par\smallskip}
+
+\pgfmathdeclarefunction{normpdf}{3}{%
+  \pgfmathparse{1/(#3*sqrt(2*pi))*exp(-((#1-#2)^2)/(2*#3^2))}%
+}
+
+\title{\textbf{STAT 1210 --- Part III Exercises}\\[0.3em]
+\large Section 3: Specific Inference Procedures\ifsolutions\ (with Solutions)\fi}
+\author{Fall 2026}
+\date{}
+
+\begin{document}
+\maketitle
+
+% =============================================================
+\section*{Part A: Samples and Study Design}
+% =============================================================
+
+% -------------------------------------------------------------
+\exercise{Sleep Habits of First-Year Students}
+
+A university health centre wants to estimate the proportion of its $2400$ first-year students who average at least $7$ hours of sleep per night. Using an up-to-date enrollment list, the centre randomly selects $200$ first-year students and sends each a confidential questionnaire. Of the selected students, $156$ return the questionnaire and $91$ of the respondents report averaging at least $7$ hours of sleep per night.
+
+\begin{enumerate}
+  \item Identify the population of interest and the sampling frame.
+  \item Distinguish between the initially selected sample and the respondent sample. Calculate the response rate.
+  \item Identify the variable recorded. Is it categorical or quantitative?
+  \item Describe the population parameter in words and calculate the sample statistic that estimates it.
+  \item Explain one strength of the sampling method and one possible source of bias.
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item The population is all $2400$ first-year students at the university. The sampling frame is the up-to-date enrollment list.
+  \item The selected sample is the $200$ randomly chosen students; the respondent sample is the $156$ who returned the questionnaire. The response rate is $156/200=0.78$, or $78\%$.
+  \item Whether a student averages at least $7$ hours of sleep per night. It is categorical (yes/no).
+  \item The parameter $p$ is the proportion of all $2400$ first-year students who average at least $7$ hours of sleep. The statistic is
+  \[
+  \hat p=\frac{91}{156}\approx0.583
+  \]
+  \item Strength: random selection from a complete, current list gives every student the same chance of selection and avoids selection bias. Possible bias: nonresponse. The $44$ nonrespondents may sleep differently from respondents (for example, students who sleep very little may be too busy to reply). Self-reported sleep may also be inaccurate.
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Sampling Dairy Cows}
+
+A veterinary epidemiologist wants to estimate the prevalence of hoof lesions among $1200$ dairy cows on several farms. The registry contains $600$ Holstein, $360$ Jersey and $240$ Ayrshire cows.
+
+\begin{itemize}[itemsep=0.1em]
+  \item \textbf{Plan A:} Randomly select $60$ cow identification numbers from the complete registry.
+  \item \textbf{Plan B:} Randomly select $30$ Holsteins, $18$ Jerseys and $12$ Ayrshires.
+  \item \textbf{Plan C:} Randomly select $6$ farms and examine every cow on each selected farm.
+  \item \textbf{Plan D:} Randomly select $6$ farms and then randomly select $10$ cows from each.
+\end{itemize}
+
+\begin{enumerate}
+  \item Identify each plan as a simple random, stratified random, cluster or multistage sample.
+  \item Under Plan A, what is the probability that a particular cow is selected?
+  \item Show that Plan B uses proportional allocation.
+  \item Explain the difference between the roles of breeds in Plan B and farms in Plan C.
+  \item Give one practical advantage and one statistical disadvantage of Plan C compared with Plan A.
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item A: simple random sample. B: stratified random sample (strata = breeds). C: cluster sample (clusters = farms). D: multistage sample (farms first, then cows within farms).
+  \item $60/1200=0.05$, a $5\%$ chance.
+  \item Population shares: $600/1200=0.50$, $360/1200=0.30$, $240/1200=0.20$. Sample shares: $30/60=0.50$, $18/60=0.30$, $12/60=0.20$. Equivalently, each breed is sampled at the same rate $0.05$.
+  \item Stratified sampling takes a sample from \emph{every} stratum; cluster sampling selects only \emph{some} clusters and measures everyone in them.
+  \item Advantage: travel to only $6$ farms reduces cost. Disadvantage: cows on one farm share management and environment, so they tend to be similar; a cluster sample usually has more sampling variability than an SRS of the same number of cows.
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Wireworm Damage in PEI Potato Fields}
+
+The PEI Department of Agriculture wants to estimate the proportion of the province's $4000$ registered potato fields that show wireworm damage this season. The provincial field registry lists $1800$ fields in Prince County, $1200$ in Queens County and $1000$ in Kings County. Three sampling plans are proposed, each producing $200$ fields.
+
+\begin{itemize}[itemsep=0.1em]
+  \item \textbf{Plan A:} An agronomist inspects $200$ fields that are easy to reach from the Trans-Canada Highway near Charlottetown.
+  \item \textbf{Plan B:} Randomly select $90$ fields from Prince County, $60$ from Queens County and $50$ from Kings County using the registry.
+  \item \textbf{Plan C:} Randomly select $200$ field identification numbers from the complete provincial registry.
+\end{itemize}
+
+\begin{enumerate}
+  \item Identify the population of interest. Is the variable recorded for each field categorical or quantitative?
+  \item Identify the sampling design used in each of Plans A, B and C. Show that the numbers selected in Plan B are proportional to the number of fields in each county.
+  \item Suppose Plan C is used and the true proportion of damaged fields is $p=0.15$. State the mean and standard deviation of the sampling distribution of $\hat p$ and check the expected count and $10\%$ conditions.
+  \item Use the Normal approximation to calculate $P(\hat p\geq0.20)$ and interpret the result in context.
+  \item The survey also finds that fields on farms using a three year crop rotation have less wireworm damage. Is this an observational study or an experiment?
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item The population is all $4000$ registered potato fields in PEI this season. The variable (wireworm damage: yes or no) is \textbf{categorical}. The parameter is the proportion $p$ of all registered fields with damage.
+  \item Plan A is a \textbf{convenience sample} (fields chosen because they are easy to reach; likely biased, since roadside fields near one city may differ from others). Plan B is a \textbf{stratified random sample} with counties as strata. Plan C is a \textbf{simple random sample}.
+
+  County shares: $1800/4000=0.45$, $1200/4000=0.30$, $1000/4000=0.25$. Plan B shares: $90/200=0.45$, $60/200=0.30$, $50/200=0.25$. Equivalently, every county is sampled at rate $90/1800=60/1200=50/1000=0.05$. So Plan B is proportional.
+  \item For $n=200$ and $p=0.15$:
+  \[
+  \mu_{\hat p}=p=0.15
+  \qquad
+  \sigma_{\hat p}=\sqrt{\frac{p(1-p)}{n}}=\sqrt{\frac{0.15(0.85)}{200}}=\sqrt{0.0006375}\approx0.0252
+  \]
+  Expected counts: $np=200(0.15)=30\geq10$ and $n(1-p)=200(0.85)=170\geq10$, so $\hat p$ is approximately Normal.
+  $10\%$ condition: $n=200\leq0.10(4000)=400$, so sampling without replacement causes negligible dependence.
+  \item Standardize:
+  \[
+  z=\frac{0.20-0.15}{0.0252}\approx1.98
+  \qquad
+  P(\hat p\geq0.20)\approx P(Z\geq1.98)=1-0.9761=0.0239
+  \]
+  If $15\%$ of all fields are damaged, only about $2.4\%$ of simple random samples of $200$ fields would show $20\%$ or more damaged fields. Such a sample would be unusual and would suggest that $p$ is larger than $0.15$.
+
+  \begin{center}
+  \begin{tikzpicture}
+  \begin{axis}[width=0.72\linewidth, height=4.2cm, xmin=0.07, xmax=0.23, ymin=0,
+    axis lines=left, xlabel={$\hat p$}, ylabel={Density}, ytick=\empty,
+    xtick={0.10,0.15,0.20}, tick label style={font=\small}, label style={font=\small}]
+    \addplot[draw=none, fill=CourseRed!55, domain=0.20:0.23, samples=60] {normpdf(x,0.15,0.0252)} \closedcycle;
+    \addplot[CourseBlue, very thick, domain=0.07:0.23, samples=150] {normpdf(x,0.15,0.0252)};
+    \node[CourseRed, font=\small] at (axis cs:0.212,6) {$0.0239$};
+  \end{axis}
+  \end{tikzpicture}
+  \end{center}
+  \item This is an \textbf{observational study}. The department recorded which farms use crop rotation; it did not assign rotation to fields. The association does not prove that rotation reduces damage, because farms that rotate may differ in other ways (soil, management, pest control).
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Invasive Plants in Nova Scotia Wetlands}
+
+The Nova Scotia Department of Environment wants to estimate the proportion of the province's $5000$ registered wetlands that contain purple loosestrife. The registry lists $2500$ wetlands in the Western region, $1500$ in the Central region and $1000$ in the Eastern region. Three plans each produce $250$ wetlands.
+
+\begin{itemize}[itemsep=0.1em]
+  \item \textbf{Plan A:} A biologist surveys $250$ wetlands within $1$ km of a paved road near Halifax.
+  \item \textbf{Plan B:} Randomly select $125$ Western, $75$ Central and $50$ Eastern wetlands from the registry.
+  \item \textbf{Plan C:} Randomly select $250$ wetland identification numbers from the complete registry.
+\end{itemize}
+
+\begin{enumerate}
+  \item Identify the population. Is the variable categorical or quantitative?
+  \item Identify each design and show that Plan B is proportional.
+  \item Why is Plan A likely biased? In which direction?
+  \item Under Plan C with $p=0.20$, state the mean and standard deviation of $\hat p$ and check the conditions.
+  \item Use the Normal approximation to find $P(\hat p\geq0.25)$ and interpret it.
+  \item Wetlands next to agricultural drainage ditches are more likely to contain the plant. Is this an observational study or an experiment? Can causation be concluded?
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item All $5000$ registered wetlands. The variable (plant present: yes/no) is categorical.
+  \item A: convenience sample. B: stratified random sample (regions). C: simple random sample. Shares $2500/5000=0.50$, $1500/5000=0.30$, $1000/5000=0.20$ match $125/250$, $75/250$, $50/250$.
+  \item Roadside wetlands near a city are exposed to more disturbance and seed spread, so Plan A would probably \emph{overestimate} $p$. It also excludes most of the province.
+  \item $\mu_{\hat p}=0.20$ and $\sigma_{\hat p}=\sqrt{0.20(0.80)/250}=\sqrt{0.00064}\approx0.0253$. Expected counts $np=50$ and $n(1-p)=200$ are both at least $10$; $n=250\leq0.10(5000)=500$.
+  \item $z=(0.25-0.20)/0.0253\approx1.98$, so $P(\hat p\geq0.25)\approx1-0.9761=0.0239$. If $20\%$ of wetlands contain the plant, only about $2.4\%$ of samples of $250$ would show $25\%$ or more.
+  \item Observational: ditches were not assigned. Wetlands near ditches may also be near farms and roads, so these confounding variables prevent a causal conclusion.
+\end{enumerate}
+\end{solution}
+
+\newpage
+% =============================================================
+\section*{Part B: Sampling Distributions}
+% =============================================================
+
+% -------------------------------------------------------------
+\exercise{An Exact Sampling Distribution}
+
+A laboratory population contains four turtle eggs with incubation times of $50$, $52$, $54$ and $56$ days. A random sample of $2$ different eggs is selected without replacement.
+
+\begin{enumerate}
+  \item List all possible samples and their sample means.
+  \item Construct the sampling distribution of $\bar x$.
+  \item Show that $\mu_{\bar x}=\mu$.
+  \item Calculate $\sigma_{\bar x}$ directly from the sampling distribution.
+  \item The population standard deviation is $\sigma=\sqrt5\approx2.236$. Explain why $\sigma_{\bar x}$ does not equal $\sigma/\sqrt2$ here.
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item There are $\binom42=6$ samples: $(50,52)$, $(50,54)$, $(50,56)$, $(52,54)$, $(52,56)$, $(54,56)$ with means $51$, $52$, $53$, $53$, $54$, $55$.
+  \item
+  \begin{tabular}{lccccc}
+  \toprule
+  $\bar x$ & $51$ & $52$ & $53$ & $54$ & $55$\\
+  $P(\bar x)$ & $1/6$ & $1/6$ & $2/6$ & $1/6$ & $1/6$\\
+  \bottomrule
+  \end{tabular}
+  \item $\mu_{\bar x}=\frac{51+52+2(53)+54+55}{6}=53$ and $\mu=\frac{50+52+54+56}{4}=53$.
+  \item $\sigma_{\bar x}^2=\frac{(-2)^2+(-1)^2+0+0+1^2+2^2}{6}=\frac{10}{6}$, so $\sigma_{\bar x}\approx1.291$ days.
+  \item $\sigma/\sqrt2\approx1.581$. The formula $\sigma/\sqrt n$ assumes independent observations. Sampling $2$ of only $4$ eggs without replacement is $50\%$ of the population, so the $10\%$ condition fails and the observations are dependent. For large populations the formula works well.
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{One Dog or the Mean of Nine?}
+
+Systolic blood pressure in healthy adult dogs is Normally distributed with mean $125$ mmHg and standard deviation $18$ mmHg. A researcher selects a random sample of $9$ dogs.
+
+\begin{enumerate}
+  \item State the distribution of an individual dog's blood pressure and of $\bar X$.
+  \item Find $P(\bar X>134)$.
+  \item Find the probability that one randomly selected dog has blood pressure above $134$ mmHg.
+  \item Explain why the two answers differ.
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item $X\sim N(125,18)$. Because the population is Normal, $\bar X\sim N(125,\ 18/\sqrt9)=N(125,6)$ exactly, for any $n$.
+  \item $z=(134-125)/6=1.50$, so $P(\bar X>134)=1-0.9332=0.0668$.
+  \item $z=(134-125)/18=0.50$, so $P(X>134)=1-0.6915=0.3085$.
+  \item The same $9$ mmHg gap is $1.5$ standard deviations for a mean of $9$ dogs but only $0.5$ for one dog. Means vary less than individuals, so an extreme mean is rarer than an extreme individual.
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Parasite Egg Counts and the Central Limit Theorem}
+
+Parasite egg counts in untreated sheep are strongly right-skewed with mean $240$ and standard deviation $150$ eggs per gram. A simple random sample of $100$ sheep is selected.
+
+\begin{enumerate}
+  \item Why should individual counts not be modelled as Normal?
+  \item Why may a Normal model for $\bar X$ nevertheless be reasonable?
+  \item Find the mean and standard deviation of $\bar X$.
+  \item Find $P(\bar X<210)$ and interpret it.
+  \item If all $100$ sheep came from one small pen with a shared contaminated feeding area, which assumption is questionable?
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item The counts are strongly skewed, but a Normal curve is symmetric. A $N(240,150)$ model would even put about $5.5\%$ probability on impossible negative counts.
+  \item With $n=100$ independent observations, the Central Limit Theorem makes the sampling distribution of $\bar X$ approximately Normal even though individual counts are skewed.
+  \item $\mu_{\bar x}=240$ and $\sigma_{\bar x}=150/\sqrt{100}=15$.
+  \item $z=(210-240)/15=-2.00$, so $P(\bar X<210)\approx0.0228$. About $2.3\%$ of random samples of $100$ sheep would have a mean below $210$.
+  \item Independence. Sheep sharing one environment have related exposures, so their counts are correlated, and the sample does not represent the whole population.
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Tick-Borne Infection in Dogs}
+
+In a region with about $10000$ dogs, the proportion carrying a tick-borne infection is $p=0.18$. A simple random sample of $400$ dogs is tested.
+
+\begin{enumerate}
+  \item Find the mean and standard deviation of $\hat p$.
+  \item Check the expected count and $10\%$ conditions.
+  \item Use the Normal approximation to find $P(\hat p\geq0.22)$ and interpret it.
+  \item How would the spread of $\hat p$ change if $n$ were quadrupled?
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item $\mu_{\hat p}=0.18$ and $\sigma_{\hat p}=\sqrt{0.18(0.82)/400}\approx0.0192$.
+  \item $np=72\geq10$ and $n(1-p)=328\geq10$; $400\leq0.10(10000)=1000$.
+  \item $z=(0.22-0.18)/0.0192\approx2.08$, so $P(\hat p\geq0.22)\approx1-0.9812=0.0188$. If $18\%$ of dogs are infected, about $1.9\%$ of samples of $400$ would show at least $22\%$ positive.
+  \item Quadrupling $n$ divides $\sigma_{\hat p}$ by $\sqrt4=2$, giving about $0.0096$.
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Planning Precision for a Proportion}
+
+A researcher expects about $40\%$ of adults to meet a physical-activity guideline and wants $\sigma_{\hat p}\leq0.02$.
+
+\begin{enumerate}
+  \item Using $p=0.40$, find the smallest sample size.
+  \item Why does $p=0.50$ give a conservative sample size when no planning value is available? Find it.
+  \item Calculate $\sigma_{\hat p}$ for $n=150$ and $n=600$ with $p=0.40$ and explain the square-root relationship.
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item $\sqrt{0.24/n}\leq0.02 \Rightarrow 0.24/n\leq0.0004 \Rightarrow n\geq600$.
+  \item $p(1-p)$ is largest at $p=0.50$ (value $0.25$), so it gives the largest standard deviation and never under-sizes the study: $n\geq0.25/0.0004=625$.
+  \item $n=150$: $\sqrt{0.24/150}=0.04$. $n=600$: $\sqrt{0.24/600}=0.02$. Four times the sample halves the standard deviation, because $\sigma_{\hat p}\propto1/\sqrt n$.
+\end{enumerate}
+\end{solution}
+
+\newpage
+% =============================================================
+\section*{Part C: Confidence Intervals and Tests}
+% =============================================================
+
+% -------------------------------------------------------------
+\exercise{Three Confidence Levels}
+
+A random sample of $64$ satellite tags attached to sea turtles has mean operating life $\bar x=26.4$ months, with $\sigma=4.8$ months.
+
+\begin{enumerate}
+  \item Calculate the standard error.
+  \item Construct $90\%$, $95\%$ and $99\%$ confidence intervals using $z^*=1.645$, $1.960$ and $2.576$.
+  \item Compare the centres and widths. Explain the trade-off between confidence and precision.
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item $SE=4.8/\sqrt{64}=0.6$ months.
+  \item $90\%$: $26.4\pm1.645(0.6)=26.4\pm0.987=(25.413,\ 27.387)$.\\
+  $95\%$: $26.4\pm1.960(0.6)=26.4\pm1.176=(25.224,\ 27.576)$.\\
+  $99\%$: $26.4\pm2.576(0.6)=26.4\pm1.546=(24.854,\ 27.946)$.
+  \item All are centred at $26.4$. Higher confidence uses a larger $z^*$, so the interval is wider: more confidence, less precision, from the same data.
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Interpreting a Confidence Interval}
+
+A random sample of fish from a large lake gives a $95\%$ confidence interval of $(24.6,\ 26.2)$ cm for the population mean length. Classify each statement as correct or incorrect and rewrite the incorrect ones.
+
+\begin{enumerate}
+  \item There is a $95\%$ probability that the population mean lies between $24.6$ and $26.2$ cm.
+  \item About $95\%$ of individual fish in the lake are between $24.6$ and $26.2$ cm long.
+  \item If the procedure were repeated many times, about $95\%$ of the intervals would contain the population mean.
+  \item The population mean changes from sample to sample, while the interval is fixed.
+  \item A $99\%$ interval from the same sample would be wider.
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item Incorrect. $\mu$ is fixed; this interval either contains it or not. Correct version: we are $95\%$ confident that $\mu$ is between $24.6$ and $26.2$ cm, because the method captures $\mu$ in $95\%$ of repeated samples.
+  \item Incorrect. The interval is about the \emph{mean} length, not individual fish, which vary much more.
+  \item Correct.
+  \item Incorrect. The population mean is fixed; the interval changes from sample to sample.
+  \item Correct; $z^*=2.576$ is larger than $1.960$.
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Writing Hypotheses}
+
+For each question, define $\mu$, state $H_0$ and $H_a$, and say whether the test is lower-tail, upper-tail or two-sided.
+
+\begin{enumerate}
+  \item Does the mean fill volume of bottles differ from the target of $500$ mL?
+  \item Does a new treatment reduce mean recovery time below $12$ days?
+  \item Is the mean spring-arrival day of a bird species later than the historical day $120$?
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item $\mu$ = mean fill volume. $H_0:\mu=500$, $H_a:\mu\neq500$. Two-sided: under- and overfilling both matter.
+  \item $\mu$ = mean recovery time with the treatment. $H_0:\mu=12$, $H_a:\mu<12$. Lower-tail.
+  \item $\mu$ = mean arrival day. $H_0:\mu=120$, $H_a:\mu>120$. Upper-tail (later = larger day number).
+\end{enumerate}
+Hypotheses are always about the parameter $\mu$, never $\bar x$, and the direction is chosen before seeing the data.
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Shell Length of Cultured Mussels in Malpeque Bay}
+
+A PEI mussel grower monitors the shell length of cultured blue mussels. Historically, the mean shell length at harvest has been $60$ mm. This season, a random sample of $n=49$ mussels from the lease has a mean shell length of $\bar{x}=58.1$ mm. Treat the population standard deviation as known at $\sigma=6$ mm, and assume the observations are independent.
+
+\begin{enumerate}
+  \item Define the parameter $\mu$ in this context and calculate the standard error of $\bar{x}$.
+  \item Construct a $95\%$ confidence interval for the population mean shell length using $z^*=1.960$.
+  \item Interpret the interval in context.
+  \item At the $\alpha=0.05$ significance level, test whether the population mean shell length this season differs from $60$ mm. State the hypotheses, calculate the test statistic and the two-sided p-value using the standard Normal table, and state your conclusion in context.
+  \item Explain how the confidence interval from Part 2 leads to the same decision as the test in Part 4.
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item $\mu$ is the population mean shell length at harvest of all cultured blue mussels on this lease this season.
+  \[
+  SE=\frac{\sigma}{\sqrt n}=\frac{6}{\sqrt{49}}=\frac67\approx0.857\text{ mm}
+  \]
+  \item $m=1.960(0.857)=1.680$ mm, so
+  \[
+  58.1\pm1.680=(56.42,\ 59.78)\text{ mm}
+  \]
+  \item We are $95\%$ confident that the population mean shell length at harvest this season is between $56.42$ and $59.78$ mm. ``$95\%$ confident'' means the method captures the true mean in about $95\%$ of repeated random samples.
+  \item $H_0:\mu=60$ mm versus $H_a:\mu\neq60$ mm (a change in either direction matters).
+  \[
+  z=\frac{\bar x-\mu_0}{\sigma/\sqrt n}=\frac{58.1-60}{0.857}\approx-2.22
+  \]
+  From the table, $P(Z\leq-2.22)=0.0132$. Two-sided, so both tails count:
+  \[
+  P=2(0.0132)=0.0264
+  \]
+  Since $0.0264<0.05$, reject $H_0$. There is significant evidence that this season's mean shell length differs from $60$ mm; the sample suggests mussels are shorter than usual.
+
+  \begin{center}
+  \begin{tikzpicture}
+  \begin{axis}[width=0.72\linewidth, height=4.2cm, xmin=-3.6, xmax=3.6, ymin=0,
+    axis lines=left, xlabel={$z$}, ylabel={Density}, ytick=\empty,
+    xtick={-2.22,0,2.22}, tick label style={font=\small}, label style={font=\small}]
+    \addplot[draw=none, fill=CourseRed!55, domain=-3.6:-2.22, samples=60] {normpdf(x,0,1)} \closedcycle;
+    \addplot[draw=none, fill=CourseRed!55, domain=2.22:3.6, samples=60] {normpdf(x,0,1)} \closedcycle;
+    \addplot[CourseBlue, very thick, domain=-3.6:3.6, samples=150] {normpdf(x,0,1)};
+    \node[CourseRed, font=\small] at (axis cs:-2.9,0.08) {$0.0132$};
+    \node[CourseRed, font=\small] at (axis cs:2.9,0.08) {$0.0132$};
+  \end{axis}
+  \end{tikzpicture}
+  \end{center}
+  \item The null value $60$ mm lies outside the $95\%$ interval $(56.42,\ 59.78)$, so $60$ is not a plausible value of $\mu$; this matches rejecting $H_0$ at $\alpha=0.05$. The two always agree for a two-sided test at level $\alpha$ and a $(1-\alpha)$ interval: $60$ is outside the interval exactly when $|\bar x-60|=1.9$ exceeds the margin $1.680$, which is the same as $|z|=2.22>1.96$.
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Shell Height of Cultured Oysters}
+
+An oyster grower's historical mean shell height at harvest is $76$ mm. This season a random sample of $n=64$ oysters has $\bar x=74.2$ mm, with $\sigma=8$ mm.
+
+\begin{enumerate}
+  \item Define $\mu$ and calculate the standard error.
+  \item Construct and interpret a $95\%$ confidence interval.
+  \item Test at $\alpha=0.05$ whether the mean differs from $76$ mm, using the table for the P-value.
+  \item Explain how the interval agrees with the test.
+  \item Would the conclusion change at $\alpha=0.10$? Confirm with a $90\%$ interval.
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item $\mu$ = mean shell height at harvest of all oysters on the lease this season. $SE=8/\sqrt{64}=1$ mm.
+  \item $74.2\pm1.960(1)=(72.24,\ 76.16)$ mm. We are $95\%$ confident the mean shell height is between $72.24$ and $76.16$ mm.
+  \item $H_0:\mu=76$, $H_a:\mu\neq76$. $z=(74.2-76)/1=-1.80$; $P=2(0.0359)=0.0718>0.05$. Fail to reject: no significant evidence of a change at the $5\%$ level. This does not prove the mean is still $76$ mm.
+  \item $76$ lies \emph{inside} the interval, so it is plausible, which matches failing to reject.
+  \item Yes: $0.0718<0.10$, so reject at $\alpha=0.10$. The $90\%$ interval $74.2\pm1.645=(72.555,\ 75.845)$ excludes $76$.
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Dissolved Oxygen: A One-Sided Test}
+
+A random sample of $36$ midsummer mornings has mean dissolved oxygen $\bar x=7.65$ mg/L, with $\sigma=0.90$ mg/L. An ecologist tests whether the mean is below the reference value $8.00$ mg/L at $\alpha=0.05$.
+
+\begin{enumerate}
+  \item State the hypotheses and calculate the standard error and $z$.
+  \item Find the P-value and state the conclusion.
+  \item Interpret the P-value as a conditional probability.
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item $H_0:\mu=8.00$, $H_a:\mu<8.00$. $SE=0.90/6=0.15$; $z=(7.65-8.00)/0.15=-2.33$.
+  \item Lower tail: $P=P(Z\leq-2.33)=0.0099<0.05$. Reject $H_0$: evidence that mean dissolved oxygen is below $8.00$ mg/L.
+  \item $P(\bar X\leq7.65\mid\mu=8.00)\approx0.0099$: if the true mean were $8.00$, a sample mean this low would occur in about $1\%$ of samples. It is \emph{not} the probability that $H_0$ is true.
+\end{enumerate}
+\end{solution}
+
+
+% -------------------------------------------------------------
+\exercise{Using an Interval to Test}
+
+A random sample of $100$ shorebird eggs has mean shell thickness $\bar x=0.300$ mm, with $\sigma=0.060$ mm.
+
+\begin{enumerate}
+  \item Construct a $95\%$ confidence interval.
+  \item Use it to test $H_0:\mu=0.285$ versus $H_a:\mu\neq0.285$ at $\alpha=0.05$. Verify with $z$ and the P-value.
+  \item Without further calculation, test $H_0:\mu=0.295$ (two-sided, $\alpha=0.05$).
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item $SE=0.006$; $0.300\pm1.960(0.006)=0.300\pm0.01176=(0.28824,\ 0.31176)$ mm.
+  \item $0.285$ is outside the interval, so reject. Check: $z=(0.300-0.285)/0.006=2.50$, $P=2(1-0.9938)=0.0124<0.05$.
+  \item $0.295$ is inside the interval, so fail to reject.
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Salmon Smolts: Significance at Two Levels}
+
+Every tenth migrating Atlantic salmon smolt is measured until $n=100$; $\bar x=102.25$ g with $\sigma=10$ g. The historical mean is $100$ g, and differences smaller than $5$ g are not biologically important.
+
+\begin{enumerate}
+  \item State the hypotheses and calculate $SE$, $z$ and the two-sided P-value.
+  \item State the decisions at $\alpha=0.05$ and $\alpha=0.01$.
+  \item Construct $95\%$ and $99\%$ intervals and match them to the decisions.
+  \item Is the result biologically important? Describe a Type I error in context.
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item $H_0:\mu=100$, $H_a:\mu\neq100$. $SE=1$; $z=2.25$; $P=2(1-0.9878)=0.0244$.
+  \item Reject at $0.05$; fail to reject at $0.01$.
+  \item $95\%$: $102.25\pm1.960=(100.29,\ 104.21)$ excludes $100$ (reject at $0.05$). $99\%$: $102.25\pm2.576=(99.674,\ 104.826)$ contains $100$ (fail to reject at $0.01$).
+  \item The plausible difference ($0.29$ to $4.21$ g) is entirely below $5$ g, so the result is statistically significant at $5\%$ but not biologically important. A Type I error would be concluding the mean differs from $100$ g when it actually equals $100$ g.
+\end{enumerate}
+\end{solution}
+
+\newpage
+% =============================================================
+\section*{Part D: Inference in Practice}
+% =============================================================
+
+% -------------------------------------------------------------
+\exercise{Planning a Sample Size}
+
+A veterinary researcher wants to estimate the mean recovery time after a routine procedure. Previous studies suggest $\sigma\approx18$ minutes.
+
+\begin{enumerate}
+  \item Find the smallest $n$ for a $95\%$ interval with margin of error at most $4$ minutes.
+  \item Find the smallest $n$ if the margin is reduced to $2$ minutes. Explain the comparison.
+  \item Find the smallest $n$ for a $99\%$ interval with margin at most $4$ minutes ($z^*=2.576$).
+  \item Why must the answers be rounded up?
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item $n=\left(\frac{z^*\sigma}{m}\right)^2=\left(\frac{1.960(18)}{4}\right)^2=(8.82)^2=77.79\Rightarrow n=78$.
+  \item $\left(\frac{1.960(18)}{2}\right)^2=(17.64)^2=311.17\Rightarrow n=312$. Halving $m$ requires $2^2=4$ times the sample, because $m\propto1/\sqrt n$.
+  \item $\left(\frac{2.576(18)}{4}\right)^2=(11.592)^2=134.37\Rightarrow n=135$.
+  \item Rounding down gives a margin slightly larger than the target (for example, $n=77$ gives $m\approx4.02$).
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Emergency Department Wait Times on PEI}
+
+Health PEI plans a study to estimate the mean wait time, in minutes, before patients are seen by a physician at the emergency department of the Queen Elizabeth Hospital. A pilot study suggests that the population standard deviation of wait times is approximately $\sigma=40$ minutes.
+
+\begin{enumerate}
+  \item Find the smallest sample size needed for a confidence interval with a margin of error no greater than $8$ minutes at
+  \begin{enumerate}[label=(\alph*)]
+    \item $95\%$ confidence using $z^*=1.960$.
+    \item $99\%$ confidence using $z^*=2.576$.
+  \end{enumerate}
+  \item At $95\%$ confidence, find the smallest sample size needed to reduce the margin of error to $4$ minutes. Compare this with Part 1(a).
+  \item Suppose the visits are sampled only from weekday daytime shifts. Name one source of error that the margin of error does \textbf{not} measure.
+  \item After a new triage system is introduced, a province wide analysis of $15000$ visits finds that the mean wait time decreased by $1.2$ minutes, with $\text{p-value}=0.002$. Explain the difference between statistical significance and practical importance in this context. Is a decrease of $1.2$ minutes likely to matter to patients?
+  \item Health PEI also tests $10$ independent outcomes, each at $\alpha=0.05$. If every null hypothesis is true, calculate the probability of at least one false positive.
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item Use $n=\left(\dfrac{z^*\sigma}{m}\right)^2$ and round up.
+  \begin{enumerate}[label=(\alph*)]
+    \item $n=\left(\dfrac{1.960(40)}{8}\right)^2=(9.8)^2=96.04\Rightarrow\boxed{n=97}$
+    \item $n=\left(\dfrac{2.576(40)}{8}\right)^2=(12.88)^2=165.89\Rightarrow\boxed{n=166}$
+  \end{enumerate}
+  Higher confidence needs a larger sample for the same margin.
+  \item $n=\left(\dfrac{1.960(40)}{4}\right)^2=(19.6)^2=384.16\Rightarrow\boxed{n=385}$. This is about $4$ times the $97$ in Part 1(a) (exactly $4\times96.04=384.16$ before rounding). Halving the margin requires quadrupling the sample because $m\propto1/\sqrt n$.
+  \item Undercoverage/selection bias: night and weekend visits are excluded, and their wait times may differ systematically (for example, fewer staff on nights and weekends). The margin of error measures only random sampling variation, not this bias. (Measurement error in recorded times or nonresponse are also acceptable answers.)
+  \item \textbf{Statistical significance} ($P=0.002$) means a decrease this large would be very unlikely if the triage system had no effect; with $15000$ visits the standard error is tiny ($40/\sqrt{15000}\approx0.33$ minutes), so even a small change is detected. \textbf{Practical importance} asks whether the change matters. A $1.2$-minute decrease when individual wait times vary by about $40$ minutes is very small and is unlikely to be noticed by patients. The result is statistically significant but probably not practically important; the decision should also weigh costs and other benefits of the system.
+  \item Using the complement rule and independence,
+  \[
+  P(\text{at least one false positive})=1-(1-0.05)^{10}=1-0.95^{10}=1-0.5987=0.4013
+  \]
+  There is about a $40\%$ chance of at least one false positive even if nothing has changed.
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{What the Margin of Error Does Not Measure}
+
+A public-health office randomly selects $5000$ residents and invites them to an online survey. Only $9\%$ respond. The survey asks, ``Do you support the responsible plan to improve community health services?'' Among respondents, $62\%$ say yes, reported as $62\%\pm4.5\%$.
+
+\begin{enumerate}
+  \item What does the margin of error measure?
+  \item Identify two problems it does not measure.
+  \item Why doesn't the random selection of $5000$ residents remove the concern?
+  \item Could the interval be narrow yet miss the true proportion by more than $4.5$ points?
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item Random sampling variation only: how much $\hat p$ would vary across random samples ($1.96\sqrt{0.62(0.38)/450}\approx0.045$ with $450$ respondents).
+  \item Nonresponse bias ($91\%$ did not respond) and response bias from the leading word ``responsible''. Undercoverage of residents without internet access is another.
+  \item Randomization protects only the sample that provides data. If responding is related to opinion, the $450$ respondents need not resemble the population.
+  \item Yes. Bias shifts the whole interval; a precise estimate can still be precisely wrong.
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{The Same Effect at Two Sample Sizes}
+
+Two studies each observe a sample mean $0.30$ unit above a reference value $\mu_0$ for a blood biomarker, with $\sigma=2.4$. Study A has $n=25$; Study B has $n=400$.
+
+\begin{enumerate}
+  \item Calculate $SE$, $z$ and the two-sided P-value for each study.
+  \item Compare the conclusions at $\alpha=0.05$. Why do they differ?
+  \item Does Study B show that $0.30$ unit is biologically important?
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item A: $SE=2.4/5=0.48$, $z=0.625$, $P=2P(Z\geq0.63)\approx0.53$. B: $SE=2.4/20=0.12$, $z=2.50$, $P=2(1-0.9938)=0.0124$.
+  \item A fails to reject; B rejects. The effect is identical, but B's standard error is $4$ times smaller, so the same $0.30$ is $2.5$ standard errors from $\mu_0$ instead of $0.625$. A's result does not show $\mu=\mu_0$; it lacks precision.
+  \item No. The P-value measures compatibility with $H_0$, not importance. A confidence interval, a meaningful threshold and the scientific context are needed.
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Multiple Testing}
+
+A study tests $20$ independent genetic markers, each at $\alpha=0.05$. Suppose every null hypothesis is true.
+
+\begin{enumerate}
+  \item Find the probability that none of the $20$ tests gives a false positive.
+  \item Find the probability of at least one false positive.
+  \item What is the expected number of false positives? Why is reporting only the significant markers misleading?
+  \item What per-test level does a Bonferroni adjustment use, and what is the trade-off?
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item $(0.95)^{20}\approx0.3585$ (multiplication rule for independent events).
+  \item $1-(0.95)^{20}\approx0.6415$ (complement rule). Equivalently, the number of false positives is $Y\sim\text{Bin}(20,0.05)$ and this is $P(Y\geq1)$.
+  \item $E(Y)=20(0.05)=1$. About one marker is expected to look significant by chance alone; reporting only it hides the $19$ other tests.
+  \item $0.05/20=0.0025$, which brings the family-wide chance back to $1-(0.9975)^{20}\approx0.049$. The cost is lower power for each test (more Type II errors).
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Exact Binomial Test: Seal Survival}
+
+A rehabilitation centre claims that $75\%$ of released seals survive at least $30$ days. Researchers track $40$ comparable seals; $23$ survive. Let $X$ be the number that survive.
+
+\begin{enumerate}
+  \item State hypotheses for testing whether survival is below $0.75$.
+  \item State the null distribution of $X$ and the binomial conditions.
+  \item Write the P-value as a conditional probability. Software gives its exact value as $0.0116$. State the conclusion at $\alpha=0.05$.
+  \item Check the Normal approximation conditions and compute the approximate P-value with a continuity correction. Compare it with the exact value.
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item $H_0:p=0.75$ versus $H_a:p<0.75$.
+  \item $X\sim\text{Bin}(40,0.75)$, $E(X)=30$. Fixed $n=40$, two outcomes, independent seals, common survival probability.
+  \item $P=P(X\leq23\mid p=0.75)=\sum_{x=0}^{23}\binom{40}{x}0.75^x0.25^{40-x}\approx0.0116<0.05$. Reject $H_0$: evidence that survival is below $75\%$. Under the claim, $23$ or fewer survivors would occur in only about $1.2\%$ of studies.
+  \item $np=30$ and $n(1-p)=10$ (barely meets the condition). $\sigma_X=\sqrt{40(0.75)(0.25)}=\sqrt{7.5}\approx2.739$. $P(X\leq23)\approx P\left(Z\leq\frac{23.5-30}{2.739}\right)=P(Z\leq-2.37)=0.0089$. Same conclusion, but the approximation is noticeably off because $n(1-p)$ is only $10$; the exact binomial is preferred.
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Type I Error, Type II Error and Power}
+
+A veterinary trial tests $H_0:\mu=0$ versus $H_a:\mu>0$ for the mean reduction in a pain score, with $\sigma=1.2$, $n=20$ and $\alpha=0.05$. A mean reduction of $0.7$ point is meaningful.
+
+\begin{enumerate}
+  \item Find the critical sample mean (the decision rule).
+  \item Find the power against $\mu=0.7$ and the Type II error probability $\beta$.
+  \item Describe a Type I and a Type II error in context. Give a sample result that would be a Type II error if $\mu=0.7$.
+  \item How would power change with $n=30$?
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item $SE=1.2/\sqrt{20}\approx0.2683$. $\bar x_{\text{crit}}=0+1.645(0.2683)\approx0.441$. Reject $H_0$ when $\bar x\geq0.441$.
+  \item Under $\mu=0.7$: $z=(0.441-0.7)/0.2683\approx-0.96$. Power $=P(Z\geq-0.96)=1-0.1685=0.8315$ (software: $0.832$). $\beta=1-0.832\approx0.168$.
+
+  \begin{center}
+  \begin{tikzpicture}
+  \begin{axis}[width=0.78\linewidth, height=4.4cm, xmin=-0.9, xmax=1.6, ymin=0,
+    axis lines=left, xlabel={Sample mean pain reduction}, ylabel={Density}, ytick=\empty,
+    xtick={0,0.441,0.7}, tick label style={font=\small}, label style={font=\small}]
+    \addplot[draw=none, fill=CourseGold!60, domain=-0.9:0.441, samples=80] {normpdf(x,0.7,0.2683)} \closedcycle;
+    \addplot[draw=none, fill=CourseRed!60, domain=0.441:1.6, samples=80] {normpdf(x,0,0.2683)} \closedcycle;
+    \addplot[CourseBlue, very thick, domain=-0.9:1.6, samples=150] {normpdf(x,0,0.2683)};
+    \addplot[CourseGreen, very thick, domain=-0.9:1.6, samples=150] {normpdf(x,0.7,0.2683)};
+    \addplot[black, dashed] coordinates {(0.441,0) (0.441,1.6)};
+    \node[CourseBlue, font=\small] at (axis cs:-0.55,1.25) {$\mu=0$};
+    \node[CourseGreen, font=\small] at (axis cs:1.30,1.25) {$\mu=0.7$};
+    \node[font=\scriptsize, CourseGold!70!black] at (axis cs:0.15,0.25) {$\beta$};
+    \node[font=\scriptsize, CourseRed] at (axis cs:0.62,0.12) {$\alpha$};
+  \end{axis}
+  \end{tikzpicture}
+  \end{center}
+  \item Type I: concluding the treatment reduces pain when the true mean reduction is $0$ (probability $\alpha=0.05$, from the $\mu=0$ curve). Type II: failing to detect a real mean reduction of $0.7$ (probability $\beta\approx0.168$, from the $\mu=0.7$ curve). Example: the trial observes $\bar x=0.40<0.441$ and fails to reject, although $\mu=0.7$.
+  \item $SE=1.2/\sqrt{30}\approx0.219$, cutoff $1.645(0.219)\approx0.360$, $z=(0.360-0.7)/0.219\approx-1.55$, power $=1-0.0606\approx0.939$. Larger $n$ narrows both curves, so they overlap less.
+\end{enumerate}
+\end{solution}
+
+% -------------------------------------------------------------
+\exercise{Putting It All Together: A Dairy Supplement Study}
+
+Researchers recruit $800$ cows from four conveniently selected farms and randomly assign cows within each farm to a supplement or a control diet. They examine $18$ outcomes but report only the significant ones. For milk production they report a mean increase of $0.12$ litre per cow per day, a $95\%$ confidence interval of $(0.04,\ 0.20)$ litre and $P=0.003$. During the study, $22\%$ of supplement cows and $4\%$ of control cows leave the study.
+
+\begin{enumerate}
+  \item Which design feature supports a causal comparison? Which limits generalization?
+  \item How does the unequal loss of cows threaten the causal conclusion?
+  \item Interpret the confidence interval and P-value. What does neither establish?
+  \item If all $18$ null hypotheses were true and independent, find the probability of at least one false positive. Is $P=0.003$ significant after a Bonferroni adjustment?
+  \item Is the evidence sufficient to recommend the supplement? Name three things that should also be reported.
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}
+  \item Random assignment within farms supports causation. Convenience selection of four farms limits generalization to other farms, breeds and management systems.
+  \item Differential attrition can undo randomization: if supplement cows left because of side effects or poor response, the remaining supplement group is no longer comparable, likely biasing the benefit upward.
+  \item We are $95\%$ confident the supplement increases mean milk production by $0.04$ to $0.20$ litre per cow per day for cows like these. If the supplement had no effect, a difference this large would occur with probability $0.003$. Neither establishes generalizability, absence of bias or practical importance.
+  \item $1-0.95^{18}\approx0.603$. Bonferroni level $0.05/18\approx0.0028$, so $P=0.003$ would \emph{not} be significant after adjustment.
+  \item No. Report all $18$ outcomes and the pre-specified plan, a multiple-testing adjustment, reasons for attrition and an analysis respecting the original randomization, adverse events, costs and a practically meaningful threshold. Replication on more farms would strengthen the evidence.
+\end{enumerate}
+\end{solution}
+
+% =============================================================
+\clearpage
+\section*{Standard Normal Cumulative Probability Table (Positive $z$)}
+
+Entries give $P(Z\leq z)$ for a Standard Normal random variable $Z$.
+
+\vspace{0.2cm}
+\small
+\setlength{\tabcolsep}{7pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{c*{10}{r}}
+\toprule
+$z$ & $.00$ & $.01$ & $.02$ & $.03$ & $.04$ & $.05$ & $.06$ & $.07$ & $.08$ & $.09$ \\
+\midrule
+$0.0$ & $0.5000$ & $0.5040$ & $0.5080$ & $0.5120$ & $0.5160$ & $0.5199$ & $0.5239$ & $0.5279$ & $0.5319$ & $0.5359$ \\
+$0.1$ & $0.5398$ & $0.5438$ & $0.5478$ & $0.5517$ & $0.5557$ & $0.5596$ & $0.5636$ & $0.5675$ & $0.5714$ & $0.5753$ \\
+$0.2$ & $0.5793$ & $0.5832$ & $0.5871$ & $0.5910$ & $0.5948$ & $0.5987$ & $0.6026$ & $0.6064$ & $0.6103$ & $0.6141$ \\
+$0.3$ & $0.6179$ & $0.6217$ & $0.6255$ & $0.6293$ & $0.6331$ & $0.6368$ & $0.6406$ & $0.6443$ & $0.6480$ & $0.6517$ \\
+$0.4$ & $0.6554$ & $0.6591$ & $0.6628$ & $0.6664$ & $0.6700$ & $0.6736$ & $0.6772$ & $0.6808$ & $0.6844$ & $0.6879$ \\
+$0.5$ & $0.6915$ & $0.6950$ & $0.6985$ & $0.7019$ & $0.7054$ & $0.7088$ & $0.7123$ & $0.7157$ & $0.7190$ & $0.7224$ \\
+$0.6$ & $0.7257$ & $0.7291$ & $0.7324$ & $0.7357$ & $0.7389$ & $0.7422$ & $0.7454$ & $0.7486$ & $0.7517$ & $0.7549$ \\
+$0.7$ & $0.7580$ & $0.7611$ & $0.7642$ & $0.7673$ & $0.7704$ & $0.7734$ & $0.7764$ & $0.7794$ & $0.7823$ & $0.7852$ \\
+$0.8$ & $0.7881$ & $0.7910$ & $0.7939$ & $0.7967$ & $0.7995$ & $0.8023$ & $0.8051$ & $0.8078$ & $0.8106$ & $0.8133$ \\
+$0.9$ & $0.8159$ & $0.8186$ & $0.8212$ & $0.8238$ & $0.8264$ & $0.8289$ & $0.8315$ & $0.8340$ & $0.8365$ & $0.8389$ \\
+$1.0$ & $0.8413$ & $0.8438$ & $0.8461$ & $0.8485$ & $0.8508$ & $0.8531$ & $0.8554$ & $0.8577$ & $0.8599$ & $0.8621$ \\
+$1.1$ & $0.8643$ & $0.8665$ & $0.8686$ & $0.8708$ & $0.8729$ & $0.8749$ & $0.8770$ & $0.8790$ & $0.8810$ & $0.8830$ \\
+$1.2$ & $0.8849$ & $0.8869$ & $0.8888$ & $0.8907$ & $0.8925$ & $0.8944$ & $0.8962$ & $0.8980$ & $0.8997$ & $0.9015$ \\
+$1.3$ & $0.9032$ & $0.9049$ & $0.9066$ & $0.9082$ & $0.9099$ & $0.9115$ & $0.9131$ & $0.9147$ & $0.9162$ & $0.9177$ \\
+$1.4$ & $0.9192$ & $0.9207$ & $0.9222$ & $0.9236$ & $0.9251$ & $0.9265$ & $0.9279$ & $0.9292$ & $0.9306$ & $0.9319$ \\
+$1.5$ & $0.9332$ & $0.9345$ & $0.9357$ & $0.9370$ & $0.9382$ & $0.9394$ & $0.9406$ & $0.9418$ & $0.9429$ & $0.9441$ \\
+$1.6$ & $0.9452$ & $0.9463$ & $0.9474$ & $0.9484$ & $0.9495$ & $0.9505$ & $0.9515$ & $0.9525$ & $0.9535$ & $0.9545$ \\
+$1.7$ & $0.9554$ & $0.9564$ & $0.9573$ & $0.9582$ & $0.9591$ & $0.9599$ & $0.9608$ & $0.9616$ & $0.9625$ & $0.9633$ \\
+$1.8$ & $0.9641$ & $0.9649$ & $0.9656$ & $0.9664$ & $0.9671$ & $0.9678$ & $0.9686$ & $0.9693$ & $0.9699$ & $0.9706$ \\
+$1.9$ & $0.9713$ & $0.9719$ & $0.9726$ & $0.9732$ & $0.9738$ & $0.9744$ & $0.9750$ & $0.9756$ & $0.9761$ & $0.9767$ \\
+$2.0$ & $0.9772$ & $0.9778$ & $0.9783$ & $0.9788$ & $0.9793$ & $0.9798$ & $0.9803$ & $0.9808$ & $0.9812$ & $0.9817$ \\
+$2.1$ & $0.9821$ & $0.9826$ & $0.9830$ & $0.9834$ & $0.9838$ & $0.9842$ & $0.9846$ & $0.9850$ & $0.9854$ & $0.9857$ \\
+$2.2$ & $0.9861$ & $0.9864$ & $0.9868$ & $0.9871$ & $0.9875$ & $0.9878$ & $0.9881$ & $0.9884$ & $0.9887$ & $0.9890$ \\
+$2.3$ & $0.9893$ & $0.9896$ & $0.9898$ & $0.9901$ & $0.9904$ & $0.9906$ & $0.9909$ & $0.9911$ & $0.9913$ & $0.9916$ \\
+$2.4$ & $0.9918$ & $0.9920$ & $0.9922$ & $0.9925$ & $0.9927$ & $0.9929$ & $0.9931$ & $0.9932$ & $0.9934$ & $0.9936$ \\
+$2.5$ & $0.9938$ & $0.9940$ & $0.9941$ & $0.9943$ & $0.9945$ & $0.9946$ & $0.9948$ & $0.9949$ & $0.9951$ & $0.9952$ \\
+$2.6$ & $0.9953$ & $0.9955$ & $0.9956$ & $0.9957$ & $0.9959$ & $0.9960$ & $0.9961$ & $0.9962$ & $0.9963$ & $0.9964$ \\
+$2.7$ & $0.9965$ & $0.9966$ & $0.9967$ & $0.9968$ & $0.9969$ & $0.9970$ & $0.9971$ & $0.9972$ & $0.9973$ & $0.9974$ \\
+$2.8$ & $0.9974$ & $0.9975$ & $0.9976$ & $0.9977$ & $0.9977$ & $0.9978$ & $0.9979$ & $0.9979$ & $0.9980$ & $0.9981$ \\
+$2.9$ & $0.9981$ & $0.9982$ & $0.9982$ & $0.9983$ & $0.9984$ & $0.9984$ & $0.9985$ & $0.9985$ & $0.9986$ & $0.9986$ \\
+$3.0$ & $0.9987$ & $0.9987$ & $0.9987$ & $0.9988$ & $0.9988$ & $0.9989$ & $0.9989$ & $0.9989$ & $0.9990$ & $0.9990$ \\
+$3.1$ & $0.9990$ & $0.9991$ & $0.9991$ & $0.9991$ & $0.9992$ & $0.9992$ & $0.9992$ & $0.9992$ & $0.9993$ & $0.9993$ \\
+$3.2$ & $0.9993$ & $0.9993$ & $0.9994$ & $0.9994$ & $0.9994$ & $0.9994$ & $0.9994$ & $0.9995$ & $0.9995$ & $0.9995$ \\
+$3.3$ & $0.9995$ & $0.9995$ & $0.9995$ & $0.9996$ & $0.9996$ & $0.9996$ & $0.9996$ & $0.9996$ & $0.9996$ & $0.9997$ \\
+$3.4$ & $0.9997$ & $0.9997$ & $0.9997$ & $0.9997$ & $0.9997$ & $0.9997$ & $0.9997$ & $0.9997$ & $0.9997$ & $0.9998$ \\
+\bottomrule
+\end{tabular}
+\normalsize
+
+\clearpage
+\section*{Standard Normal Cumulative Probability Table (Negative $z$)}
+
+\vspace{0.2cm}
+\small
+\setlength{\tabcolsep}{7pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{c*{10}{r}}
+\toprule
+$z$ & $.00$ & $.01$ & $.02$ & $.03$ & $.04$ & $.05$ & $.06$ & $.07$ & $.08$ & $.09$ \\
+\midrule
+$-0.0$ & $0.5000$ & $0.4960$ & $0.4920$ & $0.4880$ & $0.4840$ & $0.4801$ & $0.4761$ & $0.4721$ & $0.4681$ & $0.4641$ \\
+$-0.1$ & $0.4602$ & $0.4562$ & $0.4522$ & $0.4483$ & $0.4443$ & $0.4404$ & $0.4364$ & $0.4325$ & $0.4286$ & $0.4247$ \\
+$-0.2$ & $0.4207$ & $0.4168$ & $0.4129$ & $0.4090$ & $0.4052$ & $0.4013$ & $0.3974$ & $0.3936$ & $0.3897$ & $0.3859$ \\
+$-0.3$ & $0.3821$ & $0.3783$ & $0.3745$ & $0.3707$ & $0.3669$ & $0.3632$ & $0.3594$ & $0.3557$ & $0.3520$ & $0.3483$ \\
+$-0.4$ & $0.3446$ & $0.3409$ & $0.3372$ & $0.3336$ & $0.3300$ & $0.3264$ & $0.3228$ & $0.3192$ & $0.3156$ & $0.3121$ \\
+$-0.5$ & $0.3085$ & $0.3050$ & $0.3015$ & $0.2981$ & $0.2946$ & $0.2912$ & $0.2877$ & $0.2843$ & $0.2810$ & $0.2776$ \\
+$-0.6$ & $0.2743$ & $0.2709$ & $0.2676$ & $0.2643$ & $0.2611$ & $0.2578$ & $0.2546$ & $0.2514$ & $0.2483$ & $0.2451$ \\
+$-0.7$ & $0.2420$ & $0.2389$ & $0.2358$ & $0.2327$ & $0.2296$ & $0.2266$ & $0.2236$ & $0.2206$ & $0.2177$ & $0.2148$ \\
+$-0.8$ & $0.2119$ & $0.2090$ & $0.2061$ & $0.2033$ & $0.2005$ & $0.1977$ & $0.1949$ & $0.1922$ & $0.1894$ & $0.1867$ \\
+$-0.9$ & $0.1841$ & $0.1814$ & $0.1788$ & $0.1762$ & $0.1736$ & $0.1711$ & $0.1685$ & $0.1660$ & $0.1635$ & $0.1611$ \\
+$-1.0$ & $0.1587$ & $0.1562$ & $0.1539$ & $0.1515$ & $0.1492$ & $0.1469$ & $0.1446$ & $0.1423$ & $0.1401$ & $0.1379$ \\
+$-1.1$ & $0.1357$ & $0.1335$ & $0.1314$ & $0.1292$ & $0.1271$ & $0.1251$ & $0.1230$ & $0.1210$ & $0.1190$ & $0.1170$ \\
+$-1.2$ & $0.1151$ & $0.1131$ & $0.1112$ & $0.1093$ & $0.1075$ & $0.1056$ & $0.1038$ & $0.1020$ & $0.1003$ & $0.0985$ \\
+$-1.3$ & $0.0968$ & $0.0951$ & $0.0934$ & $0.0918$ & $0.0901$ & $0.0885$ & $0.0869$ & $0.0853$ & $0.0838$ & $0.0823$ \\
+$-1.4$ & $0.0808$ & $0.0793$ & $0.0778$ & $0.0764$ & $0.0749$ & $0.0735$ & $0.0721$ & $0.0708$ & $0.0694$ & $0.0681$ \\
+$-1.5$ & $0.0668$ & $0.0655$ & $0.0643$ & $0.0630$ & $0.0618$ & $0.0606$ & $0.0594$ & $0.0582$ & $0.0571$ & $0.0559$ \\
+$-1.6$ & $0.0548$ & $0.0537$ & $0.0526$ & $0.0516$ & $0.0505$ & $0.0495$ & $0.0485$ & $0.0475$ & $0.0465$ & $0.0455$ \\
+$-1.7$ & $0.0446$ & $0.0436$ & $0.0427$ & $0.0418$ & $0.0409$ & $0.0401$ & $0.0392$ & $0.0384$ & $0.0375$ & $0.0367$ \\
+$-1.8$ & $0.0359$ & $0.0351$ & $0.0344$ & $0.0336$ & $0.0329$ & $0.0322$ & $0.0314$ & $0.0307$ & $0.0301$ & $0.0294$ \\
+$-1.9$ & $0.0287$ & $0.0281$ & $0.0274$ & $0.0268$ & $0.0262$ & $0.0256$ & $0.0250$ & $0.0244$ & $0.0239$ & $0.0233$ \\
+$-2.0$ & $0.0228$ & $0.0222$ & $0.0217$ & $0.0212$ & $0.0207$ & $0.0202$ & $0.0197$ & $0.0192$ & $0.0188$ & $0.0183$ \\
+$-2.1$ & $0.0179$ & $0.0174$ & $0.0170$ & $0.0166$ & $0.0162$ & $0.0158$ & $0.0154$ & $0.0150$ & $0.0146$ & $0.0143$ \\
+$-2.2$ & $0.0139$ & $0.0136$ & $0.0132$ & $0.0129$ & $0.0125$ & $0.0122$ & $0.0119$ & $0.0116$ & $0.0113$ & $0.0110$ \\
+$-2.3$ & $0.0107$ & $0.0104$ & $0.0102$ & $0.0099$ & $0.0096$ & $0.0094$ & $0.0091$ & $0.0089$ & $0.0087$ & $0.0084$ \\
+$-2.4$ & $0.0082$ & $0.0080$ & $0.0078$ & $0.0075$ & $0.0073$ & $0.0071$ & $0.0069$ & $0.0068$ & $0.0066$ & $0.0064$ \\
+$-2.5$ & $0.0062$ & $0.0060$ & $0.0059$ & $0.0057$ & $0.0055$ & $0.0054$ & $0.0052$ & $0.0051$ & $0.0049$ & $0.0048$ \\
+$-2.6$ & $0.0047$ & $0.0045$ & $0.0044$ & $0.0043$ & $0.0041$ & $0.0040$ & $0.0039$ & $0.0038$ & $0.0037$ & $0.0036$ \\
+$-2.7$ & $0.0035$ & $0.0034$ & $0.0033$ & $0.0032$ & $0.0031$ & $0.0030$ & $0.0029$ & $0.0028$ & $0.0027$ & $0.0026$ \\
+$-2.8$ & $0.0026$ & $0.0025$ & $0.0024$ & $0.0023$ & $0.0023$ & $0.0022$ & $0.0021$ & $0.0021$ & $0.0020$ & $0.0019$ \\
+$-2.9$ & $0.0019$ & $0.0018$ & $0.0018$ & $0.0017$ & $0.0016$ & $0.0016$ & $0.0015$ & $0.0015$ & $0.0014$ & $0.0014$ \\
+$-3.0$ & $0.0013$ & $0.0013$ & $0.0013$ & $0.0012$ & $0.0012$ & $0.0011$ & $0.0011$ & $0.0011$ & $0.0010$ & $0.0010$ \\
+$-3.1$ & $0.0010$ & $0.0009$ & $0.0009$ & $0.0009$ & $0.0008$ & $0.0008$ & $0.0008$ & $0.0008$ & $0.0007$ & $0.0007$ \\
+$-3.2$ & $0.0007$ & $0.0007$ & $0.0006$ & $0.0006$ & $0.0006$ & $0.0006$ & $0.0006$ & $0.0005$ & $0.0005$ & $0.0005$ \\
+$-3.3$ & $0.0005$ & $0.0005$ & $0.0005$ & $0.0004$ & $0.0004$ & $0.0004$ & $0.0004$ & $0.0004$ & $0.0004$ & $0.0003$ \\
+$-3.4$ & $0.0003$ & $0.0003$ & $0.0003$ & $0.0003$ & $0.0003$ & $0.0003$ & $0.0003$ & $0.0003$ & $0.0003$ & $0.0002$ \\
+\bottomrule
+\end{tabular}
+\normalsize
+
+\end{document}
