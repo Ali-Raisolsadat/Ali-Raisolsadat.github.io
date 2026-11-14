@@ -238,6 +238,107 @@ ul.task-list{list-style: none;}
 
 
 
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } 
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.at { color: #204a87; } 
+code span.bn { color: #0000cf; } 
+code span.cf { color: #204a87; font-weight: bold; } 
+code span.ch { color: #4e9a06; } 
+code span.cn { color: #8f5902; } 
+code span.co { color: #8f5902; font-style: italic; } 
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.dt { color: #204a87; } 
+code span.dv { color: #0000cf; } 
+code span.er { color: #a40000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #0000cf; } 
+code span.fu { color: #204a87; font-weight: bold; } 
+code span.im { } 
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.kw { color: #204a87; font-weight: bold; } 
+code span.op { color: #ce5c00; font-weight: bold; } 
+code span.ot { color: #8f5902; } 
+code span.pp { color: #8f5902; font-style: italic; } 
+code span.sc { color: #ce5c00; font-weight: bold; } 
+code span.ss { color: #4e9a06; } 
+code span.st { color: #4e9a06; } 
+code span.va { color: #000000; } 
+code span.vs { color: #4e9a06; } 
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -505,35 +606,42 @@ year students at the university.
 </li>
 <li>
 The sampling frame is the up to date enrollment list from which the
-students were selected.
+students were selected. Because the list is current and complete, the
+frame closely matches the population.
 </li>
 <li>
 The initially selected sample consists of the <span class="math inline">\(200\)</span> students whose names were randomly
 selected. The respondent sample consists of the <span class="math inline">\(156\)</span> selected students who returned the
-questionnaire and supplied data.
+questionnaire and supplied data. The response rate is <span class="math inline">\(156/200=0.78\)</span>, or <span class="math inline">\(78\%\)</span>.
 </li>
 <li>
 The variable is whether a student averages at least <span class="math inline">\(7\)</span> hours of sleep per night. It is
 categorical, with the two categories yes and no.
 </li>
 <li>
-The parameter is the true proportion of all <span class="math inline">\(2400\)</span> first-year students who average at
-least <span class="math inline">\(7\)</span> hours of sleep per night.
+The parameter <span class="math inline">\(p\)</span> is the true
+proportion of all <span class="math inline">\(2400\)</span> first-year
+students who average at least <span class="math inline">\(7\)</span>
+hours of sleep per night. It is a fixed but unknown number.
 </li>
 <li>
 The sample proportion among respondents is <span class="math display">\[
   \widehat{p}=\frac{91}{156}\approx0.583
   \]</span> So approximately <span class="math inline">\(58.3\%\)</span>
-of the respondents reported averaging at least <span class="math inline">\(7\)</span> hours of sleep per night.
+of the respondents reported averaging at least <span class="math inline">\(7\)</span> hours of sleep per night. Unlike <span class="math inline">\(p\)</span>, the statistic <span class="math inline">\(\widehat p\)</span> would change if a different
+sample were selected.
 </li>
 <li>
 One strength is that the initial sample was selected randomly from an up
 to date list, which reduces selection bias and gives every listed
-first-year student a chance to be selected. A possible source of bias is
-nonresponse: the <span class="math inline">\(44\)</span> selected
-students who did not respond may have different sleeping habits from
-those who responded. Consequently, random selection of the initial
-sample does not guarantee that the respondent sample is representative.
+first-year student the same chance of being selected. A possible source
+of bias is nonresponse: the <span class="math inline">\(44\)</span>
+selected students who did not respond may have different sleeping habits
+from those who responded (for example, students who sleep very little
+may be too busy to return the questionnaire). Consequently, random
+selection of the initial sample does not guarantee that the respondent
+sample is representative. Self-reported sleep may also be inaccurate
+(response bias).
 </li>
 </ol>
 </div>
@@ -588,15 +696,19 @@ the dog’s health. Any two reasonable examples are sufficient.
 Owners who provide dental chews may also brush their dogs’ teeth more
 often or obtain more preventive veterinary care. If these behaviours are
 related to gingivitis, their effects are mixed with the effect of the
-chew. The observational data cannot separate these explanations.
+chew. The observational data cannot separate these explanations: the
+lower gingivitis rate could be due to the chew, to the other behaviours,
+or to both.
 </li>
 <li>
 The researcher could recruit eligible dogs and randomly assign each dog
-to a dental-chew group or a control group that does not receive the
-chew. Both groups should otherwise receive the same instructions and be
-followed for the same length of time. Random assignment tends to balance
-both known and unknown lurking variables between the groups. Variables
-such as the dogs’ usual diet, tooth-brushing routine or access to other
+to a dental-chew group or a control group that does not receive the chew
+(or receives a non-dental treat of similar size). Both groups should
+otherwise receive the same instructions and be followed for the same
+length of time, and the veterinarian assessing gingivitis should not
+know which group each dog is in. Random assignment tends to balance both
+known and unknown lurking variables between the groups. Variables such
+as the dogs’ usual diet, tooth-brushing routine or access to other
 dental products should be held constant or carefully monitored.
 </li>
 <li>
@@ -645,10 +757,11 @@ Show solution
 <div class="solution-body">
 <ol>
 <li>
-Plan A is a simple random sample. Plan B is a stratified random sample
-with breed defining the strata. Plan C is a cluster sample with farms
-defining the clusters. Plan D is a multistage sample because farms are
-selected first and cows are then selected within the chosen farms.
+Plan A is a simple random sample: every set of <span class="math inline">\(60\)</span> cows has the same chance of being
+chosen. Plan B is a stratified random sample with breed defining the
+strata. Plan C is a cluster sample with farms defining the clusters.
+Plan D is a multistage sample because farms are selected first and cows
+are then selected within the chosen farms.
 </li>
 <li>
 In a simple random sample (SRS) of <span class="math inline">\(60\)</span> cows from <span class="math inline">\(1200\)</span> each cow has inclusion probability
@@ -665,18 +778,23 @@ chance of being selected.
 <p>The corresponding sample proportions are <span class="math display">\[
   \frac{30}{60}=0.50 \qquad \frac{18}{60}=0.30 \qquad \frac{12}{60}=0.20
   \]</span></p>
-Therefore, Plan B uses proportional allocation.
+Equivalently, each breed is sampled at the same rate: <span class="math inline">\(30/600=18/360=12/240=0.05\)</span>. Therefore,
+Plan B uses proportional allocation.
 </li>
 <li>
 Plan B guarantees representation from all three breeds because a
-specified number of cows is sampled from every breed stratum.
+specified number of cows is sampled from every breed stratum. An SRS
+(Plan A) will usually include all three breeds, but it does not
+guarantee a fixed number from each.
 </li>
 <li>
 In Plan B, every breed stratum contributes sampled cows. In Plan C, only
 some farm clusters are selected, but every cow in each selected farm is
 examined. Stratified sampling deliberately samples from every group,
 whereas cluster sampling selects only some groups and studies all
-individuals within those selected groups.
+individuals within those selected groups. Strata work best when they are
+internally similar; clusters work best when each cluster is a mini
+version of the population.
 </li>
 <li>
 A practical advantage of Plan C is that it may reduce travel time and
@@ -736,7 +854,9 @@ The sampling frame includes residential landline numbers rather than all
 adult city residents. Adults who use only mobile phones, have unlisted
 numbers or do not have telephone access are omitted. This is
 undercoverage because some parts of the target population have little or
-no chance of selection.
+no chance of selection. It matters because these groups (for example,
+younger or lower-income residents) may have different access to health
+care.
 </li>
 <li>
 There are <span class="math inline">\(3000-840=2160\)</span> selected
@@ -744,7 +864,8 @@ adults who did not complete the survey. Nonresponse bias could occur if
 their satisfaction with health-care access differs systematically from
 the satisfaction of respondents. For example, adults who have difficulty
 accessing care may be either especially motivated to respond or too busy
-and discouraged to participate.
+and discouraged to participate. Making only one call increases the risk,
+because people who are rarely home are systematically missed.
 </li>
 <li>
 The phrase “excellent services” is leading wording because it encourages
@@ -825,14 +946,17 @@ lymphoma are the cases. The <span class="math inline">\(240\)</span>
 dogs without lymphoma are the controls. A case-control study can be
 efficient for an uncommon disease because researchers deliberately
 include enough cases for comparison rather than following a very large
-disease-free group until a small number develop the disease.
+disease-free group until a small number develop the disease. (Study B
+needed <span class="math inline">\(4000\)</span> dogs and <span class="math inline">\(8\)</span> years to observe only <span class="math inline">\(48\)</span> cases.)
 </li>
 <li>
 The researchers chose the numbers of cases and controls as part of the
-study design. The fraction <span class="math inline">\(120/360\)</span>
-therefore reflects the constructed sample, not the proportion of dogs
-with lymphoma in the source population. A case-control study cannot
-estimate population prevalence directly from the sampled case fraction.
+study design (two controls per case). The fraction <span class="math inline">\(120/360\)</span> therefore reflects the
+constructed sample, not the proportion of dogs with lymphoma in the
+source population. Had the researchers chosen <span class="math inline">\(1200\)</span> controls, the same calculation would
+give <span class="math inline">\(120/1320\approx0.091\)</span>. A
+case-control study cannot estimate population prevalence directly from
+the sampled case fraction.
 </li>
 <li>
 <p>For the exposed group, the incidence proportion is</p>
@@ -844,7 +968,9 @@ estimate population prevalence directly from the sampled case fraction.
   \frac{12}{2000}=0.006=0.6\%
   \]</span></p>
 In this cohort, lymphoma developed in <span class="math inline">\(1.8\%\)</span> of exposed dogs and <span class="math inline">\(0.6\%\)</span> of unexposed dogs during the <span class="math inline">\(8\)</span>-year follow-up. The observed incidence
-proportion was therefore three times as large in the exposed group.
+proportion was therefore three times as large in the exposed group
+(<span class="math inline">\(0.018/0.006=3\)</span>), although lymphoma
+remained uncommon in both groups.
 </li>
 <li>
 Study B establishes the time order more clearly because exposure is
@@ -869,6 +995,154 @@ designed, but they cannot by themselves rule out bias, confounding and
 alternative explanations sufficiently to prove causation.
 </li>
 </ol>
+</div>
+</details>
+</div>
+<div id="question-6-invasive-plants-in-nova-scotia-wetlands" class="section level3 question-card">
+<h3>Question <span class="math inline">\(6\)</span>: Invasive Plants in
+Nova Scotia Wetlands</h3>
+<p>The Nova Scotia Department of Environment wants to estimate the
+proportion of the province’s <span class="math inline">\(5000\)</span>
+registered wetlands that contain the invasive plant purple loosestrife
+this season. The provincial wetland registry lists <span class="math inline">\(2500\)</span> wetlands in the Western region,
+<span class="math inline">\(1500\)</span> in the Central region and
+<span class="math inline">\(1000\)</span> in the Eastern region. Three
+sampling plans are proposed, each producing <span class="math inline">\(250\)</span> wetlands.</p>
+<ul>
+<li><strong>Plan A:</strong> A biologist surveys <span class="math inline">\(250\)</span> wetlands that are within <span class="math inline">\(1\)</span> km of a paved road near Halifax.</li>
+<li><strong>Plan B:</strong> Randomly select <span class="math inline">\(125\)</span> wetlands from the Western region,
+<span class="math inline">\(75\)</span> from the Central region and
+<span class="math inline">\(50\)</span> from the Eastern region using
+the registry.</li>
+<li><strong>Plan C:</strong> Randomly select <span class="math inline">\(250\)</span> wetland identification numbers from
+the complete provincial registry.</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li>Identify the population of interest. Is the variable recorded for
+each wetland categorical or quantitative?</li>
+<li>Identify the sampling design used in each of Plans A, B and C. Show
+that the numbers selected in Plan B are proportional to the number of
+wetlands in each region.</li>
+<li>Explain why Plan A is likely to produce a biased estimate. In which
+direction might the bias go?</li>
+<li>Suppose Plan C is used and the true proportion of wetlands
+containing purple loosestrife is <span class="math inline">\(p=0.20\)</span>. State the mean and standard
+deviation of the sampling distribution of <span class="math inline">\(\hat p\)</span>, and check the expected count and
+<span class="math inline">\(10\%\)</span> conditions.</li>
+<li>Use the Normal approximation to calculate <span class="math inline">\(P(\hat p\geq0.25)\)</span> and interpret the
+result in context.</li>
+<li>The survey also finds that wetlands located next to agricultural
+drainage ditches are more likely to contain purple loosestrife. Is this
+an observational study or an experiment? Can the department conclude
+that drainage ditches cause the invasion? Explain.</li>
+</ol>
+<details class="solution">
+<summary>
+Show solution
+</summary>
+<div class="solution-body">
+<ol>
+<li>
+The population is all <span class="math inline">\(5000\)</span>
+registered wetlands in Nova Scotia. The variable recorded for each
+wetland is whether purple loosestrife is present (yes or no), so it is
+<b>categorical</b>. The parameter of interest is the proportion <span class="math inline">\(p\)</span> of all registered wetlands that contain
+the plant.
+</li>
+<li>
+<p>Plan A is a <b>convenience sample</b>: wetlands are chosen because
+they are easy to reach, not by chance. Plan B is a <b>stratified random
+sample</b> with regions as strata. Plan C is a <b>simple random
+sample</b>.</p>
+<p>The regional proportions in the population are</p>
+<p><span class="math display">\[
+  \frac{2500}{5000}=0.50
+  \qquad
+  \frac{1500}{5000}=0.30
+  \qquad
+  \frac{1000}{5000}=0.20
+  \]</span></p>
+<p>and the sample proportions in Plan B are</p>
+<p><span class="math display">\[
+  \frac{125}{250}=0.50
+  \qquad
+  \frac{75}{250}=0.30
+  \qquad
+  \frac{50}{250}=0.20
+  \]</span></p>
+Equivalently, every region is sampled at the same rate: <span class="math inline">\(125/2500=75/1500=50/1000=0.05\)</span>. Plan B
+therefore uses proportional allocation.
+</li>
+<li>
+Plan A only includes wetlands near roads in one part of the province.
+Roads and nearby development help invasive plants spread (seeds travel
+with vehicles, ditches and disturbed soil), so roadside wetlands near a
+city probably contain purple loosestrife more often than remote
+wetlands. Plan A would likely <b>overestimate</b> <span class="math inline">\(p\)</span>. It also gives wetlands in the Western
+and Eastern regions almost no chance of selection. Taking a larger
+convenience sample would not fix this bias.
+</li>
+<li>
+<p>For an SRS of size <span class="math inline">\(n=250\)</span> with
+<span class="math inline">\(p=0.20\)</span>, the sampling distribution
+of <span class="math inline">\(\hat p\)</span> has</p>
+<p><span class="math display">\[
+  \mu_{\hat p}=p=0.20
+  \]</span></p>
+<p><span class="math display">\[
+  \sigma_{\hat
+p}=\sqrt{\frac{p(1-p)}{n}}=\sqrt{\frac{0.20(0.80)}{250}}=\sqrt{0.00064}\approx0.0253
+  \]</span></p>
+<p><b>Expected counts:</b> <span class="math inline">\(np=250(0.20)=50\geq10\)</span> and <span class="math inline">\(n(1-p)=250(0.80)=200\geq10\)</span>, so the
+sampling distribution of <span class="math inline">\(\hat p\)</span> is
+approximately Normal.</p>
+<b>10% condition:</b> <span class="math inline">\(n=250\leq0.10(5000)=500\)</span>, so sampling
+without replacement causes negligible dependence and the formula for
+<span class="math inline">\(\sigma_{\hat p}\)</span> is appropriate.
+</li>
+<li>
+<p>Standardize <span class="math inline">\(0.25\)</span> using the
+sampling distribution from Part <span class="math inline">\(4\)</span>:</p>
+<p><span class="math display">\[
+  z=\frac{\hat p-\mu_{\hat p}}{\sigma_{\hat
+p}}=\frac{0.25-0.20}{0.0253}\approx1.98
+  \]</span></p>
+<p>From the Standard Normal table, <span class="math inline">\(P(Z\leq1.98)=0.9761\)</span>, so</p>
+<p><span class="math display">\[
+  P(\hat p\geq0.25)\approx P(Z\geq1.98)=1-0.9761=0.0239
+  \]</span></p>
+If <span class="math inline">\(20\%\)</span> of all registered wetlands
+contain purple loosestrife, only about <span class="math inline">\(2.4\%\)</span> of simple random samples of <span class="math inline">\(250\)</span> wetlands would produce a sample
+proportion of <span class="math inline">\(25\%\)</span> or higher. A
+sample proportion that high would therefore be unusual and would suggest
+that the true proportion is above <span class="math inline">\(0.20\)</span>.
+</li>
+<li>
+This is an <b>observational study</b>. The department recorded which
+wetlands are near drainage ditches; it did not assign ditches to
+wetlands. The department cannot conclude causation, because wetlands
+near ditches may differ in other ways that also affect invasion, such as
+proximity to farms and roads, soil disturbance or nutrient runoff. These
+lurking variables are confounded with the presence of ditches. The
+association is worth investigating further but does not by itself show
+that ditches cause the invasion.
+</li>
+</ol>
+<p><img role="img" src="data:image/png;base64,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" width="88%" style="display: block; margin: auto;" /></p>
+<p>The calculation can be checked in R. Software uses the unrounded
+<span class="math inline">\(z=1.976\)</span>, so it gives a slightly
+different answer from the table.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fl">0.20</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">250</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>sd_phat <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(p <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> p) <span class="sc">/</span> n)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">c</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="at">sd_phat =</span> sd_phat,</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="at">z =</span> (<span class="fl">0.25</span> <span class="sc">-</span> p) <span class="sc">/</span> sd_phat,</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="at">probability =</span> <span class="fu">pnorm</span>(<span class="fl">0.25</span>, <span class="at">mean =</span> p, <span class="at">sd =</span> sd_phat, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>##     sd_phat           z probability 
+##  0.02529822  1.97642354  0.02405341</code></pre>
 </div>
 </details>
 </div>

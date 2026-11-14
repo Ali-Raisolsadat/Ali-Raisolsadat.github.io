@@ -101,7 +101,7 @@ Health PEI plans a study to estimate the mean wait time, in minutes, before pati
 
 2. At $95\%$ confidence, find the smallest sample size needed to reduce the margin of error to $3$ minutes. Compare this with Part 1(a).
 3. Suppose the visits are sampled only from weekday daytime shifts. Name one source of error that the margin of error does **not** measure.
-4. After a new triage system is introduced, a province wide analysis of $12000$ visits finds that the mean wait time decreased by $0.9$ minutes, with $\text{p-value}=0.004$. Explain the difference between statistical significance and practical importance in this context.
+4. After a new triage system is introduced, a province wide analysis of $12000$ visits finds that the mean wait time decreased by $0.9$ minutes, with $\text{p-value}=0.004$. Explain the difference between statistical significance and practical importance in this context. Is a decrease of $1.2$ minutes likely to matter to patients?
 5. Health PEI also tests $8$ independent outcomes, each at $\alpha=0.05$. If every null hypothesis is true, calculate the probability of at least one false positive.
 
 \vfill

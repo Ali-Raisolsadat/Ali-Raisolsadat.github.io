@@ -697,8 +697,8 @@ knitr::opts_chunk$set(
   message = FALSE,
   error = FALSE,
   fig.align = "center",
-  fig.width = 7,
-  fig.height = 4.2
+  fig.width = 6.4,
+  fig.height = 3.4
 )
 
 if (!requireNamespace("ggplot2", quietly = TRUE)) {
@@ -709,20 +709,35 @@ suppressPackageStartupMessages({
   library(ggplot2)
 })
 
-lecture_chart_theme <- theme_minimal(base_size = 11) +
+# ------------------------------------------------------------------
+# Shared colours and theme
+# The base size is large enough for the figures to remain readable
+# when they are placed on Beamer slides.
+# ------------------------------------------------------------------
+course_blue  <- "#294D73"
+course_red   <- "#C44E52"
+course_green <- "#3F7D58"
+course_gold  <- "#BE892D"
+course_grey  <- "#8FA8BF"
+
+lecture_chart_theme <- theme_minimal(base_size = 14) +
   theme(
-    plot.title = element_text(size = 13, face = "bold", hjust = 0.5),
-    plot.subtitle = element_text(size = 10.5, hjust = 0.5),
-    axis.title = element_text(size = 11.5),
-    axis.text = element_text(size = 9.5, colour = "#333333"),
+    plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    axis.title = element_text(size = 13),
+    axis.text = element_text(size = 11.5, colour = "#333333"),
+    legend.text = element_text(size = 11.5),
+    legend.title = element_text(size = 12),
     panel.grid.minor = element_blank(),
     plot.background = element_rect(fill = "white", colour = NA),
     panel.background = element_rect(fill = "white", colour = NA),
-    plot.margin = margin(8, 10, 8, 10)
+    plot.margin = margin(6, 10, 6, 10)
   )
 
-# Every lecture figure is saved as a high-resolution PNG for the Beamer slides.
-save_plot <- function(filename, plot, width = 7.4, height = 4.4) {
+# Every lecture figure is saved as a high-resolution PNG.
+# The Beamer slides read these files directly, so no figure is drawn by hand in LaTeX.
+# Keep the .tex file in the same folder as this .Rmd file.
+save_plot <- function(filename, plot, width = 6.4, height = 3.4) {
   ggsave(
     filename = filename,
     plot = plot,
@@ -734,240 +749,202 @@ save_plot <- function(filename, plot, width = 7.4, height = 4.4) {
   )
 }
 
-# Figure 1: Margin of error and sample size
-sample_sizes <- seq(10, 500, by = 5)
-margin_data <- data.frame(
-  n = sample_sizes,
-  margin = qnorm(0.975) * 15 / sqrt(sample_sizes)
-)
+# ------------------------------------------------------------------
+# Figure 1: Standard Normal critical values for 95% confidence
+# ------------------------------------------------------------------
+z_grid <- seq(-3.5, 3.5, length.out = 1000)
+normal_data <- data.frame(z = z_grid, density = dnorm(z_grid))
 
-p_margin <- ggplot(margin_data, aes(x = n, y = margin)) +
-  geom_line(colour = "#294D73", linewidth = 1.1) +
+p_critical <- ggplot(normal_data, aes(x = z, y = density)) +
+  geom_area(
+    data = subset(normal_data, abs(z) <= 1.96),
+    fill = course_blue, alpha = 0.25
+  ) +
+  geom_area(
+    data = subset(normal_data, z >= 1.96),
+    fill = course_red, alpha = 0.55
+  ) +
+  geom_area(
+    data = subset(normal_data, z <= -1.96),
+    fill = course_red, alpha = 0.55
+  ) +
+  geom_line(colour = course_blue, linewidth = 1.1) +
+  geom_vline(xintercept = c(-1.96, 1.96), linetype = "dashed") +
+  annotate("text", x = 0, y = 0.16, label = "Central area\n0.95", size = 5) +
+  annotate(
+    "text", x = c(-2.7, 2.7), y = 0.07,
+    label = "0.025", colour = course_red, size = 4.6
+  ) +
+  scale_x_continuous(
+    breaks = c(-3, -1.96, -1, 0, 1, 1.96, 3),
+    labels = c("-3", "-1.96", "-1", "0", "1", "1.96", "3")
+  ) +
   labs(
-    title = "Margin of Error Decreases as Sample Size Increases",
-    subtitle = "A 95% confidence interval with population standard deviation 15",
-    x = "Sample Size",
-    y = "Margin of Error"
+    title = "The Middle 95% of the Standard Normal Distribution",
+    x = "z",
+    y = "Density"
   ) +
   lecture_chart_theme
 
-# Figure 2: Three confidence levels for the IQ example
+# ------------------------------------------------------------------
+# Figure 2: Long-run coverage of 95% confidence intervals
+# Forty samples of n = 31 IQ scores from a population with mu = 100
+# and sigma = 15. Only the sample mean is needed for each interval.
+# ------------------------------------------------------------------
+set.seed(2015)
+coverage_mu <- 100
+coverage_sigma <- 15
+coverage_n <- 31
+coverage_se <- coverage_sigma / sqrt(coverage_n)
+coverage_margin <- qnorm(0.975) * coverage_se
+
+coverage_data <- data.frame(
+  sample = 1:40,
+  xbar = rnorm(40, mean = coverage_mu, sd = coverage_se)
+)
+coverage_data$lower <- coverage_data$xbar - coverage_margin
+coverage_data$upper <- coverage_data$xbar + coverage_margin
+coverage_data$result <- ifelse(
+  coverage_data$lower <= coverage_mu & coverage_data$upper >= coverage_mu,
+  "Captures μ",
+  "Misses μ"
+)
+coverage_misses <- sum(coverage_data$result == "Misses μ")
+
+p_coverage <- ggplot(coverage_data, aes(y = sample)) +
+  geom_vline(xintercept = coverage_mu, colour = course_gold, linewidth = 1.1) +
+  geom_segment(
+    aes(x = lower, xend = upper, yend = sample, colour = result),
+    linewidth = 0.9
+  ) +
+  geom_point(aes(x = xbar, colour = result), size = 1.6) +
+  scale_colour_manual(
+    values = c("Captures μ" = course_blue, "Misses μ" = course_red)
+  ) +
+  labs(
+    title = "Forty 95% Intervals from the Same Process",
+    subtitle = paste0(
+      coverage_misses, " of 40 intervals miss the true mean μ = 100 (gold line)"
+    ),
+    x = "Mean IQ Score",
+    y = "Sample Number",
+    colour = NULL
+  ) +
+  lecture_chart_theme +
+  theme(legend.position = "bottom")
+
+# ------------------------------------------------------------------
+# Figure 3: Three confidence levels for the IQ example
+# ------------------------------------------------------------------
+iq_xbar <- 105.84
+iq_sigma <- 15
+iq_n <- 31
+iq_levels <- c(0.90, 0.95, 0.99)
+iq_margin <- qnorm((1 + iq_levels) / 2) * iq_sigma / sqrt(iq_n)
+
 iq_intervals <- data.frame(
   confidence = factor(
     c("90%", "95%", "99%"),
     levels = c("99%", "95%", "90%")
   ),
-  lower = c(101.41, 100.56, 98.90),
-  upper = c(110.27, 111.12, 112.78),
-  centre = 105.84
+  lower = iq_xbar - iq_margin,
+  upper = iq_xbar + iq_margin,
+  centre = iq_xbar
 )
 
-p_iq_intervals <- ggplot(
-  iq_intervals,
-  aes(y = confidence, x = centre)
-) +
+p_iq_intervals <- ggplot(iq_intervals, aes(y = confidence, x = centre)) +
+  geom_vline(xintercept = iq_xbar, linetype = "dashed", colour = course_gold) +
   geom_segment(
     aes(x = lower, xend = upper, yend = confidence),
-    colour = "#294D73",
-    linewidth = 1.4
+    colour = course_blue,
+    linewidth = 1.6
   ) +
-  geom_point(colour = "#C44E52", size = 3) +
+  geom_point(colour = course_red, size = 3.4) +
+  geom_text(
+    aes(x = lower, label = sprintf("%.2f", lower)),
+    vjust = -1, size = 4.2
+  ) +
+  geom_text(
+    aes(x = upper, label = sprintf("%.2f", upper)),
+    vjust = -1, size = 4.2
+  ) +
+  scale_x_continuous(limits = c(97, 114.5)) +
   labs(
-    title = "Confidence Level and Interval Width",
-    subtitle = "All intervals use the same sample mean",
+    title = "Higher Confidence Requires a Wider Interval",
+    subtitle = "Same data: sample mean 105.84, σ = 15, n = 31",
     x = "Mean IQ Score",
     y = "Confidence Level"
   ) +
   lecture_chart_theme
 
-# Figure 3: Null and alternative sampling distributions for power
-se_cola <- 1 / sqrt(10)
-critical_xbar <- qnorm(0.95, mean = 0, sd = se_cola)
-x_grid <- seq(-1.1, 1.9, length.out = 1000)
-
-power_curves <- rbind(
-  data.frame(
-    xbar = x_grid,
-    density = dnorm(x_grid, mean = 0, sd = se_cola),
-    model = "Null: mu = 0"
-  ),
-  data.frame(
-    xbar = x_grid,
-    density = dnorm(x_grid, mean = 0.8, sd = se_cola),
-    model = "Alternative: mu = 0.8"
-  )
+# ------------------------------------------------------------------
+# Figure 4: Margin of error and sample size (95% confidence, sigma = 15)
+# ------------------------------------------------------------------
+sample_sizes <- seq(10, 500, by = 2)
+margin_data <- data.frame(
+  n = sample_sizes,
+  margin = qnorm(0.975) * iq_sigma / sqrt(sample_sizes)
 )
+margin_points <- data.frame(n = c(31, 62, 124))
+margin_points$margin <- qnorm(0.975) * iq_sigma / sqrt(margin_points$n)
 
-power_shading <- subset(
-  power_curves,
-  xbar >= critical_xbar
-)
-
-p_power <- ggplot(
-  power_curves,
-  aes(x = xbar, y = density, colour = model)
-) +
-  geom_line(linewidth = 1.1) +
-  geom_area(
-    data = power_shading,
-    aes(fill = model),
-    alpha = 0.22,
-    position = "identity",
-    colour = NA
+p_margin <- ggplot(margin_data, aes(x = n, y = margin)) +
+  geom_line(colour = course_blue, linewidth = 1.2) +
+  geom_point(data = margin_points, colour = course_red, size = 3.2) +
+  geom_text(
+    data = margin_points,
+    aes(label = sprintf("n = %d:  m = %.2f", n, margin)),
+    hjust = 0, nudge_x = 10, nudge_y = 0.45, size = 4.2, colour = course_red
   ) +
-  geom_vline(
-    xintercept = critical_xbar,
-    linetype = "dashed",
-    colour = "black"
-  ) +
-  scale_colour_manual(
-    values = c(
-      "Null: mu = 0" = "#294D73",
-      "Alternative: mu = 0.8" = "#C44E52"
-    )
-  ) +
-  scale_fill_manual(
-    values = c(
-      "Null: mu = 0" = "#294D73",
-      "Alternative: mu = 0.8" = "#C44E52"
-    )
-  ) +
+  scale_y_continuous(limits = c(0, 10)) +
   labs(
-    title = "Rejection Region Under Two Population Means",
-    subtitle = "The same cutoff defines alpha under the null and power under the alternative",
-    x = "Sample Mean Sweetness Loss",
-    y = "Density",
-    colour = "Sampling Distribution",
-    fill = "Sampling Distribution"
-  ) +
-  lecture_chart_theme +
-  theme(legend.position = "bottom")
-
-# Figure 4: Statistical significance and sample size
-significance_data <- data.frame(
-  n = seq(10, 500, by = 5)
-)
-
-fixed_effect <- 0.15
-fixed_sigma <- 1
-
-significance_data$z <- (
-  fixed_effect /
-  (fixed_sigma / sqrt(significance_data$n))
-)
-
-significance_data$p_value <- 2 * pnorm(
-  -abs(significance_data$z)
-)
-
-p_significance <- ggplot(
-  significance_data,
-  aes(x = n, y = p_value)
-) +
-  geom_hline(
-    yintercept = 0.05,
-    linetype = "dashed",
-    colour = "#C44E52"
-  ) +
-  geom_line(colour = "#294D73", linewidth = 1.1) +
-  annotate(
-    "text",
-    x = 450,
-    y = 0.075,
-    label = "P = 0.05",
-    colour = "#C44E52"
-  ) +
-  labs(
-    title = "Sample Size Changes Statistical Significance",
-    subtitle = "Two-sided z test with a fixed effect of 0.15 and population standard deviation 1",
-    x = "Sample Size",
-    y = "P-Value"
+    title = "Margin of Error Shrinks as the Sample Grows",
+    subtitle = "95% confidence and σ = 15 held fixed",
+    x = "Sample Size n",
+    y = "Margin of Error m"
   ) +
   lecture_chart_theme
 
-# Figure 5: Multiple testing and false-positive risk
-multiple_testing_data <- data.frame(
-  tests = 1:50
+# ------------------------------------------------------------------
+# Figure 5: Fixed 95% confidence level, different sample sizes
+# The sample mean is held at 105.84 so that only the width changes.
+# ------------------------------------------------------------------
+interval_n <- c(10, 31, 62, 124, 250, 500)
+interval_data <- data.frame(
+  n = factor(interval_n, levels = interval_n),
+  margin = qnorm(0.975) * iq_sigma / sqrt(interval_n)
 )
+interval_data$lower <- iq_xbar - interval_data$margin
+interval_data$upper <- iq_xbar + interval_data$margin
 
-multiple_testing_data$at_least_one <- (
-  1 - (1 - 0.05)^multiple_testing_data$tests
-)
-
-p_multiple_testing <- ggplot(
-  multiple_testing_data,
-  aes(x = tests, y = at_least_one)
-) +
-  geom_line(colour = "#294D73", linewidth = 1.1) +
-  geom_point(
-    data = subset(multiple_testing_data, tests == 20),
-    colour = "#C44E52",
-    size = 3
+p_interval_n <- ggplot(interval_data, aes(x = n, y = iq_xbar)) +
+  geom_hline(yintercept = iq_xbar, linetype = "dashed", colour = course_gold) +
+  geom_errorbar(
+    aes(ymin = lower, ymax = upper),
+    width = 0.28, colour = course_blue, linewidth = 1.2
   ) +
-  annotate(
-    "text",
-    x = 22,
-    y = 0.60,
-    label = "20 tests: 0.642",
-    colour = "#C44E52",
-    hjust = 0
+  geom_point(colour = course_red, size = 3.2) +
+  geom_text(
+    aes(y = upper, label = sprintf("± %.2f", margin)),
+    vjust = -0.7, size = 4.2
   ) +
-  scale_y_continuous(
-    labels = function(x) paste0(round(100 * x), "%"),
-    limits = c(0, 1)
-  ) +
+  coord_cartesian(ylim = c(95.5, 117.5)) +
   labs(
-    title = "Chance of at Least One False Positive",
-    subtitle = "Independent tests at alpha = 0.05 when every null hypothesis is true",
-    x = "Number of Tests",
-    y = "Probability"
+    title = "95% Confidence Intervals at Different Sample Sizes",
+    subtitle = "Confidence level fixed at 95%; σ = 15; centre held at 105.84",
+    x = "Sample Size n",
+    y = "Mean IQ Score"
   ) +
   lecture_chart_theme
 
-# Figure 6: Effect size and the sample required for target power
-effect_sizes <- seq(0.20, 1.50, by = 0.05)
-z_alpha <- qnorm(0.95)
-z_power <- qnorm(0.90)
-
-power_sample_data <- data.frame(
-  effect_size = effect_sizes,
-  required_n = ceiling(
-    ((z_alpha + z_power) / effect_sizes)^2
-  )
-)
-
-p_power_sample <- ggplot(
-  power_sample_data,
-  aes(x = effect_size, y = required_n)
-) +
-  geom_line(colour = "#294D73", linewidth = 1.1) +
-  geom_point(
-    data = subset(power_sample_data, effect_size == 0.80),
-    colour = "#C44E52",
-    size = 3
-  ) +
-  annotate(
-    "text",
-    x = 0.84,
-    y = 28,
-    label = "Effect 0.8: n = 14",
-    colour = "#C44E52",
-    hjust = 0
-  ) +
-  labs(
-    title = "Smaller Effects Require Larger Samples",
-    subtitle = "One-sided z test with alpha = 0.05, power = 0.90 and population standard deviation 1",
-    x = "Effect Size to Detect",
-    y = "Required Sample Size"
-  ) +
-  lecture_chart_theme
-
-# Figure 7: Exact binomial null distribution with the observed lower tail
+# ------------------------------------------------------------------
+# Figure 6: Exact binomial null distribution with the observed lower tail
+# ------------------------------------------------------------------
 binomial_values <- 0:60
 binomial_tail_data <- data.frame(
   x = binomial_values,
   probability = dbinom(binomial_values, size = 60, prob = 0.80),
-  region = ifelse(binomial_values <= 41, "Observed or lower", "Other outcomes")
+  region = ifelse(binomial_values <= 41, "41 or fewer (as or more extreme)", "Other outcomes")
 )
 
 p_binomial_tail <- ggplot(
@@ -975,28 +952,32 @@ p_binomial_tail <- ggplot(
   aes(x = x, y = probability, fill = region)
 ) +
   geom_col(width = 0.82) +
+  geom_vline(xintercept = 48, linetype = "dotted", colour = "grey30") +
+  annotate("text", x = 48.4, y = 0.135, label = "E(X) = 48", hjust = 0, size = 4.2) +
   scale_fill_manual(
     values = c(
-      "Observed or lower" = "#C44E52",
-      "Other outcomes" = "#8FA8BF"
+      "41 or fewer (as or more extreme)" = course_red,
+      "Other outcomes" = course_grey
     )
   ) +
   labs(
-    title = "Exact Binomial Null Distribution",
-    subtitle = "X ~ Bin(60, 0.80); the shaded lower tail is P(X <= 41)",
-    x = "Number of Treatment Responses",
+    title = "Null Distribution: X ~ Bin(60, 0.80)",
+    subtitle = "Shaded lower tail: P(X ≤ 41 | p = 0.80) = 0.0221",
+    x = "Number of Dogs That Respond",
     y = "Probability",
-    fill = "Region"
+    fill = NULL
   ) +
   lecture_chart_theme +
   theme(legend.position = "bottom")
 
-# Figure 8: Exact Poisson null distribution with the observed upper tail
+# ------------------------------------------------------------------
+# Figure 7: Exact Poisson null distribution with the observed upper tail
+# ------------------------------------------------------------------
 poisson_values <- 0:30
 poisson_tail_data <- data.frame(
   x = poisson_values,
   probability = dpois(poisson_values, lambda = 12),
-  region = ifelse(poisson_values >= 20, "Observed or higher", "Other outcomes")
+  region = ifelse(poisson_values >= 20, "20 or more (as or more extreme)", "Other outcomes")
 )
 
 p_poisson_tail <- ggplot(
@@ -1004,85 +985,403 @@ p_poisson_tail <- ggplot(
   aes(x = x, y = probability, fill = region)
 ) +
   geom_col(width = 0.82) +
+  geom_vline(xintercept = 12, linetype = "dotted", colour = "grey30") +
+  annotate("text", x = 12.4, y = 0.125, label = "E(X) = 12", hjust = 0, size = 4.2) +
   scale_fill_manual(
     values = c(
-      "Observed or higher" = "#C44E52",
-      "Other outcomes" = "#8FA8BF"
+      "20 or more (as or more extreme)" = course_red,
+      "Other outcomes" = course_grey
     )
   ) +
   labs(
-    title = "Exact Poisson Null Distribution",
-    subtitle = "X ~ Pois(12); the shaded upper tail is P(X >= 20)",
+    title = "Null Distribution: X ~ Pois(12)",
+    subtitle = "Shaded upper tail: P(X ≥ 20 | λ = 12) = 0.0213",
     x = "Number of Confirmed Cases in One Month",
     y = "Probability",
-    fill = "Region"
+    fill = NULL
   ) +
   lecture_chart_theme +
   theme(legend.position = "bottom")
 
+# ------------------------------------------------------------------
+# Figure 8: Statistical significance and sample size
+# Fixed observed effect 0.30 and sigma = 2.4 (same values as the slides)
+# ------------------------------------------------------------------
+fixed_effect <- 0.30
+fixed_sigma <- 2.4
+
+significance_data <- data.frame(n = seq(10, 500, by = 2))
+significance_data$z <- fixed_effect / (fixed_sigma / sqrt(significance_data$n))
+significance_data$p_value <- 2 * pnorm(-abs(significance_data$z))
+
+significance_points <- data.frame(n = c(25, 100, 400))
+significance_points$p_value <- 2 * pnorm(
+  -fixed_effect / (fixed_sigma / sqrt(significance_points$n))
+)
+# Label positions chosen so that no label touches the curve or the 0.05 line
+significance_points$label_x <- c(35, 110, 400)
+significance_points$label_y <- c(0.60, 0.29, 0.16)
+significance_points$label_hjust <- c(0, 0, 0.5)
+
+p_significance <- ggplot(significance_data, aes(x = n, y = p_value)) +
+  geom_hline(yintercept = 0.05, linetype = "dashed", colour = course_red) +
+  geom_line(colour = course_blue, linewidth = 1.2) +
+  geom_point(data = significance_points, colour = course_red, size = 3.2) +
+  geom_text(
+    data = significance_points,
+    aes(x = label_x, y = label_y, hjust = label_hjust,
+        label = sprintf("n = %d:  P = %.3f", n, p_value)),
+    size = 4.2
+  ) +
+  annotate("text", x = 480, y = 0.085, label = "0.05", colour = course_red, size = 4.2) +
+  labs(
+    title = "The Same Effect Becomes Significant as n Grows",
+    subtitle = "Two-sided z test; observed effect 0.30 and σ = 2.4 in every study",
+    x = "Sample Size n",
+    y = "Two-Sided P-Value"
+  ) +
+  lecture_chart_theme
+
+# ------------------------------------------------------------------
+# Figure 9: Number of false positives among 20 true null hypotheses
+# ------------------------------------------------------------------
+false_positive_data <- data.frame(y = 0:6)
+false_positive_data$probability <- dbinom(false_positive_data$y, size = 20, prob = 0.05)
+false_positive_data$region <- ifelse(
+  false_positive_data$y == 0,
+  "No false positives",
+  "At least one false positive"
+)
+
+p_false_positive_count <- ggplot(
+  false_positive_data,
+  aes(x = factor(y), y = probability, fill = region)
+) +
+  geom_col(width = 0.75) +
+  geom_text(aes(label = sprintf("%.3f", probability)), vjust = -0.4, size = 4.2) +
+  scale_fill_manual(
+    values = c(
+      "No false positives" = course_grey,
+      "At least one false positive" = course_red
+    )
+  ) +
+  scale_y_continuous(limits = c(0, 0.43)) +
+  labs(
+    title = "False Positives Among 20 Foods: Y ~ Bin(20, 0.05)",
+    subtitle = "P(Y = 0) = 0.358     P(Y ≥ 1) = 0.642     E(Y) = 1",
+    x = "Number of Foods Declared Significant (Y)",
+    y = "Probability",
+    fill = NULL
+  ) +
+  lecture_chart_theme +
+  theme(legend.position = "bottom")
+
+# ------------------------------------------------------------------
+# Figure 10: Multiple testing and false-positive risk
+# ------------------------------------------------------------------
+multiple_testing_data <- data.frame(tests = 1:50)
+multiple_testing_data$at_least_one <- 1 - (1 - 0.05)^multiple_testing_data$tests
+
+p_multiple_testing <- ggplot(multiple_testing_data, aes(x = tests, y = at_least_one)) +
+  geom_line(colour = course_blue, linewidth = 1.2) +
+  geom_point(
+    data = subset(multiple_testing_data, tests == 20),
+    colour = course_red,
+    size = 3.2
+  ) +
+  annotate(
+    "text", x = 22, y = 0.58,
+    label = "20 tests: 0.642",
+    colour = course_red, hjust = 0, size = 4.4
+  ) +
+  scale_y_continuous(
+    labels = function(x) paste0(round(100 * x), "%"),
+    limits = c(0, 1)
+  ) +
+  labs(
+    title = "Chance of at Least One False Positive",
+    subtitle = "Independent tests at α = 0.05 when every null hypothesis is true",
+    x = "Number of Tests",
+    y = "Probability"
+  ) +
+  lecture_chart_theme
+
+# ------------------------------------------------------------------
+# Figures 11-13: Type I error, Type II error and power (sweetness study)
+# ------------------------------------------------------------------
+se_cola <- 1 / sqrt(10)
+critical_xbar <- qnorm(0.95, mean = 0, sd = se_cola)
+beta_cola <- pnorm(critical_xbar, mean = 0.8, sd = se_cola)
+power_cola <- 1 - beta_cola
+x_grid <- seq(-1.1, 1.9, length.out = 1000)
+
+null_curve <- data.frame(xbar = x_grid, density = dnorm(x_grid, mean = 0, sd = se_cola))
+alt_curve <- data.frame(xbar = x_grid, density = dnorm(x_grid, mean = 0.8, sd = se_cola))
+
+decision_labels <- list(
+  annotate("text", x = critical_xbar + 0.03, y = 1.42, label = "Reject H₀ →",
+           hjust = 0, size = 4.2),
+  annotate("text", x = critical_xbar - 0.03, y = 1.42, label = "← Fail to reject H₀",
+           hjust = 1, size = 4.2)
+)
+
+# Figure 11: Type I error = area under the null curve beyond the cutoff
+p_type1 <- ggplot(null_curve, aes(x = xbar, y = density)) +
+  geom_area(
+    data = subset(null_curve, xbar >= critical_xbar),
+    fill = course_red, alpha = 0.55
+  ) +
+  geom_line(colour = course_blue, linewidth = 1.2) +
+  geom_vline(xintercept = critical_xbar, linetype = "dashed") +
+  annotate("segment", x = 1.05, y = 0.42, xend = 0.66, yend = 0.08,
+           colour = course_red, linewidth = 0.6,
+           arrow = arrow(length = unit(0.08, "inches"))) +
+  annotate("text", x = 1.08, y = 0.48, label = "α = 0.05", hjust = 0,
+           colour = course_red, size = 4.8, fontface = "bold") +
+  annotate("text", x = -0.78, y = 0.9, label = "H₀ true: μ = 0",
+           colour = course_blue, size = 4.6) +
+  decision_labels +
+  scale_y_continuous(limits = c(0, 1.5)) +
+  labs(
+    title = "Type I Error: Rejecting H₀ When μ = 0",
+    subtitle = sprintf("Cutoff: reject when the sample mean is at least %.3f", critical_xbar),
+    x = "Sample Mean Sweetness Loss",
+    y = "Density"
+  ) +
+  lecture_chart_theme
+
+# Figure 12: Type II error = area under the alternative curve below the cutoff
+p_type2 <- ggplot(alt_curve, aes(x = xbar, y = density)) +
+  geom_area(
+    data = subset(alt_curve, xbar <= critical_xbar),
+    fill = course_gold, alpha = 0.6
+  ) +
+  geom_line(colour = course_green, linewidth = 1.2) +
+  geom_vline(xintercept = critical_xbar, linetype = "dashed") +
+  annotate("segment", x = -0.12, y = 0.52, xend = 0.32, yend = 0.22,
+           colour = "#8a5f17", linewidth = 0.6,
+           arrow = arrow(length = unit(0.08, "inches"))) +
+  annotate("text", x = -0.15, y = 0.58, label = sprintf("β = %.3f", beta_cola),
+           hjust = 1, colour = "#8a5f17", size = 4.8, fontface = "bold") +
+  annotate("text", x = 1.40, y = 1.0, label = "Truth: μ = 0.8",
+           colour = course_green, size = 4.6) +
+  decision_labels +
+  scale_y_continuous(limits = c(0, 1.5)) +
+  labs(
+    title = "Type II Error: Failing to Reject H₀ When μ = 0.8",
+    subtitle = sprintf("Same cutoff %.3f, but probability now comes from the μ = 0.8 curve", critical_xbar),
+    x = "Sample Mean Sweetness Loss",
+    y = "Density"
+  ) +
+  lecture_chart_theme
+
+# Figure 13: Both curves, with alpha, beta and power
+power_regions <- rbind(
+  data.frame(subset(null_curve, xbar >= critical_xbar), region = "α (Type I error)"),
+  data.frame(subset(alt_curve, xbar <= critical_xbar), region = "β (Type II error)"),
+  data.frame(subset(alt_curve, xbar >= critical_xbar), region = "Power = 1 − β")
+)
+
+p_power <- ggplot() +
+  geom_area(
+    data = power_regions,
+    aes(x = xbar, y = density, fill = region),
+    alpha = 0.45, position = "identity"
+  ) +
+  geom_line(data = null_curve, aes(x = xbar, y = density), colour = course_blue, linewidth = 1.1) +
+  geom_line(data = alt_curve, aes(x = xbar, y = density), colour = course_green, linewidth = 1.1) +
+  geom_vline(xintercept = critical_xbar, linetype = "dashed") +
+  annotate("text", x = -0.62, y = 1.12, label = "μ = 0", colour = course_blue, size = 4.6) +
+  annotate("text", x = 1.45, y = 1.12, label = "μ = 0.8", colour = course_green, size = 4.6) +
+  scale_fill_manual(
+    values = c(
+      "α (Type I error)" = course_red,
+      "β (Type II error)" = course_gold,
+      "Power = 1 − β" = course_green
+    ),
+    breaks = c("α (Type I error)", "β (Type II error)", "Power = 1 − β")
+  ) +
+  scale_y_continuous(limits = c(0, 1.35)) +
+  labs(
+    title = "One Cutoff, Two Sampling Distributions",
+    x = "Sample Mean Sweetness Loss",
+    y = "Density",
+    fill = NULL
+  ) +
+  lecture_chart_theme +
+  theme(legend.position = "bottom")
+
+# ------------------------------------------------------------------
+# Figure 14: Power depends on the true mean (power curve)
+# ------------------------------------------------------------------
+power_function_data <- data.frame(mu = seq(0, 1.5, by = 0.01))
+power_function_data$power <- 1 - pnorm(critical_xbar, mean = power_function_data$mu, sd = se_cola)
+power_function_points <- data.frame(mu = c(0, 0.3, 0.5, 0.8, 1.0))
+power_function_points$power <- 1 - pnorm(critical_xbar, mean = power_function_points$mu, sd = se_cola)
+power_function_points$label_hjust <- c(-0.3, 1.25, 1.25, 1.25, 1.25)
+
+p_power_function <- ggplot(power_function_data, aes(x = mu, y = power)) +
+  geom_hline(yintercept = 0.90, linetype = "dashed", colour = course_red) +
+  geom_line(colour = course_blue, linewidth = 1.2) +
+  geom_point(data = power_function_points, colour = course_red, size = 3.2) +
+  geom_text(
+    data = power_function_points,
+    aes(label = sprintf("%.3f", power), hjust = label_hjust),
+    vjust = -0.3, size = 4.1
+  ) +
+  annotate("text", x = 1.48, y = 0.86, label = "Target 0.90", colour = course_red,
+           hjust = 1, size = 4.1) +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(
+    title = "Power Against Different True Means",
+    subtitle = "n = 10, σ = 1, α = 0.05; at μ = 0 the 'power' equals α",
+    x = "True Mean Sweetness Loss μ",
+    y = "Power"
+  ) +
+  lecture_chart_theme
+
+# ------------------------------------------------------------------
+# Figure 15: Type II error with a binomial model (dogs revisited)
+# Reject H0: p = 0.80 when X <= 42.
+# ------------------------------------------------------------------
+binomial_cutoff <- max(which(pbinom(0:60, 60, 0.80) <= 0.05)) - 1
+binomial_compare_values <- 28:56
+
+binomial_compare <- rbind(
+  data.frame(
+    x = binomial_compare_values,
+    probability = dbinom(binomial_compare_values, 60, 0.80),
+    model = "H₀ true: p = 0.80",
+    region = ifelse(binomial_compare_values <= binomial_cutoff,
+                    "Reject H₀ (Type I error)", "Correct decision")
+  ),
+  data.frame(
+    x = binomial_compare_values,
+    probability = dbinom(binomial_compare_values, 60, 0.70),
+    model = "Alternative true: p = 0.70",
+    region = ifelse(binomial_compare_values <= binomial_cutoff,
+                    "Correct decision", "Fail to reject H₀ (Type II error)")
+  )
+)
+binomial_compare$model <- factor(
+  binomial_compare$model,
+  levels = c("H₀ true: p = 0.80", "Alternative true: p = 0.70")
+)
+
+binomial_error_labels <- data.frame(
+  model = factor(levels(binomial_compare$model), levels = levels(binomial_compare$model)),
+  x = c(35, 51),
+  y = c(0.075, 0.118),
+  label = c(
+    sprintf("α = P(X ≤ %d | 0.80) = %.3f", binomial_cutoff, pbinom(binomial_cutoff, 60, 0.80)),
+    sprintf("β = P(X ≥ %d | 0.70) = %.3f", binomial_cutoff + 1, 1 - pbinom(binomial_cutoff, 60, 0.70))
+  ),
+  colour = c(course_red, "#8a5f17")
+)
+
+p_binomial_type2 <- ggplot(binomial_compare, aes(x = x, y = probability, fill = region)) +
+  geom_col(width = 0.82) +
+  geom_vline(xintercept = binomial_cutoff + 0.5, linetype = "dashed") +
+  geom_text(
+    data = binomial_error_labels,
+    aes(x = x, y = y, label = label),
+    inherit.aes = FALSE,
+    colour = binomial_error_labels$colour,
+    size = 4.2, fontface = "bold"
+  ) +
+  facet_wrap(~ model, ncol = 1) +
+  guides(fill = guide_legend(nrow = 2)) +
+  scale_fill_manual(
+    values = c(
+      "Reject H₀ (Type I error)" = course_red,
+      "Fail to reject H₀ (Type II error)" = course_gold,
+      "Correct decision" = course_grey
+    )
+  ) +
+  labs(
+    title = sprintf("Decision Rule: Reject H₀ When X ≤ %d", binomial_cutoff),
+    x = "Number of Dogs That Respond (out of 60)",
+    y = "Probability",
+    fill = NULL
+  ) +
+  lecture_chart_theme +
+  theme(
+    legend.position = "bottom",
+    strip.text = element_text(size = 12.5, face = "bold")
+  )
+
+# ------------------------------------------------------------------
+# Figure 16: Effect size and the sample required for target power
+# ------------------------------------------------------------------
+effect_sizes <- seq(0.20, 1.50, by = 0.01)
+z_alpha <- qnorm(0.95)
+z_power <- qnorm(0.90)
+
+power_sample_data <- data.frame(
+  effect_size = effect_sizes,
+  required_n = ((z_alpha + z_power) / effect_sizes)^2
+)
+
+p_power_sample <- ggplot(power_sample_data, aes(x = effect_size, y = required_n)) +
+  geom_line(colour = course_blue, linewidth = 1.2) +
+  annotate(
+    "point", x = 0.80, y = ceiling(((z_alpha + z_power) / 0.80)^2),
+    colour = course_red, size = 3.2
+  ) +
+  annotate(
+    "text", x = 0.84, y = 38,
+    label = "δ = 0.8: n = 13.38, round up to 14",
+    colour = course_red, hjust = 0, size = 4.4
+  ) +
+  labs(
+    title = "Smaller Effects Require Larger Samples",
+    subtitle = "One-sided z test, α = 0.05, power = 0.90, σ = 1",
+    x = "Effect Size to Detect δ",
+    y = "Required Sample Size"
+  ) +
+  lecture_chart_theme
+
+# ------------------------------------------------------------------
 # Save the figures used in both the notes and the lecture slides.
-save_plot(
-  "fig_ch15_margin_sample_size.png",
-  p_margin
-)
-
-save_plot(
-  "fig_ch15_confidence_levels.png",
-  p_iq_intervals,
-  height = 3.8
-)
-
-save_plot(
-  "fig_ch15_power_curves.png",
-  p_power,
-  height = 4.7
-)
-
-save_plot(
-  "fig_ch15_significance_sample_size.png",
-  p_significance
-)
-
-save_plot(
-  "fig_ch15_multiple_testing.png",
-  p_multiple_testing
-)
-
-save_plot(
-  "fig_ch15_power_sample_size.png",
-  p_power_sample
-)
-
-save_plot(
-  "fig_ch15_binomial_tail.png",
-  p_binomial_tail
-)
-
-save_plot(
-  "fig_ch15_poisson_tail.png",
-  p_poisson_tail
-)
+# ------------------------------------------------------------------
+save_plot("fig_ch15_critical_values.png", p_critical)
+save_plot("fig_ch15_coverage.png", p_coverage, height = 3.8)
+save_plot("fig_ch15_confidence_levels.png", p_iq_intervals, height = 3.2)
+save_plot("fig_ch15_margin_sample_size.png", p_margin)
+save_plot("fig_ch15_intervals_sample_size.png", p_interval_n)
+save_plot("fig_ch15_binomial_tail.png", p_binomial_tail, height = 3.6)
+save_plot("fig_ch15_poisson_tail.png", p_poisson_tail, height = 3.6)
+save_plot("fig_ch15_significance_sample_size.png", p_significance)
+save_plot("fig_ch15_false_positive_count.png", p_false_positive_count, height = 3.6)
+save_plot("fig_ch15_multiple_testing.png", p_multiple_testing)
+save_plot("fig_ch15_type1_error.png", p_type1)
+save_plot("fig_ch15_type2_error.png", p_type2)
+save_plot("fig_ch15_power_curves.png", p_power, height = 3.6)
+save_plot("fig_ch15_power_function.png", p_power_function)
+save_plot("fig_ch15_binomial_type2.png", p_binomial_type2, height = 4.4)
+save_plot("fig_ch15_power_sample_size.png", p_power_sample)
 ```
 
 # Chapter 15 {.chapter-root .unlisted}
 
 ## Inference in Practice
 
-Chapter 14 introduced confidence intervals and hypothesis tests for a population mean under a set of simple conditions. Those procedures provide a clear introduction to the logic of inference, but using inference well requires more than knowing a formula.
+Chapters 9 through 12 built probability models: rules for events, random variables and the Normal, binomial and Poisson distributions. Chapters 13 and 14 used those models to describe how a statistic varies from sample to sample and introduced confidence intervals and hypothesis tests for a population mean.
 
-The conclusions from a statistical procedure depend on several connected questions:
+This chapter connects the two halves. Every confidence interval and every $P$-value is a probability calculation from a distribution. Once that connection is clear, we can ask the practical questions that decide whether an inferential conclusion deserves to be trusted:
 
 1. Where did the data come from?
-2. Does the statistical model fit the data and the study design?
+2. Does the probability model fit the data and the study design?
 3. How much random uncertainty remains in the estimate?
 4. How large is the estimated effect, and does it matter in context?
-5. Was the analysis planned before the data were examined?
+5. What errors could the decision produce, and how likely are they?
+6. Was the study large enough, and was the analysis planned before the data were examined?
 
 > **Central idea**
 >
-> Statistical methods are trustworthy when the assumptions fit the study and the conclusions remain within the limits of the design.
+> Probability describes what data could occur under a model. Inference compares the observed data with those model-based possibilities. Statistical methods are trustworthy when the model fits the study and the conclusions remain within the limits of the design.
 
-This chapter develops the practical judgment needed to use confidence intervals and hypothesis tests responsibly. The principles apply far beyond the one-sample $z$ procedures studied in Chapter 14.
+The chapter follows the order of those questions: the probability foundations (15.2), the conditions that connect a model to a study (15.3), how confidence intervals behave (15.4), how tests turn distributions into $P$-values (15.5), how to interpret significance (15.6), the errors a test can make and its power (15.7) and how to plan the size of a study (15.8).
 
 ## Probability as the Foundation of Inference
 
@@ -1092,7 +1391,7 @@ The probability chapters and the inference chapters address different stages of 
 - A **sampling distribution** describes how a statistic would vary across repeated samples drawn by the same method.
 - **Statistical inference** starts with observed sample data and uses the sampling distribution to evaluate possible population values.
 
-The direction of the reasoning changes, but the probability rules do not. Complements, disjoint-event addition, conditional probability, independence and distributional models all appear in inferential calculations.
+The direction of the reasoning changes, but the probability rules do not.
 
 > **Probability-to-inference connection**
 >
@@ -1124,7 +1423,18 @@ $$
 \sigma_{\bar X}=\frac{\sigma}{\sqrt{n}}
 $$
 
-This smaller standard deviation is the standard error of the sample mean under the model. It measures the sample-to-sample variation relevant to inference.
+This smaller standard deviation is the standard deviation of the sampling distribution of $\bar X$. It measures the sample-to-sample variation relevant to inference. (When $\sigma$ must be estimated from the data, the estimated version is called the **standard error**; in this chapter $\sigma$ is treated as known.)
+
+### The Probability-to-Inference Process
+
+| Stage | Question | Statistical object |
+|:--|:--|:--|
+| Probability model | What outcomes could occur if the model were correct? | Normal, binomial or Poisson distribution |
+| Sampling distribution | How would a statistic vary across repeated samples? | Distribution of $\bar x$, $\hat p$ or a count |
+| Inference | Is the observed statistic plausible under a stated population claim? | Confidence interval or $P$-value |
+| Practical conclusion | What does the evidence support in the study setting? | Contextual conclusion with limitations |
+
+Every inferential conclusion is conditional on the probability model and on the way the data were collected.
 
 ### Probability Rules Used in Inference
 
@@ -1136,7 +1446,7 @@ Several familiar probability rules appear directly in confidence intervals and t
    P(Z\ge z)=1-P(Z<z)
    $$
 
-   Upper-tail probabilities often use this form.
+   Upper-tail probabilities often use this form. It also gives $P(\text{at least one}) = 1 - P(\text{none})$, which we use for multiple testing in Section 15.6.
 
 2. **Addition of disjoint events**
 
@@ -1154,7 +1464,7 @@ Several familiar probability rules appear directly in confidence intervals and t
 
 4. **Independence**
 
-   Standard errors and exact binomial or Poisson probabilities usually rely on observations or events behaving independently under the model.
+   Observations are independent when knowing the value of one observation does not change the probabilities for another. Standard errors, the multiplication rule and exact binomial or Poisson probabilities all rely on this assumption.
 
 ### Matching the Distribution to the Response
 
@@ -1166,7 +1476,26 @@ The response variable and study design guide the choice of a probability model.
 | Number of successes in $n$ trials | Binomial model | Success probability $p$ |
 | Number of events in fixed exposure | Poisson model | Event rate $\lambda$ |
 
-The model describes more than the shape of a distribution. A binomial model assumes a fixed number of trials, two possible outcomes, independent trials and a common success probability. A Poisson model assumes a stable event rate over the defined exposure and an event process without unexplained clustering.
+The model describes more than the shape of a distribution. A binomial model assumes a fixed number of trials, two possible outcomes, independent trials and a common success probability. A Poisson model assumes events occur independently at a stable rate over the defined exposure, without unexplained clustering.
+
+### The Normal Distribution in Inference
+
+Chapter 11 used $z$-scores to convert an observation into an area under the Standard Normal curve. Inference applies the same standardization to a **statistic** instead of an individual observation:
+
+$$
+z=\frac{\text{statistic}-\text{model value of its mean}}{\text{standard deviation of the statistic}}
+$$
+
+For the sample mean, the standard deviation of the statistic is $\sigma/\sqrt{n}$. It plays the role that $\sigma$ played for individual observations.
+
+The same Standard Normal areas then serve two purposes:
+
+- **Central areas** give critical values for confidence intervals. The middle $95\%$ lies between $-1.96$ and $1.96$.
+- **Tail areas** measure how unusual a test statistic is under $H_0$.
+
+```{r critical-values-plot, echo=FALSE, fig.width=6.4, fig.height=3.4}
+p_critical
+```
 
 ### Exact Probabilities and Normal Approximations
 
@@ -1185,41 +1514,7 @@ np\ge10
 n(1-p)\ge10
 $$
 
-For a sample mean, the population shape and the sample size determine whether the Central Limit Theorem provides an adequate approximation.
-
-### The One-Sample $z$ Procedures
-
-Chapter 14 considered inference about a population mean $\mu$ under three simple conditions:
-
-- The observations came from a simple random sample
-- The population distribution was Normal, or the sampling distribution of $\bar{x}$ was approximately Normal
-- The population standard deviation $\sigma$ was known
-
-Under these conditions, the confidence interval for $\mu$ is
-
-$$
-\bar{x}
-\pm
-z^*\frac{\sigma}{\sqrt{n}}
-$$
-
-The test statistic for
-
-$$
-H_0:\mu=\mu_0
-$$
-
-is
-
-$$
-z
-=
-\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}
-$$
-
-These are called **$z$ procedures** because they use the Standard Normal distribution.
-
-Knowing the population standard deviation is unusual in real applications. Chapter 17 replaces $\sigma$ with the sample standard deviation $s$ and introduces the $t$ procedures. The practical questions about study design, model conditions and interpretation remain the same.
+For a sample mean, the population shape and the sample size determine whether the Central Limit Theorem provides an adequate approximation. Section 15.5 compares an exact binomial $P$-value with its Normal approximation.
 
 ---
 
@@ -1233,6 +1528,35 @@ Two broad questions guide the assessment:
 2. **What is the shape of the population or sampling distribution?**
 
 The first question concerns study design. The second concerns the probability model used by the procedure.
+
+### The One-Sample $z$ Procedures
+
+Chapter 14 considered inference about a population mean $\mu$ under these conditions:
+
+- The observations came from a simple random sample (or a defensible random process)
+- The observations are independent
+- The population distribution is Normal, or the sampling distribution of $\bar{x}$ is approximately Normal
+- The population standard deviation $\sigma$ is known
+
+Under these conditions, the confidence interval for $\mu$ is
+
+$$
+\bar{x}
+\pm
+z^*\frac{\sigma}{\sqrt{n}}
+$$
+
+and the test statistic for $H_0:\mu=\mu_0$ is
+
+$$
+z
+=
+\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}
+$$
+
+These are called **$z$ procedures** because they use the Standard Normal distribution.
+
+Knowing the population standard deviation is unusual in real applications. Chapter 17 replaces $\sigma$ with the sample standard deviation $s$ and introduces the $t$ procedures. The practical questions in this chapter about study design, model conditions and interpretation remain the same.
 
 ### Where the Data Come From
 
@@ -1266,9 +1590,37 @@ The resulting conclusion depends on subject-matter reasoning:
 
 There is no formula that repairs a biased sampling process. When random selection is absent, uncertainty extends beyond the reported standard error.
 
+### Example 15.1: The Neurobiologist and the Sociologist
+
+Two researchers recruit students from introductory courses at one university.
+
+**Neurobiology study:** A neurobiologist studies how people with normal vision respond to an optical illusion. Basic visual-processing mechanisms may be similar across many groups. Subject-matter knowledge may therefore support a cautious interpretation beyond the specific class, even though the students are not an actual random sample of all people with normal vision.
+
+**Sociology study:** A sociologist studies attitudes toward the use of human participants in scientific research. Age, education, field of study, family background and campus culture may all affect these attitudes. Students in one sociology class are unlikely to represent all adults or even all university students.
+
+The sampling method is similar in the two studies, but the plausibility of broader generalization differs because the variables and scientific questions differ.
+
+> **Main lesson**
+>
+> Whether a convenience sample can support a broader conclusion depends partly on how the selection process could relate to the variable being studied.
+
+### Additional Study-Design Examples
+
+Three studies from Chapter 14 illustrate different relationships between the sample and the intended population.
+
+| Study | Data source | Assessment |
+|:--|:--|:--|
+| Heights in NHANES | A complex multistage probability sample | The sample is broadly representative, but a formal analysis should account for the complex design |
+| IQ scores in a school district | A random sample of seventh-grade girls in the district | The design supports inference to the stated district population |
+| Blood phosphorus measurements | Random medical records from one laboratory in Ohio | The sample may represent a narrow laboratory-related population but not all adults aged $75$ to $79$ |
+
+The phosphorus study has two important limitations. Patients whose blood was tested at one laboratory may differ from the broader population, and laboratory procedures can affect recorded measurements. These limitations restrict generalization even though the records were randomly selected from that laboratory.
+
+The population named in the conclusion should match the population the sampling process can reasonably represent.
+
 ### Independence of Observations
 
-Many introductory formulas assume that the observations are independent. Independence means that learning one observation does not determine the value of another observation under the model.
+Many introductory formulas assume that the observations are independent. Independence means that knowing one observation does not change the probabilities for another observation under the model.
 
 Dependence can arise when
 
@@ -1298,7 +1650,7 @@ Even a well-designed sample or experiment can encounter difficulties.
 
 **Protocol deviations** occur when participants do not follow their assigned treatment or researchers do not apply the planned procedure consistently.
 
-These problems are not automatically represented in a standard confidence interval or P-value.
+These problems are not automatically represented in a standard confidence interval or $P$-value.
 
 ### Complex Sampling Designs
 
@@ -1313,11 +1665,9 @@ These designs can be efficient and scientifically appropriate, but the analysis 
 
 The design and the analysis should be planned together.
 
-### The Population Model
+### The Population Model and Sample Size
 
-Parametric inference begins with a probability model for the population. For inference about a mean, the model identifies the population mean $\mu$ as the unknown parameter.
-
-The one-sample $z$ procedures use the distribution of the sample mean. The relevant condition is therefore the shape of the **sampling distribution of $\bar{x}$**, not necessarily the exact shape of the individual observations.
+Parametric inference begins with a probability model for the population. For inference about a mean, the one-sample $z$ procedures use the distribution of the sample mean. The relevant condition is therefore the shape of the **sampling distribution of $\bar{x}$**, not necessarily the exact shape of the individual observations.
 
 If the population is Normal, then
 
@@ -1330,21 +1680,15 @@ N\left(
 \right)
 $$
 
-for every sample size $n$.
+for every sample size $n$. (Following the textbook, the second number in $N(\cdot,\cdot)$ is a standard deviation.)
 
-If the population is not Normal, the Central Limit Theorem often makes the sampling distribution of $\bar{x}$ approximately Normal when the sample size is sufficiently large.
+If the population is not Normal, the Central Limit Theorem often makes the sampling distribution of $\bar{x}$ approximately Normal when the sample size is sufficiently large. How large depends on the population shape:
 
-### Sample Size and Normality
+- With a small sample, strong skewness or outliers can make Normal-based inference unreliable
+- A moderate sample is often sufficient when the population is roughly symmetric with light tails
+- A strongly skewed or heavy-tailed population may require a large sample or a different method
 
-The sample size needed for a reasonable Normal approximation depends on the population shape.
-
-- A nearly symmetric population with light tails may require only a moderate sample
-- A strongly skewed population may require a larger sample
-- A population with heavy tails or extreme outliers may require a very large sample or a different method
-
-There is no universal rule that makes $n=30$ sufficient for every population.
-
-When the population distribution is unknown, previous research and graphs of the sample data provide useful evidence. A dotplot, histogram or Normal quantile plot can reveal strong skewness, gaps and unusual observations.
+There is no universal rule that makes $n=30$ sufficient for every population. When the population distribution is unknown, previous research and graphs of the sample data provide useful evidence. A dotplot, histogram or Normal quantile plot can reveal strong skewness, gaps and unusual observations.
 
 ### Small Samples and Outliers
 
@@ -1355,7 +1699,7 @@ Outliers deserve particular attention because the sample mean and sample standar
 - Shift the value of $\bar{x}$
 - Increase the value of $s$
 - Change a confidence interval
-- Alter the test statistic and P-value
+- Alter the test statistic and $P$-value
 
 Before removing an observation, researchers should determine whether it reflects a data-entry error, measurement problem or valid but unusual case. An observation should not be excluded only because its removal makes the analysis more favourable.
 
@@ -1364,42 +1708,13 @@ Before removing an observation, researchers should determine whether it reflects
 Before using an inferential procedure, ask:
 
 1. What population or treatment comparison does the study address?
-2. How were individuals selected?
-3. Was treatment assigned randomly?
-4. Are the observations sufficiently independent?
-5. Does the population or sampling-distribution model fit the data and sample size?
-6. Are outliers, missing values or measurement problems present?
-7. Does the procedure account for the actual sampling or experimental design?
+2. How were individuals selected and, when applicable, assigned to treatments?
+3. Are the observations sufficiently independent?
+4. Does the probability model match the response and the study process?
+5. Are outliers, missing values or measurement problems present?
+6. Does the procedure account for the actual sampling or experimental design?
 
-The answers determine whether the standard error, confidence interval and P-value have a defensible interpretation.
-
-### Example 15.1: The Neurobiologist and the Sociologist
-
-Two researchers recruit students from introductory courses at one university.
-
-**Neurobiology study:** A neurobiologist studies how people with normal vision respond to an optical illusion. Basic visual-processing mechanisms may be similar across many groups. Subject-matter knowledge may therefore support a cautious interpretation beyond the specific class, even though the students are not an actual random sample of all people with normal vision.
-
-**Sociology study:** A sociologist studies attitudes toward the use of human participants in scientific research. Age, education, field of study, family background and campus culture may all affect these attitudes. Students in one sociology class are unlikely to represent all adults or even all university students.
-
-The sampling method is similar in the two studies, but the plausibility of broader generalization differs because the variables and scientific questions differ.
-
-> **Main lesson**
->
-> Whether a convenience sample can support a broader conclusion depends partly on how the selection process could relate to the variable being studied.
-
-### Additional Study-Design Examples
-
-Three studies from Chapter 14 illustrate different relationships between the sample and the intended population.
-
-| Study | Data source | Assessment |
-|:--|:--|:--|
-| Heights in NHANES | A complex multistage probability sample | The sample is broadly representative, but a formal analysis should account for the complex design |
-| IQ scores in a school district | A random sample of seventh-grade girls in the district | The design supports inference to the stated district population |
-| Blood phosphorus measurements | Random medical records from one laboratory in Ohio | The sample may represent a narrow laboratory-related population but not all adults aged $75$ to $79$ |
-
-The phosphorus study has two important limitations. Patients whose blood was tested at one laboratory may differ from the broader population, and laboratory procedures can affect recorded measurements. These limitations restrict generalization even though the records were randomly selected from that laboratory.
-
-The population named in the conclusion should match the population the sampling process can reasonably represent.
+The answers determine whether the standard error, confidence interval and $P$-value have a defensible interpretation. For the rest of the chapter we assume the conditions hold and study how the procedures behave.
 
 ---
 
@@ -1413,14 +1728,14 @@ $$
 \text{margin of error}
 $$
 
-The margin of error combines a critical value with the standard error of the estimate:
+The margin of error combines a critical value with the standard deviation of the estimate:
 
 $$
 \text{margin of error}
 =
 \text{critical value}
 \times
-\text{standard error}
+\text{standard deviation of the estimate}
 $$
 
 For the one-sample $z$ interval for a population mean,
@@ -1431,11 +1746,7 @@ m
 z^*\frac{\sigma}{\sqrt{n}}
 $$
 
-Three quantities determine the margin of error:
-
-- The confidence level through the critical value $z^*$
-- The population variability through $\sigma$
-- The sample size through $n$
+The estimate determines the centre of the interval and the margin of error determines its half-width.
 
 ### From the Sampling Distribution to a Confidence Interval
 
@@ -1461,7 +1772,7 @@ P\left(
 =0.95
 $$
 
-Rearranging the inequalities places $\mu$ in the centre:
+Multiplying through by $\sigma/\sqrt{n}$ and rearranging the inequalities places $\mu$ in the centre:
 
 $$
 P\left(
@@ -1480,101 +1791,64 @@ Before sampling, the endpoints are random because they depend on $\bar X$. The p
 
 A $95\%$ confidence procedure has a long-run coverage rate of $95\%$ under the stated model. If the same sampling process were repeated many times, approximately $95\%$ of the resulting intervals would contain the true parameter and approximately $5\%$ would miss it.
 
-After one sample has been collected, the calculated interval is fixed. The usual frequentist interpretation refers to the reliability of the procedure rather than a probability assigned to the fixed parameter.
+The figure below simulates this process. Forty random samples of $n=31$ IQ scores are drawn from a population with $\mu=100$ and $\sigma=15$, and a $95\%$ interval is computed from each sample.
+
+```{r coverage-plot, echo=FALSE, fig.width=6.4, fig.height=3.8}
+p_coverage
+```
+
+In this simulation, `r coverage_misses` of the $40$ intervals miss $\mu$. Because each interval independently captures $\mu$ with probability $0.95$, the number of misses among $40$ intervals follows a $\operatorname{Bin}(40,0.05)$ distribution with mean $40(0.05)=2$. This is the probability model behind the phrase "95% confident".
+
+After one sample has been collected, the calculated interval is fixed. Either it contains $\mu$ or it does not. The usual frequentist interpretation refers to the reliability of the procedure rather than a probability assigned to the fixed parameter.
 
 > **Suitable interpretation**
 >
 > We are $95\%$ confident that the population parameter lies between the reported endpoints because the method captures the true parameter in approximately $95\%$ of repeated samples under the model conditions.
 
-### Confidence and Precision
-
-A confidence interval ideally has both a high confidence level and a small margin of error.
-
-The confidence level describes the long-run success rate of the interval-building procedure. A smaller margin of error describes a more precise estimate. With the same data, these goals compete.
-
-| Confidence level | Critical value $z^*$ | Effect on interval width |
-|:--|--:|:--|
-| $90\%$ | $1.645$ | Narrower |
-| $95\%$ | $1.960$ | Intermediate |
-| $99\%$ | $2.576$ | Wider |
-
-A higher confidence level includes a larger central area under the Standard Normal curve. The larger value of $z^*$ increases the margin of error.
-
-Lowering the confidence level produces a narrower interval, but it also reduces the long-run coverage rate. It does not create additional information in the data.
-
-### Population Variability
-
-The population standard deviation $\sigma$ measures the variability among individual values.
+### Three Quantities Control the Margin of Error
 
 From
 
 $$
-m
-=
-z^*\frac{\sigma}{\sqrt{n}}
+m=z^*\frac{\sigma}{\sqrt{n}}
 $$
 
-the margin of error is directly proportional to $\sigma$. If all other quantities remain fixed, doubling $\sigma$ doubles the margin of error.
+three quantities determine the margin of error:
 
-Natural biological variation often cannot be reduced. Measurement-related variation may sometimes be reduced through
-
-- More precise instruments
-- Standardized measurement procedures
-- Better training and quality control
-- Repeated measurements when scientifically appropriate
-
-The value of $\sigma$ used for planning should describe the population and measurement process relevant to the study.
-
-### Sample Size and Precision
-
-For fixed values of $z^*$ and $\sigma$,
-
-$$
-m
-\propto
-\frac{1}{\sqrt{n}}
-$$
-
-Larger samples produce more precise estimates, but precision improves according to a square-root relationship.
-
-| Change in sample size | Change in standard error | Change in margin of error |
+| Quantity | Change | Effect on $m$ |
 |:--|:--|:--|
-| $n$ becomes $4n$ | Divided by $2$ | Divided by $2$ |
-| $n$ becomes $9n$ | Divided by $3$ | Divided by $3$ |
-| $n$ becomes $100n$ | Divided by $10$ | Divided by $10$ |
+| Confidence level (through $z^*$) | Higher confidence | Larger margin |
+| Population variability $\sigma$ | Larger $\sigma$ | Larger margin |
+| Sample size $n$ | Larger $n$ | Smaller margin |
 
-Doubling the sample size multiplies the margin of error by
+The next subsections examine each quantity in turn using the IQ example.
 
-$$
-\frac{1}{\sqrt{2}}
-\approx
-0.707
-$$
+### Confidence Level and the Critical Value
 
-Therefore, doubling the sample size reduces the margin of error by approximately $29.3\%$, not by $50\%$.
+A confidence interval ideally has both a high confidence level and a small margin of error. With the same data, these goals compete.
 
-```{r margin-of-error-sample-size, echo=FALSE, fig.width=7.4, fig.height=4.4}
-p_margin
-```
+| Confidence level | Central area | Area in each tail | Critical value $z^*$ |
+|:--|:--:|:--:|--:|
+| $90\%$ | $0.90$ | $0.05$ | $1.645$ |
+| $95\%$ | $0.95$ | $0.025$ | $1.960$ |
+| $99\%$ | $0.99$ | $0.005$ | $2.576$ |
 
-The curve becomes flatter as $n$ increases. When a study already has a large sample, obtaining the same absolute reduction in margin of error may require many additional observations.
+A higher confidence level includes a larger central area under the Standard Normal curve, so the cutoffs move farther into the tails and $z^*$ increases.
 
-### Example 15.4: Confidence Level and Margin of Error
+Lowering the confidence level produces a narrower interval, but it also reduces the long-run coverage rate. It does not create additional information in the data.
 
-The IQ study has
+### Example 15.2: Confidence Level and Margin of Error
+
+A random sample of $n=31$ seventh-grade girls in a school district has mean IQ score
 
 $$
 \bar{x}=105.84
-\qquad
-\sigma=15
-\qquad
-n=31
 $$
 
-The standard error is
+and IQ scores are assumed to have $\sigma=15$. The standard deviation of $\bar x$ is
 
 $$
-\operatorname{SE}(\bar{x})
+\frac{\sigma}{\sqrt{n}}
 =
 \frac{15}{\sqrt{31}}
 \approx
@@ -1589,15 +1863,9 @@ m_{95}
 1.960\left(\frac{15}{\sqrt{31}}\right)
 \approx
 5.28
-$$
-
-The interval is
-
-$$
+\qquad\Rightarrow\qquad
 105.84\pm5.28
-$$
-
-$$
+=
 \boxed{(100.56,\ 111.12)}
 $$
 
@@ -1609,11 +1877,7 @@ m_{90}
 1.645\left(\frac{15}{\sqrt{31}}\right)
 \approx
 4.43
-$$
-
-The interval is
-
-$$
+\qquad\Rightarrow\qquad
 \boxed{(101.41,\ 110.27)}
 $$
 
@@ -1625,15 +1889,11 @@ m_{99}
 2.576\left(\frac{15}{\sqrt{31}}\right)
 \approx
 6.94
-$$
-
-The interval is
-
-$$
+\qquad\Rightarrow\qquad
 \boxed{(98.90,\ 112.78)}
 $$
 
-```{r iq-confidence-intervals-plot, echo=FALSE, fig.width=7.4, fig.height=3.8}
+```{r iq-confidence-intervals-plot, echo=FALSE, fig.width=6.4, fig.height=3.2}
 p_iq_intervals
 ```
 
@@ -1659,7 +1919,50 @@ data.frame(
 )
 ```
 
-### Example 15.4 (continued): Doubling the Sample Size
+### Population Variability
+
+The population standard deviation $\sigma$ measures the variability among individual values. The margin of error is directly proportional to $\sigma$: if all other quantities remain fixed, doubling $\sigma$ doubles the margin of error.
+
+A smaller $\sigma$ produces less sample-to-sample variation in $\bar x$; a larger $\sigma$ makes the population mean harder to estimate precisely.
+
+Natural biological variation often cannot be reduced. Measurement-related variation may sometimes be reduced through
+
+- More precise instruments
+- Standardized measurement procedures
+- Better training and quality control
+- Repeated measurements when scientifically appropriate
+
+The value of $\sigma$ used for planning should describe the population and measurement process relevant to the study.
+
+### Sample Size and the Square-Root Relationship
+
+For fixed values of $z^*$ and $\sigma$,
+
+$$
+m
+\propto
+\frac{1}{\sqrt{n}}
+$$
+
+Larger samples produce more precise estimates, but precision improves according to a square-root relationship.
+
+| Change in sample size | Change in $\sigma/\sqrt{n}$ | Change in margin of error |
+|:--|:--|:--|
+| $n$ becomes $4n$ | Divided by $2$ | Divided by $2$ |
+| $n$ becomes $9n$ | Divided by $3$ | Divided by $3$ |
+| $n$ becomes $100n$ | Divided by $10$ | Divided by $10$ |
+
+Doubling the sample size multiplies the margin of error by
+
+$$
+\frac{1}{\sqrt{2}}
+\approx
+0.707
+$$
+
+Therefore, doubling the sample size reduces the margin of error by approximately $29.3\%$, not by $50\%$.
+
+### Example 15.2 (continued): Increasing the Sample Size
 
 The original $95\%$ margin of error is
 
@@ -1693,22 +1996,41 @@ $$
 0.707
 $$
 
-Doubling the sample size does not halve the margin of error. A fourfold increase from $31$ to $124$ would be required to reduce the original margin by one-half.
+Doubling the sample size does not halve the margin of error. A fourfold increase from $31$ to $124$ is required to reduce the original margin by one-half:
 
-A new sample would also usually produce a different sample mean. Increasing $n$ determines how the margin changes, but it does not guarantee that the interval will have the same centre.
+$$
+m_{124}
+=
+1.960\frac{15}{\sqrt{124}}
+\approx
+2.64
+=
+\frac{5.28}{2}
+$$
+
+```{r margin-of-error-sample-size, echo=FALSE, fig.width=6.4, fig.height=3.4}
+p_margin
+```
+
+The curve becomes flatter as $n$ increases. When a study already has a large sample, obtaining the same absolute reduction in margin of error requires many additional observations.
+
+The next figure keeps the confidence level fixed at $95\%$ and shows the actual intervals. For the comparison, the centre is held at $105.84$ so that only the width changes. Each interval is $105.84 \pm 1.96(15)/\sqrt{n}$.
+
+```{r intervals-sample-size, echo=FALSE, fig.width=6.4, fig.height=3.4}
+p_interval_n
+```
+
+With the confidence level fixed, the long-run capture rate stays at $95\%$ for every sample size. What changes with $n$ is the precision: larger samples produce narrower intervals with the same coverage. In practice, a new sample would also produce a different sample mean, so the centre would move as well.
 
 ```{r iq-sample-size-comparison}
-margin_31 <- qnorm(0.975) * 15 / sqrt(31)
-margin_62 <- qnorm(0.975) * 15 / sqrt(62)
-margin_124 <- qnorm(0.975) * 15 / sqrt(124)
+n_values <- c(10, 31, 62, 124, 250, 500)
+margin_values <- qnorm(0.975) * 15 / sqrt(n_values)
 
-round(
-  c(
-    n_31 = margin_31,
-    n_62 = margin_62,
-    n_124 = margin_124
-  ),
-  3
+data.frame(
+  n = n_values,
+  margin = round(margin_values, 2),
+  lower = round(105.84 - margin_values, 2),
+  upper = round(105.84 + margin_values, 2)
 )
 ```
 
@@ -1750,7 +2072,24 @@ Similarly, a clinical trial may produce a precise interval for the participants 
 
 ## How Hypothesis Tests Behave
 
-Hypothesis tests evaluate evidence about a population parameter under a specified model. The procedure begins by assuming that the null hypothesis is true and then asks how unusual the observed result would be under that assumption.
+A confidence interval uses the sampling distribution to describe plausible values of a parameter. A hypothesis test uses the same kind of distribution in a different way: it assumes one specific parameter value, the null hypothesis, and asks how unusual the observed result would be under that assumption.
+
+### A $P$-Value Is a Probability from the Null Distribution
+
+The **null distribution** is the sampling distribution of the test statistic when $H_0$ and the model conditions are true. The $P$-value is a tail probability from that distribution:
+
+$$
+P\text{-value}
+=
+P(\text{test statistic at least as extreme as observed}\mid H_0)
+$$
+
+- A small value means that the observed result lies in an unusual part of the null distribution
+- A large value means that the observed result remains reasonably compatible with the null model
+
+The calculation evaluates the data under $H_0$. It does not have the reverse form $P(H_0\mid\text{data})$, so it is not the probability that $H_0$ is true.
+
+### The Test Statistic Locates the Data
 
 For a one-sample $z$ test of a population mean,
 
@@ -1760,118 +2099,40 @@ z
 \frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}
 $$
 
-The P-value is the probability, calculated under the null hypothesis and model conditions, of obtaining a test statistic at least as extreme as the observed statistic in the direction specified by the alternative hypothesis.
-
-### From the Null Model to a P-Value
-
-The test statistic locates the observed result within the null sampling distribution.
-
-For the one-sample $z$ statistic,
-
-$$
-z
-=
-\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}
-$$
-
-the numerator is the observed difference from the null value and the denominator is the standard error expected from random sampling. A value such as $z=2.4$ means that the observed sample mean is $2.4$ standard errors above the null mean.
-
-The alternative hypothesis determines which outcomes count as at least as extreme:
-
-- An upper-tail alternative uses probability to the right of $z_{\text{obs}}$
-- A lower-tail alternative uses probability to the left of $z_{\text{obs}}$
-- A two-sided alternative combines equally extreme outcomes in both tails
-
-Thus, the $P$-value has the conditional form
-
-$$
-P(\text{test statistic at least as extreme as observed}\mid H_0)
-$$
-
-It does not have the reverse form $P(H_0\mid\text{observed statistic})$.
-
-### Evidence Is Continuous
-
-Smaller P-values indicate that the observed data are less compatible with the null model. Evidence does not change abruptly at a conventional threshold.
-
-For example, the values
-
-$$
-P=0.048
-\qquad\text{and}\qquad
-P=0.052
-$$
-
-represent nearly the same strength of evidence, even though a fixed rule with $\alpha=0.05$ places them on opposite sides of the decision threshold.
-
-By contrast,
-
-$$
-P=0.004
-$$
-
-provides substantially stronger evidence against $H_0$ than
-
-$$
-P=0.04
-$$
-
-Reporting the exact P-value communicates more information than reporting only whether a result is statistically significant.
-
-### How Small Must a P-Value Be?
-
-The strength of evidence required for a decision depends partly on the setting.
-
-**Plausibility of the null hypothesis:** A well-established claim may require stronger evidence before researchers revise it.
-
-**Consequences of rejection:** A decision involving serious health risks, high costs or an irreversible policy change may require stronger evidence than a preliminary decision to continue investigating a question.
-
-**Quality of the study:** A small P-value from biased or poorly measured data does not provide reliable evidence about the intended population question.
-
-Conventional significance levels such as $0.05$ and $0.01$ can support consistent decision rules, but $\alpha=0.05$ should not be treated as a universal boundary between meaningful and meaningless results.
-
-### Type I and Type II Errors
-
-A hypothesis-test decision can be correct or incorrect.
-
-| Decision | $H_0$ is true | A specified alternative is true |
-|:--|:--|:--|
-| Fail to reject $H_0$ | Correct decision | Type II error |
-| Reject $H_0$ | Type I error | Correct decision |
-
-A **Type I error** occurs when the test rejects a true null hypothesis.
-
-$$
-P(\text{Type I error})
-=
-\alpha
-$$
-
-A **Type II error** occurs when the test fails to reject $H_0$ even though a specified alternative is true. Its probability is denoted by $\beta$.
-
-$$
-P(\text{Type II error at a specified alternative})
-=
-\beta
-$$
-
-The relative seriousness of these errors depends on context. For example, approving an ineffective treatment and failing to identify an effective treatment have different consequences.
+the numerator is the observed difference from the null value and the denominator is the standard deviation of $\bar x$ expected from random sampling. A value such as $z=2.4$ means that the observed sample mean is $2.4$ standard deviations of $\bar x$ above the null mean.
 
 ### The Alternative Hypothesis Determines the Tail
 
-The alternative hypothesis determines which outcomes count as evidence against $H_0$.
+The alternative hypothesis determines which outcomes count as at least as extreme.
 
-| Alternative hypothesis | Relevant area for the P-value |
+| Alternative hypothesis | Relevant area for the $P$-value |
 |:--|:--|
-| $H_a:\mu>\mu_0$ | Right tail |
-| $H_a:\mu<\mu_0$ | Left tail |
-| $H_a:\mu\ne\mu_0$ | Both tails |
+| $H_a:\mu>\mu_0$ | Right tail: $P(Z\ge z_{\text{obs}})$ |
+| $H_a:\mu<\mu_0$ | Left tail: $P(Z\le z_{\text{obs}})$ |
+| $H_a:\mu\ne\mu_0$ | Both tails: $2P(Z\ge \lvert z_{\text{obs}}\rvert)$ |
 
-For a symmetric sampling distribution, a one-sided P-value is often one-half of the corresponding two-sided P-value when the observed effect is in the specified direction.
+For a symmetric null distribution, the two-sided $P$-value adds two equal disjoint tails, so a one-sided $P$-value is exactly one-half of the two-sided $P$-value when the observed effect is in the direction specified by $H_a$.
 
-The direction must be justified by the scientific question and existing knowledge before the data are examined. Choosing a one-sided alternative after seeing the sample result makes the evidence appear stronger than the planned analysis permits.
+The direction must be justified by the scientific question before the data are examined. Choosing a one-sided alternative after seeing the sample result makes the evidence appear stronger than the planned analysis permits and does not preserve the intended error rate.
 
-### Example 15.2: Exact Binomial Inference for a Treatment Response
+### The Null Distribution Does Not Have to Be Normal
+
+The logic of a test does not depend on the Normal distribution. Whatever the response, the steps are the same:
+
+1. State $H_0$ and $H_a$ for the parameter
+2. Use $H_0$ to fully specify a probability model for the statistic
+3. Use $H_a$ to decide which tail counts as "at least as extreme"
+4. Add up the probability of the observed outcome and every more extreme outcome
+
+| Outcome | Null model | Practical check |
+|:--|:--|:--|
+| Continuous measurement | Normal sampling model for $\bar x$ | Study design, distributional shape and variability |
+| Binary treatment response | Binomial model for the success count | Independence and a common response probability |
+| Disease-event count | Poisson model for the count | Stable rate, constant exposure and no clustering |
+
+The next two examples use discrete models from Chapter 12. For a discrete count, "at least as extreme" means adding the probabilities of individual outcomes.
+
+### Example 15.3: Exact Binomial Inference for a Treatment Response
 
 A veterinary study evaluates whether a treatment reaches a proposed response probability of $0.80$. Among $60$ independently treated dogs, $41$ show the response defined in the study protocol.
 
@@ -1879,9 +2140,7 @@ Let $X$ be the number of dogs that respond. The hypotheses are
 
 $$
 H_0:p=0.80
-$$
-
-$$
+\qquad
 H_a:p<0.80
 $$
 
@@ -1891,13 +2150,9 @@ $$
 X\sim\operatorname{Bin}(60,0.80)
 $$
 
-The P-value is a conditional probability. The notation
+with expected count $np=60(0.80)=48$. The observed $41$ is below this, which is the direction of $H_a$.
 
-$$
-P(X\le41\mid H_0)
-$$
-
-means that the probability is calculated while treating the null model as true. In this example,
+Because the alternative concerns a lower response probability, the outcomes at least as extreme as observed are $41$ or fewer responses. The notation
 
 $$
 P(X\le41\mid H_0)
@@ -1905,7 +2160,7 @@ P(X\le41\mid H_0)
 P(X\le41\mid p=0.80)
 $$
 
-Because the alternative concerns a lower response probability, the relevant outcomes are $41$ or fewer responses:
+means that the probability is calculated while treating the null model as true. Each individual probability comes from the binomial formula:
 
 $$
 P(X=x\mid H_0)
@@ -1913,20 +2168,18 @@ P(X=x\mid H_0)
 \binom{60}{x}(0.80)^x(0.20)^{60-x}
 $$
 
+The $P$-value adds these probabilities for $x=0,1,\dots,41$:
+
 $$
 P(X\le41\mid p=0.80)
 =
 \sum_{x=0}^{41}
 \binom{60}{x}(0.80)^x(0.20)^{60-x}
-$$
-
-$$
-P(X\le41\mid p=0.80)
 \approx
 0.0221
 $$
 
-```{r binomial-tail-plot, echo=FALSE, fig.width=7.4, fig.height=4.4}
+```{r binomial-tail-plot, echo=FALSE, fig.width=6.4, fig.height=3.6}
 p_binomial_tail
 ```
 
@@ -1953,66 +2206,67 @@ p_value <- pbinom(
 )
 
 p_value
-# [1] 0.02206845
 ```
 
 The argument `q = 41` includes every possible count from $0$ through $41$, which matches the lower-tail event in the summation.
 
+### Example 15.3 (continued): Exact Versus Normal Approximation
+
 The Normal approximation conditions are satisfied because
 
 $$
-np=60(0.80)=48
+np=60(0.80)=48\ge10
+\qquad\text{and}\qquad
+n(1-p)=60(0.20)=12\ge10
 $$
 
-and
+Under $H_0$, the count has mean $48$ and standard deviation
 
 $$
-n(1-p)=60(0.20)=12
+\sqrt{np(1-p)}=\sqrt{60(0.80)(0.20)}=\sqrt{9.6}\approx3.098
 $$
 
-With a continuity correction, the approximate lower-tail probability is
+With a continuity correction, $X\le41$ is approximated by $Y\le41.5$ where $Y\sim N(48,\ 3.098)$:
 
 $$
 P(X\le41)
 \approx
-P(Y\le41.5)
+P\left(Z\le\frac{41.5-48}{3.098}\right)
+=
+P(Z\le-2.10)
+\approx
+0.0180
 $$
 
-where
+| Method | $P$-value |
+|:--|:--:|
+| Exact binomial | $0.0221$ |
+| Normal approximation with continuity correction | $0.0180$ |
 
-$$
-Y\sim N\left(48,\sqrt{60(0.80)(0.20)}\right)
-$$
+Both methods lead to the same conclusion at $\alpha=0.05$, but they do not give the same number. The approximation is less accurate here because $n(1-p)=12$ is barely above $10$. The exact binomial calculation is preferable when it is readily available.
 
-The exact binomial calculation remains preferable when it is readily available.
+```{r binomial-normal-approximation}
+exact <- pbinom(41, size = 60, prob = 0.80)
+approx_cc <- pnorm(41.5, mean = 48, sd = sqrt(60 * 0.80 * 0.20))
 
-### Example 15.3: Exact Poisson Inference for a Disease Count
+round(c(exact = exact, normal_cc = approx_cc), 4)
+```
+
+### Example 15.4: Exact Poisson Inference for a Disease Count
 
 A wildlife-health program historically records an average of $12$ confirmed cases of a disease per month. During one month, the program records $20$ cases. Researchers want to determine whether this count is unusually high under the historical-rate model.
 
-Let $X$ be the number of confirmed cases in one month. The null model is
+Let $X$ be the number of confirmed cases in one month. The hypotheses and null model are
 
 $$
 H_0:\lambda=12
-$$
-
-$$
+\qquad
 H_a:\lambda>12
-$$
-
-$$
+\qquad
 X\sim\operatorname{Pois}(12)
 $$
 
-The conditional notation
-
-$$
-P(X\ge20\mid H_0)
-=
-P(X\ge20\mid\lambda=12)
-$$
-
-means that the tail probability is calculated under the historical mean of $12$ cases per month. For any single count $x$,
+The upper-tail alternative makes counts of $20$ or more at least as extreme as the observed count. For any single count $x$,
 
 $$
 P(X=x\mid H_0)
@@ -2020,34 +2274,27 @@ P(X=x\mid H_0)
 e^{-12}\frac{12^x}{x!}
 $$
 
-The upper-tail probability is
+The upper tail has infinitely many terms, so the complement rule is used:
 
 $$
 P(X\ge20\mid\lambda=12)
 =
 1-P(X\le19\mid\lambda=12)
-$$
-
-$$
 =
 1-
 \sum_{x=0}^{19}
 e^{-12}\frac{12^x}{x!}
-$$
-
-$$
-P(X\ge20\mid\lambda=12)
 \approx
 0.0213
 $$
 
-```{r poisson-tail-plot, echo=FALSE, fig.width=7.4, fig.height=4.4}
+```{r poisson-tail-plot, echo=FALSE, fig.width=6.4, fig.height=3.6}
 p_poisson_tail
 ```
 
 Under the stable-rate model, a monthly count of $20$ or more would occur in approximately $2.13\%$ of months. This result provides evidence against the proposed rate of $12$ cases per month.
 
-The calculation uses the complement rule because R can calculate the cumulative probability through $19$:
+The calculation in R also uses the complement:
 
 ```{r poisson-tail-calculation}
 lambda_null <- 12
@@ -2060,10 +2307,11 @@ p_value <- ppois(
 )
 
 p_value
-# [1] 0.02127977
 ```
 
 Because `lower.tail = FALSE`, R calculates $P(X>19)$. For an integer-valued count, $X>19$ is the same event as $X\ge20$. An equivalent calculation is `1 - ppois(19, lambda = 12)`.
+
+### Example 15.4 (continued): What the Small $P$-Value Does Not Identify
 
 Before concluding that the underlying disease rate increased, researchers should consider whether the Poisson assumptions and exposure remained reasonable. Possible concerns include
 
@@ -2072,7 +2320,53 @@ Before concluding that the underlying disease rate increased, researchers should
 - Clustering within a location or animal group
 - A change in the size of the population at risk
 
-The small tail probability shows tension with the stated Poisson model. It does not identify which assumption or rate changed.
+The small tail probability shows tension with the stated Poisson model. It does not identify which assumption or rate changed. This is true of every $P$-value: a small value can arise because the null parameter value is wrong, because a model assumption is wrong, or both.
+
+---
+
+## Interpreting Statistical Significance
+
+Examples 15.3 and 15.4 produced small $P$-values. This section asks what such a result does and does not tell us.
+
+### Evidence Is Continuous
+
+Smaller $P$-values indicate that the observed data are less compatible with the null model. Evidence does not change abruptly at a conventional threshold.
+
+For example, the values
+
+$$
+P=0.048
+\qquad\text{and}\qquad
+P=0.052
+$$
+
+represent nearly the same strength of evidence, even though a fixed rule with $\alpha=0.05$ places them on opposite sides of the decision threshold. By contrast, $P=0.004$ provides substantially stronger evidence against $H_0$ than $P=0.04$.
+
+Reporting the exact $P$-value communicates more information than reporting only whether a result is statistically significant.
+
+### How Small Must a $P$-Value Be?
+
+The strength of evidence required for a decision depends partly on the setting.
+
+**Plausibility of the null hypothesis:** A well-established claim may require stronger evidence before researchers revise it.
+
+**Consequences of rejection:** A decision involving serious health risks, high costs or an irreversible policy change may require stronger evidence than a preliminary decision to continue investigating a question.
+
+**Quality of the study:** A small $P$-value from biased or poorly measured data does not provide reliable evidence about the intended population question.
+
+Conventional significance levels such as $0.05$ and $0.01$ can support consistent decision rules, but $\alpha=0.05$ should not be treated as a universal boundary between meaningful and meaningless results.
+
+### What a $P$-Value Is Not
+
+A $P$-value is frequently misinterpreted. It is not
+
+- The probability that $H_0$ is true
+- The probability that $H_a$ is true
+- The probability that the observed result occurred only by chance
+- A measure of effect size or practical importance
+- A substitute for checking the study design and model conditions
+
+A large $P$-value means that the observed data remain reasonably compatible with the null model. It does not prove that $H_0$ is true because other parameter values may also be compatible with the data.
 
 ### Statistical Significance Depends on Sample Size
 
@@ -2081,34 +2375,42 @@ The $z$ statistic can be viewed as
 $$
 z
 =
+\frac{\bar{x}-\mu_0}
+{\sigma/\sqrt{n}}
+=
 \frac{\text{size of the observed effect}}
 {\text{size of chance variation}}
 $$
 
-For a one-sample mean,
-
-$$
-z
-=
-\frac{\bar{x}-\mu_0}
-{\sigma/\sqrt{n}}
-$$
-
-The P-value therefore depends on three quantities:
+The $P$-value therefore depends on three quantities:
 
 1. The observed effect $\bar{x}-\mu_0$
 2. The population variability $\sigma$
 3. The sample size $n$
 
-As $n$ increases, the standard error decreases. A very large sample can produce a large test statistic for a small effect. A small sample or a highly variable population may produce weak statistical evidence even when the observed effect is fairly large.
+As $n$ increases, $\sigma/\sqrt n$ decreases. A very large sample can produce a large test statistic for a small effect. A small sample or a highly variable population may produce weak statistical evidence even when the observed effect is fairly large.
 
-Failing to reject $H_0$ does not show that the effect is exactly zero. The study may have had insufficient information to detect an effect.
+Suppose three studies all observe the same effect, $\bar x-\mu_0=0.30$, with $\sigma=2.4$:
 
-```{r significance-and-sample-size, echo=FALSE, fig.width=7.4, fig.height=4.4}
+| $n$ | $\sigma/\sqrt{n}$ | $z$ | Two-sided $P$-value |
+|:--:|:--:|:--:|:--:|
+| $25$ | $0.48$ | $0.625$ | $0.532$ |
+| $100$ | $0.24$ | $1.25$ | $0.211$ |
+| $400$ | $0.12$ | $2.50$ | $0.012$ |
+
+```{r significance-and-sample-size, echo=FALSE, fig.width=6.4, fig.height=3.4}
 p_significance
 ```
 
-The figure holds the observed effect and population standard deviation fixed while increasing the sample size. The decreasing curve shows that the same small effect can produce a much smaller P-value when it is estimated with greater precision. This is why an effect estimate and confidence interval should be considered together with statistical significance.
+The figure holds the observed effect and population standard deviation fixed while increasing the sample size. The same effect produces a much smaller $P$-value when it is estimated with greater precision. The practical size of the effect has not changed.
+
+Failing to reject $H_0$ does not show that the effect is exactly zero. The study may have had insufficient information to detect an effect. Section 15.7 makes this idea precise through power.
+
+```{r significance-table}
+n <- c(25, 100, 400)
+z <- 0.30 / (2.4 / sqrt(n))
+data.frame(n = n, z = z, p_value = round(2 * pnorm(-z), 3))
+```
 
 ### Statistical Significance and Practical Importance
 
@@ -2116,11 +2418,11 @@ Statistical significance and practical importance address different questions.
 
 | Question | Relevant information |
 |:--|:--|
-| Are the data difficult to explain under $H_0$? | P-value and model conditions |
+| Are the data difficult to explain under $H_0$? | $P$-value and model conditions |
 | How large might the effect be? | Estimate and confidence interval |
 | Is the effect important? | Scientific, clinical or policy context |
 
-A P-value does not report the size of an effect. A confidence interval is more informative about the plausible magnitude, but the interval still requires context.
+A $P$-value does not report the size of an effect. A confidence interval is more informative about the plausible magnitude, but the interval still requires context.
 
 A difference of $0.2$ units may be important for one outcome and negligible for another. Subject-matter knowledge is necessary to identify a meaningful threshold.
 
@@ -2132,13 +2434,7 @@ The reported tests included
 
 $$
 z=-4.78
-\qquad
-P<0.001
-$$
-
-and
-
-$$
+\qquad\text{and}\qquad
 z=-7.219
 \qquad
 P<0.001
@@ -2148,11 +2444,11 @@ These results provide strong statistical evidence that the manipulation changed 
 
 The estimated effect was approximately one fewer emotional word for every $1000$ words written during the following week.
 
-The very large sample made the study sensitive to this small average effect. The small P-values show that the observed changes would be unusual under a zero-effect model. They do not show that the changes were large.
+The very large sample made the study sensitive to this small average effect. The small $P$-values show that the observed changes would be unusual under a zero-effect model. They do not show that the changes were large.
 
 ### Example 15.5 (continued): Is the Effect Important?
 
-The Facebook experiment raises questions that cannot be answered by the P-value alone.
+The Facebook experiment raises questions that cannot be answered by the $P$-value alone.
 
 1. Does using fewer emotional words indicate a meaningful change in emotion?
 2. Could users simply repeat words that recently appeared in their feeds?
@@ -2167,75 +2463,116 @@ The effect was small for an individual user, but a small effect may accumulate a
 >
 > Statistical significance answers a narrow probability question. It does not determine whether an effect is meaningful.
 
-### What a P-Value Is Not
-
-A P-value is frequently misinterpreted. It is not
-
-- The probability that $H_0$ is true
-- The probability that $H_a$ is true
-- The probability that the observed result occurred only by chance
-- The probability that the researchers made a Type I error after seeing the data
-- A measure of effect size or practical importance
-
-A large P-value means that the observed data remain reasonably compatible with the null model. It does not prove that $H_0$ is true because other parameter values may also be compatible with the data.
-
-A small P-value can arise because the null value is wrong, because the model assumptions are wrong or because both are wrong. The design and conditions must therefore be assessed before the P-value is interpreted.
-
 ### Multiple Analyses
 
-Every test conducted at level $\alpha$ has a probability $\alpha$ of rejecting $H_0$ when the null hypothesis is true.
+Every test conducted at level $\alpha$ has probability $\alpha$ of rejecting $H_0$ when the null hypothesis is true. A rejection of a true null hypothesis is a **false positive**. When many tests are run, false positives become likely even if every individual test is correct.
 
-If $20$ independent tests are conducted at $\alpha=0.05$ and all $20$ null hypotheses are true, the probability that none is rejected is
+### Example 15.6: Twenty Foods and Migraine
 
-$$
-(1-0.05)^{20}
-=
-0.95^{20}
-\approx
-0.358
-$$
-
-Therefore, the probability of at least one rejection is
+A nutrition researcher surveys a large sample of adults about their diets and their migraine frequency. For each of $20$ common foods (coffee, chocolate, aged cheese, red wine and so on) the researcher tests
 
 $$
-1-0.95^{20}
-\approx
-0.642
+H_0:\text{the food is not associated with migraine frequency}
 $$
 
-This calculation does not mean that every set of $20$ analyses has exactly the same behaviour. The tests may not be independent. It does illustrate why repeatedly searching for a small P-value increases the chance of a false positive.
+at significance level $\alpha=0.05$. Suppose that, in truth, **none** of the $20$ foods is associated with migraine, so all $20$ null hypotheses are true. Assume the $20$ tests behave independently.
+
+Each test is a trial with two outcomes: a false positive (probability $0.05$) or a correct non-rejection (probability $0.95$). Let $Y$ be the number of foods declared significant. Then $Y$ counts successes in $20$ independent trials with a common probability, so
+
+$$
+Y\sim\operatorname{Bin}(20,\ 0.05)
+$$
+
+This is the binomial model from Chapter 12 applied to the testing process itself.
+
+**Expected number of false positives**
+
+$$
+E(Y)=np=20(0.05)=1
+$$
+
+On average, the researcher will "discover" one food that seems to trigger migraine, even though none does.
+
+**Probability of no false positives** (multiplication rule for independent events)
+
+$$
+P(Y=0)=(0.95)^{20}\approx0.358
+$$
+
+**Probability of at least one false positive** (complement rule)
+
+$$
+P(Y\ge1)=1-(0.95)^{20}\approx0.642
+$$
+
+```{r false-positive-count-plot, echo=FALSE, fig.width=6.4, fig.height=3.6}
+p_false_positive_count
+```
+
+There is about a $64\%$ chance that the study reports at least one "significant" food. If the researcher then publishes only that food (for example, "Aged cheese linked to migraine, $P=0.03$"), readers see one small $P$-value and none of the $19$ non-significant tests behind it.
 
 ```{r multiple-testing-probability}
 number_of_tests <- 20
 alpha <- 0.05
 
-probability_at_least_one <- 1 - (1 - alpha)^number_of_tests
-round(probability_at_least_one, 3)
+c(
+  expected_false_positives = number_of_tests * alpha,
+  p_none = dbinom(0, size = number_of_tests, prob = alpha),
+  p_at_least_one = 1 - (1 - alpha)^number_of_tests
+)
 ```
 
-```{r multiple-testing-plot, echo=FALSE, fig.width=7.4, fig.height=4.4}
+### The Risk Grows with the Number of Tests
+
+For $m$ independent tests of true null hypotheses at level $\alpha$,
+
+$$
+P(\text{at least one false positive})=1-(1-\alpha)^m
+$$
+
+```{r multiple-testing-plot, echo=FALSE, fig.width=6.4, fig.height=3.4}
 p_multiple_testing
 ```
 
-Under the illustrative independence assumption, the probability of at least one false positive increases quickly as the number of tests grows. With $20$ tests at level $alpha=0.05$, the probability is approximately $0.642$. Dependence among tests changes the exact probability, but not the broader warning that an unreported search across many analyses can inflate false-positive risk.
+Under the illustrative independence assumption, the probability of at least one false positive increases quickly as the number of tests grows. With $20$ tests at level $\alpha=0.05$, the probability is approximately $0.642$. Dependence among tests changes the exact probability, but not the broader warning that an unreported search across many analyses inflates false-positive risk.
 
-**P-hacking** or **data dredging** occurs when researchers try many outcomes, subgroups or models and emphasize only analyses that produce small P-values.
+### Example 15.6 (continued): Controlling the Overall Error Rate
+
+One simple remedy is the **Bonferroni adjustment**: test each of the $m$ hypotheses at level $\alpha/m$. For the migraine study,
+
+$$
+\frac{0.05}{20}=0.0025
+$$
+
+and the probability of at least one false positive becomes
+
+$$
+1-(1-0.0025)^{20}\approx0.049
+$$
+
+which is back below $0.05$ for the whole family of tests. The cost is that each individual test now requires much stronger evidence, which lowers its power (Section 15.7).
+
+```{r bonferroni}
+1 - (1 - 0.05 / 20)^20
+```
+
+### Selective Reporting, Replication and Transparency
+
+**P-hacking** or **data dredging** occurs when researchers try many outcomes, subgroups or models and emphasize only analyses that produce small $P$-values.
 
 **Selective reporting** occurs when nonsignificant findings are omitted.
 
 **Publication bias** occurs when studies with significant results are more likely to become publicly available than studies with nonsignificant results.
 
-These practices distort the published evidence.
+These practices distort the published evidence in exactly the way Example 15.6 illustrates.
 
-### Replication and Transparency
-
-Replication repeats a study with new observations and an independently specified analysis. A successful replication reduces the chance that the original finding depended on an unusual sample, an unnoticed design problem or a flexible analysis decision.
+Replication repeats a study with new observations and an independently specified analysis. A successful replication reduces the chance that the original finding depended on an unusual sample, an unnoticed design problem or a flexible analysis decision. If the aged-cheese result in Example 15.6 were a false positive, a new study testing only aged cheese would have just a $5\%$ chance of producing another significant result.
 
 Useful scientific practices include
 
 - Stating the research question and analysis plan before examining results
 - Reporting all planned outcomes and analyses
-- Reporting estimates and uncertainty in addition to P-values
+- Reporting estimates and uncertainty in addition to $P$-values
 - Distinguishing exploratory analyses from confirmatory analyses
 - Sharing enough methodological information for others to evaluate or reproduce the work
 
@@ -2243,9 +2580,314 @@ One study rarely settles an important scientific question. Evidence becomes stro
 
 ---
 
+## Errors and Power
+
+Section 15.6 described false positives. A test can also make the opposite mistake: missing an effect that is really there. This section names both errors, shows how to calculate their probabilities from sampling distributions and introduces power.
+
+### Type I and Type II Errors
+
+A hypothesis-test decision can be correct or incorrect.
+
+| Decision | $H_0$ is true | A specified alternative is true |
+|:--|:--|:--|
+| Fail to reject $H_0$ | Correct decision | Type II error |
+| Reject $H_0$ | Type I error | Correct decision |
+
+A **Type I error** occurs when the test rejects a true null hypothesis. It is the false positive of Section 15.6.
+
+$$
+P(\text{Type I error})
+=
+P(\text{reject }H_0\mid H_0\text{ true})
+=
+\alpha
+$$
+
+A **Type II error** occurs when the test fails to reject $H_0$ even though a specified alternative is true. It is a false negative. Its probability is denoted by $\beta$:
+
+$$
+\beta
+=
+P(\text{fail to reject }H_0\mid\text{a specified alternative is true})
+$$
+
+The two probabilities are computed from **different** sampling distributions: $\alpha$ from the null distribution and $\beta$ from the distribution under the alternative. The value of $\beta$ depends on which alternative value is assumed.
+
+The relative seriousness of these errors depends on context. For example, approving an ineffective treatment and failing to identify an effective treatment have different consequences.
+
+### Example 15.7: The Sweetness Study
+
+A quality-control engineer studies whether storage reduces the sweetness of a new cola. Ten trained tasters rate the cola before and after storage. For each taster, the response is the loss of sweetness on a $10$-point scale.
+
+The hypotheses are
+
+$$
+H_0:\mu=0
+\qquad
+H_a:\mu>0
+$$
+
+where $\mu$ is the population mean sweetness loss. The planning information is
+
+$$
+\sigma=1
+\qquad
+n=10
+\qquad
+\alpha=0.05
+$$
+
+A mean loss of $\mu=0.8$ point is considered large enough to matter to consumers.
+
+To find error probabilities, the test must first be written as a **decision rule** on the scale of $\bar x$.
+
+The test is upper-tailed. At $\alpha=0.05$, the critical Standard Normal value is $z^*=1.645$. Under $H_0:\mu=0$, the standard deviation of $\bar X$ is
+
+$$
+\frac{\sigma}{\sqrt{n}}
+=
+\frac{1}{\sqrt{10}}
+\approx
+0.3162
+$$
+
+The rejection cutoff for the sample mean is
+
+$$
+\bar{x}_{\text{crit}}
+=
+\mu_0+z^*\frac{\sigma}{\sqrt n}
+=
+0+1.645(0.3162)
+\approx
+0.520
+$$
+
+> **Decision rule**
+>
+> Reject $H_0$ when $\bar x\ge0.520$. Fail to reject $H_0$ when $\bar x<0.520$.
+
+### Example 15.7 (continued): The Type I Error
+
+A Type I error happens when $\mu=0$ (storage causes no loss) but the tasters' mean loss happens to be at least $0.520$, so the engineer concludes that storage reduces sweetness.
+
+$$
+P(\text{Type I error})
+=
+P(\bar X\ge0.520\mid\mu=0)
+=
+P\left(Z\ge\frac{0.520-0}{0.3162}\right)
+=
+P(Z\ge1.645)
+=
+0.05
+$$
+
+```{r type1-plot, echo=FALSE, fig.width=6.4, fig.height=3.4}
+p_type1
+```
+
+The cutoff was chosen to make this area exactly $\alpha$.
+
+### Example 15.7 (continued): The Type II Error
+
+Now suppose storage really does cause a mean loss of $\mu=0.8$. The sampling distribution of $\bar X$ then has mean $0.8$ and the same standard deviation $0.3162$, but the decision rule does not change.
+
+**A concrete Type II error.** Suppose the ten tasters report losses with mean $\bar x=0.45$. Because $0.45<0.520$, the engineer fails to reject $H_0$ and concludes that there is not enough evidence of a sweetness loss. If the true mean loss is $0.8$, this conclusion is a Type II error: a real and important loss has been missed. The tasters simply produced a sample mean on the low side of what $\mu=0.8$ typically produces.
+
+**How often does this happen?** The probability of a Type II error at $\mu=0.8$ is the probability that $\bar X$ falls in the fail-to-reject region when the mean is $0.8$:
+
+$$
+\beta
+=
+P(\bar X<0.520\mid\mu=0.8)
+=
+P\left(Z<\frac{0.520-0.8}{0.3162}\right)
+=
+P(Z<-0.885)
+\approx
+0.188
+$$
+
+```{r type2-plot, echo=FALSE, fig.width=6.4, fig.height=3.4}
+p_type2
+```
+
+With only $10$ tasters, about $18.8\%$ of studies would miss a real mean loss of $0.8$ point. The calculation uses the same cutoff as the Type I error calculation, but the area now comes from the curve centred at $\mu=0.8$.
+
+### Power
+
+The **power** of a test against a specified alternative is the probability that the test rejects $H_0$ when that alternative is true.
+
+$$
+\text{Power}
+=
+P(
+\text{reject }H_0
+\mid
+\text{specified alternative is true}
+)
+$$
+
+Rejecting and failing to reject are complementary events, so
+
+$$
+\boxed{
+\text{Power}=1-\beta
+}
+$$
+
+For the sweetness study at $\mu=0.8$,
+
+$$
+\text{Power}
+=
+P(\bar X\ge0.520\mid\mu=0.8)
+=
+P(Z\ge-0.885)
+\approx
+0.812
+$$
+
+The test will reject $H_0$ in approximately $81.2\%$ of repeated studies when the true population mean loss is $0.8$ point.
+
+```{r cola-power-plot, echo=FALSE, fig.width=6.4, fig.height=3.6}
+p_power
+```
+
+In the graph, the area to the right of the cutoff under the null distribution is $\alpha=0.05$. Under the alternative distribution, the area to the left of the cutoff is $\beta=0.188$ and the area to the right is the power $0.812$.
+
+The calculation can be checked in R.
+
+```{r cola-power-calculation}
+sigma <- 1
+n <- 10
+alpha <- 0.05
+mu_0 <- 0
+mu_alternative <- 0.8
+
+standard_deviation_xbar <- sigma / sqrt(n)
+critical_x_bar <- qnorm(
+  1 - alpha,
+  mean = mu_0,
+  sd = standard_deviation_xbar
+)
+
+beta <- pnorm(
+  critical_x_bar,
+  mean = mu_alternative,
+  sd = standard_deviation_xbar
+)
+
+c(
+  critical_sample_mean = critical_x_bar,
+  beta = beta,
+  power = 1 - beta
+)
+```
+
+In context:
+
+- A Type I error means concluding that storage causes a population mean sweetness loss when the true mean loss is $0$
+- A Type II error at $\mu=0.8$ means failing to detect a mean loss of $0.8$ point when that loss is real
+
+### Power Depends on the Alternative
+
+Power is always defined for a particular alternative value. A test does not have one universal power value. Repeating the calculation for several true means gives
+
+| True mean loss $\mu$ | Power $=P(\bar X\ge0.520\mid\mu)$ | $\beta$ |
+|:--:|:--:|:--:|
+| $0.3$ | $0.243$ | $0.757$ |
+| $0.5$ | $0.475$ | $0.525$ |
+| $0.8$ | $0.812$ | $0.188$ |
+| $1.0$ | $0.935$ | $0.065$ |
+
+```{r power-function-plot, echo=FALSE, fig.width=6.4, fig.height=3.4}
+p_power_function
+```
+
+The farther the true mean lies from the null value, the easier it is to detect and the smaller the Type II error probability. At $\mu=0$ the curve equals $\alpha=0.05$, because "rejecting" there is a Type I error.
+
+```{r power-function-table}
+mu_values <- c(0.3, 0.5, 0.8, 1.0)
+power_values <- 1 - pnorm(critical_x_bar, mean = mu_values, sd = standard_deviation_xbar)
+
+data.frame(
+  mu = mu_values,
+  power = round(power_values, 3),
+  beta = round(1 - power_values, 3)
+)
+```
+
+The engineer wanted power of at least $0.90$ against $\mu=0.8$. With $10$ tasters the power is only $0.812$, so the study is too small. Section 15.8 finds the required number of tasters.
+
+### Example 15.8: Type II Error with a Binomial Model
+
+Type II errors are not limited to Normal models. Return to the veterinary study of Example 15.3, where $H_0:p=0.80$ and $H_a:p<0.80$ with $n=60$ dogs.
+
+**Step 1: Decision rule.** Rejection happens for small counts. The largest cutoff $k$ with $P(X\le k\mid p=0.80)\le0.05$ is $k=42$:
+
+$$
+P(X\le42\mid p=0.80)\approx0.0427
+\qquad
+P(X\le43\mid p=0.80)\approx0.0772
+$$
+
+The rule is: reject $H_0$ when $X\le42$. Because $X$ is discrete, the actual Type I error probability is $0.0427$, slightly below the nominal $0.05$.
+
+**Step 2: A concrete Type II error.** Suppose the treatment's true response probability is only $p=0.70$, a clinically important shortfall. A second clinic treats $60$ dogs and observes $X=45$ responses. Because $45>42$, the clinic fails to reject $H_0$ (the exact $P$-value is $P(X\le45\mid p=0.80)\approx0.207$). The treatment really falls short, but the study does not detect it. This is a Type II error.
+
+**Step 3: Probability of a Type II error.** Under $p=0.70$, the count follows $\operatorname{Bin}(60,0.70)$, so
+
+$$
+\beta
+=
+P(X\ge43\mid p=0.70)
+=
+1-P(X\le42\mid p=0.70)
+\approx
+1-0.549
+=
+0.451
+$$
+
+and the power against $p=0.70$ is about $0.549$.
+
+```{r binomial-type2-plot, echo=FALSE, fig.width=6.4, fig.height=4.4}
+p_binomial_type2
+```
+
+The top panel shows the Type I error probability under the null model and the bottom panel shows the Type II error probability under the alternative. With $60$ dogs, a shortfall from $0.80$ to $0.70$ would be missed nearly half the time.
+
+```{r binomial-type2-calculation}
+cdf_null <- pbinom(0:60, size = 60, prob = 0.80)
+k <- max(which(cdf_null <= 0.05)) - 1   # largest k with P(X <= k) <= 0.05
+
+c(
+  cutoff_k = k,
+  actual_alpha = pbinom(k, size = 60, prob = 0.80),
+  beta_p_0.70 = 1 - pbinom(k, size = 60, prob = 0.70),
+  power_p_0.70 = pbinom(k, size = 60, prob = 0.70)
+)
+```
+
+### What Affects Power
+
+The calculations above show which features of a study change power. Power increases when
+
+- The sample size increases (the sampling distributions become narrower and overlap less)
+- The true effect is farther from the null value
+- The population variability $\sigma$ is smaller
+- The significance level $\alpha$ is larger (the cutoff moves toward $\mu_0$, at the cost of more Type I errors)
+- A one-sided test is justified instead of a two-sided test
+
+For a fixed sample size, lowering $\alpha$ reduces Type I errors but increases Type II errors. Increasing the sample size is the main way to reduce both.
+
+---
+
 ## Planning Studies: Selecting a Sample Size
 
-Study planning should include the intended statistical analysis. The sample size affects both the precision of a confidence interval and the ability of a hypothesis test to detect an effect.
+Sections 15.4 and 15.7 showed that sample size controls both the precision of a confidence interval and the power of a test. Study planning uses those relationships in reverse: it chooses $n$ before data collection so the study can answer its question.
 
 Larger samples provide more information, but collecting observations may require time, money, specialized equipment or participant risk. A useful design balances statistical performance with practical and ethical constraints.
 
@@ -2303,19 +2945,7 @@ The formula requires three planning quantities.
 
 A poor estimate of $\sigma$ can make the planned sample too small or unnecessarily large. When uncertainty about $\sigma$ is substantial, a conservative value or sensitivity analysis can be used.
 
-### Why Population Size Usually Does Not Appear
-
-The usual formula depends on the sample size, variability and desired precision. It does not depend on the size of the population when the population is much larger than the sample.
-
-For example, the sample size needed to estimate a mean with a particular margin of error can be similar for populations of $100{,}000$ and $10{,}000{,}000$ individuals when
-
-- Both populations have comparable variability
-- The same probability-sampling design is used
-- The sample is a small fraction of each population
-
-When the sample represents a substantial fraction of a finite population, a finite-population correction can reduce the required sample size. That adjustment is beyond the one-sample formula used here.
-
-### Example 15.6: Planning a Body-Temperature Study
+### Example 15.9: Planning a Body-Temperature Study
 
 Researchers want to estimate the population mean body temperature of healthy adults within
 
@@ -2329,13 +2959,7 @@ $$
 \sigma=0.6^\circ\text{F}
 $$
 
-The $95\%$ critical value is
-
-$$
-z^*=1.960
-$$
-
-Substitute into the sample-size formula:
+The $95\%$ critical value is $z^*=1.960$. Substitute into the sample-size formula:
 
 $$
 n
@@ -2343,10 +2967,8 @@ n
 \left(
 \frac{1.960(0.6)}{0.05}
 \right)^2
-$$
-
-$$
-n
+=
+(23.52)^2
 =
 553.1904
 $$
@@ -2382,249 +3004,41 @@ achieved_margin <- z_star * sigma / sqrt(required_n)
 round(achieved_margin, 5)
 ```
 
+### Why Population Size Usually Does Not Appear
+
+The usual formula depends on the confidence level, variability and desired precision. It does not depend on the size of the population when the population is much larger than the sample.
+
+For example, the sample size needed to estimate a mean with a particular margin of error can be similar for populations of $100{,}000$ and $10{,}000{,}000$ individuals when
+
+- Both populations have comparable variability
+- The same probability-sampling design is used
+- The sample is a small fraction of each population
+
+When the sample represents a substantial fraction of a finite population, a finite-population correction can reduce the required sample size. That adjustment is beyond the one-sample formula used here.
+
 ### Planning a Hypothesis Test
 
 Planning a hypothesis test requires more than choosing a sample size. The design must specify
 
 1. **Significance level $\alpha$:** the tolerated long-run probability of a Type I error when $H_0$ is true
 2. **Effect size:** the smallest departure from the null value that would matter in context
-3. **Power:** the desired probability that the test will detect that effect
+3. **Power:** the desired probability that the test will detect that effect (equivalently, the tolerated $\beta$)
 
 The effect size should be chosen using scientific or practical reasoning rather than from the observed data of the planned study.
 
-### Power
+### Example 15.7 (continued): How Many Tasters Are Needed?
 
-The **power** of a test against a specified alternative is the probability that the test rejects $H_0$ when that alternative is true.
+The sweetness test with $10$ tasters had power $0.812$ against $\mu=0.8$, below the target of $0.90$.
+
+For a one-sided $z$ test, the power requirement means the cutoff $\mu_0+z_{1-\alpha}\,\sigma/\sqrt n$ must lie $z_{\text{power}}$ standard deviations below the alternative mean $\mu_0+\delta$:
 
 $$
-\text{Power}
+\mu_0 + z_{1-\alpha}\frac{\sigma}{\sqrt n}
 =
-P(
-\text{reject }H_0
-\mid
-\text{specified alternative is true}
-)
+\mu_0+\delta - z_{\text{power}}\frac{\sigma}{\sqrt n}
 $$
 
-If $\beta$ is the probability of a Type II error at that alternative, then
-
-$$
-\boxed{
-\text{Power}=1-\beta
-}
-$$
-
-Power is always defined for a particular alternative value or effect size. A test does not have one universal power value for every possible alternative.
-
-A test usually has greater power when the true parameter lies farther from the null value.
-
-### Example 15.7: Planning a Sweetness Study
-
-A quality-control engineer studies whether storage reduces the sweetness of a new cola. Ten trained tasters rate the cola before and after storage. For each taster, the response is the loss of sweetness on a $10$-point scale.
-
-The hypotheses are
-
-$$
-H_0:\mu=0
-$$
-
-$$
-H_a:\mu>0
-$$
-
-where $\mu$ is the population mean sweetness loss.
-
-The planning information is
-
-$$
-\sigma=1
-\qquad
-n=10
-\qquad
-\alpha=0.05
-$$
-
-A mean loss of
-
-$$
-\mu=0.8
-$$
-
-is considered large enough to matter to consumers. The engineer wants power of at least $0.90$ against this alternative.
-
-The question is whether $10$ tasters provide enough power.
-
-### Example 15.7 (continued): The Rejection Cutoff
-
-The test is upper-tailed. At $\alpha=0.05$, the critical Standard Normal value is
-
-$$
-z_{0.95}
-=
-1.645
-$$
-
-Under $H_0:\mu=0$, the standard error is
-
-$$
-\operatorname{SE}(\bar{X})
-=
-\frac{1}{\sqrt{10}}
-\approx
-0.3162
-$$
-
-The rejection cutoff for the sample mean is
-
-$$
-\bar{x}_{\text{crit}}
-=
-0+1.645(0.3162)
-\approx
-0.520
-$$
-
-The test rejects $H_0$ when
-
-$$
-\bar{x}\geq0.520
-$$
-
-### Example 15.7 (continued): Calculating the Power
-
-If the true population mean is $\mu=0.8$, then the sampling distribution of $\bar{X}$ has mean $0.8$ and standard deviation $0.3162$.
-
-The power is the probability that the sample mean enters the rejection region:
-
-$$
-P(\bar{X}\geq0.520\mid\mu=0.8)
-$$
-
-Standardize the cutoff under the alternative distribution:
-
-$$
-z
-=
-\frac{0.520-0.8}{0.3162}
-\approx
--0.886
-$$
-
-Therefore,
-
-$$
-\text{Power}
-=
-P(Z\geq-0.886)
-\approx
-0.812
-$$
-
-The test will reject $H_0$ in approximately $81.2\%$ of repeated studies when the true population mean loss is $0.8$ point. This is below the target power of $90\%$.
-
-```{r cola-power-plot, echo=FALSE, fig.width=7.5, fig.height=4.7}
-p_power
-```
-
-In the graph, the area to the right of the cutoff under the null distribution is $\alpha=0.05$. The area to the right of the same cutoff under the alternative distribution is the power.
-
-The calculation can be checked in R.
-
-```{r cola-power-calculation}
-sigma <- 1
-n <- 10
-alpha <- 0.05
-mu_0 <- 0
-mu_alternative <- 0.8
-
-standard_error <- sigma / sqrt(n)
-critical_x_bar <- qnorm(
-  1 - alpha,
-  mean = mu_0,
-  sd = standard_error
-)
-
-power <- pnorm(
-  critical_x_bar,
-  mean = mu_alternative,
-  sd = standard_error,
-  lower.tail = FALSE
-)
-
-c(
-  critical_sample_mean = critical_x_bar,
-  power = power
-)
-```
-
-### Example 15.7 (continued): Type I and Type II Error Probabilities
-
-The sweetness test uses
-
-$$
-\alpha=0.05
-$$
-
-Therefore,
-
-$$
-P(\text{Type I error})
-=
-P(\text{reject }H_0\mid\mu=0)
-=
-0.05
-$$
-
-The test has power $0.812$ against $\mu=0.8$. Therefore,
-
-$$
-P(\text{Type II error at }\mu=0.8)
-=
-\beta
-$$
-
-$$
-\beta
-=
-1-0.812
-=
-0.188
-$$
-
-In context:
-
-- A Type I error means concluding that storage causes a population mean sweetness loss when the true mean loss is $0$
-- A Type II error at $\mu=0.8$ means failing to detect a mean loss of $0.8$ point when that loss is real
-
-The value of $\beta$ changes when the specified alternative changes.
-
-### Factors That Affect Power and Required Sample Size
-
-The following changes generally require a larger sample:
-
-- Reducing $\alpha$, because stronger evidence is required to reject $H_0$
-- Increasing the target power, because the study must detect the effect more reliably
-- Using a two-sided alternative instead of a one-sided alternative
-- Planning to detect a smaller effect
-- Studying a population with greater variability
-
-The following relationships are useful:
-
-| Planning change | Effect on required sample size |
-|:--|:--|
-| Smaller $\alpha$ | Increases required $n$ |
-| Higher target power | Increases required $n$ |
-| Smaller effect to detect | Increases required $n$ |
-| Larger $\sigma$ | Increases required $n$ |
-| Two-sided rather than one-sided test | Usually increases required $n$ |
-
-```{r power-and-effect-size-plot, echo=FALSE, fig.width=7.4, fig.height=4.4}
-p_power_sample
-```
-
-The curve illustrates the trade-off between the effect size a study is designed to detect and the required sample size. Detecting a smaller meaningful effect with the same significance level, power and population variability requires a larger sample. For the sweetness-study planning values, an effect of $0.8$ point requires $14$ tasters after rounding up.
-
-For the one-sided sweetness test, a Normal-theory planning formula gives
+Solving for $n$ gives the Normal-theory planning formula
 
 $$
 n
@@ -2634,7 +3048,7 @@ n
 \right)^2
 $$
 
-where $\delta$ is the effect size to be detected.
+where $\delta$ is the effect size to be detected, $z_{1-\alpha}$ is the upper-$\alpha$ critical value and $z_{\text{power}}$ is the Standard Normal value with area equal to the target power to its left.
 
 Using
 
@@ -2666,7 +3080,7 @@ $$
 \boxed{n=14}
 $$
 
-tasters are required under this planning model.
+tasters are required under this planning model. With $n=14$, the cutoff is $1.645/\sqrt{14}\approx0.440$ and the power against $\mu=0.8$ is $P(Z\ge(0.440-0.8)\sqrt{14})=P(Z\ge-1.35)\approx0.911$.
 
 ```{r cola-required-sample-size}
 alpha <- 0.05
@@ -2681,8 +3095,33 @@ unrounded_n <- (
   (z_alpha + z_power) * sigma / effect_size
 )^2
 
-ceiling(unrounded_n)
+required_n <- ceiling(unrounded_n)
+
+# Check the achieved power with the rounded sample size
+achieved_power <- 1 - pnorm(z_alpha - effect_size * sqrt(required_n) / sigma)
+
+c(
+  unrounded_n = unrounded_n,
+  required_n = required_n,
+  achieved_power = achieved_power
+)
 ```
+
+### Factors That Affect Required Sample Size
+
+| Planning change | Effect on required sample size |
+|:--|:--|
+| Smaller $\alpha$ | Increases required $n$ |
+| Higher target power | Increases required $n$ |
+| Smaller effect to detect | Increases required $n$ |
+| Larger $\sigma$ | Increases required $n$ |
+| Two-sided rather than one-sided test | Usually increases required $n$ |
+
+```{r power-and-effect-size-plot, echo=FALSE, fig.width=6.4, fig.height=3.4}
+p_power_sample
+```
+
+The curve illustrates the trade-off between the effect size a study is designed to detect and the required sample size. Because $n$ is proportional to $1/\delta^2$, halving the effect size to be detected multiplies the required sample size by about four. For the sweetness-study planning values, an effect of $0.8$ point requires $14$ tasters after rounding up.
 
 ---
 
@@ -2697,7 +3136,7 @@ Reliable statistical inference requires the procedure, study design and scientif
 - Complements, disjoint-event addition, conditional probability and independence appear directly in inferential calculations
 - The response and study design determine whether a Normal, binomial, Poisson or another probability model is appropriate
 - Exact calculations retain the original discrete model; Normal approximations require adequate conditions
-- A P-value has the form $P(\text{data at least as extreme as observed}\mid H_0)$, not $P(H_0\mid\text{data})$
+- A $P$-value has the form $P(\text{data at least as extreme as observed}\mid H_0)$, not $P(H_0\mid\text{data})$
 
 ### Conditions for Inference
 
@@ -2716,35 +3155,31 @@ $$
 \bar{x}
 \pm
 z^*\frac{\sigma}{\sqrt{n}}
-$$
-
-and
-
-$$
+\qquad\text{with}\qquad
 m
 =
 z^*\frac{\sigma}{\sqrt{n}}
 $$
 
-Higher confidence and greater variability increase the margin of error. Larger samples decrease it according to the square-root relationship.
+- A $95\%$ procedure captures the parameter in about $95\%$ of repeated samples
+- Higher confidence and greater variability increase the margin of error
+- Larger samples decrease it according to the square-root relationship, while the confidence level stays fixed
 
 The margin of error measures random sampling variation under the model. It does not measure bias from poor sampling, nonresponse, confounding or systematic measurement error.
 
-### Hypothesis Tests
+### Hypothesis Tests and Significance
 
-For a one-sample $z$ test,
+- A $P$-value is a tail probability from the null distribution, which may be Normal, binomial, Poisson or another model
+- The alternative hypothesis determines which tail is used
+- Statistical significance depends on the observed effect, population variability and sample size
+- A small $P$-value does not give the probability that $H_0$ is true, measure the effect size or determine practical importance
+- With $m$ independent tests of true nulls, the number of false positives is $\operatorname{Bin}(m,\alpha)$ and $P(\text{at least one})=1-(1-\alpha)^m$
 
-$$
-z
-=
-\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}
-$$
+### Errors and Power
 
-Statistical significance depends on the observed effect, population variability and sample size.
-
-A small P-value provides evidence against the null model. It does not give the probability that $H_0$ is true, measure the effect size or determine practical importance.
-
-Multiple analyses and selective reporting can increase false-positive findings. Transparent planning and independent replication strengthen scientific evidence.
+- Type I error: reject a true $H_0$; probability $\alpha$, calculated under $H_0$
+- Type II error: fail to reject $H_0$ when a specified alternative is true; probability $\beta$, calculated under that alternative
+- $\text{Power}=1-\beta$, and it depends on the alternative, $n$, $\sigma$ and $\alpha$
 
 ### Study Planning
 
@@ -2758,29 +3193,25 @@ n
 \right)^2
 $$
 
-The result is rounded up.
-
-Planning a hypothesis test requires a significance level, a meaningful effect size and a target power.
+and for a one-sided $z$ test with target power,
 
 $$
-\text{Power}
+n
 =
-1-\beta
+\left(
+\frac{(z_{1-\alpha}+z_{\text{power}})\sigma}{\delta}
+\right)^2
 $$
 
-Larger samples increase precision and usually increase power. Statistical planning should occur before data collection so that the study has a reasonable chance of answering its scientific question.
+Both results are rounded up. Statistical planning should occur before data collection so that the study has a reasonable chance of answering its scientific question.
 
 ### A Consistent Workflow
 
 1. Define the population, parameter and scientific question.
 2. Examine how the data were collected.
-3. Assess independence, distributional conditions and unusual observations.
-4. Select a probability model and inferential procedure that match the response and design.
-5. Report the estimate, confidence interval and exact P-value when appropriate.
+3. Match the response to a probability model and check independence, distributional conditions and unusual observations.
+4. Choose the statistic and determine its sampling distribution.
+5. Report the estimate, confidence interval and exact $P$-value when appropriate.
 6. Distinguish statistical evidence from practical importance.
-7. Describe limitations and the scope of the conclusion.
-8. Replicate important findings when possible.
-
-
-
-
+7. Consider the error probabilities and power of the design.
+8. Describe limitations and the scope of the conclusion, and replicate important findings when possible.

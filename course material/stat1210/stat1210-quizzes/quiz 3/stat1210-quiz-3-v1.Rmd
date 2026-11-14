@@ -57,7 +57,7 @@ The PEI Department of Agriculture wants to estimate the proportion of the provin
 
 1. Identify the population of interest. Is the variable recorded for each field categorical or quantitative?
 2. Identify the sampling design used in each of Plans A, B and C. Show that the numbers selected in Plan B are proportional to the number of fields in each county.
-3. Suppose Plan C is used and the true proportion of damaged fields is $p=0.15$. State the mean and standard deviation of the sampling distribution of $\hat p$ and check the expected count and $10\%$ conditions. 
+3. Suppose Plan C is used and the true proportion of damaged fields is $p=0.15$. State the mean and standard deviation of the sampling distribution of $\hat p$ and check the expected count and $10\%$ conditions.
 4. Use the Normal approximation to calculate $P(\hat p\geq0.20)$ and interpret the result in context.
 5. The survey also finds that fields on farms using a three year crop rotation have less wireworm damage. Is this an observational study or an experiment?
 
@@ -95,13 +95,13 @@ A PEI mussel grower monitors the shell length of cultured blue mussels. Historic
 
 Health PEI plans a study to estimate the mean wait time, in minutes, before patients are seen by a physician at the emergency department of the Queen Elizabeth Hospital. A pilot study suggests that the population standard deviation of wait times is approximately $\sigma=40$ minutes.
 
-1. Find the smallest sample size needed for a confidence interval with a margin of error no greater than $8$ minutes at 
-    a. $95\%$ confidence using $z^*=1.960$. 
-    b. $99\%$ confidence using $z^*=2.576$. 
-  
+1. Find the smallest sample size needed for a confidence interval with a margin of error no greater than $8$ minutes at
+    a. $95\%$ confidence using $z^*=1.960$.
+    b. $99\%$ confidence using $z^*=2.576$.
+
 2. At $95\%$ confidence, find the smallest sample size needed to reduce the margin of error to $4$ minutes. Compare this with Part 1(a).
 3. Suppose the visits are sampled only from weekday daytime shifts. Name one source of error that the margin of error does **not** measure.
-4. After a new triage system is introduced, a province wide analysis of $15000$ visits finds that the mean wait time decreased by $1.2$ minutes, with $\text{p-value}=0.002$. Explain the difference between statistical significance.
+4. After a new triage system is introduced, a province wide analysis of $15000$ visits finds that the mean wait time decreased by $1.2$ minutes, with $\text{p-value}=0.002$. Explain the difference between statistical significance and practical importance in this context. Is a decrease of $1.2$ minutes likely to matter to patients?
 5. Health PEI also tests $10$ independent outcomes, each at $\alpha=0.05$. If every null hypothesis is true, calculate the probability of at least one false positive.
 
 \vfill

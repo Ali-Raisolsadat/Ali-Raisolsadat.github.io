@@ -156,10 +156,27 @@ knitr::opts_chunk$set(
   message = FALSE,
   fig.align = "center",
   fig.retina = 2,
-  out.width = "88%"
+  out.width = "88%",
+  fig.width = 6.4,
+  fig.height = 3.4
 )
-```
 
+suppressPackageStartupMessages(library(ggplot2))
+
+hw_blue  <- "#294D73"
+hw_red   <- "#C44E52"
+hw_green <- "#3F7D58"
+hw_gold  <- "#BE892D"
+hw_grey  <- "#8FA8BF"
+
+hw_theme <- theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5),
+    panel.grid.minor = element_blank(),
+    legend.position = "bottom"
+  )
+```
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -195,8 +212,8 @@ A provincial wildlife registry contains records for all $12480$ known bald eagle
   \hat p=\frac{71}{250}=0.284
   $$
   So $28.4\%$ of the sampled nesting pairs successfully raised at least two chicks.</li>
-  <li>A different random sample would usually contain a different collection of nesting pairs. The number that raised at least two chicks, and therefore the sample proportion, could change. This natural change is called sampling variability.</li>
-  <li>The population parameter $p=0.310$ is fixed for the defined population and breeding season. The statistic $\hat p$ varies across possible random samples.</li>
+  <li>A different random sample would usually contain a different collection of nesting pairs. The number that raised at least two chicks, and therefore the sample proportion, could change. This natural change is called sampling variability. The difference $0.284-0.310=-0.026$ in this sample is due to sampling variability, not to a mistake.</li>
+  <li>The population parameter $p=0.310$ is fixed for the defined population and breeding season. The statistic $\hat p$ varies across possible random samples. In practice $p$ is usually unknown; this question is unusual because the full registry reveals it.</li>
 </ol>
 </div>
 </details>
@@ -227,7 +244,7 @@ For each description below, state whether it refers to the **population distribu
   $$
   \sigma_{\bar x}=\frac{\sigma}{\sqrt{n}}
   $$
-  which is smaller than $\sigma$ whenever $n>1$.</li>
+  which is smaller than $\sigma$ whenever $n>1$. For $n=40$, sample means vary about $\sqrt{40}\approx6.3$ times less than individual trout lengths.</li>
 </ol>
 </div>
 </details>
@@ -265,10 +282,11 @@ $$
   51,\ 52,\ 53,\ 53,\ 54,\ 55
   $$
   </li>
-  <li>The value $53$ occurs for two of the six samples. Every other listed mean occurs once.
-| $\bar x$ | $51$ | $52$ | $53$ | $54$ | $55$ |
-|:--|--:|--:|--:|--:|--:|
-| $P(\bar x)$ | $1/6$ | $1/6$ | $2/6$ | $1/6$ | $1/6$ |
+  <li>The value $53$ occurs for two of the six samples, $(50,56)$ and $(52,54)$. Every other listed mean occurs once.
+  <table>
+    <thead><tr><th>$\bar x$</th><th>$51$</th><th>$52$</th><th>$53$</th><th>$54$</th><th>$55$</th></tr></thead>
+    <tbody><tr><td>$P(\bar x)$</td><td>$1/6$</td><td>$1/6$</td><td>$2/6$</td><td>$1/6$</td><td>$1/6$</td></tr></tbody>
+  </table>
   The probabilities sum to $1$.</li>
   <li>The mean of the sampling distribution is
   $$
@@ -293,8 +311,10 @@ $$
   $$
   \sigma_{\bar x}=\sqrt{\frac{10}{6}}\approx1.291\text{ days}
   $$
-  </li>
+
+  <b>Why this is not $\sigma/\sqrt n$.</b> The population standard deviation is $\sigma=\sqrt{\frac{(-3)^2+(-1)^2+1^2+3^2}{4}}=\sqrt5\approx2.236$, so $\sigma/\sqrt2\approx1.581$, which is larger than $1.291$. The formula $\sigma/\sqrt n$ assumes independent observations. Here we sample $2$ of only $4$ eggs without replacement ($50\%$ of the population), so the $10\%$ condition fails and the observations are dependent: once one egg is chosen, it cannot be chosen again. With large populations this dependence is negligible and $\sigma/\sqrt n$ works well.</li>
 </ol>
+
 ```{r q3-exact-sampling-distribution, echo=TRUE}
 population <- c(50, 52, 54, 56)
 
@@ -308,6 +328,22 @@ sample_means
 mean(sample_means)
 sqrt(mean((sample_means - mean(sample_means))^2))
 ```
+
+```{r q3-sampling-distribution-plot, fig.height=3}
+q3 <- data.frame(xbar = c(51, 52, 53, 54, 55), prob = c(1, 1, 2, 1, 1) / 6)
+
+ggplot(q3, aes(factor(xbar), prob)) +
+  geom_col(fill = hw_blue, width = 0.6) +
+  geom_text(aes(label = c("1/6", "1/6", "2/6", "1/6", "1/6")), vjust = -0.4) +
+  scale_y_continuous(limits = c(0, 0.4)) +
+  labs(
+    title = "Exact Sampling Distribution of the Sample Mean (n = 2)",
+    subtitle = "Centred at μ = 53 days",
+    x = "Sample Mean Incubation Time (days)",
+    y = "Probability"
+  ) +
+  hw_theme
+```
 </div>
 </details>
 :::
@@ -315,12 +351,12 @@ sqrt(mean((sample_means - mean(sample_means))^2))
 ::: {.question-card}
 ### Question $4$
 
-The concentration of a blood biomarker in a healthy adult population has mean $72$ units and standard deviation $12$ units. Random samples of $36$ adults are selected and the sample mean biomarker concentration is calculated for each sample.
+The resting heart rate of healthy adult horses has mean $36$ beats per minute (bpm) and standard deviation $6$ bpm. Random samples of $36$ horses are selected and the sample mean resting heart rate is calculated for each sample.
 
 1. State the mean of the sampling distribution of $\bar x$.
 2. Calculate the standard deviation of the sampling distribution of $\bar x$.
 3. Interpret both values in context.
-4. Is a particular sample mean guaranteed to equal $72$ units? Explain.
+4. Is a particular sample mean guaranteed to equal $36$ bpm? Explain.
 5. Explain what it means to say that $\bar x$ is an unbiased estimator of $\mu$.
 
 <details class="solution">
@@ -329,17 +365,17 @@ The concentration of a blood biomarker in a healthy adult population has mean $7
 <ol>
   <li>The sampling distribution is centred at the population mean:
   $$
-  \mu_{\bar x}=\mu=72\text{ units}
+  \mu_{\bar x}=\mu=36\text{ bpm}
   $$
   </li>
   <li>Its standard deviation is
   $$
-  \sigma_{\bar x}=\frac{\sigma}{\sqrt n}=\frac{12}{\sqrt{36}}=\frac{12}{6}=2\text{ units}
+  \sigma_{\bar x}=\frac{\sigma}{\sqrt n}=\frac{6}{\sqrt{36}}=\frac{6}{6}=1\text{ bpm}
   $$
   </li>
-  <li>Across many random samples of $36$ adults, the sample means would be centred at $72$ units. Their typical distance from $72$ would be about $2$ units.</li>
-  <li>No. Sampling variability causes individual sample means to fall above or below $72$. The value $72$ is the long-run centre of the possible sample means, not a guarantee for every sample.</li>
-  <li>Unbiasedness means that the mean of the sampling distribution of $\bar x$ equals the population mean. Over all possible random samples of the same size, $\bar x$ does not systematically overestimate or underestimate $\mu$.</li>
+  <li>Across many random samples of $36$ horses, the sample means would be centred at $36$ bpm. Their typical distance from $36$ bpm would be about $1$ bpm, compared with a typical distance of $6$ bpm for individual horses.</li>
+  <li>No. Sampling variability causes individual sample means to fall above or below $36$. The value $36$ is the long-run centre of the possible sample means, not a guarantee for every sample.</li>
+  <li>Unbiasedness means that the mean of the sampling distribution of $\bar x$ equals the population mean. Over all possible random samples of the same size, $\bar x$ does not systematically overestimate or underestimate $\mu$. Unbiasedness is about the centre, not the spread: an unbiased statistic can still be far from $\mu$ in a single sample.</li>
 </ol>
 </div>
 </details>
@@ -372,11 +408,11 @@ The standard deviation of individual daily sodium measurements in a population i
   $$
   </li>
   <li>The sample size is multiplied by $4$, from $16$ to $64$, and the standard deviation is divided by $\sqrt4=2$. It decreases from $3$ to $1.5$.</li>
-  <li>To divide the standard deviation by $3$, the sample size must be multiplied by
+  <li>To divide the standard deviation by $3$, $\sqrt n$ must be multiplied by $3$, so the sample size must be multiplied by
   $$
   3^2=9
   $$
-  </li>
+  (Check: $16\times9=144$ and $\sigma_{\bar x}$ drops from $3$ to $1$.)</li>
   <li>We require
   $$
   \frac{12}{\sqrt n}\leq0.75
@@ -389,7 +425,7 @@ The standard deviation of individual daily sodium measurements in a population i
   n\geq16^2=256
   $$
   The smallest required sample size is $256$.</li>
-  <li>The standard deviation depends on the square root of the sample size. Doubling $n$ divides the standard deviation by $\sqrt2$, not by $2$. To cut the standard deviation in half, the sample size must be multiplied by $4$.</li>
+  <li>The standard deviation depends on the square root of the sample size. Doubling $n$ divides the standard deviation by $\sqrt2\approx1.414$, not by $2$; for example, $n=32$ gives $12/\sqrt{32}\approx2.12$ rather than $1.5$. To cut the standard deviation in half, the sample size must be multiplied by $4$.</li>
 </ol>
 </div>
 </details>
@@ -442,11 +478,36 @@ Systolic blood pressure in a population of healthy adult dogs is Normally distri
   P(X>134)=P(Z>0.50)=1-0.6915=0.3085
   $$
   </li>
-  <li>Individual measurements have standard deviation $18$ mmHg, whereas means of $9$ measurements have standard deviation $6$ mmHg. Sample means are more concentrated around $125$, so a sample mean above $134$ is less common than an individual value above $134$.</li>
+  <li>Individual measurements have standard deviation $18$ mmHg, whereas means of $9$ measurements have standard deviation $6$ mmHg. The same $9$ mmHg distance above $125$ is $0.5$ standard deviations for one dog but $1.5$ standard deviations for a mean of $9$ dogs. Sample means are more concentrated around $125$, so a sample mean above $134$ is less common than an individual value above $134$. The graph below shows both distributions.</li>
 </ol>
+
 ```{r q6-dog-blood-pressure, echo=TRUE}
 pnorm(134, mean = 125, sd = 18 / sqrt(9), lower.tail = FALSE)
 pnorm(134, mean = 125, sd = 18, lower.tail = FALSE)
+```
+
+```{r q6-individual-vs-mean-plot}
+xg <- seq(70, 180, length.out = 1000)
+q6 <- rbind(
+  data.frame(x = xg, d = dnorm(xg, 125, 18), curve = "One dog: N(125, 18)"),
+  data.frame(x = xg, d = dnorm(xg, 125, 6), curve = "Mean of 9 dogs: N(125, 6)")
+)
+q6$curve <- factor(q6$curve, levels = c("One dog: N(125, 18)", "Mean of 9 dogs: N(125, 6)"))
+
+ggplot(q6, aes(x, d, colour = curve)) +
+  geom_area(data = subset(q6, x >= 134), aes(fill = curve), alpha = 0.35, position = "identity", colour = NA) +
+  geom_line(linewidth = 1.1) +
+  geom_vline(xintercept = 134, linetype = "dashed") +
+  scale_colour_manual(values = c(hw_gold, hw_blue)) +
+  scale_fill_manual(values = c(hw_gold, hw_blue)) +
+  labs(
+    title = "Above 134: 0.3085 (One Dog) vs 0.0668 (Mean)",
+    x = "Systolic Blood Pressure (mmHg)",
+    y = "Density",
+    colour = NULL,
+    fill = NULL
+  ) +
+  hw_theme
 ```
 </div>
 </details>
@@ -455,11 +516,11 @@ pnorm(134, mean = 125, sd = 18, lower.tail = FALSE)
 ::: {.question-card}
 ### Question $7$
 
-The fork length of adult Atlantic salmon returning to a river is approximately Normally distributed with mean $62$ cm and standard deviation $8$ cm. Independent random samples of $16$ returning salmon are considered.
+The fork length of adult striped bass in a coastal river is approximately Normally distributed with mean $62$ cm and standard deviation $8$ cm. Independent random samples of $16$ striped bass are considered.
 
 1. Find the mean and standard deviation of the sampling distribution of $\bar x$.
 2. Calculate $P(60\leq\bar X\leq65)$ by standardizing both boundaries.
-3. If researchers independently collected $200$ samples of $16$ salmon, approximately how many sample means would be expected to fall between $60$ cm and $65$ cm?
+3. If researchers independently collected $200$ samples of $16$ striped bass, approximately how many sample means would be expected to fall between $60$ cm and $65$ cm?
 4. Would the same Normal calculation be exact if the population distribution were strongly skewed? Explain.
 
 <details class="solution">
@@ -482,7 +543,7 @@ The fork length of adult Atlantic salmon returning to a river is approximately N
   $$
   z_{65}=\frac{65-62}{2}=1.50
   $$
-  Therefore
+  The probability between two values is the area to the left of the upper value minus the area to the left of the lower value:
   $$
   \begin{aligned}
   P(60\leq\bar X\leq65)
@@ -493,14 +554,15 @@ The fork length of adult Atlantic salmon returning to a river is approximately N
   \end{aligned}
   $$
   </li>
-  <li>The expected number is
+  <li>Each of the $200$ samples independently has probability $0.7745$ of a mean in this range, so the expected number is
   $$
   200(0.7745)=154.9
   $$
-  Approximately $155$ of the $200$ sample means would be expected to fall in this interval.</li>
+  Approximately $155$ of the $200$ sample means would be expected to fall in this interval. The actual count would vary around $155$.</li>
   <li>No. With a strongly skewed population and a sample size of only $16$, the sampling distribution may not be sufficiently close to Normal. The exact calculation is justified here because the population itself is modelled as Normal.</li>
 </ol>
-```{r q7-salmon-means, echo=TRUE}
+
+```{r q7-bass-means, echo=TRUE}
 probability <- pnorm(65, mean = 62, sd = 2) - pnorm(60, mean = 62, sd = 2)
 
 probability
@@ -528,8 +590,8 @@ For each study below, assess whether a Normal model for the sampling distributio
   <li>A Normal model is reasonable and is exact under the stated population model. If the population is Normal, the sampling distribution of $\bar x$ is Normal even when $n=5$.</li>
   <li>A Normal approximation is likely reasonable. The sample size of $80$ provides substantial averaging, and the population has only moderate skewness with no substantial outliers.</li>
   <li>A Normal approximation may not be reliable. The sample is small, while the population is strongly skewed and contains extreme values. A larger sample would be needed before relying on the Central Limit Theorem.</li>
-  <li>The amount of averaging required depends on the population. A nearly symmetric population may require only a modest sample size, while severe skewness or extreme outliers may require a much larger sample. The sampling process and independence also matter.</li>
-  <li>No. The Central Limit Theorem concerns the distribution of sample means across repeated samples. It does not say that the individual observations in one large sample become Normal.</li>
+  <li>The amount of averaging required depends on the population. A nearly symmetric population may require only a modest sample size, while severe skewness or extreme outliers may require a much larger sample. Rules such as "$n\geq30$" are rough guides, not guarantees. The sampling process and independence also matter.</li>
+  <li>No. The Central Limit Theorem concerns the distribution of sample means across repeated samples. It does not say that the individual observations in one large sample become Normal. A large sample from a skewed population looks skewed; it simply shows the population shape more clearly.</li>
 </ol>
 </div>
 </details>
@@ -551,7 +613,7 @@ Parasite egg counts in livestock are strongly right-skewed. In a large populatio
 <summary>Show solution</summary>
 <div class="solution-body">
 <ol>
-  <li>The individual counts are described as strongly right-skewed. A Normal distribution is symmetric, so it would not appropriately represent the stated population shape.</li>
+  <li>The individual counts are described as strongly right-skewed. A Normal distribution is symmetric, so it would not appropriately represent the stated population shape. Note also that a Normal model with mean $240$ and standard deviation $150$ would give about $5.5\%$ probability to negative counts, which are impossible.</li>
   <li>The sample size is large, with $n=100$. If the observations are independent and the population has finite mean and standard deviation, the Central Limit Theorem indicates that the sampling distribution of $\bar x$ should be approximately Normal even though individual counts are skewed.</li>
   <li>The centre is
   $$
@@ -568,16 +630,43 @@ Parasite egg counts in livestock are strongly right-skewed. In a large populatio
   $$
   Therefore
   $$
-  P(\bar X<210)=P(Z<-2.00)=0.0228
+  P(\bar X<210)\approx P(Z<-2.00)=0.0228
   $$
-  </li>
+  The answer is approximate because it relies on the Central Limit Theorem.</li>
   <li>If the population mean and standard deviation are $240$ and $150$, approximately $2.28\%$ of random samples of $100$ sheep would have a sample mean below $210$ eggs per gram.</li>
-  <li>The independence assumption could be questionable. Sheep sharing one small environment may have related exposures and therefore correlated parasite counts. Increasing the number of sheep in that one pen would not necessarily create independent observations.</li>
+  <li>The independence assumption could be questionable. Sheep sharing one small environment may have related exposures and therefore correlated parasite counts. Increasing the number of sheep in that one pen would not necessarily create independent observations. The sample would also not represent the whole population of untreated sheep.</li>
 </ol>
 
 ```{r q9-parasite-means, echo=TRUE}
 standard_error <- 150 / sqrt(100)
 pnorm(210, mean = 240, sd = standard_error)
+```
+
+The simulation below illustrates the Central Limit Theorem for this setting. Individual counts are drawn from a strongly right-skewed (gamma) model with mean $240$ and standard deviation $150$, and the means of $5000$ samples of $100$ sheep are close to Normal.
+
+```{r q9-clt-plot, fig.height=3.6}
+set.seed(1213)
+shape <- (240 / 150)^2
+rate <- 240 / 150^2
+individual <- rgamma(5000, shape = shape, rate = rate)
+sample_means <- replicate(5000, mean(rgamma(100, shape = shape, rate = rate)))
+
+clt <- rbind(
+  data.frame(value = individual, panel = "Individual sheep (skewed)"),
+  data.frame(value = sample_means, panel = "Means of 100 sheep (near Normal)")
+)
+clt$panel <- factor(clt$panel, levels = c("Individual sheep (skewed)", "Means of 100 sheep (near Normal)"))
+
+ggplot(clt, aes(value)) +
+  geom_histogram(bins = 40, fill = hw_blue, colour = "white") +
+  facet_wrap(~ panel, scales = "free") +
+  labs(
+    title = "Skewed Population, Near-Normal Means",
+    x = "Eggs per Gram",
+    y = "Count"
+  ) +
+  hw_theme +
+  theme(strip.text = element_text(face = "bold"))
 ```
 </div>
 </details>
@@ -606,7 +695,7 @@ A veterinary surveillance program randomly tests $320$ honeybee colonies for a p
   $$
   So $22.5\%$ of the sampled colonies tested positive.</li>
   <li>The parameter $p$ is the true proportion of all colonies in the target population that would test positive under the same testing procedure.</li>
-  <li>The response is categorical. Each colony is classified into one of two categories: positive or not positive.</li>
+  <li>The response is categorical. Each colony is classified into one of two categories: positive or not positive. The count $X=72$ is a summary of these categorical outcomes.</li>
   <li>In probability models, success is simply the outcome being counted. It does not imply a favourable medical or biological outcome.</li>
   <li>No. A different random sample would generally contain different colonies, so its number of positive results and its sample proportion could differ because of sampling variability.</li>
 </ol>
@@ -653,19 +742,40 @@ In a region containing approximately $10000$ dogs, the long-run proportion carry
   $$
   0.10(10000)=1000
   $$
-  Since $400\leq1000$, the sample is no more than $10\%$ of the population. Treating the sampled outcomes as approximately independent is reasonable under simple random sampling.</li>
+  Since $400\leq1000$, the sample is no more than $10\%$ of the population. Treating the sampled outcomes as approximately independent is reasonable under simple random sampling, so the formula for $\sigma_{\hat p}$ applies.</li>
   <li>Standardizing $0.22$ gives
   $$
-  z=\frac{0.22-0.18}{0.01921}\approx2.082
+  z=\frac{0.22-0.18}{0.01921}\approx2.08
   $$
-  Therefore
+  From the table, $P(Z\leq2.08)=0.9812$, so
   $$
-  P(\hat p\geq0.22)\approx P(Z\geq2.082)\approx0.0187
+  P(\hat p\geq0.22)\approx P(Z\geq2.08)=1-0.9812=0.0188
   $$
-  </li>
-  <li>If the true infection proportion is $0.18$, approximately $1.87\%$ of random samples of $400$ dogs would have at least $22\%$ positive results.</li>
-  <li>The standard deviation $\sqrt{p(1-p)/n}$ decreases as $n$ increases. The sampling distribution becomes narrower, so $\hat p$ tends to fall closer to $p$.</li>
+  (Software with the unrounded $z=2.082$ gives $0.0187$.)</li>
+  <li>If the true infection proportion is $0.18$, approximately $1.9\%$ of random samples of $400$ dogs would have at least $22\%$ positive results. Such a sample would be unusual.</li>
+  <li>The standard deviation $\sqrt{p(1-p)/n}$ decreases as $n$ increases. The sampling distribution becomes narrower, so $\hat p$ tends to fall closer to $p$. Quadrupling $n$ halves the standard deviation.</li>
 </ol>
+
+```{r q11-phat-plot}
+sd11 <- sqrt(0.18 * 0.82 / 400)
+pg <- seq(0.11, 0.25, length.out = 800)
+q11 <- data.frame(p = pg, d = dnorm(pg, 0.18, sd11))
+
+ggplot(q11, aes(p, d)) +
+  geom_area(data = subset(q11, p >= 0.22), fill = hw_red, alpha = 0.6) +
+  geom_line(colour = hw_blue, linewidth = 1.1) +
+  geom_vline(xintercept = 0.18, linetype = "dotted") +
+  annotate("segment", x = 0.235, y = 6, xend = 0.226, yend = 0.8,
+           colour = hw_red, arrow = arrow(length = unit(0.08, "inches"))) +
+  annotate("text", x = 0.235, y = 7, label = "P ≈ 0.019", colour = hw_red) +
+  labs(
+    title = "Sampling Distribution of the Sample Proportion",
+    subtitle = "Approximately N(0.18, 0.0192) for n = 400",
+    x = "Sample Proportion Testing Positive",
+    y = "Density"
+  ) +
+  hw_theme
+```
 </div>
 </details>
 :::
@@ -702,7 +812,7 @@ A public health researcher expects approximately $40\%$ of adults in a target po
   $$
   0.50(1-0.50)=0.25
   $$
-  Using the largest possible variance avoids choosing a sample that is too small when $p$ is unknown.</li>
+  For comparison, $0.40(0.60)=0.24$ and $0.20(0.80)=0.16$. Using the largest possible variance avoids choosing a sample that is too small when $p$ is unknown.</li>
   <li>Using $p=0.50$,
   $$
   \sqrt{\frac{0.25}{n}}\leq0.02
@@ -713,14 +823,14 @@ A public health researcher expects approximately $40\%$ of adults in a target po
   $$
   n\geq\frac{0.25}{0.0004}=625
   $$
-  The conservative sample size is $625$.</li>
+  The conservative sample size is $625$, only slightly larger than $600$ because $p=0.40$ is close to $0.50$.</li>
   <li>For $n=150$
   $$
-  \sigma_{\hat p}=\sqrt{\frac{0.40(0.60)}{150}}=0.04
+  \sigma_{\hat p}=\sqrt{\frac{0.40(0.60)}{150}}=\sqrt{0.0016}=0.04
   $$
   For $n=600$
   $$
-  \sigma_{\hat p}=\sqrt{\frac{0.40(0.60)}{600}}=0.02
+  \sigma_{\hat p}=\sqrt{\frac{0.40(0.60)}{600}}=\sqrt{0.0004}=0.02
   $$
   </li>
   <li>The sample size increases by a factor of $4$, from $150$ to $600$, while the standard deviation is divided by $\sqrt4=2$. Four times as many observations are required to cut the sampling standard deviation in half.</li>
@@ -758,7 +868,7 @@ A laboratory repeatedly measures the protein concentration of a stable reference
   \sigma_{\bar x}=\frac{0.8}{\sqrt{400}}=\frac{0.8}{20}=0.04\text{ mg/L}
   $$
   </li>
-  <li>The mean of $400$ measurements has one quarter of the sampling standard deviation of the mean of $25$ measurements. It is therefore much more stable across repetitions.</li>
+  <li>The mean of $400$ measurements has one quarter of the sampling standard deviation of the mean of $25$ measurements ($16$ times as many measurements, $\sqrt{16}=4$). It is therefore much more stable across repetitions.</li>
   <li>No. One new observation can temporarily move the running mean farther from $50.0$. The Law of Large Numbers describes the overall long-run tendency, not a step-by-step guarantee.</li>
   <li>A systematic error of $+0.4$ mg/L shifts the mean of the recorded measurements to
 
@@ -767,10 +877,10 @@ A laboratory repeatedly measures the protein concentration of a stable reference
   $$
 
   The running mean would tend to approach $50.4$ mg/L.</li>
-  <li>More independent measurements average out random high and low errors, reducing sampling variability. A systematic error shifts every measurement in the same direction, so averaging more biased observations does not correct the bias.</li>
+  <li>More independent measurements average out random high and low errors, reducing sampling variability. A systematic error shifts every measurement in the same direction, so averaging more biased observations does not correct the bias. The running mean converges, precisely, to the wrong value.</li>
 </ol>
 
-The following short simulation illustrates one possible running mean. A different random seed would produce a different path, but the same long-run tendency.
+The following short simulation illustrates one possible running mean, with and without the $+0.4$ calibration error. A different random seed would produce a different path, but the same long-run tendency.
 
 ```{r q13-law-large-numbers, echo=TRUE}
 set.seed(1210)
@@ -778,6 +888,25 @@ measurements <- rnorm(500, mean = 50, sd = 0.8)
 running_mean <- cumsum(measurements) / seq_along(measurements)
 
 running_mean[c(25, 100, 400, 500)]
+```
+
+```{r q13-running-mean-plot}
+lln <- rbind(
+  data.frame(n = seq_along(running_mean), running = running_mean, device = "Calibrated device"),
+  data.frame(n = seq_along(running_mean), running = running_mean + 0.4, device = "Device with +0.4 bias")
+)
+
+ggplot(lln, aes(n, running, colour = device)) +
+  geom_hline(yintercept = c(50, 50.4), linetype = "dashed", colour = c(hw_blue, hw_red)) +
+  geom_line(linewidth = 0.9) +
+  scale_colour_manual(values = c("Calibrated device" = hw_blue, "Device with +0.4 bias" = hw_red)) +
+  labs(
+    title = "Averaging Removes Noise, Not Bias",
+    x = "Number of Measurements",
+    y = "Running Mean (mg/L)",
+    colour = NULL
+  ) +
+  hw_theme
 ```
 </div>
 </details>
@@ -821,12 +950,13 @@ $$
   &=\$1020
   \end{aligned}
   $$
-  </li>
+  Even though $85\%$ of policies cost nothing, the rare $\$50000$ claims contribute almost half of the expected cost.</li>
   <li>First
   $$
   \begin{aligned}
   E(C^2)
   &=0^2(0.85)+2000^2(0.10)+8000^2(0.04)+50000^2(0.01)\\
+  &=0+400000+2560000+25000000\\
   &=27960000
   \end{aligned}
   $$
@@ -836,6 +966,7 @@ $$
   \begin{aligned}
   \sigma_C
   &=\sqrt{27960000-1020^2}\\
+  &=\sqrt{27960000-1040400}\\
   &=\sqrt{26919600}\\
   &\approx\$5188.41
   \end{aligned}
@@ -855,8 +986,8 @@ $$
   \sigma_{\bar C}=\frac{5188.41}{\sqrt{10000}}\approx\$51.88
   $$
   </li>
-  <li>As the number of independent policies increases, the average claim cost tends to stabilize near the expected cost of $\$1020$ per policy. The average becomes more predictable even though individual claim costs remain highly variable.</li>
-  <li>A catastrophe can generate many claims from the same event. The policy costs then move together rather than independently, so the portfolio may contain less effective averaging than its policy count suggests.</li>
+  <li>As the number of independent policies increases, the average claim cost tends to stabilize near the expected cost of $\$1020$ per policy. The average becomes more predictable even though individual claim costs remain highly variable. This is what allows the insurer to set premiums.</li>
+  <li>A catastrophe can generate many claims from the same event. The policy costs then move together rather than independently, so the portfolio may contain less effective averaging than its policy count suggests, and the formula $\sigma_C/\sqrt n$ would understate the real variability.</li>
   <li>No. A large portfolio reduces random sampling variability under the model, but it cannot correct an inaccurate model, missing risks, changing claim patterns or biased historical data.</li>
 </ol>
 
@@ -930,10 +1061,10 @@ A provincial wildlife rehabilitation registry contains $10000$ completed cases. 
   $$
   Thus
   $$
-  P(700<\bar X<1000)\approx P(-3.00<Z<3.00)=0.9973
+  P(700<\bar X<1000)\approx P(-3.00<Z<3.00)=0.9987-0.0013=0.9974
   $$
-  </li>
-  <li>Increasing the sample size from $144$ to $576$ multiplies $n$ by $4$ and cuts the sampling standard deviation in half. The sample mean is therefore much more likely to lie within $\$150$ of the population mean. The probability increases from about $0.8664$ to about $0.9973$.</li>
+  (Software gives $0.9973$; the difference is table rounding.)</li>
+  <li>Increasing the sample size from $144$ to $576$ multiplies $n$ by $4$ and cuts the sampling standard deviation in half. The same $\pm\$150$ window is $\pm1.5$ standard deviations for $n=144$ but $\pm3$ standard deviations for $n=576$. The sample mean is therefore much more likely to lie within $\$150$ of the population mean. The probability increases from about $0.866$ to about $0.997$.</li>
   <li>No. Excluding all emergency-surgery cases creates undercoverage and would tend to bias the estimated mean downward. A larger sample from the same incomplete registry would reduce random variability around the wrong centre, but it would not repair the selection bias.</li>
 </ol>
 
@@ -951,6 +1082,28 @@ prob_576 <- pnorm(1000, mean_cost, sd_mean_576) -
 
 c(sd_144 = sd_mean_144, probability_144 = prob_144,
   sd_576 = sd_mean_576, probability_576 = prob_576)
+```
+
+```{r q15-two-sample-sizes-plot}
+cg <- seq(500, 1200, length.out = 1000)
+q15 <- rbind(
+  data.frame(x = cg, d = dnorm(cg, 850, 100), n = "n = 144: SD = $100"),
+  data.frame(x = cg, d = dnorm(cg, 850, 50), n = "n = 576: SD = $50")
+)
+
+ggplot(q15, aes(x, d, colour = n)) +
+  annotate("rect", xmin = 700, xmax = 1000, ymin = 0, ymax = Inf, fill = hw_green, alpha = 0.1) +
+  geom_line(linewidth = 1.1) +
+  geom_vline(xintercept = c(700, 1000), linetype = "dashed", colour = "grey40") +
+  scale_colour_manual(values = c(hw_gold, hw_blue)) +
+  labs(
+    title = "Larger n: Means Cluster Inside $700 to $1000",
+    subtitle = "Probability inside the band: 0.866 (n = 144) vs 0.997 (n = 576)",
+    x = "Sample Mean Treatment Cost ($)",
+    y = "Density",
+    colour = NULL
+  ) +
+  hw_theme
 ```
 </div>
 </details>

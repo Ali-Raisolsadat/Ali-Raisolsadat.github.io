@@ -156,8 +156,26 @@ knitr::opts_chunk$set(
   message = FALSE,
   fig.align = "center",
   fig.retina = 2,
-  out.width = "88%"
+  out.width = "88%",
+  fig.width = 6.4,
+  fig.height = 3.4
 )
+
+suppressPackageStartupMessages(library(ggplot2))
+
+hw_blue  <- "#294D73"
+hw_red   <- "#C44E52"
+hw_green <- "#3F7D58"
+hw_gold  <- "#BE892D"
+hw_grey  <- "#8FA8BF"
+
+hw_theme <- theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5),
+    panel.grid.minor = element_blank(),
+    legend.position = "bottom"
+  )
 ```
 
 <script>
@@ -183,13 +201,13 @@ A veterinary clinic wants to estimate the population mean body temperature of he
 <summary>Show solution</summary>
 <div class="solution-body">
 <ol>
-  <li>The parameter is $\mu$, the population mean body temperature of healthy adult cats examined during routine appointments at the clinic.</li>
-  <li>The sample statistic is $\bar{x}=38.9^\circ$C.</li>
-  <li>A point estimate gives one numerical value as an estimate of an unknown parameter. The value $38.9^\circ$C does not by itself describe the uncertainty caused by random sampling.</li>
+  <li>The parameter is $\mu$, the population mean body temperature of healthy adult cats examined during routine appointments at the clinic. It is a fixed but unknown number.</li>
+  <li>The sample statistic is $\bar{x}=38.9^\circ$C. Unlike $\mu$, it would change if a different random sample of $64$ cats were selected.</li>
+  <li>A point estimate gives one numerical value as an estimate of an unknown parameter. The value $38.9^\circ$C does not by itself describe the uncertainty caused by random sampling. An interval estimate (a confidence interval) adds a margin of error to show a range of plausible values for $\mu$.</li>
   <li>The standard error is
   $$\operatorname{SE}(\bar{x})=\frac{\sigma}{\sqrt{n}}=\frac{0.8}{\sqrt{64}}=\frac{0.8}{8}=0.1^\circ\text{C}$$
   </li>
-  <li>If many independent random samples of $64$ healthy adult cats were selected using the same procedure, their sample means would typically vary around the population mean with a standard deviation of approximately $0.1^\circ$C.
+  <li>If many independent random samples of $64$ healthy adult cats were selected using the same procedure, their sample means would typically vary around the population mean with a standard deviation of approximately $0.1^\circ$C. Individual cats vary much more ($\sigma=0.8^\circ$C); averaging $64$ cats reduces the variability by a factor of $\sqrt{64}=8$.
   </li>
 </ol>
 </div>
@@ -216,13 +234,14 @@ A nutrition laboratory studies the time required for a bacterial culture to reac
   </li>
   <li>The margin of error is
   $$m=z^*\operatorname{SE}(\bar{x})=1.960(0.6)=1.176\text{ hours}$$
+  The value $z^*=1.960$ is used because the middle $95\%$ of the Standard Normal distribution lies between $-1.960$ and $1.960$.
   </li>
   <li>The confidence interval is
   $$54.2\pm1.176$$
   Therefore
   $$\boxed{(53.024,\ 55.376)\text{ hours}}$$
   </li>
-  <li>The total width is
+  <li>The total width is twice the margin of error:
   $$2m=2(1.176)=2.352\text{ hours}$$
   </li>
   <li>We are $95\%$ confident that the population mean time required for cultures produced under the stated laboratory conditions to reach the specified concentration is between approximately $53.024$ and $55.376$ hours. The confidence comes from a method that captures the true mean in approximately $95\%$ of repeated random samples when the assumptions are satisfied.
@@ -253,21 +272,40 @@ A marine research group studies the operating life of satellite tags attached to
   <li>For $90\%$ confidence,
   $$m=1.645(0.6)=0.987$$
   so the interval is
-  $$\boxed{(25.413,\ 27.387)\text{ months}}$$
+  $$26.4\pm0.987=\boxed{(25.413,\ 27.387)\text{ months}}$$
   </li>
   <li>For $95\%$ confidence,
   $$m=1.960(0.6)=1.176$$
   so the interval is
-  $$\boxed{(25.224,\ 27.576)\text{ months}}$$
+  $$26.4\pm1.176=\boxed{(25.224,\ 27.576)\text{ months}}$$
   </li>
-  <li>For $99\%$ confidence
+  <li>For $99\%$ confidence,
   $$m=2.576(0.6)=1.5456$$
   so the interval is
-  $$\boxed{(24.8544,\ 27.9456)\text{ months}}$$
+  $$26.4\pm1.5456=\boxed{(24.8544,\ 27.9456)\text{ months}}$$
   </li>
-  <li>All three intervals are centred at the same sample mean, $26.4$ months. A higher confidence level requires a larger critical value, which increases the margin of error and makes the interval wider. Greater confidence is therefore obtained at the cost of lower precision when the sample data remain unchanged.
+  <li>All three intervals are centred at the same sample mean, $26.4$ months. Their widths are $1.974$, $2.352$ and $3.091$ months. A higher confidence level requires a larger critical value, which increases the margin of error and makes the interval wider. Greater confidence is therefore obtained at the cost of lower precision when the sample data remain unchanged.
   </li>
 </ol>
+
+```{r q3-interval-plot, fig.height=2.8}
+q3 <- data.frame(
+  level = factor(c("90%", "95%", "99%"), levels = c("99%", "95%", "90%")),
+  lower = 26.4 - c(1.645, 1.960, 2.576) * 0.6,
+  upper = 26.4 + c(1.645, 1.960, 2.576) * 0.6
+)
+
+ggplot(q3, aes(y = level)) +
+  geom_vline(xintercept = 26.4, linetype = "dashed", colour = hw_gold) +
+  geom_segment(aes(x = lower, xend = upper, yend = level), colour = hw_blue, linewidth = 1.5) +
+  geom_point(aes(x = 26.4), colour = hw_red, size = 3) +
+  labs(
+    title = "Same Data, Three Confidence Levels",
+    x = "Mean Operating Life (months)",
+    y = "Confidence Level"
+  ) +
+  hw_theme
+```
 </div>
 </details>
 :::
@@ -300,10 +338,33 @@ A laboratory measures the concentration of a blood biomarker. Previous validatio
   <li>The sample size increased by a factor of
   $$\frac{144}{36}=4$$
   </li>
-  <li>The margin of error decreased from $3.92$ to $1.96$ so it was divided by $2$.</li>
-  <li>The margin of error is proportional to $1/\sqrt{n}$, not $1/n$. Doubling the sample size multiplies the margin of error by $1/\sqrt{2}\approx0.707$, whereas multiplying the sample size by $4$ cuts the margin of error in half.
+  <li>The margin of error decreased from $3.92$ to $1.96$, so it was divided by $2$. Note that $2=\sqrt{4}$.</li>
+  <li>The margin of error is proportional to $1/\sqrt{n}$, not $1/n$. Doubling the sample size to $n=72$ gives $m=1.960(12/\sqrt{72})\approx2.77$, which is $3.92\times0.707$: a reduction of about $29\%$, not $50\%$. Multiplying the sample size by $4$ is what cuts the margin of error in half.
   </li>
 </ol>
+
+```{r q4-margin-plot}
+q4 <- data.frame(n = 10:200)
+q4$margin <- 1.96 * 12 / sqrt(q4$n)
+q4_points <- data.frame(n = c(36, 72, 144))
+q4_points$margin <- 1.96 * 12 / sqrt(q4_points$n)
+
+ggplot(q4, aes(n, margin)) +
+  geom_line(colour = hw_blue, linewidth = 1.1) +
+  geom_point(data = q4_points, colour = hw_red, size = 3) +
+  geom_text(
+    data = q4_points,
+    aes(label = sprintf("n = %d: m = %.2f", n, margin)),
+    hjust = 0, nudge_x = 6, nudge_y = 0.35, colour = hw_red
+  ) +
+  labs(
+    title = "Margin of Error Shrinks Like 1/√n",
+    subtitle = "95% confidence, σ = 12",
+    x = "Sample Size n",
+    y = "Margin of Error"
+  ) +
+  hw_theme
+```
 </div>
 </details>
 :::
@@ -327,16 +388,16 @@ A random sample of fish from a large lake produces a $95\%$ confidence interval 
   Incorrect. In the frequentist interpretation, the population mean is fixed and the calculated interval either contains it or does not. A suitable statement is: We are $95\%$ confident that the population mean body length lies between $24.6$ and $26.2$ cm because the method has approximately $95\%$ long-run coverage under the stated conditions.
   </li>
   <li>
-  Incorrect. The interval estimates the population mean, not the distribution of individual fish lengths. No conclusion about the percentage of individual fish in this range can be made from this confidence interval alone.
+  Incorrect. The interval estimates the population mean, not the distribution of individual fish lengths. Individual fish vary far more than sample means do, so many fish will be shorter than $24.6$ cm or longer than $26.2$ cm. A correct statement is: We are $95\%$ confident that the <em>mean</em> length of all fish in the lake is between $24.6$ and $26.2$ cm.
   </li>
   <li>
   Correct. This statement describes the long-run coverage of the confidence-interval procedure.
   </li>
   <li>
-  Incorrect. The population mean is fixed. The interval changes because a different random sample generally produces a different sample mean and therefore different endpoints.
+  Incorrect. The population mean is fixed. The interval changes because a different random sample generally produces a different sample mean and therefore different endpoints. A correct statement is: The population mean is fixed, while the confidence interval changes from sample to sample.
   </li>
   <li>
-  Correct. A $99\%$ interval uses a larger critical value than a $95\%$ interval, so it has a larger margin of error when the sample and standard error remain unchanged.
+  Correct. A $99\%$ interval uses a larger critical value ($2.576$ instead of $1.960$) than a $95\%$ interval, so it has a larger margin of error when the sample and standard error remain unchanged.
   </li>
 </ol>
 </div>
@@ -366,13 +427,13 @@ A biologist randomly selects $12$ frogs from the $300$ frogs living at one breed
   which is less than $10\%$. Sampling without replacement is therefore unlikely to create substantial dependence among the observations.
   </li>
   <li>
-  No. The sample is small, strongly skewed and contains two unusually large observations. The Central Limit Theorem does not automatically guarantee an approximately Normal sampling distribution for such a small sample.
+  No. The sample is small, strongly skewed and contains two unusually large observations. The Central Limit Theorem needs a larger sample when the population is skewed, so it does not automatically guarantee an approximately Normal sampling distribution for $\bar x$ with only $12$ observations. In addition, $\bar x$ is not resistant: the two large values pull it upward.
   </li>
   <li>
   No. Knowing $\sigma$ determines the standard-error formula used by the $z$ procedure, but it does not make a strongly skewed population Normal or remove the influence of outliers.
   </li>
   <li>
-  A larger random sample would make the sampling distribution of $\bar{x}$ more nearly Normal provided the population has finite variance. The study directly represents frogs at the sampled breeding site. Generalization to frogs at other sites would require additional sampling across those sites.
+  A larger random sample would make the sampling distribution of $\bar{x}$ more nearly Normal provided the population has finite variance. The outliers should also be checked for recording or measurement errors (but not removed just because they are large). The study directly represents frogs at the sampled breeding site. Generalization to frogs at other sites would require additional sampling across those sites.
   </li>
 </ol>
 </div>
@@ -401,7 +462,7 @@ Historical studies support treating the population standard deviation as known a
   Let $\mu$ be the population mean straight carapace length of newly hatched loggerhead turtles from this nesting beach during the period represented by the study.
   </li>
   <li>
-  The sample mean is
+  The sum of the $16$ lengths is $327.3+358.7=686.0$ mm (first row plus second row), so the sample mean is
   $$\bar{x}=\frac{686.0}{16}=42.875\text{ mm}$$
   </li>
   <li>
@@ -413,7 +474,7 @@ Historical studies support treating the population standard deviation as known a
   $$m=1.960(1.0)=1.960\text{ mm}$$
   Therefore
   $$42.875\pm1.960=\boxed{(40.915,\ 44.835)\text{ mm}}$$
-  We are $95\%$ confident that the population mean straight carapace length of newly hatched loggerhead turtles from this nesting beach is between approximately $40.915$ and $44.835$ mm.
+  We are $95\%$ confident that the population mean straight carapace length of newly hatched loggerhead turtles from this nesting beach is between approximately $40.915$ and $44.835$ mm. Although $n=16$ is small, the $z$ interval is appropriate because the population is approximately Normal, so $\bar x$ is Normal for any sample size.
   </li>
   <li>
   The calculations can be checked with the following short R code.
@@ -443,57 +504,82 @@ c(
 ::: {.question-card}
 ### Question $8$
 
-A mussel grower monitors the shell length of cultured blue mussels. Historically, the population mean shell length at harvest has been $60$ mm. This season, a random sample of $n=49$ mussels from the lease has a mean shell length of $\bar{x}=58.1$ mm. Treat the population standard deviation as known at $\sigma=6$ mm, and assume that the observations are independent.
+An oyster grower monitors the shell height of cultured oysters. Historically, the population mean shell height at harvest has been $76$ mm. This season, a random sample of $n=64$ oysters from the lease has a mean shell height of $\bar{x}=74.2$ mm. Treat the population standard deviation as known at $\sigma=8$ mm, and assume that the observations are independent.
 
 1. Define the population parameter $\mu$ in this context and calculate the standard error of $\bar{x}$.
-2. Construct a $95\%$ confidence interval for the population mean shell length using $z^*=1.960$.
+2. Construct a $95\%$ confidence interval for the population mean shell height using $z^*=1.960$.
 3. Interpret the confidence interval in context.
-4. At the $\alpha=0.05$ significance level, test whether the population mean shell length this season differs from $60$ mm. State the hypotheses, calculate the test statistic and determine the two-sided p-value using the Standard Normal table. State the conclusion in context.
+4. At the $\alpha=0.05$ significance level, test whether the population mean shell height this season differs from $76$ mm. State the hypotheses, calculate the test statistic and determine the two-sided P-value using the Standard Normal table. State the conclusion in context.
 5. Explain how the confidence interval from Part $2$ leads to the same decision as the hypothesis test in Part $4$.
+6. Would the conclusion change at $\alpha=0.10$? Answer using the P-value and confirm with a $90\%$ confidence interval ($z^*=1.645$).
 
 <details class="solution">
 <summary>Show solution</summary>
 <div class="solution-body">
 <ol>
   <li>
-  Let $\mu$ represent the population mean shell length at harvest of all cultured blue mussels from this PEI lease during the current season.The standard error of the sample mean is
-  $$\operatorname{SE}(\bar{x})=\frac{\sigma}{\sqrt{n}}=\frac{6}{\sqrt{49}}=\frac{6}{7}\approx0.857\text{ mm}$$
+  Let $\mu$ represent the population mean shell height at harvest of all cultured oysters from this lease during the current season. The standard error of the sample mean is
+  $$\operatorname{SE}(\bar{x})=\frac{\sigma}{\sqrt{n}}=\frac{8}{\sqrt{64}}=\frac{8}{8}=1\text{ mm}$$
   </li>
   <li>
   The margin of error is
-  $$m=z^*\operatorname{SE}(\bar{x})=1.960\left(\frac{6}{7}\right)=1.680\text{ mm}$$
+  $$m=z^*\operatorname{SE}(\bar{x})=1.960(1)=1.960\text{ mm}$$
   Therefore the $95\%$ confidence interval is
-  $$\bar{x}\pm m=58.1\pm1.680$$
+  $$\bar{x}\pm m=74.2\pm1.960$$
   which gives
-  $$\boxed{(56.42,\ 59.78)\text{ mm}}$$
+  $$\boxed{(72.24,\ 76.16)\text{ mm}}$$
   </li>
   <li>
-  We are $95\%$ confident that the population mean shell length at harvest of cultured blue mussels from this lease during the current season is between $56.42$ mm and $59.78$ mm. This confidence comes from a procedure that captures the true population mean in approximately $95\%$ of repeated random samples when the assumptions are satisfied.
+  We are $95\%$ confident that the population mean shell height at harvest of cultured oysters from this lease during the current season is between $72.24$ mm and $76.16$ mm. This confidence comes from a procedure that captures the true population mean in approximately $95\%$ of repeated random samples when the assumptions are satisfied.
   </li>
   <li>
-  Let $\mu$ represent the population mean shell length at harvest during the current season. Because the question asks whether the mean differs from the historical value in either direction, the hypotheses are
-  $$H_0:\mu=60\text{ mm}$$
-  $$H_a:\mu\ne60\text{ mm}$$
-  The test statistic is
-  $$z=\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}=\frac{58.1-60}{6/\sqrt{49}}$$
-  $$z=\frac{-1.9}{0.857}\approx-2.22$$
+  Because the question asks whether the mean differs from the historical value in either direction, the hypotheses are
+  $$H_0:\mu=76\text{ mm}$$
+  $$H_a:\mu\ne76\text{ mm}$$
+  The test statistic measures how many standard errors $\bar x$ lies from $\mu_0$:
+  $$z=\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}=\frac{74.2-76}{1}=-1.80$$
   From the Standard Normal table
-  $$P(Z\leq-2.22)\approx0.0132$$
-  Because this is a two-sided test, the p-value is
-  $$P=2P(Z\leq-2.22)=2(0.0132)=0.0264$$
+  $$P(Z\leq-1.80)=0.0359$$
+  Because this is a two-sided test, values at least as extreme in <em>either</em> direction count, so the P-value doubles the tail area:
+  $$P=2P(Z\leq-1.80)=2(0.0359)=0.0718$$
   Since
-  $$0.0264<0.05$$
-  we reject $H_0$. The sample provides statistically significant evidence that the population mean shell length at harvest differs from $60$ mm during the current season. Because the sample mean is below $60$ mm, the data suggest that the current population mean is lower than the historical mean.
+  $$0.0718>0.05$$
+  we fail to reject $H_0$. The sample does not provide statistically significant evidence at the $5\%$ level that the population mean shell height differs from $76$ mm this season. This does <b>not</b> prove that the mean is still $76$ mm; it means a sample mean of $74.2$ mm is reasonably compatible with $\mu=76$ given the sampling variability.
   </li>
-
   <li>
-  The null value of $60$ mm does not lie within the $95\%$ confidence interval
-  $$(56.42,\ 59.78)\text{ mm}$$
-  Therefore, $60$ mm is not considered a plausible value for the population mean under the corresponding $95\%$ confidence procedure. This agrees with the two-sided hypothesis test, which rejects
-  $$H_0:\mu=60\text{ mm}$$
-  at $\alpha=0.05$. A two-sided test at significance level $\alpha=0.05$ and a $95\%$ confidence interval lead to the same decision when they use the same data, model and standard error.
+  The null value of $76$ mm lies <em>inside</em> the $95\%$ confidence interval
+  $$(72.24,\ 76.16)\text{ mm}$$
+  so $76$ mm is a plausible value for the population mean. This agrees with failing to reject
+  $$H_0:\mu=76\text{ mm}$$
+  at $\alpha=0.05$. The two procedures agree because $76$ lies inside the interval exactly when $|\bar x-76|=1.8$ is smaller than the margin $1.96(1)=1.96$, which is the same as $|z|=1.80<1.96$. A two-sided test at significance level $\alpha$ and a $(1-\alpha)$ confidence interval lead to the same decision when they use the same data, model and standard error.
+  </li>
+  <li>
+  Yes. Since $0.0718<0.10$, the test would reject $H_0$ at $\alpha=0.10$. The matching $90\%$ interval is
+  $$74.2\pm1.645(1)=\boxed{(72.555,\ 75.845)\text{ mm}}$$
+  which does not contain $76$, confirming rejection at the $10\%$ level. The evidence is moderate: strong enough for a $10\%$ standard but not for a $5\%$ standard.
   </li>
 </ol>
+
+```{r q8-test-plot}
+zg <- seq(-3.6, 3.6, length.out = 800)
+q8 <- data.frame(z = zg, d = dnorm(zg))
+
+ggplot(q8, aes(z, d)) +
+  geom_area(data = subset(q8, z <= -1.8), fill = hw_red, alpha = 0.6) +
+  geom_area(data = subset(q8, z >= 1.8), fill = hw_red, alpha = 0.6) +
+  geom_line(colour = hw_blue, linewidth = 1.1) +
+  geom_vline(xintercept = c(-1.96, 1.96), linetype = "dashed", colour = "grey40") +
+  annotate("text", x = -2.6, y = 0.09, label = "0.0359", colour = hw_red) +
+  annotate("text", x = 2.6, y = 0.09, label = "0.0359", colour = hw_red) +
+  annotate("text", x = 0, y = 0.18, label = "Observed z = -1.80\nTwo-sided P = 0.0718") +
+  labs(
+    title = "Null Distribution of z When μ = 76",
+    subtitle = "Red: P-value tails beyond ±1.80; dashed: ±1.96 cutoffs for α = 0.05",
+    x = "z",
+    y = "Density"
+  ) +
+  hw_theme
+```
 </div>
 </details>
 :::
@@ -513,24 +599,24 @@ For each research question below, define the relevant population mean $\mu$, sta
 <div class="solution-body">
 <ol>
   <li>Let $\mu$ be the population mean bottle fill volume. The hypotheses are
-  $$H_0:\mu=500\qquad\text{and}\qquadH_a:\mu\ne500$$
+  $$H_0:\mu=500\qquad\text{and}\qquad H_a:\mu\ne500$$
   This is a two-sided test because both underfilling and overfilling differ from the target.</li>
   <li>
   Let $\mu$ be the population mean recovery time under the new treatment. The hypotheses are
   $$H_0:\mu=12\qquad\text{and}\qquad H_a:\mu<12$$
-  This is a lower-tail test.
+  This is a lower-tail test because only a reduction in recovery time is of interest.
   </li>
   <li>
   Let $\mu$ be the population mean spring-arrival day under the current conditions. The hypotheses are
   $$H_0:\mu=120\qquad\text{and}\qquad H_a:\mu>120$$
-  This is an upper-tail test.
+  This is an upper-tail test because "later" means a larger day number.
   </li>
   <li>
   Let $\mu$ be the population mean battery life of the new radio collars. The hypotheses are
   $$H_0:\mu=24\qquad\text{and}\qquad H_a:\mu>24$$
-
   This is an upper-tail test.</li>
 </ol>
+<p>In every case the hypotheses are about the population mean $\mu$, never about $\bar x$, and the direction of $H_a$ is decided from the research question before the data are seen.</p>
 </div>
 </details>
 :::
@@ -560,9 +646,9 @@ where $\mu$ is the population mean lead concentration for the water system.
 <ol>
   <li>A Type I error occurs if the laboratory concludes that the population mean lead concentration exceeds $10$ ppb when the null value is actually correct.</li>
   <li>A Type II error occurs if the laboratory fails to conclude that the population mean exceeds $10$ ppb when the true population mean is greater than $10$ ppb.</li>
-  <li>A Type I error could lead to unnecessary public concern, further testing and costly corrective action. A Type II error could leave residents exposed to an elevated lead concentration without an appropriate response.</li>
-  <li>Failure to reject means that the sample did not provide sufficiently strong evidence against $H_0$ at the selected significance level. The true mean could differ from $10$ ppb by an amount the study was not precise enough to detect.</li>
-  <li>Reducing $\alpha$ from $0.05$ to $0.01$ reduces the long-run probability of a Type I error from $5\%$ to $1\%$ when $H_0$ is true. With the sample size fixed, the stricter rejection rule generally increases the probability of a Type II error and reduces power.</li>
+  <li>A Type I error could lead to unnecessary public concern, further testing and costly corrective action. A Type II error could leave residents exposed to an elevated lead concentration without an appropriate response. In this setting the Type II error is arguably the more serious one.</li>
+  <li>Failure to reject means that the sample did not provide sufficiently strong evidence against $H_0$ at the selected significance level. The true mean could differ from $10$ ppb by an amount the study was not precise enough to detect, for example because the sample was small or the measurements were highly variable.</li>
+  <li>Reducing $\alpha$ from $0.05$ to $0.01$ reduces the long-run probability of a Type I error from $5\%$ to $1\%$ when $H_0$ is true. With the sample size fixed, the stricter rule requires a larger sample mean before rejecting, so a truly elevated mean is missed more often: the probability of a Type II error generally increases and power decreases. Increasing the sample size is the way to reduce both errors.</li>
 </ol>
 </div>
 </details>
@@ -606,15 +692,37 @@ A freshwater ecologist studies dissolved oxygen during midsummer mornings in a r
   =\frac{7.65-8.00}{0.15}
   =-2.333
   $$
-  </li>
-  <li>Because the alternative is lower-tailed,
+
+  The sample mean is $2.33$ standard errors below the reference value.</li>
+  <li>Because the alternative is lower-tailed, only the left tail counts:
 
   $$
   P=P(Z\leq-2.333)\approx0.0098
   $$
-  </li>
-  <li>Because $0.0098<0.05$, reject $H_0$. The sample provides statistically significant evidence that the population mean midsummer morning dissolved-oxygen concentration is below $8.00$ mg/L. If the true population mean were $8.00$ mg/L and the model conditions held, the probability of obtaining a sample mean of $7.65$ mg/L or lower from a random sample of $36$ mornings would be approximately $0.0098$.</li>
+
+  (The table with $z=-2.33$ gives $0.0099$.)</li>
+  <li>Because $0.0098<0.05$, reject $H_0$. The sample provides statistically significant evidence that the population mean midsummer morning dissolved-oxygen concentration is below $8.00$ mg/L. As a conditional probability, $P(\bar X\leq7.65\mid\mu=8.00)\approx0.0098$: if the true population mean were $8.00$ mg/L and the model conditions held, the probability of obtaining a sample mean of $7.65$ mg/L or lower from a random sample of $36$ mornings would be approximately $0.0098$. It is not the probability that $H_0$ is true.</li>
 </ol>
+
+```{r q11-lower-tail-plot}
+xg <- seq(7.4, 8.6, length.out = 800)
+q11 <- data.frame(x = xg, d = dnorm(xg, 8, 0.15))
+
+ggplot(q11, aes(x, d)) +
+  geom_area(data = subset(q11, x <= 7.65), fill = hw_red, alpha = 0.6) +
+  geom_line(colour = hw_blue, linewidth = 1.1) +
+  geom_vline(xintercept = 7.65, linetype = "dashed") +
+  annotate("segment", x = 7.5, y = 0.9, xend = 7.62, yend = 0.15,
+           colour = hw_red, arrow = arrow(length = unit(0.08, "inches"))) +
+  annotate("text", x = 7.5, y = 1.05, label = "P = 0.0098", colour = hw_red) +
+  labs(
+    title = "Sampling Distribution of the Sample Mean if μ = 8.00",
+    subtitle = "N(8.00, 0.15); shaded: sample means of 7.65 or lower",
+    x = "Sample Mean Dissolved Oxygen (mg/L)",
+    y = "Density"
+  ) +
+  hw_theme
+```
 </div>
 </details>
 :::
@@ -656,18 +764,18 @@ $$
   =2.000
   $$
   </li>
-  <li>Because the alternative is upper-tailed,
+  <li>Because the alternative is upper-tailed, use the complement of the table value:
 
   $$
-  P=P(Z\geq2.000)\approx0.0228
+  P=P(Z\geq2.000)=1-P(Z<2.00)=1-0.9772=0.0228
   $$
   </li>
   <li>At $\alpha=0.05$, $0.0228<0.05$, so $H_0$ is rejected. The data provide evidence that the population mean recovery time exceeds $10$ minutes.</li>
-  <li>At $\alpha=0.01$, $0.0228>0.01$, so $H_0$ is not rejected. The same evidence is statistically significant at the $5\%$ level but not at the stricter $1\%$ level.</li>
+  <li>At $\alpha=0.01$, $0.0228>0.01$, so $H_0$ is not rejected. The data and the P-value are the same; only the standard of evidence changed. The same evidence is statistically significant at the $5\%$ level but not at the stricter $1\%$ level. This is why reporting the P-value itself is more informative than reporting only “significant” or “not significant.”</li>
   <li>The calculations can be checked with the following short R code.</li>
 </ol>
 
-```{r q11-veterinary-upper-tail-test, echo=TRUE}
+```{r q12-veterinary-upper-tail-test, echo=TRUE}
 x_bar <- 10.6
 mu_0 <- 10
 sigma <- 2.1
@@ -731,7 +839,8 @@ The company considers a population difference smaller than $5$ mg to be too smal
   $$
   P=2P(Z\geq3.000)\approx0.0027
   $$
-  </li>
+
+  (The table gives $2(1-0.9987)=0.0026$; the small difference is table rounding.)</li>
   <li>Because $0.0027<0.05$, reject $H_0$. The sample provides statistically significant evidence that the population mean active-ingredient amount differs from $50$ mg.</li>
   <li>The margin of error is
 
@@ -746,8 +855,27 @@ The company considers a population difference smaller than $5$ mg to be too smal
   =\boxed{(50.832,\ 53.968)\text{ mg}}
   $$
   </li>
-  <li>The null value of $50$ mg lies outside the $95\%$ confidence interval, so the corresponding two-sided test rejects $H_0$ at $\alpha=0.05$. However, the interval indicates that the population difference from $50$ mg is plausibly between $0.832$ and $3.968$ mg. This entire range is below the company's practical-importance threshold of $5$ mg. The result is statistically significant but not practically important according to the stated criterion.</li>
+  <li>The null value of $50$ mg lies outside the $95\%$ confidence interval, so the corresponding two-sided test rejects $H_0$ at $\alpha=0.05$. However, the interval indicates that the population difference from $50$ mg is plausibly between $0.832$ and $3.968$ mg. This entire range is below the company's practical-importance threshold of $5$ mg. The result is statistically significant but not practically important according to the stated criterion. Statistical significance says the difference is unlikely to be zero; the confidence interval shows how big it plausibly is.</li>
 </ol>
+
+```{r q13-practical-plot, fig.height=2.6}
+ggplot() +
+  annotate("rect", xmin = 45, xmax = 55, ymin = 0.4, ymax = 1.6, fill = hw_green, alpha = 0.15) +
+  annotate("text", x = 50, y = 1.45, label = "Practically unimportant zone: 45 to 55 mg", colour = hw_green) +
+  annotate("segment", x = 50, xend = 50, y = 0.4, yend = 1.3, linetype = "dashed", colour = hw_gold) +
+  annotate("segment", x = 50.832, xend = 53.968, y = 1, yend = 1, colour = hw_blue, linewidth = 1.8) +
+  annotate("point", x = 52.4, y = 1, colour = hw_red, size = 3) +
+  annotate("text", x = 52.4, y = 0.75, label = "95% CI (50.83, 53.97)") +
+  scale_x_continuous(limits = c(44, 56)) +
+  scale_y_continuous(limits = c(0.4, 1.6)) +
+  labs(
+    title = "Statistically Significant but Not Practically Important",
+    x = "Mean Active Ingredient (mg)",
+    y = NULL
+  ) +
+  hw_theme +
+  theme(axis.text.y = element_blank(), panel.grid.major.y = element_blank())
+```
 </div>
 </details>
 :::
@@ -784,10 +912,10 @@ Researchers study the mean eggshell thickness of a shorebird population. A rando
   Therefore,
 
   $$
-  \boxed{(0.28824,\ 0.31176)\text{ mm}}
+  0.300\pm0.01176=\boxed{(0.28824,\ 0.31176)\text{ mm}}
   $$
   </li>
-  <li>The null value $0.285$ mm lies below the confidence interval. Therefore, reject $H_0$ at $\alpha=0.05$.</li>
+  <li>The null value $0.285$ mm lies below the confidence interval, so it is not a plausible value of $\mu$. Therefore, reject $H_0$ at $\alpha=0.05$.</li>
   <li>The test statistic is
 
   $$
@@ -799,13 +927,33 @@ Researchers study the mean eggshell thickness of a shorebird population. A rando
   The two-sided P-value is
 
   $$
-  P=2P(Z\geq2.500)\approx0.0124
+  P=2P(Z\geq2.500)=2(1-0.9938)=0.0124
   $$
 
   Since $0.0124<0.05$, the direct test also rejects $H_0$.</li>
-  <li>The value $0.295$ mm lies inside the $95\%$ confidence interval, so the corresponding two-sided test would fail to reject $H_0:\mu=0.295$ at $\alpha=0.05$.</li>
-  <li>The equivalence applies because the interval and tests use the same sample, known population standard deviation, standard error and two-sided Normal model. A $95\%$ interval corresponds to a two-sided test at $\alpha=0.05$.</li>
+  <li>The value $0.295$ mm lies inside the $95\%$ confidence interval, so the corresponding two-sided test would fail to reject $H_0:\mu=0.295$ at $\alpha=0.05$. (Check: $z=(0.300-0.295)/0.006\approx0.83$, which is well inside $\pm1.96$.)</li>
+  <li>The equivalence applies because the interval and tests use the same sample, known population standard deviation, standard error and two-sided Normal model. A $95\%$ interval corresponds to a two-sided test at $\alpha=0.05$. It would not apply directly to a one-sided test.</li>
 </ol>
+
+```{r q14-ci-test-plot, fig.height=2.6}
+ggplot() +
+  annotate("segment", x = 0.28824, xend = 0.31176, y = 1, yend = 1, colour = hw_blue, linewidth = 1.8) +
+  annotate("point", x = 0.300, y = 1, colour = hw_blue, size = 3) +
+  geom_vline(xintercept = 0.285, linetype = "dashed", colour = hw_red) +
+  geom_vline(xintercept = 0.295, linetype = "dashed", colour = hw_green) +
+  annotate("text", x = 0.2853, y = 1.35, label = "0.285: outside,\nreject", colour = hw_red, lineheight = 0.9, hjust = 0) +
+  annotate("text", x = 0.2953, y = 1.35, label = "0.295: inside,\nfail to reject", colour = hw_green, lineheight = 0.9, hjust = 0) +
+  annotate("text", x = 0.3035, y = 0.75, label = "95% CI (0.2882, 0.3118)") +
+  scale_y_continuous(limits = c(0.5, 1.55)) +
+  scale_x_continuous(limits = c(0.282, 0.315)) +
+  labs(
+    title = "Using the Interval to Test Two Null Values",
+    x = "Mean Eggshell Thickness (mm)",
+    y = NULL
+  ) +
+  hw_theme +
+  theme(axis.text.y = element_blank(), panel.grid.major.y = element_blank())
+```
 </div>
 </details>
 :::
@@ -831,9 +979,9 @@ A total of $5000$ followers voluntarily respond, and $84\%$ answer yes. A very n
 <ol>
   <li>The intended population is all adults. The actual sample is the $5000$ followers who saw the post and voluntarily chose to respond.</li>
   <li>The followers are not a probability sample of all adults, so many adults are undercovered. In addition, voluntary-response bias is likely because people with strong opinions or prior interest in the influencer or supplement may be more likely to respond. Followers may also differ systematically from adults who do not follow this account.</li>
-  <li>The wording is leading because it describes the supplement as *scientifically designed*. It is also emotionally loaded because it says that *busy people desperately need focus*. The wording encourages agreement and does not clearly separate belief in the product from personal experience with it.</li>
-  <li>A larger voluntary-response sample can estimate the views of respondents with small random sampling variation, but it does not make the respondents representative of all adults. The usual margin of error measures random sampling variability under a probability-sampling model. It does not account for undercoverage, voluntary-response bias or leading wording.</li>
-  <li>A more appropriate design would select adults using a probability-sampling method from a suitable sampling frame, with follow-up efforts to reduce nonresponse. A neutral question could be: *Based on what you know or have experienced, do you believe this supplement improves concentration?* Response options could include *Yes*, *No*, *Unsure* and *I am not familiar with the supplement*.</li>
+  <li>The wording is leading because it describes the supplement as <em>scientifically designed</em>. It is also emotionally loaded because it says that <em>busy people desperately need focus</em>. The wording encourages agreement and does not clearly separate belief in the product from personal experience with it.</li>
+  <li>A larger voluntary-response sample can estimate the views of respondents with small random sampling variation, but it does not make the respondents representative of all adults. The usual margin of error measures random sampling variability under a probability-sampling model. It does not account for undercoverage, voluntary-response bias or leading wording. A large biased sample gives a precise estimate of the wrong quantity.</li>
+  <li>A more appropriate design would select adults using a probability-sampling method from a suitable sampling frame, with follow-up efforts to reduce nonresponse. A neutral question could be: <em>Based on what you know or have experienced, do you believe this supplement improves concentration?</em> Response options could include <em>Yes</em>, <em>No</em>, <em>Unsure</em> and <em>I am not familiar with the supplement</em>.</li>
 </ol>
 </div>
 </details>
@@ -865,7 +1013,7 @@ The historical reference value is $100$ g. Differences smaller than $5$ g are co
   $$
 
   The alternative is two-sided because mean masses either below or above the historical value represent a change.</li>
-  <li>Measuring every tenth passing fish is a systematic design that may provide a broadly distributed sample if there is no periodic pattern related to fish mass. The sample is a small fraction of a large migration, supporting approximate independence. With $n=100$, the Central Limit Theorem supports an approximately Normal sampling distribution of $\bar{x}$ unless the population is extremely heavy-tailed. The standard error is
+  <li>Measuring every tenth passing fish is a systematic design that may provide a broadly distributed sample if there is no periodic pattern related to fish mass. It is not a simple random sample, so the inference treats it as approximately random. The sample is a small fraction of a large migration, supporting approximate independence. With $n=100$, the Central Limit Theorem supports an approximately Normal sampling distribution of $\bar{x}$ unless the population is extremely heavy-tailed. The standard error is
 
   $$
   \operatorname{SE}(\bar{x})
@@ -884,7 +1032,7 @@ The historical reference value is $100$ g. Differences smaller than $5$ g are co
   The two-sided P-value is
 
   $$
-  P=2P(Z\geq2.250)\approx0.0244
+  P=2P(Z\geq2.250)=2(1-0.9878)=0.0244
   $$
   </li>
   <li>At $\alpha=0.05$, $0.0244<0.05$, so reject $H_0$. At $\alpha=0.01$, $0.0244>0.01$, so fail to reject $H_0$. The evidence is statistically significant at the $5\%$ level but not at the $1\%$ level.</li>
@@ -912,7 +1060,7 @@ The historical reference value is $100$ g. Differences smaller than $5$ g are co
   and the $95\%$ confidence interval places the plausible difference between $0.290$ and $4.210$ g. This entire range is below the stated $5$ g threshold. The result is statistically significant at $\alpha=0.05$ but is not biologically important according to the stated criterion. A Type I error would occur if the biologist concluded that the current population mean differs from $100$ g when it actually equals $100$ g. The inference applies directly to smolts from this river and season; extending it to other rivers or years would require additional sampling.</li>
 </ol>
 
-```{r q15-salmon-inference, echo=TRUE}
+```{r q16-salmon-inference, echo=TRUE}
 x_bar <- 102.25
 mu_0 <- 100
 sigma <- 10
@@ -932,6 +1080,29 @@ list(
   confidence_interval_95 = ci_95,
   confidence_interval_99 = ci_99
 )
+```
+
+```{r q16-interval-plot, fig.height=2.8}
+q16 <- data.frame(
+  level = factor(c("95%", "99%"), levels = c("99%", "95%")),
+  lower = 102.25 - c(1.960, 2.576),
+  upper = 102.25 + c(1.960, 2.576)
+)
+
+ggplot(q16, aes(y = level)) +
+  annotate("rect", xmin = 95, xmax = 105, ymin = 0.5, ymax = 2.5, fill = hw_green, alpha = 0.12) +
+  geom_vline(xintercept = 100, linetype = "dashed", colour = hw_red) +
+  geom_segment(aes(x = lower, xend = upper, yend = level), colour = hw_blue, linewidth = 1.6) +
+  geom_point(aes(x = 102.25), colour = hw_blue, size = 3) +
+  annotate("text", x = 100, y = 2.45, label = "Null value 100", colour = hw_red, hjust = 1.1) +
+  scale_x_continuous(limits = c(94.5, 106)) +
+  labs(
+    title = "100 g Is Outside the 95% CI but Inside the 99% CI",
+    subtitle = "Green band: differences under 5 g (not biologically important)",
+    x = "Mean Smolt Body Mass (g)",
+    y = "Confidence Level"
+  ) +
+  hw_theme
 ```
 </div>
 </details>
