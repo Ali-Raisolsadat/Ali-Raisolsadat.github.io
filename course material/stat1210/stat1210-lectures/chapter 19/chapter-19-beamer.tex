@@ -10,16 +10,12 @@
 \usepackage{listings}
 \usepackage{ragged2e}
 \usepackage{tabularx}
-\usepackage{tikz}
-\usepackage{pgfplots}
-\usepackage{iftex}
-\pgfplotsset{compat=1.18}
 
-\ifPDFTeX
-  \pdfmapfile{+cm.map}
-  \pdfmapfile{+cmextra.map}
-  \pdfmapfile{+symbols.map}
-\fi
+% -------------------------------------------------------------
+% Figures are produced by Chapter19_Notes.Rmd (ggsave).
+% Knit the .Rmd first; keep this .tex file in the same folder.
+% -------------------------------------------------------------
+\graphicspath{{./}}
 
 \definecolor{CourseBlue}{RGB}{41,77,115}
 \definecolor{CourseGreen}{RGB}{63,125,88}
@@ -35,7 +31,7 @@
 
 \lstdefinestyle{Rstyle}{
   language=R,
-  basicstyle=\ttfamily\scriptsize,
+  basicstyle=\ttfamily\footnotesize,
   keywordstyle=\color{CourseBlue}\bfseries,
   commentstyle=\color{CourseGreen!80!black},
   stringstyle=\color{CourseRed!85!black},
@@ -48,6 +44,15 @@
   keepspaces=true
 }
 
+% Full-width figure helper
+\newcommand{\slidefig}[2][0.70]{%
+  \begin{center}
+    \includegraphics[width=0.92\textwidth,height=#1\textheight,keepaspectratio]{#2}
+  \end{center}}
+
+% Step label used in the worked examples
+\newcommand{\step}[1]{\textcolor{CourseBlue}{\textbf{#1}}\quad}
+
 \title[Chapter 19: Inference about a Proportion]{\textbf{Chapter 19: Inference about a Population Proportion}}
 \subtitle{The Practice of Statistics in the Life Sciences \\ Brigitte Baldi and David S. Moore}
 \author{Instructor: Ali Raisolsadat}
@@ -55,383 +60,328 @@
 
 \begin{document}
 
-% SLIDE 1
+% 1
 \begin{frame}
   \titlepage
 \end{frame}
 
-% SLIDE 2
+% =============================================================
+% INTRODUCTION
+% =============================================================
+
+% 2
 \begin{frame}{Why Chapter 19 Matters}
-Earlier chapters developed inference for population means using quantitative data.
+Chapters 17 and 18 made inferences about \textbf{means} of quantitative data. Many life-science questions instead record a \textbf{yes/no} outcome:
 
-\vspace{0.25cm}
-Many scientific questions instead record a categorical outcome with two possible categories.
-
+\vspace{0.2cm}
 \begin{itemize}
+  \setlength{\itemsep}{0.15cm}
   \item Does a person currently test positive for an infection?
   \item Does a patient respond to treatment?
-  \item Does an animal display a particular behaviour?
+  \item Does an animal show a particular behaviour?
 \end{itemize}
 
+\vspace{0.3cm}
 \begin{block}{Main Question}
 How can a sample proportion be used to estimate or test an unknown population proportion?
 \end{block}
 \end{frame}
 
-% SLIDE 3
-\begin{frame}{Chapter Roadmap}
-The chapter develops five connected ideas.
-
-\begin{enumerate}
-  \item The sample proportion and its sampling distribution
-  \item Large-sample confidence intervals
-  \item The more accurate plus four confidence interval
-  \item Sample-size planning for a desired margin of error
-  \item One-proportion hypothesis tests
-\end{enumerate}
-
-\vspace{0.2cm}
-The theory comes first. Each procedure is then applied to a life-science example and reproduced in R.
-\end{frame}
-
-% SLIDE 4
+% 3
 \begin{frame}{Means and Proportions}
 \begin{center}
-\begin{tabularx}{0.94\textwidth}{>{\RaggedRight\arraybackslash}p{0.25\textwidth} X X}
+\begin{tabularx}{0.88\textwidth}{>{\RaggedRight\arraybackslash}p{0.25\textwidth} X X}
 \toprule
- & \textbf{Quantitative response} & \textbf{Binary categorical response} \\
+ & \textbf{Quantitative response} & \textbf{Binary response} \\
 \midrule
-Population parameter & Mean $\mu$ & Proportion $p$ \\
-Sample statistic & Mean $\bar{x}$ & Proportion $\hat{p}$ \\
-Typical question & Average measurement & Fraction with an outcome \\
-Reference model & $t$ or Normal & Approximately Normal \\
+Population parameter & Mean $\mu$ & Proportion $p$ \\[0.1cm]
+Sample statistic & Mean $\bar{x}$ & Proportion $\hat{p}$ \\[0.1cm]
+Typical question & Average measurement & Fraction with an outcome \\[0.1cm]
+Reference model & $t$ distribution & Normal approximation \\
 \bottomrule
 \end{tabularx}
 \end{center}
 
-The inferential logic remains the same: use a sample statistic to learn about an unknown population parameter while accounting for sampling variation.
+\vspace{0.3cm}
+The logic does not change: use a sample statistic to learn about an unknown parameter, while accounting for sampling variation. Only the standard errors and conditions are new.
 \end{frame}
 
-% SLIDE 5
+% 4
+\begin{frame}{Roadmap}
+\begin{enumerate}
+  \setlength{\itemsep}{0.25cm}
+  \item \textbf{The sample proportion} and its sampling distribution \hfill \textit{HPV prevalence}
+  \item \textbf{Large-sample confidence interval} \hfill \textit{HPV}
+  \item \textbf{Plus four interval:} a simple fix with better coverage \hfill \textit{blinding in trials}
+  \item \textbf{Choosing a sample size} for a target margin of error \hfill \textit{flossing survey}
+  \item \textbf{One-proportion $z$ test} \hfill \textit{aphid behaviour}
+\end{enumerate}
+
+\vspace{0.4cm}
+Every example follows four steps: \step{State} \step{Plan} \step{Solve} \textcolor{CourseBlue}{\textbf{Conclude}}
+\end{frame}
+
+% =============================================================
+\section{The Sample Proportion}
+% =============================================================
+
+% 5
 \begin{frame}{Defining the Outcome}
-For convenience, the outcome being counted is called a \textbf{success}. The label does not imply that the outcome is desirable.
+The outcome being counted is called a \textbf{success}. The word does not mean the outcome is good.
 
 \vspace{0.2cm}
 Before collecting or analyzing data, define
-
 \begin{itemize}
-  \item The target population
-  \item The observational unit
-  \item The exact rule that identifies a success
-  \item The time period or measurement window
+  \item the target population
+  \item the observational unit (person, animal, plot, article, \ldots)
+  \item the exact rule that counts as a success
+  \item the time period or measurement window
 \end{itemize}
 
+\vspace{0.2cm}
 \begin{block}{Why the Definition Matters}
-Different definitions of \emph{smoker}, \emph{infection} or \emph{treatment response} can produce very different proportions from the same population.
+``Smoked once in the past 30 days'' and ``smokes half a pack a day'' give very different proportions from the same population. A large sample cannot fix an unclear definition.
 \end{block}
 \end{frame}
 
-% SLIDE 6
+% 6
 \begin{frame}{The Sample Proportion}
-Suppose a sample contains $n$ individuals and $X$ successes.
-
+\begin{columns}[T]
+\begin{column}{0.46\textwidth}
+A sample of $n$ individuals contains $X$ successes.
 \begin{block}{Sample Proportion}
 \[
 \hat{p}=\frac{X}{n}
 \]
 \end{block}
-
-The statistic $\hat{p}$ estimates the unknown population proportion $p$.
-
 \begin{itemize}
-  \item $\hat{p}$ is read as \emph{p-hat}
-  \item $0\leq\hat{p}\leq1$
-  \item $100\hat{p}\%$ is the corresponding sample percentage
-  \item A different random sample usually produces a different value of $\hat{p}$
+  \item $\hat{p}$ (``p-hat'') estimates the unknown $p$
+  \item $0\le\hat{p}\le1$
+  \item Different samples give different $\hat{p}$
 \end{itemize}
+\end{column}
+\begin{column}{0.50\textwidth}
+\textbf{Example 19.1: HPV prevalence}
+
+\vspace{0.1cm}
+A national survey obtained valid specimens from $1921$ women aged 14--59. Of these, $515$ tested positive for HPV.
+\[
+\hat{p}=\frac{515}{1921}\approx0.2681\quad(26.8\%)
+\]
+This describes the \emph{sample}. We need inference to estimate $p$ for all women in the population.
+\end{column}
+\end{columns}
 \end{frame}
 
-% SLIDE 7
-\begin{frame}{Example 19.1: HPV Prevalence}
-A nationally representative survey obtained valid specimens from $1921$ women aged $14$ to $59$. Of these specimens, $515$ tested positive for HPV.
+% 7
+\begin{frame}{Sampling Distribution of $\hat{p}$: Centre and Spread}
+For a random sample of size $n$ from a large population with proportion $p$:
 
-\begin{block}{Sample Estimate}
-\[
-\hat{p}=\frac{515}{1921}\approx0.2681
-\]
-\[
-100\hat{p}\%\approx26.81\%
-\]
-\end{block}
-
-The observed percentage describes the sample. Inference is needed to estimate the proportion $p$ of all women in the target population who would test positive.
-\end{frame}
-
-% SLIDE 8
-\begin{frame}{Sampling Distribution of $\hat{p}$}
-For a random sample of size $n$ from a large population with proportion $p$,
-
-\textbf{Centre}
+\vspace{0.1cm}
+\begin{columns}[T]
+\begin{column}{0.45\textwidth}
+\centering\textbf{Centre}
 \[
 \mu_{\hat{p}}=p
 \]
-
-\textbf{Spread}
+$\hat{p}$ is \textbf{unbiased}
+\end{column}
+\begin{column}{0.45\textwidth}
+\centering\textbf{Spread}
 \[
 \sigma_{\hat{p}}=\sqrt{\frac{p(1-p)}{n}}
 \]
+\end{column}
+\end{columns}
 
-The sample proportion is an unbiased estimator of $p$. Its sampling variability decreases as the sample size increases.
+\slidefig[0.48]{slide_ch19_sampling_n.png}
+
+\vspace{-0.2cm}
+\centering Larger samples give less variable $\hat{p}$. Multiplying $n$ by 4 halves the spread.
 \end{frame}
 
-% SLIDE 9
-\begin{frame}{Shape of the Sampling Distribution}
-When the expected numbers of successes and failures are sufficiently large, the sampling distribution of $\hat{p}$ is approximately Normal.
+% 8
+\begin{frame}{Sampling Distribution of $\hat{p}$: Shape}
+\slidefig[0.55]{slide_ch19_shape.png}
 
-\begin{center}
-\begin{tikzpicture}
-\begin{axis}[
-  width=0.82\textwidth,
-  height=0.48\textheight,
-  axis lines=left,
-  xmin=0.20,xmax=0.34,
-  ymin=0,ymax=42,
-  xtick={0.20,0.22,0.24,0.26,0.28,0.30,0.32,0.34},
-  ytick=\empty,
-  xlabel={Possible values of $\hat{p}$},
-  ylabel={Density},
-  grid=major,
-  grid style={SoftGrid,dotted}
-]
-\addplot[CourseBlue,very thick,domain=0.20:0.34,samples=180]
-{1/(0.0101*sqrt(2*pi))*exp(-((x-0.2681)^2)/(2*0.0101^2))};
-\addplot[CourseRed,dashed,thick] coordinates {(0.2681,0) (0.2681,40)};
-\end{axis}
-\end{tikzpicture}
-\end{center}
-
-The approximation can be poor when $n$ is small or when $p$ is close to $0$ or $1$.
-\end{frame}
-
-% SLIDE 10
-\begin{frame}{Conditions for Inference about a Proportion}
-Inference about one population proportion requires three ideas.
-
+\vspace{-0.2cm}
 \begin{itemize}
-  \item \textbf{Randomness:} The data can be treated as a simple random sample or arise from another defensible random process
-  \item \textbf{Independence:} The population is much larger than the sample, often checked with $n\leq0.10N$
-  \item \textbf{Large counts:} The relevant procedure has enough expected or observed successes and failures for its Normal approximation
+  \item With many expected successes and failures, $\hat{p}$ is approximately Normal
+  \item With few, the distribution piles up at 0, and the Normal curve even puts probability on impossible negative values
+  \item The approximation is poor when $n$ is small or $p$ is near 0 or 1
+\end{itemize}
+\end{frame}
+
+% 9
+\begin{frame}{Conditions for Inference about a Proportion}
+\begin{itemize}
+  \item \textbf{Randomness:} the data come from an SRS or another defensible random process
+  \item \textbf{Independence:} the population is much larger than the sample, $n\le0.10N$
+  \item \textbf{Large counts:} the condition depends on the procedure
 \end{itemize}
 
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+\textbf{Procedure} & \textbf{Count condition} & \textbf{Uses} \\
+\midrule
+Large-sample interval & $X\ge15$ and $n-X\ge15$ & observed counts \\
+Plus four interval & $n\ge10$, confidence $\ge90\%$ & sample size \\
+One-proportion $z$ test & $np_0\ge10$ and $n(1-p_0)\ge10$ & expected counts under $H_0$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
 \begin{block}{Design Before Formula}
-A larger sample reduces random sampling error. It does not remove selection bias, nonresponse bias or an unclear definition of success.
+A larger sample reduces random error. It does not remove selection bias, nonresponse bias or an unclear definition of success.
 \end{block}
 \end{frame}
 
+% =============================================================
+\section{Large-Sample Interval}
+% =============================================================
 
-% SLIDE 11
-\begin{frame}{Anatomy of a Confidence Interval}
-A confidence interval for a population proportion has the familiar form
+% 10
+\begin{frame}{The Large-Sample Confidence Interval}
+Same structure as always: $\text{estimate}\pm\text{critical value}\times\text{standard error}$.
 
-\[
-\text{estimate}\pm\text{critical value}\times\text{standard error}
-\]
-
-Using $\hat{p}$ to estimate $p$ gives
-
+\vspace{0.2cm}
+Because $p$ is unknown, estimate the standard error with $\hat{p}$:
 \[
 SE_{\hat{p}}=\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
 \]
 
-The margin of error is
-
-\[
-m=z^*SE_{\hat{p}}
-\]
-
-The critical value $z^*$ comes from the Standard Normal distribution.
-\end{frame}
-
-% SLIDE 12
-\begin{frame}{Large-Sample Confidence Interval}
-For a random sample from a large population, the approximate level $C$ interval is
-
-\begin{block}{Large-Sample Interval}
+\begin{block}{Large-Sample Level $C$ Interval}
 \[
 \hat{p}\pm z^*\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
 \]
 \end{block}
 
-Common critical values are
-
 \begin{center}
-\begin{tabular}{cc}
+\begin{tabular}{cccc}
 \toprule
-Confidence level & $z^*$ \\
+Confidence level & $90\%$ & $95\%$ & $99\%$ \\
 \midrule
-$90\%$ & $1.645$ \\
-$95\%$ & $1.960$ \\
-$99\%$ & $2.576$ \\
+$z^*$ & $1.645$ & $1.960$ & $2.576$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 \end{frame}
 
-% SLIDE 13
-\begin{frame}{Why the Critical Value Is $z^*$}
-Inference for a mean uses a $t$ distribution when the separate spread parameter $\sigma$ must be estimated by $s$.
+% 11
+\begin{frame}{Why $z^*$ and Not $t^*$?}
+\textbf{For a mean,} the spread depends on a \emph{separate} unknown parameter $\sigma$. Estimating $\sigma$ with $s$ gives a $t$ distribution.
 
-\vspace{0.2cm}
-For a proportion, the sampling variance is determined by the same parameter being estimated:
-
+\vspace{0.3cm}
+\textbf{For a proportion,} the spread depends on the \emph{same} parameter we are estimating:
 \[
 \operatorname{Var}(\hat{p})=\frac{p(1-p)}{n}
 \]
 
-Replacing $p$ with $\hat{p}$ does not create a $t$ statistic. The method continues to use a Normal approximation and a $z^*$ critical value.
+\vspace{0.2cm}
+Replacing $p$ with $\hat{p}$ does not create a $t$ statistic. The method keeps the Normal approximation and a $z^*$ critical value.
+
+\vspace{0.3cm}
+\begin{block}{Conditions for the Large-Sample Interval}
+A sound random sample, a population much larger than the sample, and at least \textbf{15 successes and 15 failures} in the sample.
+\end{block}
 \end{frame}
 
-% SLIDE 14
-\begin{frame}{Conditions for the Large-Sample Interval}
-Use the ordinary large-sample interval only when
+% 12
+\begin{frame}{Example 19.3: HPV Confidence Interval}
+\step{State} Estimate $p$, the proportion of women aged 14--59 in the target population who currently test positive for HPV.
 
+\vspace{0.3cm}
+\step{Plan} Construct a $95\%$ large-sample interval from $X=515$ positives among $n=1921$ valid specimens.
+
+\vspace{0.3cm}
+\step{Solve} Check the conditions:
 \begin{itemize}
-  \item The sampling design supports inference to the target population
-  \item The population is much larger than the sample
-  \item The sample contains at least $15$ successes
-  \item The sample contains at least $15$ failures
+  \item NHANES uses a complex representative design, which we treat as roughly comparable to an SRS
+  \item The population of women is far larger than $1921$
+  \item $X=515\ge15$ successes and $n-X=1406\ge15$ failures
 \end{itemize}
 
-\[
-X\geq15
-\qquad\text{and}\qquad
-n-X\geq15
-\]
-
-Observed counts are used because the population proportion $p$ is unknown.
+\vspace{0.2cm}
+The count condition is easily met. The sampling design is the part that needs careful interpretation.
 \end{frame}
 
-% SLIDE 15
-\begin{frame}{Example 19.3: HPV Confidence Interval}
-\begin{block}{State}
-Estimate the proportion $p$ of women aged $14$ to $59$ in the target population who currently test positive for HPV.
-\end{block}
-
-\begin{block}{Plan}
-Construct a $95\%$ large-sample confidence interval using $X=515$ positive specimens from $n=1921$ valid specimens.
-\end{block}
-
-The point estimate is
-
+% 13
+\begin{frame}{Example 19.3: Calculation}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Estimate}
 \[
 \hat{p}=\frac{515}{1921}=0.2681
 \]
-\end{frame}
-
-% SLIDE 16
-\begin{frame}{Example 19.3: Checking the Conditions}
-\begin{itemize}
-  \item NHANES used a complex representative sampling design. The analysis treats its overall behaviour as approximately comparable to an SRS
-  \item The target population is much larger than $1921$
-  \item The number of successes is $515$
-  \item The number of failures is $1921-515=1406$
-\end{itemize}
-
+\textbf{Standard error}
 \[
-515\geq15
-\qquad\text{and}\qquad
-1406\geq15
+SE=\sqrt{\frac{(0.2681)(0.7319)}{1921}}=0.01011
 \]
-
-The count condition is easily satisfied. The sampling design requires more careful interpretation than the calculation alone suggests.
-\end{frame}
-
-% SLIDE 17
-\begin{frame}{Example 19.3: Calculating the Interval}
-The estimated standard error is
-
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Margin of error}
 \[
-SE=\sqrt{\frac{(0.2681)(0.7319)}{1921}}\approx0.01011
+m=1.960(0.01011)=0.01981
 \]
-
-The margin of error is
-
-\[
-m=1.960(0.01011)\approx0.01981
-\]
-
-The $95\%$ confidence interval is
-
+\textbf{Interval}
 \[
 0.2681\pm0.01981
 \]
-
 \[
 \boxed{(0.2483,\ 0.2879)}
 \]
+\end{column}
+\end{columns}
 \end{frame}
 
-% SLIDE 18
-\begin{frame}[fragile]{Example 19.3: Calculation in R}
-\begin{lstlisting}[style=Rstyle]
-# Observed count and sample size
-x_hpv <- 515
-n_hpv <- 1921
+% 14
+\begin{frame}{Example 19.3: Conclusion}
+\slidefig[0.32]{slide_ch19_hpv_ci.png}
 
-# Large-sample 95% confidence interval
-p_hat_hpv <- x_hpv / n_hpv
-se_hpv <- sqrt(p_hat_hpv * (1 - p_hat_hpv) / n_hpv)
-z_star <- qnorm(0.975)
-margin_hpv <- z_star * se_hpv
+\step{Conclude} We are $95\%$ confident that between about $24.8\%$ and $28.8\%$ of women aged 14--59 in the target population would currently test positive for HPV.
 
-c(
-  estimate = p_hat_hpv,
-  lower = p_hat_hpv - margin_hpv,
-  upper = p_hat_hpv + margin_hpv
-)
-\end{lstlisting}
-\end{frame}
-
-% SLIDE 19
-\begin{frame}{Example 19.3: Interpretation and Scope}
-We are $95\%$ confident that the proportion of women aged $14$ to $59$ in the target population who would currently test positive for HPV lies between approximately $0.248$ and $0.288$.
-
-\vspace{0.2cm}
-Equivalently, the estimated population percentage is between approximately $24.8\%$ and $28.8\%$.
-
-\begin{block}{Study Limitation}
-About $23\%$ of the original sample did not provide a usable specimen. If respondents and nonrespondents differ in HPV prevalence, nonresponse can bias the estimate. The margin of error does not measure that bias.
+\vspace{0.3cm}
+\begin{block}{Study Limitation: Nonresponse}
+About $23\%$ of the original sample gave no usable specimen. If nonrespondents differ in HPV status, the estimate is biased, and the margin of error does \textbf{not} measure that bias.
 \end{block}
 \end{frame}
 
-% SLIDE 20
-\begin{frame}{Limitations of the Ordinary Interval}
-The large-sample interval is easy to calculate, but its actual coverage can fall below the requested confidence level.
+% 15
+\begin{frame}[fragile]{Example 19.3: In R}
+\begin{lstlisting}[style=Rstyle]
+x_hpv <- 515
+n_hpv <- 1921
+
+p_hat  <- x_hpv / n_hpv
+se     <- sqrt(p_hat * (1 - p_hat) / n_hpv)
+margin <- qnorm(0.975) * se
+
+c(estimate = p_hat, lower = p_hat - margin, upper = p_hat + margin)
+#  estimate     lower     upper
+# 0.2680896 0.2482794 0.2878998
+\end{lstlisting}
 
 \vspace{0.2cm}
-Problems are most noticeable when
-
-\begin{itemize}
-  \item The sample size is modest
-  \item The number of successes is small
-  \item The number of failures is small
-  \item The true population proportion is close to $0$ or $1$
-\end{itemize}
-
-A simple adjustment improves coverage substantially in many of these settings.
+\small Note: \texttt{prop.test()} uses a different (score) method with a continuity correction, so its interval will not match this hand calculation exactly.
 \end{frame}
 
+% =============================================================
+\section{Plus Four Interval}
+% =============================================================
 
-% SLIDE 21
+% 16
+\begin{frame}{The Ordinary Interval Often Misses}
+\slidefig[0.55]{slide_ch19_coverage.png}
+
+\vspace{-0.2cm}
+A ``95\%'' large-sample interval actually captures $p$ much less often than 95\% when $n$ is modest or $p$ is near 0 or 1. The plus four interval stays close to the target.
+\end{frame}
+
+% 17
 \begin{frame}{The Plus Four Method}
-The plus four method adds four imaginary observations:
-
-\begin{itemize}
-  \item Two successes
-  \item Two failures
-\end{itemize}
-
-The adjusted estimate is
+Add four imaginary observations: \textbf{two successes and two failures}.
 
 \begin{block}{Plus Four Estimate}
 \[
@@ -439,382 +389,418 @@ The adjusted estimate is
 \]
 \end{block}
 
-The confidence interval then uses the ordinary formula with $\widetilde{p}$ and the adjusted sample size $n+4$.
-\end{frame}
-
-% SLIDE 22
-\begin{frame}{Plus Four Confidence Interval}
-The plus four interval is
-
+\begin{block}{Plus Four Interval}
 \[
-\widetilde{p}
-\pm
-z^*
-\sqrt{
-\frac{
-\widetilde{p}(1-\widetilde{p})
-}{
-n+4
-}
-}
+\widetilde{p}\pm z^*\sqrt{\frac{\widetilde{p}(1-\widetilde{p})}{n+4}}
 \]
-
-Use this method when
-
-\begin{itemize}
-  \item The confidence level is at least $90\%$
-  \item The original sample size satisfies $n\geq10$
-  \item The sampling and independence conditions are reasonable
-\end{itemize}
-
-The adjustment moves the estimate slightly toward $0.5$, where the Normal approximation behaves more reliably.
-\end{frame}
-
-% SLIDE 23
-\begin{frame}{Example 19.4: Blinding in Clinical Trials}
-Investigators randomly selected $97$ articles that reported placebo-controlled clinical trials. Only $7$ articles discussed whether blinding had succeeded.
-
-\begin{block}{Question}
-What proportion $p$ of all similar articles discuss the success of blinding?
 \end{block}
 
-The ordinary large-sample interval is not recommended because the sample contains only $7$ successes. The sample size is large enough for a plus four interval.
+\vspace{0.1cm}
+It is the same formula as before, applied to the adjusted counts.
 \end{frame}
 
-% SLIDE 24
+% 18
+\begin{frame}{When to Use Plus Four, and Why It Works}
+\textbf{Use the plus four interval when:}
+\begin{itemize}
+  \item the sampling and independence conditions are reasonable
+  \item the confidence level is at least $90\%$
+  \item the original sample size is $n\ge10$
+\end{itemize}
+It does \textbf{not} need 15 successes and 15 failures.
+
+\vspace{0.3cm}
+\textbf{Why it helps:} the adjustment pulls the estimate slightly toward $0.5$.
+\begin{itemize}
+  \item If $\hat{p}$ is near 0, adding two successes moves it up
+  \item If $\hat{p}$ is near 1, adding two failures moves it down
+\end{itemize}
+This small change greatly improves long-run coverage.
+\end{frame}
+
+% 19
+\begin{frame}{Example 19.4: Blinding in Clinical Trials}
+Investigators randomly sampled $97$ articles reporting placebo-controlled trials. Only $7$ discussed whether blinding had succeeded.
+
+\vspace{0.2cm}
+\step{State} Estimate $p$, the proportion of all similar articles that discuss the success of blinding.
+
+\vspace{0.3cm}
+\step{Plan} Which interval?
+\begin{itemize}
+  \item Ordinary interval: needs 15 successes, but $X=7<15$, so it is \textcolor{CourseRed}{\textbf{not recommended}}
+  \item Plus four: needs $n\ge10$, and $n=97$, so it is \textcolor{CourseGreen}{\textbf{appropriate}}
+\end{itemize}
+
+\vspace{0.2cm}
+Use a $95\%$ plus four interval.
+\end{frame}
+
+% 20
 \begin{frame}{Example 19.4: Plus Four Calculation}
-The adjusted estimate is
-
+\step{Solve}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Adjusted estimate}
 \[
-\widetilde{p}
-=
-\frac{7+2}{97+4}
-=
-\frac{9}{101}
-\approx0.0891
+\widetilde{p}=\frac{7+2}{97+4}=\frac{9}{101}=0.0891
 \]
-
-The adjusted standard error is
-
+\textbf{Adjusted standard error}
 \[
-SE
-=
-\sqrt{\frac{(0.0891)(0.9109)}{101}}
-\approx0.02835
+SE=\sqrt{\frac{(0.0891)(0.9109)}{101}}=0.02835
 \]
-
-The $95\%$ plus four interval is
-
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Margin of error}
 \[
-0.0891\pm1.960(0.02835)
-=
+m=1.960(0.02835)=0.05556
+\]
+\textbf{Interval}
+\[
+0.0891\pm0.05556
+\]
+\[
 \boxed{(0.0335,\ 0.1447)}
 \]
+\end{column}
+\end{columns}
+
+\vspace{0.3cm}
+\step{Conclude} We are $95\%$ confident that between about $3.4\%$ and $14.5\%$ of similar articles discuss whether blinding succeeded.
 \end{frame}
 
-% SLIDE 25
-\begin{frame}[fragile]{Example 19.4: Plus Four Interval in R}
+% 21
+\begin{frame}{Example 19.4: Ordinary vs.\ Plus Four}
+\slidefig[0.42]{slide_ch19_blinding.png}
+
+\begin{itemize}
+  \item The numbers differ only modestly in this one sample
+  \item But with only 7 successes, the ordinary interval's long-run coverage falls well below 95\%, while plus four stays close to it
+  \item With even fewer successes, the ordinary interval can run below 0, which is impossible for a proportion
+\end{itemize}
+\end{frame}
+
+% 22
+\begin{frame}[fragile]{Example 19.4: In R}
 \begin{lstlisting}[style=Rstyle]
-# Original study results
 x_blind <- 7
 n_blind <- 97
 
 # Add two successes and two failures
-x_plus4 <- x_blind + 2
-n_plus4 <- n_blind + 4
-p_plus4 <- x_plus4 / n_plus4
+p_plus4  <- (x_blind + 2) / (n_blind + 4)
+se_plus4 <- sqrt(p_plus4 * (1 - p_plus4) / (n_blind + 4))
+margin   <- qnorm(0.975) * se_plus4
 
-se_plus4 <- sqrt(p_plus4 * (1 - p_plus4) / n_plus4)
-margin_plus4 <- qnorm(0.975) * se_plus4
-
-c(
-  estimate = p_plus4,
-  lower = p_plus4 - margin_plus4,
-  upper = p_plus4 + margin_plus4
-)
+c(estimate = p_plus4, lower = p_plus4 - margin, upper = p_plus4 + margin)
+#   estimate      lower      upper
+# 0.08910891 0.03355166 0.14466616
 \end{lstlisting}
+
+\vspace{0.2cm}
+Plus four is simply the large-sample calculation applied to $X+2$ and $n+4$.
 \end{frame}
 
-% SLIDE 26
-\begin{frame}{Ordinary and Plus Four Intervals}
-For the blinding example,
+% =============================================================
+\section{Sample Size}
+% =============================================================
 
-\begin{center}
-\begin{tabular}{lccc}
-\toprule
-Method & Estimate & Lower bound & Upper bound \\
-\midrule
-Ordinary large-sample & $0.0722$ & $0.0207$ & $0.1237$ \\
-Plus four & $0.0891$ & $0.0335$ & $0.1447$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-The numerical difference is modest, but the repeated-sampling coverage of the plus four method is more reliable.
-
-\begin{block}{Recommended Method}
-Use the plus four interval when estimating one population proportion under its stated conditions.
-\end{block}
-\end{frame}
-
-% SLIDE 27
+% 23
 \begin{frame}{Choosing a Sample Size}
-To plan for a margin of error no greater than $m$, use
+To plan for a margin of error no greater than $m$:
 
 \begin{block}{Required Sample Size}
 \[
-n
-=
-\left(\frac{z^*}{m}\right)^2
-p^*(1-p^*)
+n=\left(\frac{z^*}{m}\right)^2 p^*(1-p^*)
 \]
 \end{block}
 
-Here, $p^*$ is a planning value for the anticipated population proportion.
-
-\vspace{0.2cm}
-Always round the calculated sample size \textbf{up}. Rounding down can produce a margin of error larger than requested.
+\begin{itemize}
+  \setlength{\itemsep}{0.15cm}
+  \item $p^*$ is a \textbf{planning value}: a guess at $p$ made before collecting data
+  \item \textbf{Always round up}. Rounding down gives a margin larger than requested
+  \item $n$ is the number of \emph{completed} observations needed
+\end{itemize}
 \end{frame}
 
-% SLIDE 28
+% 24
 \begin{frame}{Choosing the Planning Value $p^*$}
-Two approaches are common.
-
+\begin{columns}[T]
+\begin{column}{0.44\textwidth}
+\textbf{Two common choices}
 \begin{itemize}
-  \item Use a value from a pilot study, previous research or credible subject-matter knowledge
-  \item Use $p^*=0.5$ when no useful prior estimate is available
+  \item A value from a pilot study or previous research
+  \item $p^*=0.5$ when there is no useful prior estimate
 \end{itemize}
 
-The product $p^*(1-p^*)$ is largest at $p^*=0.5$:
-
-\[
-(0.5)(1-0.5)=0.25
-\]
-
-This choice gives the largest required sample size and therefore provides a conservative plan.
+\vspace{0.3cm}
+$p^*(1-p^*)$ is largest at $p^*=0.5$, so this choice gives the \textbf{largest} $n$. It is a conservative plan that cannot leave too little precision.
+\end{column}
+\begin{column}{0.54\textwidth}
+\centering
+\includegraphics[width=\textwidth]{slide_ch19_pstar.png}
+\end{column}
+\end{columns}
 \end{frame}
 
-% SLIDE 29
+% 25
 \begin{frame}{Example 19.5: Planning a Survey}
-A university wants to estimate the proportion of students who never floss. The desired confidence level is $95\%$, and the margin of error should be no greater than $0.04$.
+A university wants to estimate the proportion of students who \textbf{never floss}, with $95\%$ confidence and a margin of error of at most $0.04$.
 
 \vspace{0.2cm}
-With no precise prior estimate, use $p^*=0.5$:
-
+There is no precise prior estimate, so use $p^*=0.5$:
 \[
-n
-=
-\left(\frac{1.960}{0.04}\right)^2
-(0.5)(0.5)
-=
-600.25
-\]
-
-Round upward:
-
-\[
+n=\left(\frac{1.960}{0.04}\right)^2(0.5)(0.5)=600.25
+\qquad\Longrightarrow\qquad
 \boxed{n=601}
 \]
-\end{frame}
 
-% SLIDE 30
-\begin{frame}[fragile]{Sample-Size Planning in R}
-\begin{lstlisting}[style=Rstyle]
-# Desired design values
-confidence <- 0.95
-margin <- 0.04
-p_star <- 0.50
-
-# Critical value and required sample size
-z_star <- qnorm(1 - (1 - confidence) / 2)
-n_required <- (z_star / margin)^2 *
-  p_star * (1 - p_star)
-
-ceiling(n_required)
-# [1] 601
-\end{lstlisting}
-
-For margins of error $0.03$ and $0.02$, the required sample sizes are $1068$ and $2401$, respectively.
-\end{frame}
-
-
-% SLIDE 31
-\begin{frame}{Hypothesis Tests for a Proportion}
-A one-proportion test evaluates a specific claim about the population proportion.
-
+\vspace{0.2cm}
+\textbf{Response rate:} if only $60\%$ of invited students respond, invite
 \[
-H_0:p=p_0
+\frac{601}{0.60}\approx1002 \text{ students}
 \]
+This guarantees enough completed surveys. It does \textbf{not} remove nonresponse bias.
+\end{frame}
 
-Under the null hypothesis, the sampling distribution of $\hat{p}$ has centre $p_0$ and standard deviation
+% 26
+\begin{frame}[fragile]{Precision Is Expensive}
+\slidefig[0.45]{slide_ch19_sample_size.png}
 
+\vspace{-0.3cm}
+\begin{columns}[T]
+\begin{column}{0.52\textwidth}
+\begin{lstlisting}[style=Rstyle]
+z_star <- qnorm(0.975)
+m <- c(0.04, 0.03, 0.02)
+ceiling((z_star / m)^2 * 0.25)
+# [1]  601 1068 2401
+\end{lstlisting}
+\end{column}
+\begin{column}{0.44\textwidth}
+$n$ grows with $1/m^2$, so \textbf{halving the margin of error takes about four times the sample size}.
+\end{column}
+\end{columns}
+\end{frame}
+
+% =============================================================
+\section{One-Proportion Test}
+% =============================================================
+
+% 27
+\begin{frame}{Hypothesis Tests for a Proportion}
+To test a specific claim $H_0:p=p_0$, ask how unusual $\hat{p}$ would be \textbf{if $H_0$ were true}.
+
+\vspace{0.2cm}
+Under $H_0$, $\hat{p}$ has centre $p_0$ and standard deviation
 \[
 \sqrt{\frac{p_0(1-p_0)}{n}}
 \]
 
-The null value $p_0$, rather than the observed $\hat{p}$, determines the standard error used in the test statistic.
-\end{frame}
-
-% SLIDE 32
-\begin{frame}{The One-Proportion $z$ Statistic}
-The test statistic is
-
-\begin{block}{Test Statistic}
+\begin{block}{One-Proportion $z$ Statistic}
 \[
-z
-=
-\frac{
-\hat{p}-p_0
-}{
-\sqrt{p_0(1-p_0)/n}
-}
+z=\frac{\hat{p}-p_0}{\sqrt{p_0(1-p_0)/n}}
 \]
 \end{block}
 
-Use the Normal approximation when the expected counts under $H_0$ satisfy
-
-\[
-np_0\geq10
-\qquad\text{and}\qquad
-n(1-p_0)\geq10
-\]
-
-The test uses expected counts under the null hypothesis. Confidence-interval conditions use observed counts.
+The test's standard error uses the null value $p_0$, not $\hat{p}$.
 \end{frame}
 
-% SLIDE 33
-\begin{frame}{Alternative Hypotheses and Tail Areas}
-The alternative hypothesis determines the P-value.
+% 28
+\begin{frame}{Test Conditions and $P$-Values}
+\textbf{Conditions:} a sound random design, independence, and expected counts under $H_0$ of
+\[
+np_0\ge10\qquad\text{and}\qquad n(1-p_0)\ge10
+\]
 
 \begin{center}
-\begin{tabular}{ccc}
+\begin{tabular}{lll}
 \toprule
-Alternative & Direction & P-value \\
+\textbf{Alternative} & \textbf{$P$-value} & \textbf{Direction} \\
 \midrule
-$H_a:p>p_0$ & Upper tail & $P(Z\geq z)$ \\
-$H_a:p<p_0$ & Lower tail & $P(Z\leq z)$ \\
-$H_a:p\ne p_0$ & Two tails & $2P(Z\geq|z|)$ \\
+$H_a:p>p_0$ & $P(Z\ge z)$ & upper tail \\
+$H_a:p<p_0$ & $P(Z\le z)$ & lower tail \\
+$H_a:p\ne p_0$ & $2P(Z\ge|z|)$ & two tails \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-Choose the direction from the research question before examining the sample result.
+\vspace{0.1cm}
+Choose the direction from the research question \textbf{before} looking at the data.
 \end{frame}
 
-% SLIDE 34
-\begin{frame}{Example 19.6: Aphid Righting Behaviour}
-Researchers released $20$ live pea aphids upside down. Nineteen landed on their legs.
-
-\begin{block}{Research Question}
-Do live aphids land on their legs more often than the probability $0.5$ expected from chance alone?
-\end{block}
-
-Let $p$ be the population proportion that land on their legs.
-
-\[
-H_0:p=0.5
-\qquad
-H_a:p>0.5
-\]
-
-Under $H_0$, both expected counts equal $20(0.5)=10$, so the count condition is satisfied.
-\end{frame}
-
-% SLIDE 35
-\begin{frame}{Example 19.6: Test Statistic and P-Value}
-The sample proportion is
-
-\[
-\hat{p}=\frac{19}{20}=0.95
-\]
-
-The null standard error is
-
-\[
-SE_0=\sqrt{\frac{(0.5)(0.5)}{20}}\approx0.1118
-\]
-
-The test statistic is
-
-\[
-z=\frac{0.95-0.5}{0.1118}\approx4.025
-\]
-
-The upper-tail P-value is
-
-\[
-P(Z\geq4.025)\approx0.0000285
-\]
-\end{frame}
-
-% SLIDE 36
-\begin{frame}[fragile]{Example 19.6: Test in R}
-\begin{lstlisting}[style=Rstyle]
-# Observed data and null value
-x_aphid <- 19
-n_aphid <- 20
-p0 <- 0.50
-
-# One-proportion z test calculated directly
-p_hat_aphid <- x_aphid / n_aphid
-se_null <- sqrt(p0 * (1 - p0) / n_aphid)
-z_aphid <- (p_hat_aphid - p0) / se_null
-
-# Upper-tail P-value for Ha: p > 0.50
-p_value <- 1 - pnorm(z_aphid)
-
-c(z = z_aphid, p_value = p_value)
-\end{lstlisting}
-\end{frame}
-
-% SLIDE 37
-\begin{frame}{Example 19.6: Conclusion and Limitations}
-The very small P-value provides strong evidence against $H_0$.
-
-\vspace{0.2cm}
-The data support the conclusion that live pea aphids land on their legs more often than chance alone would predict under the study conditions.
-
-\begin{block}{What the Test Does Not Establish}
-The test does not identify the biological mechanism responsible for the behaviour. It also does not quantify how well the laboratory aphids represent every population or natural dropping condition.
-\end{block}
-
-Statistical significance addresses compatibility with the null model. Scientific interpretation still depends on the design and biological context.
-\end{frame}
-
-% SLIDE 38
-\begin{frame}{Choosing the Correct Procedure}
+% 29
+\begin{frame}{Confidence Interval vs.\ Test: Two Differences}
 \begin{center}
-\begin{tabularx}{0.95\textwidth}{>{\RaggedRight\arraybackslash}p{0.31\textwidth} X}
+\begin{tabularx}{0.86\textwidth}{>{\RaggedRight\arraybackslash}p{0.28\textwidth} X X}
 \toprule
-\textbf{Research goal} & \textbf{Procedure} \\
+ & \textbf{Confidence interval} & \textbf{Hypothesis test} \\
 \midrule
-Estimate one population proportion with large observed counts & Large-sample interval \\
-Estimate one population proportion with $n\geq10$ and confidence at least $90\%$ & Plus four interval \\
-Plan a sample for a target margin of error & Sample-size formula using $p^*$ \\
-Test $H_0:p=p_0$ with adequate expected counts & One-proportion $z$ test \\
-Compare proportions from two groups & Two-proportion methods in Chapter 20 \\
+Standard error uses & $\hat{p}$ (or $\widetilde{p}$) & $p_0$ \\[0.15cm]
+Count condition uses & observed counts & expected counts under $H_0$ \\
 \bottomrule
 \end{tabularx}
 \end{center}
 
-The study design and definition of success determine whether the calculation answers the intended question.
+\vspace{0.3cm}
+\textbf{Why?} A confidence interval has no null value, so it can only use what was observed. A test assumes $H_0$ is true, so everything is calculated under $p_0$.
+
+\vspace{0.3cm}
+\begin{block}{Common Mistakes}
+Using $\hat{p}$ in the test's standard error, or using $p_0$ in a confidence interval.
+\end{block}
 \end{frame}
 
-% SLIDE 39
+% 30
+\begin{frame}{Example 19.6: Aphid Righting Behaviour}
+Researchers released $20$ live pea aphids upside down. \textbf{Nineteen} landed on their legs.
+
+\vspace{0.2cm}
+\step{State} Let $p$ be the proportion of live pea aphids that land on their legs under these conditions. Do they land on their legs more often than the $0.5$ expected by chance?
+
+\vspace{0.2cm}
+\step{Plan} One-proportion $z$ test:
+\[
+H_0:p=0.5\qquad\qquad H_a:p>0.5
+\]
+
+\step{Solve} Check the expected counts under $H_0$:
+\[
+np_0=20(0.5)=10\qquad n(1-p_0)=20(0.5)=10
+\]
+Both just meet the minimum of 10.
+\end{frame}
+
+% 31
+\begin{frame}{Example 19.6: Test Statistic and $P$-Value}
+\begin{columns}[T]
+\begin{column}{0.46\textwidth}
+\textbf{Sample proportion}
+\[
+\hat{p}=\frac{19}{20}=0.95
+\]
+\textbf{Null standard error}
+\[
+SE_0=\sqrt{\frac{(0.5)(0.5)}{20}}=0.1118
+\]
+\end{column}
+\begin{column}{0.50\textwidth}
+\textbf{Test statistic}
+\[
+z=\frac{0.95-0.5}{0.1118}=4.025
+\]
+\textbf{$P$-value} (upper tail)
+\[
+P(Z\ge4.025)\approx0.0000285
+\]
+\end{column}
+\end{columns}
+
+\vspace{0.3cm}
+Because the counts only just meet the condition, check with the exact binomial: $P(X\ge19)=21/2^{20}\approx0.00002$. The conclusion is the same.
+\end{frame}
+
+% 32
+\begin{frame}{Example 19.6: How Unusual Is 0.95?}
+\slidefig[0.55]{slide_ch19_aphid_null.png}
+
+\vspace{-0.2cm}
+If $H_0$ were true, $\hat{p}$ would cluster around $0.5$. The observed $0.95$ is about 4 standard errors out, so far into the tail that the $P$-value area is too small to see.
+\end{frame}
+
+% 33
+\begin{frame}{Example 19.6: Conclusion}
+\step{Conclude} The $P$-value is extremely small. There is \textbf{very strong evidence} that live pea aphids land on their legs more often than chance alone would predict under the study conditions.
+
+\vspace{0.3cm}
+\begin{block}{What the Test Does Not Establish}
+\begin{itemize}
+  \item It does not identify the biological \emph{mechanism} behind the behaviour
+  \item It does not show that every aphid population, or every natural fall, has the same success rate
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+Statistical significance measures incompatibility with the null model. Scientific interpretation still depends on the design and the biology.
+\end{frame}
+
+% 34
+\begin{frame}[fragile]{Example 19.6: In R}
+\begin{lstlisting}[style=Rstyle]
+x_aphid <- 19
+n_aphid <- 20
+p0 <- 0.50
+
+p_hat   <- x_aphid / n_aphid
+se_null <- sqrt(p0 * (1 - p0) / n_aphid)   # uses p0, not p_hat
+z       <- (p_hat - p0) / se_null
+
+c(z = z, p_value = pnorm(z, lower.tail = FALSE))
+#            z      p_value
+# 4.024922e+00 2.849706e-05
+
+sum(dbinom(19:20, size = 20, prob = 0.5))  # exact binomial check
+# [1] 2.002716e-05
+\end{lstlisting}
+\end{frame}
+
+% =============================================================
+\section{Summary}
+% =============================================================
+
+% 35
+\begin{frame}{Common Errors}
+\begin{center}
+\small
+\begin{tabularx}{0.95\textwidth}{>{\RaggedRight\arraybackslash}p{0.44\textwidth} X}
+\toprule
+\textbf{Error} & \textbf{Correction} \\
+\midrule
+Confusing $\hat{p}$ (known) with $p$ (unknown) & State the parameter in words first \\
+Using $\hat{p}$ in the test's standard error & Use $\sqrt{p_0(1-p_0)/n}$ \\
+Using $p_0$ in a confidence interval & Use $\hat{p}$, or $\widetilde{p}$ for plus four \\
+Large-sample interval with few successes & Use plus four when $X<15$ or $n-X<15$ \\
+Rounding a planned sample size down & Always round up: $600.25\to601$ \\
+Treating the margin of error as the total error & It covers random sampling only, not bias \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\end{frame}
+
+% 36
+\begin{frame}{Choosing the Correct Procedure}
+\begin{center}
+\begin{tabularx}{0.95\textwidth}{>{\RaggedRight\arraybackslash}p{0.36\textwidth} >{\RaggedRight\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Research goal} & \textbf{Procedure} & \textbf{Condition} \\
+\midrule
+Estimate $p$, large observed counts & Large-sample interval & $X\ge15$, $n-X\ge15$ \\
+Estimate $p$, small or unbalanced counts & Plus four interval & $n\ge10$, $C\ge90\%$ \\
+Plan a study for margin $m$ & Sample-size formula & choose $z^*$, $m$, $p^*$ \\
+Test $H_0:p=p_0$ & One-proportion $z$ test & $np_0\ge10$, $n(1-p_0)\ge10$ \\
+Compare two groups & Two-proportion methods & Chapter 20 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{0.2cm}
+The study design and the definition of success determine whether the calculation answers the intended question.
+\end{frame}
+
+% 37
 \begin{frame}{Chapter 19 Summary}
 \begin{itemize}
-  \item The sample proportion $\hat{p}=X/n$ estimates the population proportion $p$
-  \item The sampling distribution has centre $p$ and standard deviation $\sqrt{p(1-p)/n}$
-  \item The ordinary interval uses $\hat{p}\pm z^*\sqrt{\hat{p}(1-\hat{p})/n}$
-  \item The plus four interval usually provides more accurate coverage
-  \item Sample-size planning uses $n=(z^*/m)^2p^*(1-p^*)$
-  \item A test of $H_0:p=p_0$ uses the null standard error based on $p_0$
+  \setlength{\itemsep}{0.12cm}
+  \item $\hat{p}=X/n$ estimates $p$. Its sampling distribution has centre $p$ and spread $\sqrt{p(1-p)/n}$
+  \item \textbf{Large-sample interval:} $\hat{p}\pm z^*\sqrt{\hat{p}(1-\hat{p})/n}$, needing 15 successes and 15 failures
+  \item \textbf{Plus four:} use $\widetilde{p}=(X+2)/(n+4)$ and $n+4$. It has better coverage and needs only $n\ge10$
+  \item \textbf{Sample size:} $n=(z^*/m)^2p^*(1-p^*)$, rounded up, with $p^*=0.5$ if unsure
+  \item \textbf{Test:} $z=(\hat{p}-p_0)/\sqrt{p_0(1-p_0)/n}$, using expected counts under $H_0$
 \end{itemize}
 
+\vspace{0.2cm}
 \begin{block}{Final Principle}
-The procedure measures random sampling uncertainty. Population definitions, sampling quality and study conditions determine the scope of the conclusion.
+The procedure measures random sampling uncertainty. The population definition, sampling quality and study conditions determine the scope of the conclusion.
 \end{block}
 \end{frame}
 
 \end{document}
-
