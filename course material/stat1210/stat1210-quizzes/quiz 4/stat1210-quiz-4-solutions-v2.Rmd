@@ -1,6 +1,6 @@
 ---
 title: "STAT 1210 - Quiz 4 Solutions"
-subtitle: "Part IV: Inference for Population Means - Version 2"
+subtitle: "Part IV: Inference for Means and Proportions - Version 2"
 author: "Fall 2026"
 date: ""
 output:
@@ -22,58 +22,64 @@ header-includes:
 ## Question 1: Shell Length of Cultured PEI Mussels (8 marks)
 
 1. **Parameter and hypotheses (2 marks).** Let $\mu$ be the population mean shell length, in millimetres, of all harvest-ready blue mussels in the grower's lease this season. The hypotheses are
-$$H_0:\mu=61.5$$
-$$H_a:\mu\ne61.5$$
-The alternative is two-sided because the grower asks whether the current population mean differs from $61.5$ mm in either direction.
+$$H_0:\mu=60$$
+$$H_a:\mu\ne60$$
+The alternative is two-sided because the grower asks whether the current population mean differs from $60$ mm in either direction.
 2. **Standard error, test statistic and degrees of freedom (2 marks).** The estimated standard error is
-$$SE=\frac{s}{\sqrt{n}}=\frac{6.5}{\sqrt{25}}=\frac{6.5}{5}=1.300\text{ mm}$$
+$$SE=\frac{s}{\sqrt{n}}=\frac{5.5}{\sqrt{25}}=\frac{5.5}{5}=1.100\text{ mm}$$
 The test statistic is
-$$t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}}=\frac{59.0-61.5}{1.300}=\frac{-2.5}{1.300}\approx-1.923$$
+$$t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}}=\frac{62.5-60}{1.100}=\frac{2.5}{1.100}\approx2.273$$
 The degrees of freedom are
 $$df=n-1=25-1=24$$
-3. **Table-based P-value range (2 marks).** Use $|t|=1.923$ and the row for $df=24$. The table gives
-$$1.711<1.923<2.064$$
-The corresponding right-tail probabilities are $0.050$ and $0.025$, so the one-sided tail area satisfies
-$$0.025<P(T\ge1.923)<0.050$$
+3. **Table-based P-value range (2 marks).** Use $t=2.273$ and the row for $df=24$. The table gives
+$$2.064<2.273<2.492$$
+The corresponding right-tail probabilities are $0.025$ and $0.010$, so the one-sided tail area satisfies
+$$0.010<P(T\ge 2.273)<0.025$$
 The alternative is two-sided, so both tails are included:
-$$\boxed{0.050<P\text{-value}<0.100}$$
-For reference, the exact two-sided P-value is approximately $0.0664$.
+$$\boxed{0.020<P\text{-value}<0.050}$$
+For reference, the exact two-sided P-value is approximately $0.0323$. Because the P-value is less than $\alpha=0.05$, reject $H_0$: the data provide statistically significant evidence that this season's population mean shell length differs from $60$ mm. The sample suggests the mussels are longer.
+
 4. **Confidence interval (2 marks).** The margin of error is
-$$m=t^*SE=2.064(1.300)=2.6832$$
+$$m=t^*SE=2.064(1.100)=2.2704$$
 Therefore, the $95\%$ confidence interval is
-$$59.0\pm2.6832$$
-$$\boxed{(56.317,\ 61.683)\text{ mm}}$$
+$$62.5\pm2.2704$$
+$$\boxed{(60.230,\ 64.770)\text{ mm}}$$
+The interval does not contain $60$, which agrees with rejecting $H_0$.
 
 
-## Question 2: Potato Yield under Two Disease-Control Programs (12 marks)
+## Question 2: Varroa Mites in PEI Honeybee Colonies (12 marks)
 
-1. **Parameters and hypotheses (2 marks).** Let $\mu_E$ be the population mean marketable potato yield, in tonnes per hectare, under the enhanced disease-control program for plots like those studied. Let $\mu_S$ be the corresponding population mean under the standard program. With the difference defined as enhanced minus standard,
-$$H_0:\mu_E-\mu_S=0$$
-$$H_a:\mu_E-\mu_S>0$$
+1. **Parameter and hypotheses (2 marks).** Let $p$ be the proportion of all honeybee colonies in PEI's registered apiaries that have varroa mite levels above the treatment threshold this spring. The hypotheses are
+$$H_0:p=0.21$$
+$$H_a:p\ne0.21$$
+The alternative is two-sided because the apiarist asks whether the proportion has changed in either direction.
+2. **Condition, sample proportion, null standard error and test statistic (3 marks).** The test uses the expected counts under $H_0$:
+$$np_0=320(0.21)=67.2\ge10\qquad n(1-p_0)=320(0.79)=252.8\ge10$$
+The condition is satisfied. The colonies are a random sample, and $320$ is far less than $10\%$ of the several thousand colonies.
 
-2. **Point estimate and standard error (2 marks).** The point estimate is
-$$\bar{x}_E-\bar{x}_S=37.1-33.8=3.3\text{ tonnes/ha}$$
-The standard error is
-$$SE=\sqrt{\frac{4.5^2}{18}+\frac{3.9^2}{16}}$$
-$$=\sqrt{\frac{20.25}{18}+\frac{15.21}{16}}=\sqrt{1.125+0.950625}=\sqrt{2.075625}\approx1.441\text{ tonnes/ha}
-$$
-
-3. **Degrees of freedom, test statistic, P-value and conclusion (4 marks).** For the Welch degrees of freedom,
-$$\frac{s_E^2}{n_E}=\frac{4.5^2}{18}=1.125\qquad\frac{s_S^2}{n_S}=\frac{3.9^2}{16}=0.950625$$
-Therefore
-$$df=\frac{(1.125+0.950625)^2}{\dfrac{1.125^2}{17}+\dfrac{0.950625^2}{15}}=\frac{4.308219}{0.074449+0.060246}=\frac{4.308219}{0.134694}\approx31.985$$
+The sample proportion is
+$$\hat{p}=\frac{88}{320}=0.275$$
+The null standard error uses $p_0$, not $\hat{p}$:
+$$SE_0=\sqrt{\frac{p_0(1-p_0)}{n}}=\sqrt{\frac{(0.21)(0.79)}{320}}=\sqrt{0.000518}\approx0.02277$$
 The test statistic is
-$$t=\frac{3.3-0}{1.440703}\approx2.291$$
-The calculated degrees of freedom are not listed, so use the next lower available row, $df=30$. In that row,
-$$2.042<2.291<2.457$$
-The associated right-tail probabilities are $0.025$ and $0.010$. Thus,
-$$\boxed{0.010<P\text{-value}<0.025}$$
-The exact one-sided P-value is approximately $0.0144$. Because the P-value is less than $\alpha=0.05$, reject $H_0$. The data provide statistically significant evidence that the enhanced program increases the population mean marketable potato yield for plots like those in the experiment.
-
-4. **Confidence interval (2 marks).** The margin of error is
-$$m=t^*SE=2.037(1.440703)\approx2.935$$
-The confidence interval is
-$$3.3\pm2.935$$
-$$\boxed{(0.365,\ 6.235)\text{ tonnes/ha}}$$
-5. **Role of random assignment and generalization (2 marks).** Random assignment tends to balance both known and unknown confounding variables between the treatment groups. It therefore supports a cause-and-effect conclusion about the disease-control programs for the experimental plots under the study conditions. The results cannot automatically be generalized to every potato field in PEI. The plots were randomly assigned to treatments, but they were not described as a random sample of all PEI potato fields. Differences in soil, potato variety, weather, farm management and disease pressure may limit generalization.
-
+$$z=\frac{0.275-0.21}{0.02277}=\frac{0.065}{0.02277}\approx2.855$$
+3. **Table-based P-value range and conclusion (2 marks).** Use the $df=\infty$ row. The table gives
+$$2.807<2.855<3.090$$
+The corresponding right-tail probabilities are $0.0025$ and $0.001$, so
+$$0.001<P(Z\ge2.855)<0.0025$$
+Doubling for the two-sided alternative,
+$$\boxed{0.002<P\text{-value}<0.005}$$
+The exact two-sided P-value is approximately $0.0043$. Because the P-value is less than $\alpha=0.05$, reject $H_0$. The data provide strong evidence that the proportion of PEI colonies above the varroa treatment threshold has changed from $21\%$. The sample suggests it has increased.
+4. **Confidence interval and consistency (3 marks).** The interval uses the observed counts:
+$$X=88\ge15\qquad n-X=232\ge15$$
+so the large-sample interval is appropriate. The standard error uses $\hat{p}$:
+$$SE=\sqrt{\frac{(0.275)(0.725)}{320}}=\sqrt{0.000623}\approx0.02496$$
+$$m=1.960(0.02496)\approx0.04892$$
+$$0.275\pm0.04892$$
+$$\boxed{(0.226,\ 0.324)}$$
+We are $95\%$ confident that between about $22.6\%$ and $32.4\%$ of colonies in PEI's registered apiaries are above the treatment threshold. The interval does not contain $0.21$, which is consistent with rejecting $H_0$ at $\alpha=0.05$.
+5. **Sample size and scope (2 marks).** Using $p^*=0.275$, $z^*=1.960$ and $m=0.03$,
+$$n=\left(\frac{1.960}{0.03}\right)^2(0.275)(0.725)=4268.44(0.199375)\approx851.02$$
+Always round up:
+$$\boxed{n=852\text{ colonies}}$$
+A larger sample would **not** fix the problem. Colonies whose beekeepers volunteer may differ systematically from other colonies. For example, beekeepers who are worried about mites, or who manage their hives more carefully, may be more likely to volunteer. That is selection bias. A larger volunteer sample gives a more precise estimate of the wrong population. Fixing the problem requires random selection of colonies, not more colonies.

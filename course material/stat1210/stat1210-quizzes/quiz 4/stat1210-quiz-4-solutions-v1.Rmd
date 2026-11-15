@@ -1,6 +1,6 @@
 ---
 title: "STAT 1210 - Quiz 4 Solutions"
-subtitle: "Part IV: Inference for Population Means - Version 1"
+subtitle: "Part IV: Inference for Means and Proportions - Version 1"
 author: "Fall 2026"
 date: ""
 output:
@@ -37,40 +37,49 @@ The corresponding right-tail probabilities are $0.050$ and $0.025$, so the one-s
 $$0.025<P(T\ge 2.000)<0.050$$
 The alternative is two-sided, so both tails are included:
 $$\boxed{0.050<P\text{-value}<0.100}$$
-For reference, the exact two-sided P-value is approximately $0.0569$.
+For reference, the exact two-sided P-value is approximately $0.0569$. Because the P-value is greater than $\alpha=0.05$, fail to reject $H_0$: the data do not provide statistically significant evidence that this season's population mean shell length differs from $60$ mm.
 
 4. **Confidence interval (2 marks).** The margin of error is
 $$m=t^*SE=2.064(1.200)=2.4768$$
 Therefore, the $95\%$ confidence interval is
 $$57.6\pm2.4768$$
 $$\boxed{(55.123,\ 60.077)\text{ mm}}$$
+The interval contains $60$, which agrees with failing to reject $H_0$.
 
 
-## Question 2: Potato Yield under Two Disease-Control Programs (12 marks)
+## Question 2: Varroa Mites in PEI Honeybee Colonies (12 marks)
 
-1. **Parameters and hypotheses (2 marks).** Let $\mu_E$ be the population mean marketable potato yield, in tonnes per hectare, under the enhanced disease-control program for plots like those studied. Let $\mu_S$ be the corresponding population mean under the standard program. With the difference defined as enhanced minus standard,
-$$H_0:\mu_E-\mu_S=0$$
-$$H_a:\mu_E-\mu_S>0$$
-2. **Point estimate and standard error (2 marks).** The point estimate is
-$$\bar{x}_E-\bar{x}_S=35.8-32.4=3.4\text{ tonnes/ha}$$
-The standard error is
-$$SE=\sqrt{\frac{4.2^2}{18}+\frac{3.6^2}{16}}$$
-$$=\sqrt{\frac{17.64}{18}+\frac{12.96}{16}}=\sqrt{0.980+0.810}=\sqrt{1.790}\approx1.338\text{ tonnes/ha}$$
-3. **Degrees of freedom, test statistic, P-value and conclusion (4 marks).** For the Welch degrees of freedom,
-$$\frac{s_E^2}{n_E}=\frac{4.2^2}{18}=0.980\qquad\frac{s_S^2}{n_S}=\frac{3.6^2}{16}=0.810$$
-Therefore
-$$df=\frac{(0.980+0.810)^2}{\dfrac{0.980^2}{17}+\dfrac{0.810^2}{15}}=\frac{3.2041}{0.056494+0.043740}=\frac{3.2041}{0.100234}\approx31.966$$
+1. **Parameter and hypotheses (2 marks).** Let $p$ be the proportion of all honeybee colonies in PEI's registered apiaries that have varroa mite levels above the treatment threshold this spring. The hypotheses are
+$$H_0:p=0.24$$
+$$H_a:p\ne0.24$$
+The alternative is two-sided because the apiarist asks whether the proportion has changed in either direction.
+2. **Condition, sample proportion, null standard error and test statistic (3 marks).** The test uses the expected counts under $H_0$:
+$$np_0=250(0.24)=60\ge10\qquad n(1-p_0)=250(0.76)=190\ge10$$
+The condition is satisfied. The colonies are a random sample, and $250$ is far less than $10\%$ of the several thousand colonies.
+
+The sample proportion is
+$$\hat{p}=\frac{75}{250}=0.300$$
+The null standard error uses $p_0$, not $\hat{p}$:
+$$SE_0=\sqrt{\frac{p_0(1-p_0)}{n}}=\sqrt{\frac{(0.24)(0.76)}{250}}=\sqrt{0.0007296}\approx0.02701$$
 The test statistic is
-$$t=\frac{3.4-0}{1.337909}\approx2.541$$
-The calculated degrees of freedom are not listed, so use the next lower available row, $df=30$. In that row,
-$$2.457<2.541<2.750$$
-The associated right-tail probabilities are $0.010$ and $0.005$. Thus,
-$$\boxed{0.005<P\text{-value}<0.010}$$
-The exact one-sided P-value is approximately $0.0080$. Because the P-value is less than $\alpha=0.05$, reject $H_0$. The data provide statistically significant evidence that the enhanced program increases the population mean marketable potato yield for plots like those in the experiment.
-4. **Confidence interval (2 marks).** The margin of error is
-$$m=t^*SE=2.037(1.337909)\approx2.725$$
-The confidence interval is
-$$3.4\pm2.725$$
-$$\boxed{(0.675,\ 6.125)\text{ tonnes/ha}}$$
-5. **Role of random assignment and generalization (2 marks).** Random assignment tends to balance both known and unknown confounding variables between the treatment groups. It therefore supports a cause-and-effect conclusion about the disease-control programs for the experimental plots under the study conditions. The results cannot automatically be generalized to every potato field in PEI. The plots were randomly assigned to treatments, but they were not described as a random sample of all PEI potato fields. Differences in soil, potato variety, weather, farm management and disease pressure may limit generalization.
-
+$$z=\frac{0.300-0.24}{0.02701}=\frac{0.060}{0.02701}\approx2.221$$
+3. **Table-based P-value range and conclusion (2 marks).** Use the $df=\infty$ row. The table gives
+$$1.960<2.221<2.326$$
+The corresponding right-tail probabilities are $0.025$ and $0.010$, so
+$$0.010<P(Z\ge2.221)<0.025$$
+Doubling for the two-sided alternative,
+$$\boxed{0.020<P\text{-value}<0.050}$$
+The exact two-sided P-value is approximately $0.0263$. Because the P-value is less than $\alpha=0.05$, reject $H_0$. The data provide statistically significant evidence that the proportion of PEI colonies above the varroa treatment threshold has changed from $24\%$. The sample suggests it has increased.
+4. **Confidence interval and consistency (3 marks).** The interval uses the observed counts:
+$$X=75\ge15\qquad n-X=175\ge15$$
+so the large-sample interval is appropriate. The standard error uses $\hat{p}$:
+$$SE=\sqrt{\frac{(0.300)(0.700)}{250}}=\sqrt{0.00084}\approx0.02898$$
+$$m=1.960(0.02898)\approx0.05681$$
+$$0.300\pm0.05681$$
+$$\boxed{(0.243,\ 0.357)}$$
+We are $95\%$ confident that between about $24.3\%$ and $35.7\%$ of colonies in PEI's registered apiaries are above the treatment threshold. The interval does not contain $0.24$ (although it only just excludes it), which is consistent with rejecting $H_0$ at $\alpha=0.05$.
+5. **Sample size and scope (2 marks).** Using $p^*=0.30$, $z^*=1.960$ and $m=0.03$,
+$$n=\left(\frac{1.960}{0.03}\right)^2(0.30)(0.70)=4268.44(0.21)\approx896.37$$
+Always round up:
+$$\boxed{n=897\text{ colonies}}$$
+A larger sample would **not** fix the problem. Colonies whose beekeepers volunteer may differ systematically from other colonies. For example, beekeepers who are worried about mites, or who manage their hives more carefully, may be more likely to volunteer. That is selection bias. A larger volunteer sample gives a more precise estimate of the wrong population. Fixing the problem requires random selection of colonies, not more colonies.
