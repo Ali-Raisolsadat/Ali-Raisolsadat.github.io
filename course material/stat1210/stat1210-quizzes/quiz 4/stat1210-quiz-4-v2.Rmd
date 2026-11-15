@@ -1,6 +1,6 @@
 ---
 title: "STAT 1210 - Quiz 4"
-subtitle: "Part IV: Inference for Means and Proportions - Version 2"
+subtitle: "Part IV: Specific Inference Procedures - Version 2"
 author: "Fall 2026"
 date: ""
 output:
