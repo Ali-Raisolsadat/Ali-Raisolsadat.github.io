@@ -65,21 +65,6 @@ Probability describes what data could occur under a model. Inference compares th
 \end{block}
 \end{frame}
 
-\begin{frame}{Roadmap: The Questions This Chapter Answers}
-\begin{enumerate}
-  \item Which probability ideas sit underneath every inference procedure?
-  \item When does the probability model actually fit the study? \hfill \textit{Conditions}
-  \item How do confidence intervals respond to $n$, $\sigma$ and confidence level? \hfill \textit{Intervals}
-  \item How does a distribution become a $P$-value? \hfill \textit{Tests}
-  \item What does ``statistically significant'' really tell us? \hfill \textit{Significance}
-  \item What mistakes can a test make, and how often? \hfill \textit{Errors and power}
-  \item How large should a study be? \hfill \textit{Planning}
-\end{enumerate}
-
-\vspace{0.2cm}
-Each question builds on the one before it.
-\end{frame}
-
 \begin{frame}{Parameters, Statistics and Randomness}
 A population parameter is a fixed but usually unknown number. A sample statistic is calculated from the observations and changes from sample to sample.
 
@@ -112,27 +97,6 @@ Inference uses that one number while accounting for how much it \emph{could} hav
 \vspace{0.2cm}
 If individual values have standard deviation $\sigma$, the mean of $n$ independent values has
 $$\sigma_{\bar{X}}=\frac{\sigma}{\sqrt{n}}$$
-
-\begin{block}{Why this matters}
-Confidence intervals and $P$-values use the \emph{sampling} distribution, because it describes how much the statistic varies from sample to sample.
-\end{block}
-\end{frame}
-
-\begin{frame}{The Probability-to-Inference Process}
-\begin{center}
-\begin{tabularx}{0.94\textwidth}{>{\RaggedRight\arraybackslash}p{0.20\textwidth} X >{\RaggedRight\arraybackslash}p{0.25\textwidth}}
-\toprule
-\textbf{Stage} & \textbf{Question} & \textbf{Statistical object} \\
-\midrule
-Probability model & What outcomes could occur if the model were correct? & Normal, binomial or Poisson distribution \\
-Sampling distribution & How would a statistic vary across repeated samples? & Distribution of $\bar{x}$, $\hat p$ or a count \\
-Inference & Is the observed statistic plausible under a stated population claim? & Confidence interval or $P$-value \\
-Practical conclusion & What does the evidence support in the study setting? & Contextual conclusion with limitations \\
-\bottomrule
-\end{tabularx}
-\end{center}
-
-Inference remains conditional on the probability model and the data-collection process.
 \end{frame}
 
 \begin{frame}{Probability Rules Inside Inference}
@@ -147,22 +111,6 @@ Several rules from Chapters 9--10 appear directly in inferential calculations.
 \begin{block}{Important Distinction}
 $P(\text{data as or more extreme}\mid H_0)$ is not the same as $P(H_0\mid\text{data})$.
 \end{block}
-\end{frame}
-
-\begin{frame}{Matching the Probability Model to the Response}
-The response variable determines the starting probability model.
-\begin{center}
-\begin{tabularx}{0.95\textwidth}{>{\RaggedRight\arraybackslash}p{0.24\textwidth} >{\RaggedRight\arraybackslash}p{0.27\textwidth} X}
-\toprule
-\textbf{Response} & \textbf{Possible model} & \textbf{Parameter} \\
-\midrule
-Continuous measurement & Normal model, or Normal sampling distribution of $\bar{x}$ & Population mean $\mu$ \\
-Successes in $n$ trials & Binomial model & Success probability $p$ \\
-Event count over exposure & Poisson model & Event rate $\lambda$ \\
-\bottomrule
-\end{tabularx}
-\end{center}
-A model is more than a shape. A binomial model assumes fixed $n$, independent trials and a common $p$. A Poisson model assumes independent events at a stable rate with no clustering.
 \end{frame}
 
 \begin{frame}{The Normal Distribution in Inference}
@@ -183,6 +131,22 @@ For $\bar{x}$, the SD is $\sigma/\sqrt{n}$.
 \includegraphics[width=\linewidth]{fig_ch15_critical_values.png}
 \end{column}
 \end{columns}
+\end{frame}
+
+\begin{frame}{Matching the Probability Model to the Sample}
+The sample determines the starting probability model.
+\begin{center}
+\begin{tabularx}{0.95\textwidth}{>{\RaggedRight\arraybackslash}p{0.24\textwidth} >{\RaggedRight\arraybackslash}p{0.27\textwidth} X}
+\toprule
+\textbf{Response} & \textbf{Possible model} & \textbf{Parameter} \\
+\midrule
+Continuous measurement & Normal model, or Normal sampling distribution of $\bar{x}$ & Population mean $\mu$ \\
+Successes in $n$ trials & Binomial model & Success probability $p$ \\
+Event count over exposure & Poisson model & Event rate $\lambda$ \\
+\bottomrule
+\end{tabularx}
+\end{center}
+A model is more than a shape. A binomial model assumes fixed $n$, independent trials and a common $p$. A Poisson model assumes independent events at a stable rate with no clustering.
 \end{frame}
 
 \begin{frame}{Exact Models and Normal Approximations}
@@ -239,20 +203,6 @@ Random assignment & Units assigned to treatments by chance & Causal treatment ef
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Example 15.1: The Scope of Generalization}
-Two researchers recruit students from introductory courses at one university. Neither class is a random sample.
-
-\begin{block}{Neurobiology Study}
-A researcher studies responses to an optical illusion. Basic visual mechanisms may be similar across many groups, so subject-matter knowledge may support a cautiously broader interpretation.
-\end{block}
-
-\begin{block}{Attitude Survey}
-A researcher studies opinions about human-participant research. Age, education, program and campus culture may affect responses, so one class does not represent adults or university students generally.
-\end{block}
-
-The sampling method is the same; the defensible scope differs because the variables differ.
-\end{frame}
-
 \begin{frame}{Independence of Observations}
 Independence means that knowing one observation does not change the probabilities for another.
 
@@ -292,7 +242,10 @@ There is no universal cutoff such as $n=30$. Stronger skewness and heavier tails
 \end{frame}
 
 \begin{frame}{Outliers and Nonresistant Statistics}
-$\bar{x}$ and $s$ are not resistant. One outlier can shift the estimate, inflate the standard deviation and change the conclusion of a test. Before performing inference:
+$\bar{x}$ and $s$ are not resistant. One outlier can shift the estimate, inflate the standard deviation and change the conclusion of a test. 
+
+\vspace{0.2cm}
+Before performing inference:
 \begin{itemize}
   \item Check for data-entry and measurement errors
   \item Examine a suitable graph of the observations
@@ -302,21 +255,6 @@ $\bar{x}$ and $s$ are not resistant. One outlier can shift the estimate, inflate
 An observation should not be removed solely because its removal changes the conclusion.
 \end{frame}
 
-\begin{frame}{A Conditions Checklist}
-Before reporting an inferential result, ask:
-\begin{enumerate}
-  \item What population or treatment comparison does the study address?
-  \item How were individuals selected and, when applicable, assigned to treatments?
-  \item Are the observations sufficiently independent?
-  \item Does the probability model match the response and the study process?
-  \item Are outliers, missing observations or measurement problems present?
-  \item Does the analysis account for the actual sampling or experimental design?
-\end{enumerate}
-
-\begin{block}{Next}
-From here on we assume the conditions hold and ask: how do the procedures \emph{behave}?
-\end{block}
-\end{frame}
 
 % =============================================================
 % SECTION 3: CONFIDENCE INTERVALS
@@ -333,37 +271,6 @@ $$m=z^*\frac{\sigma}{\sqrt{n}}$$
 The estimate determines the centre. The margin of error determines the half-width.
 \end{frame}
 
-\begin{frame}{From a Sampling Distribution to an Interval}
-Under the $z$ model, the standardized sample mean is Standard Normal:
-$$Z=\frac{\bar{X}-\mu}{\sigma/\sqrt{n}}\sim N(0,1)$$
-The middle $95\%$ of $N(0,1)$ lies between $-1.96$ and $1.96$, so
-$$P\left(-1.96\leq\frac{\bar{X}-\mu}{\sigma/\sqrt{n}}\leq1.96\right)=0.95$$
-Multiplying by $\sigma/\sqrt{n}$ and rearranging to isolate $\mu$:
-$$P\left(\bar{X}-1.96\frac{\sigma}{\sqrt{n}}\leq\mu\leq \bar{X}+1.96\frac{\sigma}{\sqrt{n}}\right)=0.95$$
-Before sampling, the \emph{endpoints} are random because they depend on $\bar{X}$. The parameter $\mu$ is fixed.
-\end{frame}
-
-\begin{frame}{What ``95\% Confidence'' Means}
-\begin{columns}[T,onlytextwidth]
-\begin{column}{0.60\textwidth}
-\centering
-\includegraphics[width=\linewidth,height=0.78\textheight,keepaspectratio]{fig_ch15_coverage.png}
-\end{column}
-\begin{column}{0.38\textwidth}
-\small
-Forty samples of $n=31$ from a population with $\mu=100$, $\sigma=15$.
-
-\vspace{0.15cm}
-Each interval captures $\mu$ with probability $0.95$, so the number of misses is
-$$\operatorname{Bin}(40,\,0.05)$$
-with mean $40(0.05)=2$. Here, $2$ intervals miss.
-
-\vspace{0.15cm}
-After sampling, one interval either contains $\mu$ or it does not. ``95\%'' describes the \emph{method}.
-\end{column}
-\end{columns}
-\end{frame}
-
 \begin{frame}{Three Quantities Control the Margin of Error}
 $$m=z^*\frac{\sigma}{\sqrt{n}}$$
 \begin{center}
@@ -371,7 +278,7 @@ $$m=z^*\frac{\sigma}{\sqrt{n}}$$
 \toprule
 \textbf{Quantity} & \textbf{Change} & \textbf{Effect on $m$} \\
 \midrule
-Confidence level (through $z^*$) & Higher confidence & Wider interval \\
+Critical value $z^*$ & Higher confidence & Wider interval \\
 Population variability $\sigma$ & Larger $\sigma$ & Wider interval \\
 Sample size $n$ & Larger $n$ & Narrower interval \\
 \bottomrule
@@ -402,7 +309,7 @@ Lower confidence gives a narrower interval, but it is wrong more often. It adds 
 \end{frame}
 
 \begin{frame}{Example 15.2: Confidence Level and Margin of Error}
-A random sample of $n=31$ seventh-grade girls in a school district has mean IQ $\bar{x}=105.84$. Assume $\sigma=15$, so
+A random sample of $n=31$ of adult males has mean IQ $\bar{x}=105.84$. Assume $\sigma=15$, so
 $$\frac{\sigma}{\sqrt{n}}=\frac{15}{\sqrt{31}}\approx2.694$$
 \begin{center}
 \begin{tabular}{cccc}
@@ -431,7 +338,6 @@ $$m=z^*\frac{\sigma}{\sqrt{n}}$$
   \item A smaller $\sigma$ produces less sample-to-sample variation in $\bar{x}$
   \item A larger $\sigma$ makes the population mean harder to estimate precisely
 \end{itemize}
-Natural biological variation usually cannot be removed. Measurement variation can sometimes be reduced through better instruments, standardized procedures or training.
 \end{frame}
 
 \begin{frame}{Lever 3: Sample Size and the Square-Root Relationship}
@@ -498,15 +404,6 @@ The margin comes from the sampling distribution, which describes only that one s
 \end{columns}
 \vspace{0.2cm}
 A narrow interval means high precision under the model. It does not guarantee the estimate is free of bias.
-\end{frame}
-
-% ---------- BREAK SLIDE ----------
-\begin{frame}[plain]
-  \centering
-  \vfill
-  {\Huge\bfseries\color{CourseBlue} Break}\\[0.4cm]
-  \includegraphics[width=0.75\textwidth,height=0.65\textheight,keepaspectratio]{break_image.jpeg}\\[0.3cm]
-  \vfill
 \end{frame}
 
 
@@ -657,12 +554,19 @@ $$P\text{-value}=P(X\ge20\mid\lambda=12)$$
 For a Poisson random variable,
 $$P(X=x\mid H_0)=e^{-12}\frac{12^x}{x!}$$
 The upper tail has infinitely many terms, so use the complement rule:
-\begin{align*}
-P(X\ge20\mid H_0)
-&=1-P(X\le19\mid H_0) \\
-&=1-\sum_{x=0}^{19}e^{-12}\frac{12^x}{x!} \\
-&\approx 0.0213
-\end{align*}
+$$
+P(X\ge20\mid H_0)=1-P(X\le19\mid H_0) =1-\sum_{x=0}^{19}e^{-12}\frac{12^x}{x!} \approx 0.0213
+$$
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+\textbf{Method} & \textbf{$P$-value} \\
+\midrule
+Exact binomial & $0.0213$ \\
+Normal approximation (continuity corrected $P(Y\geq 20.5)$) & $0.00714$ \\
+\bottomrule
+\end{tabular}
+\end{center}
 If the mean remained $12$ cases per month, a count of $20$ or more would occur in about $2.13\%$ of months.
 \end{frame}
 
@@ -702,6 +606,15 @@ Before concluding that the disease rate increased, check whether the Poisson mod
 \begin{block}{General lesson}
 A small $P$-value shows tension between the data and the \emph{whole} null model. It can arise because the parameter value is wrong, because an assumption is wrong, or both.
 \end{block}
+\end{frame}
+
+% ---------- BREAK SLIDE ----------
+\begin{frame}[plain]
+  \centering
+  \vfill
+  {\Huge\bfseries\color{CourseBlue} Break Time}\\[0.4cm]
+  \includegraphics[width=0.75\textwidth,height=0.65\textheight,keepaspectratio]{break_image.jpeg}\\[0.3cm]
+  \vfill
 \end{frame}
 
 
@@ -1141,19 +1054,6 @@ Smaller effects are harder to distinguish from sampling variation, so they need 
 % SECTION 8: SUMMARY
 % =============================================================
 \section{Summary}
-
-\begin{frame}{Key Ideas}
-\small
-\begin{itemize}
-  \item Every interval and $P$-value is a probability from a sampling distribution, which may be Normal, binomial or Poisson
-  \item The conditions (randomization, independence, model fit) decide whether that probability means anything
-  \item $m=z^*\sigma/\sqrt{n}$: higher confidence and larger $\sigma$ widen the interval; larger $n$ narrows it while coverage stays fixed
-  \item A $P$-value is $P(\text{as or more extreme}\mid H_0)$, not $P(H_0\mid\text{data})$, and not an effect size
-  \item With many tests, false positives follow $\operatorname{Bin}(m,\alpha)$; $P(\text{at least one})=1-(1-\alpha)^m$
-  \item Type I error probability $\alpha$ comes from the null distribution; Type II error probability $\beta$ comes from the alternative; power $=1-\beta$
-  \item Plan $n$ in advance: $n=(z^*\sigma/m)^2$ for intervals and $n=\big((z_{1-\alpha}+z_{\text{power}})\sigma/\delta\big)^2$ for tests, rounded up
-\end{itemize}
-\end{frame}
 
 \begin{frame}{A Consistent Inferential Workflow}
 \begin{enumerate}
