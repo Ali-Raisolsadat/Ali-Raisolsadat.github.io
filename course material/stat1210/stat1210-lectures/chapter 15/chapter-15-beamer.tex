@@ -630,26 +630,10 @@ Examples 15.3 and 15.4 gave small $P$-values. What do such results tell us?
 Smaller $P$-values indicate greater incompatibility between the data and the null model. A significance level such as $\alpha=0.05$ provides a decision rule, but not a sharp scientific boundary.
 
 \begin{block}{Example}
-$P=0.048$ and $P=0.052$ represent nearly the same strength of evidence, although a fixed $5\%$ rule gives different formal decisions. $P=0.004$ is much stronger evidence than $P=0.04$.
+$P=0.048$ and $P=0.052$ represent nearly the same strength of evidence, although a fixed $5\%$ rule gives different formal decisions.
 \end{block}
 
 Report the exact $P$-value, the effect estimate and a confidence interval. The required strength of evidence depends on the plausibility of $H_0$ and the consequences of the decision.
-\end{frame}
-
-\begin{frame}{What a $P$-Value Does Not Mean}
-A $P$-value is calculated under the null hypothesis and the model assumptions.
-
-\vspace{0.2cm}
-It is not
-\begin{itemize}
-  \item The probability that $H_0$ is true
-  \item The probability that the result occurred only because of chance
-  \item The size or importance of the observed effect
-  \item A substitute for checking the study design and model conditions
-\end{itemize}
-
-\vspace{0.2cm}
-A large $P$-value indicates compatibility with the null model. It does not establish that $H_0$ is correct, because other parameter values may be compatible too.
 \end{frame}
 
 \begin{frame}{Statistical Significance Depends on Sample Size}
@@ -708,17 +692,21 @@ Would the effect matter in practice? & Scientific thresholds, consequences, cost
 A complete analysis reports the size and uncertainty of the effect rather than only whether a significance threshold was crossed. The next example shows why.
 \end{frame}
 
-\begin{frame}{Example 15.5: A Large Social-Media Experiment}
-A randomized experiment altered the emotional content shown in the News Feeds of $689{,}003$ users for one week.
+\begin{frame}{Example 15.5: Facebook Experiment}
+A randomized experiment studied whether \textbf{emotional contagion} occurs on Facebook without in person interaction. The company reduced for one week the amount of emotional (positive, negative, or neutral) content from friends in the News Feed of a random sample of $689003$ Facebook users without informing them, then monitored the users’ posts the following week.
 
 \vspace{0.2cm}
-The reported tests produced very small $P$-values:
-$$z=-4.78 \qquad\text{and}\qquad z=-7.219 \qquad P<0.001$$
-The estimated change was approximately one fewer emotional word per $1000$ words written during the following week.
+Omitting emotional content reduced the number of words users subsequently produced:
+\begin{itemize}
+  \item when positivity reduced: $z=-4.78,\ P<0.001$
+  \item when negativity reduced: $z=-7.219,\ P<0.001$
+\end{itemize}
 
-\begin{block}{Interpretation}
-The huge sample made the analysis sensitive to a very small average change. The $P$-values provide evidence against a zero-effect model but do not establish a large effect.
-\end{block}
+\vspace{0.1cm}
+\textbf{Effect size:} on average, about \textbf{one fewer emotional word per $1000$ words} over the following week.
+
+\textbf{Interpretation}: The results are highly statistically significant, but the effect is extremely small. The huge sample size made the test sensitive enough to detect it. The small $P$-values mean that even a change as tiny as one word in $1000$ would be unlikely in a random sample of $689{,}003$ users if changing the News Feed had \textbf{no effect}. They do not show that the effect is large or practically important.
+
 \end{frame}
 
 \begin{frame}{Example 15.5: Practical Importance}
@@ -839,7 +827,7 @@ $\alpha$ and $\beta$ come from \emph{different} sampling distributions. The seri
 \begin{frame}{Example 15.7: The Sweetness Study}
 Storage may reduce the sweetness of a new cola. Ten trained tasters rate the cola before and after storage; the response is sweetness loss.
 $$H_0:\mu=0 \qquad H_a:\mu>0 \qquad \sigma=1,\quad n=10,\quad \alpha=0.05$$
-A mean loss of $\mu=0.8$ point would matter to consumers.
+Each taster's sweetness loss is (rating before storage) $-$ (rating after storage). A mean loss of $\mu=0.8$ point means that, on average, tasters would rate the stored cola $0.8$ point \textbf{less sweet} than the fresh cola. It is the specific alternative we want the test to detect.
 
 \vspace{0.15cm}
 \textbf{Step 1: write the test as a decision rule on $\bar{x}$.} Under $H_0$, $\bar{X}\sim N(0,\ 1/\sqrt{10})$, with $1/\sqrt{10}\approx0.3162$.
