@@ -66,33 +66,10 @@
 \end{frame}
 
 % =============================================================
-% INTRODUCTION
+\section{Introduction}
 % =============================================================
 
-% 2
-\begin{frame}{From $z$ Procedures to $t$ Procedures}
-Chapter 14 built confidence intervals and tests for $\mu$ \textbf{assuming $\sigma$ was known}. In practice, $\sigma$ is almost never known, so we estimate it with $s$.
-
-\vspace{0.3cm}
-\begin{center}
-\begin{tabularx}{0.82\textwidth}{>{\RaggedRight\arraybackslash}p{0.26\textwidth} X X}
-\toprule
- & \textbf{Chapter 14: $\sigma$ known} & \textbf{Chapter 17: $\sigma$ unknown} \\
-\midrule
-Standard error & $\sigma/\sqrt{n}$ & $s/\sqrt{n}$ \\[0.1cm]
-Statistic & $z$ & $t$ \\[0.1cm]
-Reference distribution & $N(0,1)$ & $t(n-1)$ \\
-\bottomrule
-\end{tabularx}
-\end{center}
-
-\vspace{0.3cm}
-\begin{block}{Main Transition}
-The logic of intervals and $P$-values stays the same. Only the standard error, the reference distribution and the degrees of freedom change.
-\end{block}
-\end{frame}
-
-% 3
+% 1
 \begin{frame}{Roadmap}
 \begin{enumerate}
   \setlength{\itemsep}{0.25cm}
@@ -108,116 +85,61 @@ The logic of intervals and $P$-values stays the same. Only the standard error, t
 Every example follows four steps: \step{State} \step{Plan} \step{Solve} \textcolor{CourseBlue}{\textbf{Conclude}}
 \end{frame}
 
-% =============================================================
-\section{Conditions and Standard Error}
-% =============================================================
 
-% 4
-\begin{frame}{Condition 1: Random Sampling and Independence}
-The data should be an SRS from the population of interest, or come from a design that supports a similar independence assumption.
-
-\vspace{0.2cm}
-\begin{itemize}
-  \setlength{\itemsep}{0.2cm}
-  \item When sampling without replacement, the population should be at least 10 times the sample: $n\le0.10N$
-  \item Repeatedly measuring the \emph{same} animal and treating each measurement as a new animal underestimates uncertainty
-  \item This condition sets the \textbf{scope}: a correct calculation cannot make a convenience sample represent a wider population
-\end{itemize}
-\end{frame}
-
-% 5
-\begin{frame}{Condition 2: Shape of the Population}
-The $t$ procedures are exact for a Normal population. For other shapes, ask whether the procedure is still reliable \emph{for this sample size}.
-
-\vspace{0.2cm}
-\begin{itemize}
-  \setlength{\itemsep}{0.15cm}
-  \item How large is $n$?
-  \item How strong is the skewness?
-  \item Are there outliers? These affect both $\bar{x}$ and $s$
-  \item Does the distribution have one meaningful centre?
-\end{itemize}
-
-\vspace{0.2cm}
-\begin{block}{Priority of Conditions}
-Independence matters more than perfect Normality. A large $n$ can fix shape problems, but it never fixes bias or dependence. \textbf{Always plot the data first.}
-\end{block}
-\end{frame}
-
-% 6
+% 2
 \begin{frame}{Standard Deviation vs.\ Standard Error}
 \begin{center}
-\begin{tabularx}{0.88\textwidth}{>{\centering\arraybackslash}p{0.14\textwidth} >{\RaggedRight\arraybackslash}p{0.24\textwidth} X}
+\begin{tabularx}{0.88\textwidth}{
+>{\centering\arraybackslash}p{0.14\textwidth}
+>{\RaggedRight\arraybackslash}p{0.24\textwidth}
+X}
 \toprule
 \textbf{Quantity} & \textbf{What varies?} & \textbf{What it describes} \\
 \midrule
-$s$ & Individual observations & Spread of values in the population \\[0.15cm]
-$\dfrac{s}{\sqrt{n}}$ & Sample means & Spread of $\bar{x}$ from sample to sample \\
+$s$ & Individual observations & Spread of values in the sample \\[0.15cm]
+$SE_{\bar{x}}$ & Sample means & Spread of $\bar{x}$ from sample to sample \\
 \bottomrule
 \end{tabularx}
 \end{center}
 
-\vspace{0.3cm}
-\[
-s=\sqrt{\frac{\sum(x_i-\bar{x})^2}{n-1}}
-\qquad\qquad
-SE_{\bar{x}}=\frac{s}{\sqrt{n}}
-\]
-
-\vspace{0.2cm}
-Both are in the original units of the variable. The standard error measures how precisely $\bar{x}$ estimates $\mu$.
-\end{frame}
-
-% 7
-\begin{frame}{The Standard Error and Sample Size}
-For the same $s$, a larger sample gives a smaller standard error:
-\[
-\frac{s}{\sqrt{4n}}=\frac{1}{2}\cdot\frac{s}{\sqrt{n}}
-\]
-\textbf{Multiplying $n$ by 4 only halves the SE.} Much more precision needs a much larger sample.
-
-\vspace{0.3cm}
-\begin{block}{A Frequent Mistake}
-The standard error is \textbf{not} $s$, and it is \textbf{not} $s/n$:
-\[
-\boxed{SE_{\bar{x}}=\frac{s}{\sqrt{n}}}
-\]
+\begin{block}{Standard Deviation and Standard Error Formulas}
+\centering
+$$s=\sqrt{\frac{\sum_{i=1}^{n}(x_i-\bar{x})^2}{n-1}} \qquad \widehat{SE}_{\bar{x}}=\frac{s}{\sqrt{n}}$$
 \end{block}
 
-Because $s$ changes from sample to sample, the SE is itself random. That is why $N(0,1)$ is no longer exactly right.
+\vspace{0.1cm}
+The standard error measures how precisely $\bar{x}$ estimates $\mu$. For the same $s$, a larger sample gives a smaller estimated standard error:
+$$\frac{s}{\sqrt{4n}}=\frac{1}{2}\cdot\frac{s}{\sqrt{n}}$$
+\textbf{Multiplying $n$ by 4 only halves the SE.} Much more precision needs a much larger sample.
 \end{frame}
+
 
 % =============================================================
 \section{The $t$ Distributions}
 % =============================================================
 
-% 8
+% 3
 \begin{frame}{From $z$ to $t$}
-\begin{columns}[T]
-\begin{column}{0.48\textwidth}
-\centering \textbf{$\sigma$ known}
-\[
-z=\frac{\bar{x}-\mu}{\sigma/\sqrt{n}}\sim N(0,1)
-\]
-\end{column}
-\begin{column}{0.48\textwidth}
-\centering \textbf{$\sigma$ unknown}
-\[
-t=\frac{\bar{x}-\mu}{s/\sqrt{n}}\sim t(n-1)
-\]
-\end{column}
-\end{columns}
+\begin{center}
+\textbf{$\sigma$ known}
+$$z=\frac{\bar{x}-\mu}{\sigma/\sqrt{n}}\sim N(0,1)$$
 
-\vspace{0.3cm}
+\vspace{0.2cm}
+
+\textbf{$\sigma$ unknown}
+$$t=\frac{\bar{x}-\mu}{s/\sqrt{n}}\sim t(n-1)$$
+\end{center}
+
+\vspace{0.2cm}
 Both count how many standard errors $\bar{x}$ lies from $\mu$.
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \begin{block}{Why a New Distribution?}
-The denominator $s/\sqrt{n}$ is random, so $t$ varies more than $z$. The $t$ distribution has heavier tails to allow for $s$ under- or over-estimating $\sigma$. As a result, intervals are wider and $P$-values are larger.
+The denominator $s/\sqrt{n}$ is random, so $t$ varies more than $z$. The $t$ distribution has heavier tails to allow for $s$ under- or over-estimating $\sigma$. As a result intervals are wider and $P$-values are larger for the same absolute test statistic.
 \end{block}
 \end{frame}
 
-% 9
+% 4
 \begin{frame}{The Family of $t$ Distributions}
 \slidefig[0.60]{slide_ch17_t_distributions.png}
 
@@ -228,60 +150,133 @@ Each curve is symmetric about 0 and bell-shaped. Smaller $df$ means heavier tail
 \small\textit{Student's $t$:} W.\ S.\ Gosset developed it at the Guinness brewery for small samples and published under the name ``Student.''
 \end{frame}
 
-% 10
-\begin{frame}{Degrees of Freedom and Critical Values}
-\begin{columns}[T]
-\begin{column}{0.48\textwidth}
-\textbf{Why $df=n-1$?}
+% 5
+\begin{frame}{Degrees of Freedom: Why $n-1$?}
+When calculating the sample standard deviation, we first estimate the population mean using the sample mean $\bar{x}$.
+
+\vspace{0.15cm}
+\begin{block}{The Key Constraint}
+The deviations from the sample mean must sum to zero:
+$$\sum_{i=1}^{n}(x_i-\bar{x})=0$$
+Once $n-1$ deviations are known, the final deviation is determined automatically.
+\end{block}
+
+\vspace{0.15cm}
+\textbf{Example:} Suppose $4$ observations have a sample mean of $10$.
+Three observations are $8$, $9$, and $11$. What must the fourth observation be?
+$$(8-10)+(9-10)+(11-10)+(x_4-10)=0$$
+$$-2-1+1+(x_4-10)=0 \quad\Rightarrow\quad \boxed{x_4=12}$$
 
 \vspace{0.1cm}
-The deviations must sum to zero:
-\[
-\sum_{i=1}^{n}(x_i-\bar{x})=0
-\]
-After $n-1$ deviations are known, the last one is fixed. So $s$ has $n-1$ free pieces of information.
-
-\vspace{0.2cm}
-The $df$ tells us \emph{which} $t$ curve to use.
-\end{column}
-\begin{column}{0.46\textwidth}
+Only $3$ deviations can vary freely; the fourth is constrained.
 \begin{center}
-\begin{tabular}{cc}
+\boxed{df=n-1=4-1=3}
+\end{center}
+\end{frame}
+
+% 6
+\begin{frame}{Degrees of Freedom and the $t$-Table}
+The degrees of freedom determine which $t$ distribution we use.
+$$\boxed{df=n-1}$$
+
+\vspace{0.1cm}
+\textbf{Example:} Suppose we have a sample of $n=11$ observations and want to construct a $95\%$ confidence interval.
+$$df=11-1=\boxed{10}$$
+
+\vspace{0.1cm}
+\begin{center}
+\small
+\begin{tabular}{cccc}
 \toprule
-\textbf{Distribution} & \textbf{95\% critical value} \\
+& \multicolumn{3}{c}{\textbf{Confidence Level}} \\
+\cmidrule(lr){2-4}
+\textbf{df} & \textbf{90\%} & \textbf{95\%} & \textbf{99\%} \\
 \midrule
-$t(5)$ & $2.571$ \\
-$t(10)$ & $2.228$ \\
-$t(20)$ & $2.086$ \\
-$t(50)$ & $2.009$ \\
-$N(0,1)$ & $1.960$ \\
+$5$  & $2.015$ & $2.571$ & $4.032$ \\
+$\mathbf{10}$ & $1.812$ & $\boxed{\mathbf{2.228}}$ & $3.169$ \\
+$20$ & $1.725$ & $2.086$ & $2.845$ \\
+$50$ & $1.676$ & $2.009$ & $2.678$ \\
+$\infty$ & $1.645$ & $1.960$ & $2.576$ \\
 \bottomrule
 \end{tabular}
 \end{center}
-\vspace{0.1cm}
-Estimating $\sigma$ costs a lot when $n$ is small and very little when $n$ is large.
-\end{column}
-\end{columns}
 \end{frame}
 
-% 11
+% 7
+\begin{frame}{Degrees of Freedom and the $t$-Table}
+\vspace{0.15cm}
+\textbf{How to read the table:}
+\begin{enumerate}
+	\item Find the row corresponding to $df=10$.
+	\item Find the column for a $95\%$ confidence level.
+	\item The intersection gives the critical value $t^*=2.228$.
+\end{enumerate}
+
+\vspace{0.1cm}
+Therefore, the confidence interval is:
+$$\boxed{\bar{x}\pm 2.228\frac{s}{\sqrt{11}}}$$
+\end{frame}
+
+% 8
 \begin{frame}{Example 17.1: Reading $t$ Probabilities}
-For a $t$ distribution with $10$ degrees of freedom:
-
+Consider a $t$ distribution with $10$ degrees of freedom.
 \slidefig[0.50]{slide_ch17_t_areas.png}
-
 \vspace{-0.2cm}
+
 \begin{columns}[T]
 \begin{column}{0.48\textwidth}
-\centering $P(T\le-3)=0.0067$
+\centering
+\textbf{Left-Tail Probability}
+\vspace{0.05cm}
+$$\boxed{0.005<P(T\le -3)<0.010}$$
+The $t$-table gives a range rather than an exact probability.
 \end{column}
+
 \begin{column}{0.48\textwidth}
-\centering $P(T\ge1.812)=0.05$, so by symmetry $P(T\le-1.812)=0.05$
+\centering
+\textbf{Right-Tail Probability}
+
+\vspace{0.05cm}
+$$\boxed{P(T\ge 1.812)\approx 0.05}$$
+
+By symmetry:
+$P(T\le -1.812)\approx 0.05$
 \end{column}
 \end{columns}
 \end{frame}
 
-% 12
+% 9
+\begin{frame}{Example 17.1: Using the $t$-Table}
+Most $t$-tables list critical values for specific upper-tail probabilities.
+
+\vspace{0.15cm}
+\begin{center}
+\small
+\begin{tabular}{c|ccccc}
+\toprule
+& \multicolumn{5}{c}{\textbf{Upper-Tail Probability}} \\
+\cmidrule(lr){2-6}
+\textbf{df} & $0.10$ & $0.05$ & $0.025$ & $0.01$ & $0.005$ \\
+\midrule
+$5$  & $1.476$ & $2.015$ & $2.571$ & $3.365$ & $4.032$ \\
+$\mathbf{10}$ & $\mathbf{1.372}$ & $\mathbf{1.812}$ & $\mathbf{2.228}$ & $\mathbf{2.764}$ & $\mathbf{3.169}$ \\
+$20$ & $1.325$ & $1.725$ & $2.086$ & $2.528$ & $2.845$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.1cm}
+\textbf{Example A: Find $P(T\ge 1.812)$ for $df=10$.} In the $df=10$ row, $t=1.812$ corresponds to an upper-tail probability of $0.05$.
+$$P(T\ge 1.812)\approx 0.05$$
+
+\vspace{0.1cm}
+\textbf{Example B: Find $P(T\le -3)$ for $df=10$.} By symmetry, $P(T\le -3)=P(T\ge 3)$. From the $df=10$ row:
+$$2.764<3<3.169$$
+Larger $t$-values have smaller upper-tail probabilities.
+$$0.005<P(T\le -3)<0.010$$
+\end{frame}
+
+% 10
 \begin{frame}[fragile]{Example 17.1: $t$ Probabilities in R}
 \begin{columns}[T]
 \begin{column}{0.50\textwidth}
@@ -322,13 +317,10 @@ Critical value & \texttt{qnorm()} & \texttt{qt()} \\
 \section{One-Sample $t$ Interval}
 % =============================================================
 
-% 13
+% 12
 \begin{frame}{The One-Sample $t$ Confidence Interval}
 \begin{block}{Level $C$ Confidence Interval for $\mu$}
-\[
-\bar{x}\pm t^*\frac{s}{\sqrt{n}}
-\qquad t^* \text{ from } t(n-1) \text{ with central area } C
-\]
+$$\bar{x}\pm t^*\frac{s}{\sqrt{n}} \qquad t^* \text{ from } t(n-1) \text{ with central area } C$$
 \end{block}
 
 \vspace{0.2cm}
@@ -336,12 +328,11 @@ Critical value & \texttt{qnorm()} & \texttt{qt()} \\
   \setlength{\itemsep}{0.15cm}
   \item The margin of error is $m=t^*\,s/\sqrt{n}$
   \item The interval is \textbf{wider} with a higher confidence level, more variable data or a smaller $n$
-  \item It is exact for a Normal population and approximately correct for large random samples
   \item $C$ is the long-run success rate of the \emph{method}. It is not the probability that this particular interval contains $\mu$
 \end{itemize}
 \end{frame}
 
-% 14
+% 13
 \begin{frame}{Example 17.2: Testosterone in Obese Adolescent Males}
 Plasma testosterone (nmol/L) for $25$ obese adolescent males:
 
@@ -361,7 +352,7 @@ Plasma testosterone (nmol/L) for $25$ obese adolescent males:
 \step{Plan} $\sigma$ is unknown, so use a one-sample $t$ interval.
 \end{frame}
 
-% 15
+% 14
 \begin{frame}{Example 17.2: Check the Data}
 \step{Solve} Before calculating anything, plot the data.
 
@@ -370,64 +361,46 @@ Plasma testosterone (nmol/L) for $25$ obese adolescent males:
 The distribution is single-peaked, with no extreme outliers or strong skewness. With $n=25$, a $t$ procedure is reasonable.
 \end{frame}
 
-% 16
+% 15
 \begin{frame}{Example 17.2: Calculation}
-\begin{columns}[T]
-\begin{column}{0.48\textwidth}
 \textbf{Summary statistics}
-\[
-n=25,\quad \bar{x}=0.2584,\quad s=0.1115
-\]
+$$n=25,\quad \bar{x}=0.2584,\quad s=0.1115$$
 \textbf{Standard error}
-\[
-SE=\frac{0.1115}{\sqrt{25}}=0.0223
-\]
+$$SE=\frac{0.1115}{\sqrt{25}}=0.0223$$
 \textbf{Critical value}, $df=24$
-\[
-t^*=2.064\qquad(\text{vs. } z^*=1.960)
-\]
-\end{column}
-\begin{column}{0.48\textwidth}
+$$t^*=2.064\qquad(\text{vs. } z^*=1.960)$$
 \textbf{Margin of error}
-\[
-m=2.064(0.0223)=0.0460
-\]
+$$m=2.064(0.0223)=0.0460$$
 \textbf{Interval}
-\[
-0.2584\pm0.0460
-\]
-\[
-\boxed{(0.212,\ 0.304)\text{ nmol/L}}
-\]
-\end{column}
-\end{columns}
+$$0.2584\pm0.0460$$
+$$\boxed{(0.212,\ 0.304)\text{ nmol/L}}$$
 
 \vspace{0.3cm}
 The larger $t^*$ makes the interval a little wider than a $z$ interval. That is the cost of not knowing $\sigma$.
 \end{frame}
 
-% 17
+% 16
 \begin{frame}{Example 17.2: Conclusion}
 \slidefig[0.45]{slide_ch17_testosterone_ci.png}
 
 \step{Conclude} We are 95\% confident that the mean plasma testosterone for obese adolescent males similar to those studied is between $0.212$ and $0.304$ nmol/L.
 \end{frame}
 
-% 18
+% 17
 \begin{frame}{Example 17.2: What the Interval Does Not Tell Us}
-The boys came from one medical centre, not from an SRS of all obese adolescent males. The conclusion applies most directly to \textbf{similar patients}.
+The males  came from one medical centre not from an SRS of all obese males. The conclusion applies most directly to \textbf{similar patients}.
 
 \vspace{0.3cm}
 The interval covers random sampling variation under the model. It does \textbf{not}:
 \begin{itemize}
-  \setlength{\itemsep}{0.15cm}
-  \item give a range for \emph{individual} boys (most of the dots lie outside it)
-  \item correct for selection bias or measurement error
-  \item show that obesity \emph{causes} low testosterone, because this is an observational study
+ \setlength{\itemsep}{0.15cm}
+	\item give a range for \emph{individual} males (most of the dots lie outside it)
+  	\item correct for selection bias or measurement error
+  	\item show that obesity \emph{causes} low testosterone, because this is an observational study
 \end{itemize}
 \end{frame}
 
-% 19
+% 18
 \begin{frame}[fragile]{Example 17.2: In R}
 \begin{columns}[T]
 \begin{column}{0.52\textwidth}
@@ -465,7 +438,7 @@ t.test(testosterone,
 \section{One-Sample $t$ Test}
 % =============================================================
 
-% 20
+% 19
 \begin{frame}{The One-Sample $t$ Test}
 To test $H_0:\mu=\mu_0$, compute
 \[
