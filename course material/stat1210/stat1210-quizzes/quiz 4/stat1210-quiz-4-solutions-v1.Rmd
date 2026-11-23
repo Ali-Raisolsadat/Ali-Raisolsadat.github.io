@@ -55,9 +55,7 @@ $$H_a:p\ne0.24$$
 The alternative is two-sided because the apiarist asks whether the proportion has changed in either direction.
 2. **Condition, sample proportion, null standard error and test statistic (3 marks).** The test uses the expected counts under $H_0$:
 $$np_0=250(0.24)=60\ge10\qquad n(1-p_0)=250(0.76)=190\ge10$$
-The condition is satisfied. The colonies are a random sample, and $250$ is far less than $10\%$ of the several thousand colonies.
-
-The sample proportion is
+The condition is satisfied. The colonies are a random sample, and $250$ is far less than $10\%$ of the several thousand colonies. The sample proportion is
 $$\hat{p}=\frac{75}{250}=0.300$$
 The null standard error uses $p_0$, not $\hat{p}$:
 $$SE_0=\sqrt{\frac{p_0(1-p_0)}{n}}=\sqrt{\frac{(0.24)(0.76)}{250}}=\sqrt{0.0007296}\approx0.02701$$
@@ -78,8 +76,3 @@ $$m=1.960(0.02898)\approx0.05681$$
 $$0.300\pm0.05681$$
 $$\boxed{(0.243,\ 0.357)}$$
 We are $95\%$ confident that between about $24.3\%$ and $35.7\%$ of colonies in PEI's registered apiaries are above the treatment threshold. The interval does not contain $0.24$ (although it only just excludes it), which is consistent with rejecting $H_0$ at $\alpha=0.05$.
-5. **Sample size and scope (2 marks).** Using $p^*=0.30$, $z^*=1.960$ and $m=0.03$,
-$$n=\left(\frac{1.960}{0.03}\right)^2(0.30)(0.70)=4268.44(0.21)\approx896.37$$
-Always round up:
-$$\boxed{n=897\text{ colonies}}$$
-A larger sample would **not** fix the problem. Colonies whose beekeepers volunteer may differ systematically from other colonies. For example, beekeepers who are worried about mites, or who manage their hives more carefully, may be more likely to volunteer. That is selection bias. A larger volunteer sample gives a more precise estimate of the wrong population. Fixing the problem requires random selection of colonies, not more colonies.

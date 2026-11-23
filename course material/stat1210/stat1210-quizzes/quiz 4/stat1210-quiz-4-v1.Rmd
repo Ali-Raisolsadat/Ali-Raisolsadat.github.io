@@ -78,17 +78,8 @@ $$z=\frac{\hat{p}-p_0}{\sqrt{p_0(1-p_0)/n}}$$
 3. Use the $df=\infty$ row of the table to give a range for the two-sided P-value. State the test decision and conclusion in context.
 4. Check the large-count condition for a large-sample confidence interval. Construct a $95\%$ confidence interval for $p$ using $z^*=1.960$. Is the interval consistent with your test decision? Explain. You may use
 $$\hat{p}\pm z^*\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}$$
-5. Next spring, the apiarist wants to estimate $p$ with a margin of error of at most $0.03$ at $95\%$ confidence, using this year's $\hat{p}$ as the planning value. How many colonies should be inspected? If the apiarist inspected only colonies whose beekeepers volunteered, would a larger sample fix the resulting problem? Explain. You may use
-$$n=\left(\frac{z^*}{m}\right)^2p^*(1-p^*)$$
 
 \vfill
-\newpage
-
-\vfill
-\begin{center}
-\textit{Answer Page for Question 2}
-\end{center}
-
 \newpage
 
 \vfill
