@@ -1,6 +1,6 @@
 ---
 title: "STAT 1210 - Quiz 3"
-subtitle: "Part III: Foundations of Statistical Inference"
+subtitle: "Part III: Foundations of Statistical Inference - Version 1"
 author: "Fall 2026"
 date: ""
 output:
@@ -57,9 +57,8 @@ The PEI Department of Agriculture wants to estimate the proportion of the provin
 
 1. Identify the population of interest. Is the variable recorded for each field categorical or quantitative?
 2. Identify the sampling design used in each of Plans A, B and C. Show that the numbers selected in Plan B are proportional to the number of fields in each county.
-3. Suppose Plan C is used and the true proportion of damaged fields is $p=0.15$. State the mean and standard deviation of the sampling distribution of $\hat p$ and check the expected count and $10\%$ conditions.
+3. Suppose Plan C is used and the true proportion of damaged fields is $p=0.15$. State the mean and standard deviation of the sampling distribution of $\hat p$.
 4. Use the Normal approximation to calculate $P(\hat p\geq0.20)$ and interpret the result in context.
-5. The survey also finds that fields on farms using a three year crop rotation have less wireworm damage. Is this an observational study or an experiment?
 
 \vfill
 \newpage
@@ -77,9 +76,8 @@ A PEI mussel grower monitors the shell length of cultured blue mussels. Historic
 
 1. Define the parameter $\mu$ in this context and calculate the standard error of $\bar{x}$.
 2. Construct a $95\%$ confidence interval for the population mean shell length using $z^*=1.960$.
-3. Interpret the interval in context.
-4. At the $\alpha=0.05$ significance level, test whether the population mean shell length this season differs from $60$ mm. State the hypotheses, calculate the test statistic and the two-sided p-value using the standard Normal table, and state your conclusion in context.
-5. Explain how the confidence interval from Part 2 leads to the same decision as the test in Part 4.
+3. At the $\alpha=0.05$ significance level, test whether the population mean shell length this season differs from $60$ mm. State the hypotheses, calculate the test statistic and the two-sided p-value using the standard Normal table, and state your conclusion in context.
+4. Explain how the confidence interval from Part 2 leads to the same decision as the test in Part 4.
 
 \vfill
 \newpage
