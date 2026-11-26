@@ -361,23 +361,33 @@ Plasma testosterone (nmol/L) for $25$ obese adolescent males:
 The distribution is single-peaked, with no extreme outliers or strong skewness. With $n=25$, a $t$ procedure is reasonable.
 \end{frame}
 
+
 % 15
 \begin{frame}{Example 17.2: Calculation}
+\small
 \textbf{Summary statistics}
-$$n=25,\quad \bar{x}=0.2584,\quad s=0.1115$$
-\textbf{Standard error}
-$$SE=\frac{0.1115}{\sqrt{25}}=0.0223$$
-\textbf{Critical value}, $df=24$
-$$t^*=2.064\qquad(\text{vs. } z^*=1.960)$$
-\textbf{Margin of error}
-$$m=2.064(0.0223)=0.0460$$
-\textbf{Interval}
-$$0.2584\pm0.0460$$
-$$\boxed{(0.212,\ 0.304)\text{ nmol/L}}$$
+$$n=25,\qquad \bar{x}=\frac{\sum_{i=1}^{25}x_i}{25}=\frac{6.46}{25}=0.2584,\qquad s=0.1115$$
 
-\vspace{0.3cm}
-The larger $t^*$ makes the interval a little wider than a $z$ interval. That is the cost of not knowing $\sigma$.
+\vspace{0.05cm}
+\textbf{Calculating the sample standard deviation}
+$$s=\sqrt{\frac{\sum_{i=1}^{n}(x_i-\bar{x})^2}{n-1}}=\sqrt{\frac{0.298536}{25-1}}=\sqrt{\frac{0.298536}{24}}=\boxed{0.1115}$$
+
+
+\vspace{0.05cm}
+\textbf{Standard error}
+$$SE=\frac{s}{\sqrt{n}}=\frac{0.1115}{\sqrt{25}}=\boxed{0.0223}$$
+
+\vspace{0.05cm}
+\textbf{Critical value}, $df=25-1=24$
+$$t^*=2.064\qquad(\text{vs. }z^*=1.960)$$
+
+\vspace{0.05cm}
+\textbf{Margin of error and confidence interval}
+$$m=2.064(0.0223)=0.0460$$
+$$\bar{x}\pm m=0.2584\pm0.0460$$
+$$\boxed{(0.212,\ 0.304)\text{ nmol/L}}$$
 \end{frame}
+
 
 % 16
 \begin{frame}{Example 17.2: Conclusion}
@@ -441,9 +451,7 @@ t.test(testosterone,
 % 19
 \begin{frame}{The One-Sample $t$ Test}
 To test $H_0:\mu=\mu_0$, compute
-\[
-t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}},\qquad df=n-1
-\]
+$$t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}},\qquad df=n-1$$
 
 \begin{center}
 \begin{tabular}{lll}
@@ -461,10 +469,9 @@ $H_a:\mu\ne\mu_0$ & $2P(T\ge |t|)$ & \texttt{alternative = "two.sided"} \\
 The alternative comes from the research question, chosen \textbf{before} looking at the data. Picking the tail after seeing the data understates the $P$-value.
 \end{frame}
 
-% 21
+% 20
 \begin{frame}{Example 17.3: Pulse Wave Velocity and Progeria}
 Progeria is a rare genetic condition that causes accelerated aging. Pulse wave velocity (PWV) measures arterial stiffness. PWV (m/s) for $18$ children with progeria:
-
 \begin{center}
 \begin{tabular}{rrrrrrrrr}
 18.8 & 17.6 & 17.5 & 16.0 & 14.8 & 14.1 & 13.7 & 13.1 & 12.9 \\
@@ -481,15 +488,13 @@ Is the mean PWV of children with progeria greater than $6.6$ m/s?
 \end{block}
 \end{frame}
 
-% 22
+% 21
 \begin{frame}{Example 17.3: Hypotheses}
 \step{State} Let $\mu$ be the mean PWV for children with progeria like those in the study.
 
 \vspace{0.2cm}
 \step{Plan} One-sample $t$ test of
-\[
-H_0:\mu=6.6\text{ m/s}\qquad\qquad H_a:\mu>6.6\text{ m/s}
-\]
+$$H_0:\mu=6.6\text{ m/s}\qquad\qquad H_a:\mu>6.6\text{ m/s}$$
 The test is upper-tailed because the question asks ``greater than.''
 
 \vspace{0.3cm}
@@ -498,7 +503,7 @@ Progeria is rare, and the children were recruited worldwide rather than selected
 \end{block}
 \end{frame}
 
-% 23
+% 22
 \begin{frame}{Example 17.3: Check the Data}
 \step{Solve} Plot the data and compare it with the reference value.
 
@@ -507,45 +512,86 @@ Progeria is rare, and the children were recruited worldwide rather than selected
 There is no outlier and the distribution is roughly single-peaked, so a $t$ test is reasonable for $n=18$. Every child is above $6.6$.
 \end{frame}
 
-% 24
+% 23
 \begin{frame}{Example 17.3: Test Statistic and $P$-Value}
-\begin{columns}[T]
-\begin{column}{0.46\textwidth}
+\small
 \textbf{Summary statistics}
-\[
-n=18,\quad\bar{x}=12.444,\quad s=3.638
-\]
-\textbf{Standard error}
-\[
-SE=\frac{3.638}{\sqrt{18}}=0.857
-\]
-\end{column}
-\begin{column}{0.50\textwidth}
-\textbf{Test statistic}, $df=17$
-\[
-t=\frac{12.444-6.6}{0.857}=6.82
-\]
-\textbf{$P$-value} (upper tail)
-\[
-P(T\ge6.82)\approx0.0000015
-\]
-\end{column}
-\end{columns}
+$$n=18,\qquad \bar{x}=12.444,\qquad s=3.638$$
 
-\vspace{0.3cm}
-The sample mean is about $6.8$ standard errors above the null value.
+\vspace{0.05cm}
+\textbf{Calculating the sample standard deviation}
+For the $18$ PWV measurements, the sum of squared deviations from the sample mean is approximately $225.0$.
+$$s=\sqrt{\frac{\sum_{i=1}^{18}(x_i-12.444)^2}{17}} \approx\sqrt{\frac{225.0}{17}} =\boxed{3.638}$$
+
+\vspace{0.05cm}
+\textbf{Standard error}
+$$SE=\frac{s}{\sqrt{n}}=\frac{3.638}{\sqrt{18}}=\boxed{0.857}$$
+
+\vspace{0.05cm}
+\textbf{Test statistic}, $df=18-1=17$
+$$t=\frac{\bar{x}-\mu_0}{SE}=\frac{12.444-6.6}{0.857}=\boxed{6.82}$$
+\end{frame}
+
+% 24
+\begin{frame}{Example 17.3: Finding the $P$-Value from a $t$-Table}
+
+\small
+From the previous slide: $t=6.82 \quad  \text{and} \quad df=17$.
+
+Since $H_a:\mu>6.6$, we need the \textbf{upper-tail probability}:
+$$P(T_{17}\ge 6.82)$$
+
+\vspace{0.15cm}
+\textbf{Step 1:} Find the row corresponding to $df=17$ in the $t$-table.
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{3.2pt}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{c|ccccccccccc}
+\toprule
+\textbf{Upper tail}
+& $.25$ & $.20$ & $.15$ & $.10$ & $.05$
+& $.025$ & $.01$ & $.005$ & $.0025$
+& $.001$ & $\mathbf{.0005}$ \\
+\midrule
+$\mathbf{17}$
+& $.689$ & $.863$ & $1.069$ & $1.333$
+& $1.740$ & $2.110$ & $2.567$ & $2.898$
+& $3.222$ & $3.646$ & $\mathbf{3.965}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.15cm}
+\textbf{Step 2:} Compare our test statistic with the critical values.
+$$6.82>3.646$$
+Since $3.646$ corresponds to an upper-tail probability of $0.001$, our probability must be even smaller.
+$$\boxed{P(T_{17}\ge 6.82)<0.0005}$$
 \end{frame}
 
 % 25
 \begin{frame}{Example 17.3: Conclusion}
-If the true mean were $6.6$ m/s, a sample mean this large would occur in only about $1.5$ out of every million samples of 18 children.
+
+\small
+\textbf{Recall the hypotheses:}
+$$H_0:\mu=6.6 \qquad H_a:\mu>6.6$$
+
+\vspace{0.1cm}
+\textbf{$P$-value:}
+$$\boxed{P(T_{17}\ge 6.82)<0.0005} \qquad \text{(from the $t$-table)}$$
+
+
+\vspace{0.05cm}
+\textbf{Decision:} Since $P<0.0005<\alpha=0.05$, we \textbf{reject $H_0$} at the $5\%$ significance level.
+
+\vspace{0.1cm}
+\step{Conclude} The data provide \textbf{very strong statistical evidence} that the mean PWV of comparable children with progeria is greater than $6.6$ m/s.
 
 \vspace{0.2cm}
-\step{Conclude} The data give \textbf{very strong evidence} that the mean PWV of comparable children with progeria is greater than $6.6$ m/s.
-
-\vspace{0.3cm}
 \begin{block}{Significance Is Not Size}
-The $P$-value measures evidence, not how big or important the effect is. Report the estimate as well: $\bar{x}-6.6=5.84$ m/s, with a 95\% CI for $\mu$ of $(10.64,\ 14.25)$ m/s. Whether that matters clinically is a medical judgment.
+The $P$-value measures evidence against $H_0$, not the size or clinical importance of the difference. The estimated difference is:
+$$\bar{x}-\mu_0=12.444-6.6=\boxed{5.84\text{ m/s}}$$
+The $95\%$ confidence interval for $\mu$ is $(10.64,\ 14.25)$ m/s. Clinical importance requires medical judgment.
 \end{block}
 \end{frame}
 
@@ -570,20 +616,99 @@ The \texttt{alternative} argument must match $H_a$. Software may print a tiny $P
 \end{frame}
 
 % 27
-\begin{frame}{Confidence Intervals and Two-Sided Tests}
-With the same data, a two-sided level $\alpha$ test and a $(1-\alpha)$ confidence interval always agree:
-\begin{itemize}
-  \item \textbf{Reject} $H_0:\mu=\mu_0$ if $\mu_0$ is \emph{outside} the interval
-  \item \textbf{Fail to reject} if $\mu_0$ is \emph{inside} the interval
-\end{itemize}
+\begin{frame}{Example 17.3: A Two-Sided Hypothesis Test}
+\small
+Suppose we want to determine whether the mean PWV of children with progeria \textbf{differs} from $6.6$ m/s, rather than specifically being greater.
 
 \vspace{0.2cm}
-\textbf{PWV:} the 95\% CI is $(10.64,\ 14.25)$. The value $6.6$ is far outside it, so a two-sided test at $\alpha=0.05$ also rejects.
+\step{State} Let $\mu$ be the mean PWV for comparable children with progeria.
 
-\vspace{0.2cm}
-\begin{block}{What ``Fail to Reject'' Means}
-A large $P$-value means the data are \emph{consistent} with $H_0$. It does not prove $H_0$. A non-significant result can come from a small effect, high variability or a small sample.
+\vspace{0.1cm}
+\step{Plan} Conduct a two-sided one-sample $t$ test:
+$$H_0:\mu=6.6 \qquad H_a:\mu\neq6.6$$
+
+\vspace{0.1cm}
+\step{Solve} Using the same sample of $18$ children:
+$$n=18,\quad \bar{x}=12.444,\quad s=3.638, \quad SE=0.857, \quad t=6.82$$
+The degrees of freedom are $df=18-1=17$.
+
+\vspace{0.1cm}
+\begin{block}{One-Sided vs.\ Two-Sided}
+A two-sided test considers extreme results in \textbf{both directions}, not just values greater than the hypothesized mean.
 \end{block}
+\end{frame}
+
+% 28
+\begin{frame}{Example 17.3: Two-Sided $P$-Value}
+\small
+For a two-sided test, we consider values at least as extreme as $t=6.82$ in \textbf{both tails}.
+$$P\text{-value}=P(T_{17}\le-6.82)+P(T_{17}\ge6.82)$$
+By symmetry:
+$$P\text{-value}=2P(T_{17}\ge6.82)$$
+
+\vspace{0.1cm}
+\textbf{Step 1:} Find $df=17$ in the $t$-table.
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{3.2pt}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{c|ccccccccccc}
+\toprule
+\textbf{Upper tail}
+& $.25$ & $.20$ & $.15$ & $.10$ & $.05$
+& $.025$ & $.01$ & $.005$ & $.0025$
+& $.001$ & $\mathbf{.0005}$ \\
+\midrule
+$\mathbf{17}$
+& $.689$ & $.863$ & $1.069$ & $1.333$
+& $1.740$ & $2.110$ & $2.567$ & $2.898$
+& $3.222$ & $3.646$ & $\mathbf{3.965}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.1cm}
+\textbf{Step 2:} Since $6.82>3.965$, the upper-tail probability is less than $0.0005$.
+$$P(T_{17}\ge6.82)<0.0005$$
+
+\textbf{Step 3:} Multiply by $2$ for the two-sided test.
+$$P\text{-value}=2P(T_{17}\ge6.82)<2(0.0005)$$
+$$\boxed{P\text{-value}<0.001}$$
+\end{frame}
+
+% 29
+\begin{frame}{Two-Sided Test: Conclusion and Confidence Interval}
+\small
+\textbf{Recall the hypotheses:}
+$$H_0:\mu=6.6 \qquad H_a:\mu\neq6.6$$
+
+\vspace{0.1cm}
+\textbf{Decision based on the $P$-value:}
+From the $t$-table:
+$$\boxed{P<0.001<\alpha=0.05}$$
+We \textbf{reject $H_0$} at the $5\%$ significance level.
+
+\vspace{0.15cm}
+\step{Conclude} There is very strong statistical evidence that the mean PWV of comparable children with progeria \textbf{differs from} $6.6$ m/s.
+
+\vspace{0.2cm}
+\begin{block}{Connection to Confidence Intervals}
+For a two-sided $t$ test at significance level $\alpha$, the corresponding $(1-\alpha)$ $t$ confidence interval gives the same decision.
+$$95\%\text{ CI}=(10.64,\ 14.25)\text{ m/s}$$
+Since $6.6$ is \textbf{outside} this interval, we reject $H_0$. So the general rule is
+\begin{itemize}
+\item If $\mu_0$ is outside the CI, reject $H_0$.
+\item If $\mu_0$ is inside the CI, fail to reject $H_0$.
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ---------- BREAK SLIDE ----------
+\begin{frame}[plain]
+  \centering
+  \vfill
+  \includegraphics[width=0.75\textwidth,height=0.65\textheight,keepaspectratio]{break.jpg}\\[0.3cm]
+  \vfill
 \end{frame}
 
 % =============================================================

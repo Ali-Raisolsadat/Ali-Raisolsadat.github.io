@@ -1,6 +1,6 @@
 ---
-title: "STAT 1210 - Quiz 3 Solutions (Version B)"
-subtitle: "Part III: Foundations of Statistical Inference"
+title: "STAT 1210 - Quiz 3 Solutions"
+subtitle: "Part III: Foundations of Statistical Inference - Version 2"
 author: "Fall 2026"
 date: ""
 output:
@@ -64,8 +64,6 @@ $$
 
 If $12\%$ of all registered fields truly have wireworm damage, only about $2.81\%$ of simple random samples of $240$ fields would show $16\%$ or more damaged fields. A sample proportion of $0.16$ or higher would therefore be unusual under $p=0.12$.
 
-**Part 5.** This is an **observational study**. The farmers chose whether to use a three-year rotation; the department only recorded what was already happening and did not assign rotation schedules to fields. Because rotation was not randomly assigned, the survey shows an association only and cannot by itself establish that crop rotation causes less damage.
-
 \newpage
 
 ## Question 2: Shell Length of Cultured Mussels in Malpeque Bay (7 marks)
@@ -84,9 +82,7 @@ $$
 \bar x\pm m=60.1\pm1.764=(58.336,\ 61.864)\text{ mm}
 $$
 
-**Part 3.** We are $95\%$ confident that the population mean shell length of all cultured blue mussels on this lease this season is between $58.336$ mm and $61.864$ mm. The $95\%$ refers to the method: in repeated random samples of $64$ mussels, about $95\%$ of intervals built this way would capture the true mean $\mu$.
-
-**Part 4.** Hypotheses:
+**Part 3.** Hypotheses:
 $$
 H_0:\mu=62\text{ mm} \qquad H_a:\mu\ne62\text{ mm}
 $$
@@ -103,7 +99,7 @@ $$
 
 Because $0.0348<0.05$, we reject $H_0$. The data provide evidence, at the $5\%$ level, that the population mean shell length on the lease this season differs from the historical mean of $62$ mm; the sample suggests mussels are shorter this season.
 
-**Part 5.** A two-sided test at $\alpha=0.05$ corresponds to a $95\%$ confidence interval: the interval contains exactly those values of $\mu_0$ that would **not** be rejected. The null value $62$ mm lies **outside** the interval $(58.336,\ 61.864)$, so $62$ is not a plausible value for $\mu$ and the test rejects $H_0$. Both methods give the same decision.
+**Part 4.** A two-sided test at $\alpha=0.05$ corresponds to a $95\%$ confidence interval: the interval contains exactly those values of $\mu_0$ that would **not** be rejected. The null value $62$ mm lies **outside** the interval $(58.336,\ 61.864)$, so $62$ is not a plausible value for $\mu$ and the test rejects $H_0$. Both methods give the same decision.
 
 \newpage
 
