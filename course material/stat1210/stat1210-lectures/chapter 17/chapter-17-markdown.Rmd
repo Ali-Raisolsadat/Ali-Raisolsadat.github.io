@@ -323,7 +323,7 @@ suppressPackageStartupMessages({
 
 # -------------------------------------------------------------
 # All figures are created here with ggsave() and saved as
-# slide_ch17_*.png. The same files are used by Chapter17_Slides.tex,
+# slide_ch17_*.png. The same files are used by chapter-17-beamer.tex,
 # so knit this document before compiling the slides.
 # -------------------------------------------------------------
 
@@ -480,31 +480,7 @@ p7 <- ggplot(dd, aes(x, y)) +
   slide_theme
 save_plot("slide_ch17_differences.png", p7, width = 5.6, height = 5)
 
-# ---- 8. Paired vs (incorrect) independent analysis ----------
-paired_ci <- t.test(after, before, paired = TRUE)$conf.int
-welch_ci  <- t.test(after, before)$conf.int
-cmp <- data.frame(
-  method = factor(c("Paired t (correct)", "Two-sample t (ignores pairing)"),
-                  levels = c("Two-sample t (ignores pairing)", "Paired t (correct)")),
-  est = mean(difference),
-  lo = c(paired_ci[1], welch_ci[1]),
-  hi = c(paired_ci[2], welch_ci[2]),
-  se = c(sd(difference) / sqrt(18), sqrt(var(after) / 18 + var(before) / 18))
-)
-cmp$lab <- sprintf("SE = %.3f    95%% CI (%.2f, %.2f)", cmp$se, cmp$lo, cmp$hi)
-p8 <- ggplot(cmp, aes(y = method, x = est)) +
-  geom_vline(xintercept = 0, linetype = "dashed", colour = "grey40") +
-  geom_errorbar(aes(xmin = lo, xmax = hi, colour = method),
-                orientation = "y", width = 0.18, linewidth = 1.4) +
-  geom_point(size = 4, aes(colour = method)) +
-  geom_text(aes(label = lab), vjust = -1.5, size = 4.6) +
-  scale_colour_manual(values = c(course_red, course_green), guide = "none") +
-  scale_x_continuous(limits = c(-6.5, 0.5)) +
-  labs(x = "Estimated mean change in PWV (after - before, m/s)", y = NULL) +
-  slide_theme
-save_plot("slide_ch17_paired_vs_independent.png", p8, height = 3.6)
-
-# ---- 9. Robustness: three illustrative shapes ---------------
+# ---- 8. Robustness: three illustrative shapes ---------------
 set.seed(1210)
 rob <- rbind(
   data.frame(value = c(3.4, 3.7, 3.9, 4.0, 4.1, 4.2, 4.3, 4.5, 4.6, 4.8, 11.7),
@@ -521,7 +497,7 @@ verdict <- data.frame(
   lab = c("t not reliable", "t reasonable", "t reasonable"),
   col = c("bad", "ok", "ok")
 )
-p9 <- ggplot(rob, aes(value)) +
+p8 <- ggplot(rob, aes(value)) +
   geom_histogram(bins = 14, fill = course_grey, colour = "white") +
   geom_label(data = verdict, aes(x = Inf, y = Inf, label = lab, fill = col),
              hjust = 1.05, vjust = 1.2, colour = "white", size = 4.6,
@@ -532,26 +508,14 @@ p9 <- ggplot(rob, aes(value)) +
   labs(x = "Observed value", y = "Frequency") +
   slide_theme +
   theme(strip.text = element_text(face = "bold", size = 14))
-save_plot("slide_ch17_robustness.png", p9, width = 11, height = 4.2)
+save_plot("slide_ch17_robustness.png", p8, width = 11, height = 4.2)
 ```
 
 # Chapter 17 {.chapter-root .unlisted}
 
 ## From the $z$ Procedures to the $t$ Procedures
 
-Chapter 14 introduced confidence intervals and hypothesis tests for a population mean $\mu$. Those procedures assumed that the population standard deviation $\sigma$ was known, and they used the standard error
-
-$$
-\frac{\sigma}{\sqrt{n}}
-$$
-
-In most applications, however, $\sigma$ is unknown. Only the sample is available, so we estimate $\sigma$ with the sample standard deviation $s$. The estimated standard error is
-
-$$
-\frac{s}{\sqrt{n}}
-$$
-
-Replacing $\sigma$ by $s$ adds uncertainty. The Standard Normal distribution no longer describes the standardized sample mean exactly. The correct reference distribution is a **Student's $t$ distribution**.
+Chapter 14 introduced confidence intervals and hypothesis tests for a population mean $\mu$ when the population standard deviation $\sigma$ was known. In most applications, however, $\sigma$ is unknown and must be estimated from the sample by the sample standard deviation $s$. Replacing $\sigma$ by $s$ adds uncertainty, and the correct reference distribution becomes a **Student's $t$ distribution**.
 
 | | Chapter 14: $\sigma$ known | Chapter 17: $\sigma$ unknown |
 |:--|:--|:--|
@@ -563,309 +527,247 @@ Replacing $\sigma$ by $s$ adds uncertainty. The Standard Normal distribution no 
 >
 > The logic of confidence intervals and hypothesis tests stays the same. The standard error is estimated from the sample, the reference distribution changes from $z$ to $t$, and the degrees of freedom must be identified.
 
+### Roadmap
+
+1. **Standard error:** how precisely does $\bar{x}$ estimate $\mu$?
+2. **The $t$ distributions:** the new reference model, degrees of freedom and the $t$-table
+3. **One-sample $t$ interval:** estimating $\mu$ (testosterone example)
+4. **One-sample $t$ test:** testing a claim about $\mu$ (progeria PWV example)
+5. **Matched pairs:** two measurements become one sample of differences (lonafarnib example)
+6. **Robustness:** how much non-Normality can the procedures handle?
+
+Every example follows four steps: **STATE**, **PLAN**, **SOLVE** and **CONCLUDE**.
+
 ### Learning Goals
 
 After studying this chapter, you should be able to
 
-1. Assess the conditions for inference about a population mean
-2. Distinguish the population standard deviation, the sample standard deviation and the standard error
-3. Explain why a $t$ distribution is used when $\sigma$ is unknown
+1. Distinguish the sample standard deviation from the standard error
+2. Explain why a $t$ distribution is used when $\sigma$ is unknown, and why $\operatorname{df}=n-1$
+3. Read probabilities and critical values from a $t$-table and with R
 4. Construct and interpret a one-sample $t$ confidence interval
-5. Conduct and interpret a one-sample $t$ test
-6. Analyze paired measurements through their within-pair differences
-7. Assess whether a $t$ procedure is reasonably robust for a given sample
-8. Use R to check hand calculations and carry out the procedures
-
-### The Four-Step Process
-
-Every example in this chapter follows the same structure used in Chapter 14:
-
-1. **STATE:** Define the population, the parameter and the question
-2. **PLAN:** Choose the procedure (interval or test) and, for a test, the hypotheses
-3. **SOLVE:** Check the conditions, then calculate
-4. **CONCLUDE:** Interpret the result in context, for the population the design supports
+5. Conduct and interpret one-sided and two-sided one-sample $t$ tests
+6. Connect two-sided tests with confidence intervals
+7. Analyze paired measurements through their within-pair differences
+8. Assess whether a $t$ procedure is reasonably robust for a given sample
 
 ---
 
-## Conditions for Inference about a Mean
-
-The formulas mean something only when the data and the study design support the procedure.
-
-### Condition 1: Random Sampling or a Comparable Design
-
-The observations should reasonably be viewed as a simple random sample from the population of interest, or as observations produced by a design that supports a similar independence assumption.
-
-This condition determines the **scope** of the conclusion. A correct calculation cannot make a convenience sample represent a wider population.
-
-When sampling without replacement from a finite population, a common practical condition for independence is that the sample is no more than $10\%$ of the population:
-
-$$
-n\leq0.10N
-$$
-
-where $N$ is the population size. The $10\%$ condition is not needed when the observations come from an effectively infinite process or from independent experimental units.
-
-### Condition 2: Shape of the Population
-
-The one-sample $t$ procedures are exact when the population distribution is Normal. Real populations are rarely perfectly Normal, so the practical question is whether the procedure is still reliable for the observed sample size and shape.
-
-The assessment should consider
-
-- The sample size
-- The degree of skewness
-- The presence of outliers
-- Whether the distribution has one meaningful centre
-
-The Central Limit Theorem improves the sampling distribution of $\bar{x}$ as $n$ increases. It does not remove data-quality problems, make observations independent or make an unhelpful mean meaningful.
-
-### Independence Is More Important Than Perfect Normality
-
-Moderate non-Normality can often be handled with a large enough sample. Dependence, selection bias and systematic measurement error cannot be fixed by increasing the sample size.
-
-For example, measuring the same animal repeatedly and treating every measurement as if it came from a different animal underestimates uncertainty. There may be many measurements, but they are not independent experimental units.
-
-> **Priority of conditions**
->
-> The sampling or study-design condition usually matters more than having data that look exactly Normal. Always plot the data before using a $t$ procedure.
-
----
-
-## Standard Deviation and Standard Error
+## Standard Deviation vs. Standard Error
 
 The sample standard deviation and the standard error answer different questions.
 
-### The Sample Standard Deviation
-
-The sample standard deviation is
-
-$$
-s
-=
-\sqrt{
-\frac{
-\sum_{i=1}^{n}(x_i-\bar{x})^2
-}{
-n-1
-}
-}
-$$
-
-It describes how the **individual observations** vary around the sample mean, and it estimates the unknown population standard deviation $\sigma$. Its units are the original units of the variable.
-
-### The Standard Error of the Sample Mean
-
-The standard error of $\bar{x}$ is
-
-$$
-\operatorname{SE}(\bar{x})
-=
-\frac{s}{\sqrt{n}}
-$$
-
-It estimates how much **sample means** would vary across repeated random samples of size $n$. Its units are also the original units of the variable.
-
 | Quantity | What varies? | What it describes |
 |:--|:--|:--|
-| $s$ | Individual observations | Estimated spread of values in the population |
-| $s/\sqrt{n}$ | Sample means | Estimated sample-to-sample spread of $\bar{x}$ |
+| $s$ | Individual observations | Spread of values in the sample |
+| $SE_{\bar{x}}$ | Sample means | Spread of $\bar{x}$ from sample to sample |
 
-### Effect of the Sample Size
-
-For the same sample standard deviation, a larger $n$ gives a smaller standard error. If the sample size is multiplied by $4$,
+The two formulas are
 
 $$
-\frac{s}{\sqrt{4n}}
-=
-\frac{1}{2}\cdot\frac{s}{\sqrt{n}}
+s=\sqrt{\frac{\sum_{i=1}^{n}(x_i-\bar{x})^2}{n-1}}
+\qquad\qquad
+\widehat{SE}_{\bar{x}}=\frac{s}{\sqrt{n}}
 $$
 
-so the standard error is cut in half. Because of this square-root relationship, much greater precision may require a much larger sample.
-
-### A Frequent Mistake
-
-The standard error is **not** $s$, and it is **not** $s/n$. The correct expression divides by the square root of the sample size:
+The standard error measures how precisely $\bar{x}$ estimates $\mu$. For the same $s$, a larger sample gives a smaller standard error:
 
 $$
-\boxed{
-\operatorname{SE}(\bar{x})
-=
-\frac{s}{\sqrt{n}}
-}
+\frac{s}{\sqrt{4n}}=\frac{1}{2}\cdot\frac{s}{\sqrt{n}}
 $$
 
-Because $s$ changes from sample to sample, the estimated standard error is itself random. This is why the Standard Normal distribution is no longer exactly correct.
+**Multiplying $n$ by $4$ only halves the standard error.** Much more precision needs a much larger sample.
+
+> **A frequent mistake**
+>
+> The standard error is **not** $s$, and it is **not** $s/n$. It divides by the square root of the sample size.
 
 ---
 
 ## The $t$ Distributions
 
-Suppose an SRS of size $n$ comes from a Normal population with mean $\mu$ and standard deviation $\sigma$. If $\sigma$ were known, the standardized statistic would be
+### From $z$ to $t$
+
+If $\sigma$ were known, the standardized sample mean would be
 
 $$
-z
-=
-\frac{\bar{x}-\mu}{\sigma/\sqrt{n}}\sim N(0,1)
+z=\frac{\bar{x}-\mu}{\sigma/\sqrt{n}}\sim N(0,1)
 $$
 
 When $\sigma$ is unknown, it is replaced by $s$:
 
 $$
-t
-=
-\frac{\bar{x}-\mu}{s/\sqrt{n}}
+t=\frac{\bar{x}-\mu}{s/\sqrt{n}}\sim t(n-1)
 $$
 
-This statistic has a $t$ distribution with
+Both statistics count how many standard errors $\bar{x}$ lies from $\mu$.
 
-$$
-\operatorname{df}=n-1
-$$
+### Why a New Distribution?
 
-degrees of freedom. Both statistics count how many standard errors $\bar{x}$ lies from $\mu$.
+The denominator $s/\sqrt{n}$ is random, because $s$ changes from sample to sample. So $t$ varies more than $z$. The $t$ distribution has heavier tails to allow for $s$ under- or over-estimating $\sigma$. As a result, intervals are wider and $P$-values are larger for the same absolute test statistic.
 
-### Why the Reference Distribution Changes
-
-The denominator $s/\sqrt{n}$ is random because $s$ changes from sample to sample. This extra uncertainty makes the $t$ distribution more spread out than the Standard Normal distribution. Its heavier tails allow for the possibility that $s$ underestimates or overestimates $\sigma$.
-
-As a result, $t$ intervals are wider than $z$ intervals, and the same standardized distance gives a larger $P$-value.
-
-### Properties of the $t$ Family
-
-The $t$ distributions form a family rather than a single curve.
-
-- Every $t$ distribution is symmetric about $0$
-- Every $t$ distribution is single-peaked and bell-shaped
-- A $t$ distribution has heavier tails than the Standard Normal distribution
-- Smaller degrees of freedom produce heavier tails
-- As the degrees of freedom increase, the $t$ distribution approaches $N(0,1)$
+### The Family of $t$ Distributions
 
 ```{r t-distribution-plot, echo=FALSE}
 knitr::include_graphics("slide_ch17_t_distributions.png")
 ```
 
-For a small sample, $s$ is a less stable estimate of $\sigma$, so the critical value must be larger. With a large sample, $s$ estimates $\sigma$ accurately and the difference between $t^*$ and $z^*$ becomes small.
+- Every $t$ distribution is symmetric about $0$ and bell-shaped
+- Smaller degrees of freedom mean heavier tails
+- As the degrees of freedom grow, $t(\operatorname{df})\to N(0,1)$
 
-### Degrees of Freedom
+**Student's $t$:** W. S. Gosset developed the $t$ distribution at the Guinness brewery for small samples and published under the name "Student."
 
-The degrees of freedom identify which member of the $t$ family to use. For one-sample inference,
+---
 
-$$
-\operatorname{df}=n-1
-$$
+## Degrees of Freedom
 
-We lose one degree of freedom by estimating the population mean with $\bar{x}$. Once the sample mean is fixed, only $n-1$ deviations from it can vary freely, because
+### Why $n-1$?
+
+When calculating the sample standard deviation, we first estimate the population mean using $\bar{x}$. The deviations from the sample mean must sum to zero:
 
 $$
 \sum_{i=1}^{n}(x_i-\bar{x})=0
 $$
 
-For first-year applications, the essential step is to calculate $n-1$ and use the matching distribution.
+Once $n-1$ deviations are known, the final deviation is determined automatically.
 
-| Distribution | 95% critical value |
-|:--:|:--:|
-| $t(5)$ | $2.571$ |
-| $t(10)$ | $2.228$ |
-| $t(20)$ | $2.086$ |
-| $t(50)$ | $2.009$ |
-| $N(0,1)$ | $1.960$ |
+**Example.** Suppose $4$ observations have a sample mean of $10$. Three observations are $8$, $9$ and $11$. What must the fourth be?
 
-The cost of estimating $\sigma$ is large for small samples and small for large ones.
+$$
+(8-10)+(9-10)+(11-10)+(x_4-10)=0
+$$
 
-### William S. Gosset and Student's $t$
+$$
+-2-1+1+(x_4-10)=0
+\quad\Longrightarrow\quad
+\boxed{x_4=12}
+$$
 
-William S. Gosset developed the $t$ distribution while working for the Guinness brewery. He needed to make reliable decisions from the small experimental samples used in brewing and agriculture.
+Only $3$ deviations can vary freely; the fourth is constrained. So
 
-The company restricted employees from publishing its work, so Gosset published under the pen name **Student**. The distribution is therefore often called **Student's $t$ distribution**. This history reflects the method's purpose: allowing for the extra uncertainty that comes from estimating $\sigma$ from a small sample.
+$$
+\boxed{\operatorname{df}=n-1=4-1=3}
+$$
+
+### Using the $t$-Table
+
+The degrees of freedom determine which $t$ distribution to use. Suppose we have $n=11$ observations and want a $95\%$ confidence interval:
+
+$$
+\operatorname{df}=11-1=\boxed{10}
+$$
+
+| df | 90% | 95% | 99% |
+|:--:|:--:|:--:|:--:|
+| $5$ | $2.015$ | $2.571$ | $4.032$ |
+| $\mathbf{10}$ | $1.812$ | $\boxed{\mathbf{2.228}}$ | $3.169$ |
+| $20$ | $1.725$ | $2.086$ | $2.845$ |
+| $50$ | $1.676$ | $2.009$ | $2.678$ |
+| $\infty$ | $1.645$ | $1.960$ | $2.576$ |
+
+**How to read the table:**
+
+1. Find the row for $\operatorname{df}=10$
+2. Find the column for a $95\%$ confidence level
+3. The intersection gives the critical value $t^*=2.228$
+
+The confidence interval is therefore
+
+$$
+\boxed{\bar{x}\pm2.228\,\frac{s}{\sqrt{11}}}
+$$
+
+The last row ($\infty$) gives the Standard Normal values. The cost of estimating $\sigma$ is large for small samples and small for large ones.
 
 ---
 
-## Probabilities and Critical Values in R
+## Example 17.1: Reading $t$ Probabilities
 
-The R functions for a $t$ distribution mirror the Normal-distribution functions.
-
-| Task | Standard Normal | $t$ distribution |
-|:--|:--|:--|
-| Left-tail probability | `pnorm()` | `pt()` |
-| Quantile or critical value | `qnorm()` | `qt()` |
-| Density | `dnorm()` | `dt()` |
-| Random values | `rnorm()` | `rt()` |
-
-Every $t$ calculation must include the degrees of freedom.
-
-### Example 17.1: Reading $t$ Probabilities
-
-For a $t$ distribution with $10$ degrees of freedom, find (a) the area to the left of $t=-3$ and (b) the point $t^*$ with probability $0.05$ to its right.
+Consider a $t$ distribution with $10$ degrees of freedom. Find (a) $P(T\geq1.812)$ and (b) $P(T\leq-3)$.
 
 ```{r t-areas-plot, echo=FALSE}
 knitr::include_graphics("slide_ch17_t_areas.png")
 ```
 
-**(a) An area question.** Use `pt()`:
+Most $t$-tables list critical values for specific upper-tail probabilities.
+
+| df | 0.10 | 0.05 | 0.025 | 0.01 | 0.005 |
+|:--:|:--:|:--:|:--:|:--:|:--:|
+| $5$ | $1.476$ | $2.015$ | $2.571$ | $3.365$ | $4.032$ |
+| $\mathbf{10}$ | $\mathbf{1.372}$ | $\mathbf{1.812}$ | $\mathbf{2.228}$ | $\mathbf{2.764}$ | $\mathbf{3.169}$ |
+| $20$ | $1.325$ | $1.725$ | $2.086$ | $2.528$ | $2.845$ |
+
+### (a) Right-Tail Probability
+
+In the $\operatorname{df}=10$ row, $t=1.812$ corresponds to an upper-tail probability of $0.05$:
+
+$$
+\boxed{P(T\geq1.812)\approx0.05}
+$$
+
+By symmetry, $P(T\leq-1.812)\approx0.05$ as well.
+
+### (b) Left-Tail Probability
+
+By symmetry, $P(T\leq-3)=P(T\geq3)$. In the $\operatorname{df}=10$ row,
+
+$$
+2.764<3<3.169
+$$
+
+Larger $t$-values have smaller upper-tail probabilities, so
+
+$$
+\boxed{0.005<P(T\leq-3)<0.010}
+$$
+
+The $t$-table gives a range rather than an exact probability.
+
+### $t$ Probabilities in R
+
+R gives exact values. The functions mirror the Normal-distribution functions.
+
+| Task | Normal | $t$ |
+|:--|:--|:--|
+| Left-tail area | `pnorm()` | `pt()` |
+| Critical value | `qnorm()` | `qt()` |
 
 ```{r t-left-tail}
+# Area question: left of t = -3
 pt(q = -3, df = 10)
-```
 
-$$
-P(T\leq-3)\approx0.0067
-$$
-
-**(b) A cutoff question.** The point with $0.05$ to its right has $1-0.05=0.95$ to its left, so use `qt()`:
-
-```{r t-upper-critical-value}
+# Cutoff question: 0.95 to the left
 qt(p = 0.95, df = 10)
 ```
 
-$$
-t^*\approx1.812
-$$
-
-Because the distribution is symmetric, $P(T\leq-1.812)=P(T\geq1.812)=0.05$. For a right-tail area directly, use `pt(t, df, lower.tail = FALSE)`.
-
-### Two-Sided Critical Values
-
-For a $95\%$ confidence interval, the central area is $0.95$. The remaining $0.05$ is split equally between the two tails, $0.025$ each, so the upper critical value has cumulative probability $0.975$:
-
-```{r t-two-sided-critical-values}
-qt(0.975, df = c(4, 9, 19, 49, 199))
-```
-
-The critical values decrease toward $1.960$, the Standard Normal critical value for a $95\%$ interval.
+- Every $t$ calculation needs `df`
+- For a $95\%$ interval, put $0.025$ in each tail: `qt(0.975, df)`
+- Right-tail area: `pt(t, df, lower.tail = FALSE)`
 
 ---
 
 ## The One-Sample $t$ Confidence Interval
 
-The one-sample $t$ confidence interval estimates an unknown population mean when the population standard deviation is also unknown. For a sample of size $n$, a level $C$ confidence interval is
+A level $C$ confidence interval for $\mu$ is
 
 $$
 \boxed{
-\bar{x}
-\pm
-t^*\frac{s}{\sqrt{n}}
+\bar{x}\pm t^*\frac{s}{\sqrt{n}}
 }
 $$
 
-where
+where $t^*$ comes from the $t(n-1)$ distribution with central area $C$.
 
-- $\bar{x}$ is the point estimate
-- $s/\sqrt{n}$ is the estimated standard error
-- $t^*$ is the critical value from the $t(n-1)$ distribution with central area $C$
-- $m=t^*s/\sqrt{n}$ is the margin of error
+- The margin of error is $m=t^*\,s/\sqrt{n}$
+- The interval is **wider** with a higher confidence level, more variable data or a smaller $n$
+- $C$ is the long-run success rate of the *method*. It is not the probability that this particular interval contains $\mu$
 
-The interval is exact for a Normal population and approximately correct for a large enough sample from other population shapes.
+---
 
-### What Controls the Width?
+## Example 17.2: Testosterone in Obese Adolescent Males
 
-- A **higher confidence level** increases $t^*$ and widens the interval
-- **More variable data** (larger $s$) widen the interval
-- A **larger sample** shrinks $s/\sqrt{n}$ and usually narrows the interval
-
-The confidence level $C$ describes the long-run success rate of the *method*: in repeated sampling, a proportion $C$ of such intervals capture $\mu$. It is not the probability that one already-computed interval contains the fixed parameter.
-
-### Example 17.2: Testosterone Concentrations
-
-A study recorded plasma testosterone concentrations for $25$ obese adolescent males. Measurements are in nanomoles per litre of blood.
+Plasma testosterone (nmol/L) for $25$ obese adolescent males:
 
 |  |  |  |  |  |
 |--:|--:|--:|--:|--:|
@@ -875,11 +777,11 @@ A study recorded plasma testosterone concentrations for $25$ obese adolescent ma
 | $0.25$ | $0.25$ | $0.32$ | $0.35$ | $0.37$ |
 | $0.39$ | $0.46$ | $0.49$ | $0.42$ | $0.36$ |
 
-**STATE:** Estimate $\mu$, the population mean testosterone concentration for obese adolescent males similar to those in the study, with $95\%$ confidence.
+**STATE:** Estimate $\mu$, the mean testosterone for obese adolescent males like those in the study, with $95\%$ confidence.
 
 **PLAN:** $\sigma$ is unknown, so use a one-sample $t$ interval.
 
-### Example 17.2: Checking the Data
+### Check the Data
 
 **SOLVE:** Before calculating anything, plot the data.
 
@@ -887,148 +789,118 @@ A study recorded plasma testosterone concentrations for $25$ obese adolescent ma
 knitr::include_graphics("slide_ch17_testosterone_dotplot.png")
 ```
 
-The dot plot is single-peaked, with no extreme outlier or strong skewness. With $n=25$, a $t$ procedure is reasonable.
+The distribution is single-peaked, with no extreme outliers or strong skewness. With $n=25$, a $t$ procedure is reasonable.
 
-### Example 17.2: Calculation
+### Calculation
 
-The summary statistics are
-
-$$
-n=25,\qquad \bar{x}=0.2584,\qquad s\approx0.1115
-$$
-
-The estimated standard error is
+**Summary statistics**
 
 $$
-\operatorname{SE}(\bar{x})
-=
-\frac{0.1115}{\sqrt{25}}
-\approx
-0.0223
+n=25,\qquad
+\bar{x}=\frac{\sum_{i=1}^{25}x_i}{25}=\frac{6.46}{25}=0.2584
 $$
 
-With $\operatorname{df}=25-1=24$, the $95\%$ critical value is
+**Sample standard deviation**
 
 $$
-t^*=t^*_{0.975,24}\approx2.064
+s=\sqrt{\frac{\sum_{i=1}^{n}(x_i-\bar{x})^2}{n-1}}
+=\sqrt{\frac{0.298536}{24}}
+=\boxed{0.1115}
 $$
 
-The margin of error is
+**Standard error**
 
 $$
-m
-=
-t^*\frac{s}{\sqrt{n}}
-=
-2.064(0.0223)
-\approx
-0.0460
+SE=\frac{s}{\sqrt{n}}=\frac{0.1115}{\sqrt{25}}=\boxed{0.0223}
 $$
 
-and the interval is
+**Critical value**, with $\operatorname{df}=25-1=24$
 
 $$
-0.2584\pm0.0460
+t^*=2.064\qquad(\text{vs. } z^*=1.960)
+$$
+
+**Margin of error**
+
+$$
+m=2.064(0.0223)=0.0460
+$$
+
+**Confidence interval**
+
+$$
+\bar{x}\pm m=0.2584\pm0.0460
 \quad\Longrightarrow\quad
-\boxed{
-(0.2124,\ 0.3044)\text{ nmol/L}
-}
+\boxed{(0.212,\ 0.304)\text{ nmol/L}}
 $$
 
-For comparison, $z^*=1.960$, but $t^*\approx2.064$. The larger critical value makes the interval a little wider, to allow for estimating $\sigma$ with $s$.
+The larger critical value ($2.064$ rather than $1.960$) makes the interval a little wider, to allow for estimating $\sigma$ with $s$.
 
-### Example 17.2: Conclusion
+### Conclusion
 
 ```{r testosterone-ci-plot, echo=FALSE}
 knitr::include_graphics("slide_ch17_testosterone_ci.png")
 ```
 
-**CONCLUDE:** We are $95\%$ confident that the population mean plasma testosterone concentration for obese adolescent males similar to those in the study is between approximately $0.212$ and $0.304$ nmol/L.
+**CONCLUDE:** We are $95\%$ confident that the mean plasma testosterone for obese adolescent males similar to those studied is between $0.212$ and $0.304$ nmol/L.
 
-### Example 17.2: What the Interval Does Not Tell Us
+### What the Interval Does Not Tell Us
 
-The participants were recruited through one medical centre rather than selected as an SRS of all obese adolescent males. The interval describes uncertainty for a population similar to these participants. The study design limits any wider generalization.
+The males came from one medical centre, not from an SRS of all obese males. The conclusion applies most directly to **similar patients**.
 
-The interval covers random sample-to-sample variation under the model. It does **not**
+The interval covers random sampling variation under the model. It does **not**
 
-- give a range for *individual* boys (most of the observations in the plot lie outside it)
-- correct for selection bias or systematic measurement error
-- show that obesity *causes* lower testosterone, because this is an observational study
+- give a range for *individual* males (most of the dots lie outside it)
+- correct for selection bias or measurement error
+- show that obesity *causes* low testosterone, because this is an observational study
 
-### Manual Calculation in R
+### In R
+
+**By hand:**
 
 ```{r testosterone-manual-calculation}
-n_testosterone <- length(testosterone)
-xbar_testosterone <- mean(testosterone)
-s_testosterone <- sd(testosterone)
-df_testosterone <- n_testosterone - 1
-
-se_testosterone <- s_testosterone / sqrt(n_testosterone)
-t_star_testosterone <- qt(p = 0.975, df = df_testosterone)
-margin_testosterone <- t_star_testosterone * se_testosterone
-
-c(
-  mean = xbar_testosterone,
-  standard_deviation = s_testosterone,
-  standard_error = se_testosterone,
-  critical_value = t_star_testosterone,
-  margin_of_error = margin_testosterone,
-  lower = xbar_testosterone - margin_testosterone,
-  upper = xbar_testosterone + margin_testosterone
-)
+n  <- length(testosterone)
+se <- sd(testosterone) / sqrt(n)
+t_star <- qt(0.975, df = n - 1)
+mean(testosterone) + c(-1, 1) * t_star * se
 ```
 
-### The Direct R Method
-
-The `t.test()` function constructs the interval directly from the observations.
+**Directly:**
 
 ```{r testosterone-t-test-confidence-interval}
-testosterone_result <- t.test(
-  x = testosterone,
-  conf.level = 0.95
-)
-
-testosterone_result$estimate
-testosterone_result$conf.int
+t.test(testosterone, conf.level = 0.95)$conf.int
 ```
-
-The stored result contains several components. Selecting `estimate` and `conf.int` reports only what this question needs. By default, `t.test()` also tests whether the mean is zero, and that test is not relevant here.
 
 > **Reading software output**
 >
-> Software may report more than the research question requires. Interpret only the parts of the output that correspond to the stated analysis.
+> `t.test()` also reports a test of $\mu=0$ by default. Interpret only the parts of the output that answer your question.
 
 ---
 
 ## The One-Sample $t$ Test
 
-The one-sample $t$ test evaluates a claim about a population mean when $\sigma$ is unknown. The null hypothesis is $H_0:\mu=\mu_0$, and the one-sample $t$ statistic is
+To test $H_0:\mu=\mu_0$, compute
 
 $$
 \boxed{
-t
-=
-\frac{\bar{x}-\mu_0}{s/\sqrt{n}}
-}
+t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}}
+},
+\qquad \operatorname{df}=n-1
 $$
 
-It measures the distance between the observed sample mean and the null value in estimated standard errors. Under $H_0$, the statistic follows a $t$ distribution with $\operatorname{df}=n-1$.
-
-### P-Value by Alternative
-
-Let $T$ have a $t(n-1)$ distribution and let $t$ be the observed test statistic.
-
-| Alternative | P-value | R argument |
+| Alternative | $P$-value | R argument |
 |:--|:--|:--|
 | $H_a:\mu>\mu_0$ | $P(T\geq t)$ | `alternative = "greater"` |
 | $H_a:\mu<\mu_0$ | $P(T\leq t)$ | `alternative = "less"` |
 | $H_a:\mu\ne\mu_0$ | $2P(T\geq|t|)$ | `alternative = "two.sided"` |
 
-The alternative hypothesis, not the sign of the observed statistic, determines which tail or tails to use. It must be chosen from the research question **before** looking at the data. The $P$-value is calculated assuming $H_0$ and the model are true.
+The alternative comes from the research question, chosen **before** looking at the data. Picking the tail after seeing the data understates the $P$-value.
 
-### Example 17.3: Pulse Wave Velocity and Progeria
+---
 
-Hutchinson–Gilford progeria syndrome is a rare genetic condition associated with accelerated aging. Pulse wave velocity (PWV) is used as a measure of arterial stiffness. PWV was measured in $18$ children diagnosed with progeria:
+## Example 17.3: Pulse Wave Velocity and Progeria
+
+Progeria is a rare genetic condition that causes accelerated aging. Pulse wave velocity (PWV) measures arterial stiffness. PWV (m/s) for $18$ children with progeria:
 
 |  |  |  |  |  |  |
 |--:|--:|--:|--:|--:|--:|
@@ -1036,13 +908,13 @@ Hutchinson–Gilford progeria syndrome is a rare genetic condition associated wi
 | $13.7$ | $13.1$ | $12.9$ | $12.9$ | $12.4$ | $10.1$ |
 | $9.3$ | $9.1$ | $8.3$ | $8.3$ | $7.9$ | $7.2$ |
 
-In healthy children, a PWV above $6.6$ m/s would be considered abnormal. The question is whether the population mean PWV for children with progeria is greater than $6.6$ m/s.
+In healthy children, a PWV above $6.6$ m/s is considered abnormal. **Is the mean PWV of children with progeria greater than $6.6$ m/s?**
 
-### Example 17.3: Hypotheses
+### Hypotheses
 
-**STATE:** Let $\mu$ be the population mean PWV for children with progeria similar to those in the study.
+**STATE:** Let $\mu$ be the mean PWV for children with progeria like those in the study.
 
-**PLAN:** Use a one-sample $t$ test of
+**PLAN:** One-sample $t$ test of
 
 $$
 H_0:\mu=6.6\text{ m/s}
@@ -1050,193 +922,194 @@ H_0:\mu=6.6\text{ m/s}
 H_a:\mu>6.6\text{ m/s}
 $$
 
-The test is upper-tailed because the scientific question asks whether the mean is *higher* than the reference value.
+The test is upper-tailed because the question asks "greater than."
 
-Progeria is rare, and the participants were recruited worldwide rather than selected through a formal SRS. The conclusion applies most directly to comparable children with progeria.
+> **Study scope**
+>
+> Progeria is rare, and the children were recruited worldwide rather than selected through an SRS. The conclusion applies most directly to comparable children with progeria.
 
-### Example 17.3: Checking the Data
+### Check the Data
 
-**SOLVE:**
+**SOLVE:** Plot the data and compare it with the reference value.
 
 ```{r pwv-dotplot, echo=FALSE}
 knitr::include_graphics("slide_ch17_pwv_dotplot.png")
 ```
 
-The plot shows no outlier and no strong departure from a single-peaked distribution, so a $t$ test is reasonable for $n=18$. Every child is above the $6.6$ m/s cutoff.
+There is no outlier and the distribution is roughly single-peaked, so a $t$ test is reasonable for $n=18$. Every child is above $6.6$.
 
-### Example 17.3: Test Statistic and P-Value
+### Test Statistic
 
-The data give
-
-$$
-n=18,\qquad \bar{x}\approx12.444,\qquad s\approx3.638
-$$
-
-The standard error is
+**Summary statistics**
 
 $$
-\operatorname{SE}(\bar{x})
-=
-\frac{3.638}{\sqrt{18}}
-\approx
-0.857
+n=18,\qquad \bar{x}=12.444
 $$
 
-and the test statistic, with $\operatorname{df}=17$, is
+**Sample standard deviation.** The sum of squared deviations from the sample mean is approximately $225.0$:
 
 $$
-t
-=
-\frac{12.444-6.6}{0.857}
-\approx
-6.816
+s=\sqrt{\frac{\sum_{i=1}^{18}(x_i-12.444)^2}{17}}
+\approx\sqrt{\frac{225.0}{17}}
+=\boxed{3.638}
 $$
 
-The observed sample mean is about $6.8$ estimated standard errors above the null value. Because the alternative is upper-tailed,
+**Standard error**
 
 $$
-P\text{-value}
-=
-P(T_{17}\geq6.816)
-\approx
-1.50\times10^{-6}
+SE=\frac{s}{\sqrt{n}}=\frac{3.638}{\sqrt{18}}=\boxed{0.857}
 $$
+
+**Test statistic**, with $\operatorname{df}=18-1=17$
+
+$$
+t=\frac{\bar{x}-\mu_0}{SE}=\frac{12.444-6.6}{0.857}=\boxed{6.82}
+$$
+
+### Finding the $P$-Value from a $t$-Table
+
+Since $H_a:\mu>6.6$, we need the upper-tail probability $P(T_{17}\geq6.82)$.
+
+**Step 1.** Find the row for $\operatorname{df}=17$:
+
+| Upper tail | .25 | .20 | .15 | .10 | .05 | .025 | .01 | .005 | .0025 | .001 | **.0005** |
+|:--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|
+| **17** | .689 | .863 | 1.069 | 1.333 | 1.740 | 2.110 | 2.567 | 2.898 | 3.222 | 3.646 | **3.965** |
+
+**Step 2.** Compare the test statistic with the table values. Since $6.82>3.965$, which has an upper-tail probability of $0.0005$, our probability must be even smaller:
+
+$$
+\boxed{P(T_{17}\geq6.82)<0.0005}
+$$
+
+R gives the exact value:
 
 ```{r pwv-manual-p-value}
-pt(q = 6.816273, df = 17, lower.tail = FALSE)
+t_pwv <- (mean(pwv) - 6.6) / (sd(pwv) / sqrt(length(pwv)))
+pt(q = t_pwv, df = 17, lower.tail = FALSE)
 ```
 
-### Example 17.3: Conclusion
+### Conclusion
 
-If the population mean were $6.6$ m/s, a sample mean this large would occur in only about $1.5$ out of every million random samples of $18$ children.
+**Decision:** Since $P<0.0005<\alpha=0.05$, we **reject $H_0$** at the $5\%$ significance level.
 
-**CONCLUDE:** The data provide very strong evidence that the population mean PWV for children with progeria similar to those in the study is greater than $6.6$ m/s.
+**CONCLUDE:** The data provide very strong statistical evidence that the mean PWV of comparable children with progeria is greater than $6.6$ m/s.
 
-### Manual Test Calculation in R
+> **Significance is not size**
+>
+> The $P$-value measures evidence against $H_0$, not the size or clinical importance of the difference. The estimated difference is $\bar{x}-\mu_0=12.444-6.6=5.84$ m/s, and the $95\%$ confidence interval for $\mu$ is $(10.64,\ 14.25)$ m/s. Clinical importance requires medical judgment.
 
-```{r pwv-manual-test}
-mu_null_pwv <- 6.6
-n_pwv <- length(pwv)
-xbar_pwv <- mean(pwv)
-s_pwv <- sd(pwv)
-se_pwv <- s_pwv / sqrt(n_pwv)
-df_pwv <- n_pwv - 1
-
-t_pwv <- (xbar_pwv - mu_null_pwv) / se_pwv
-p_pwv_upper <- pt(q = t_pwv, df = df_pwv, lower.tail = FALSE)
-
-c(
-  mean = xbar_pwv,
-  standard_deviation = s_pwv,
-  standard_error = se_pwv,
-  t_statistic = t_pwv,
-  degrees_of_freedom = df_pwv,
-  p_value = p_pwv_upper
-)
-```
-
-### Direct Test with `t.test()`
+### In R
 
 ```{r pwv-direct-test}
-t.test(
-  x = pwv,
-  mu = 6.6,
-  alternative = "greater"
-)
+t.test(pwv, mu = 6.6, alternative = "greater")
 ```
 
-The value supplied to `alternative` must match the stated research hypothesis.
+The `alternative` argument must match $H_a$. Software may print a tiny $P$-value as `0.000`. Report it as $P<0.001$, never as $P=0$.
 
-### Statistical Significance and Effect Size
+### A Two-Sided Test
 
-The result is statistically significant, but the $P$-value does not measure how large or how clinically important the difference is. The observed difference from the reference value is
+Suppose instead we want to know whether the mean PWV **differs** from $6.6$ m/s, rather than specifically being greater.
+
+**STATE:** Let $\mu$ be the mean PWV for comparable children with progeria.
+
+**PLAN:** Two-sided one-sample $t$ test:
 
 $$
-12.444-6.6=5.844\text{ m/s}
+H_0:\mu=6.6
+\qquad
+H_a:\mu\neq6.6
 $$
 
-A confidence interval describes the plausible range of the population mean:
+**SOLVE:** Using the same sample, $n=18$, $\bar{x}=12.444$, $s=3.638$, $SE=0.857$, $t=6.82$ and $\operatorname{df}=17$.
+
+A two-sided test considers results at least as extreme as $t=6.82$ in **both tails**:
+
+$$
+P\text{-value}=P(T_{17}\leq-6.82)+P(T_{17}\geq6.82)=2P(T_{17}\geq6.82)
+$$
+
+**Step 1.** From the $\operatorname{df}=17$ row, $6.82>3.965$, so the upper-tail probability is less than $0.0005$.
+
+**Step 2.** Multiply by $2$:
+
+$$
+P\text{-value}=2P(T_{17}\geq6.82)<2(0.0005)
+\quad\Longrightarrow\quad
+\boxed{P\text{-value}<0.001}
+$$
+
+**Decision:** Since $P<0.001<\alpha=0.05$, we reject $H_0$.
+
+**CONCLUDE:** There is very strong statistical evidence that the mean PWV of comparable children with progeria **differs from** $6.6$ m/s.
+
+```{r pwv-two-sided}
+t.test(pwv, mu = 6.6, alternative = "two.sided")
+```
+
+### Connection to Confidence Intervals
+
+For a two-sided $t$ test at significance level $\alpha$, the corresponding $(1-\alpha)$ $t$ confidence interval gives the same decision:
+
+- If $\mu_0$ is **outside** the confidence interval, reject $H_0$
+- If $\mu_0$ is **inside** the confidence interval, fail to reject $H_0$
+
+For the PWV data, the $95\%$ interval is $(10.64,\ 14.25)$ m/s. Since $6.6$ lies outside it, a two-sided test at $\alpha=0.05$ rejects $H_0$.
 
 ```{r pwv-confidence-interval}
-t.test(
-  x = pwv,
-  conf.level = 0.95
-)$conf.int
+t.test(pwv, conf.level = 0.95)$conf.int
 ```
-
-Whether a mean PWV between about $10.6$ and $14.3$ m/s is clinically important requires medical expertise. That judgment depends on the reference group, the measurement process and the patient population.
-
-### Confidence Intervals and Two-Sided Tests
-
-When a two-sided test and a confidence interval use the same data, model and level,
-
-- **reject** $H_0:\mu=\mu_0$ at level $\alpha$ if $\mu_0$ lies *outside* the $(1-\alpha)100\%$ confidence interval
-- **fail to reject** if $\mu_0$ lies *inside* the interval
-
-For the PWV data, the $95\%$ interval is $(10.64,\ 14.25)$ m/s. The value $6.6$ lies far outside it, so a two-sided test at $\alpha=0.05$ also rejects $H_0$.
-
-The test asks whether one particular value $\mu_0$ is plausible. The interval shows every plausible value and how precise the estimate is.
-
-### What Failure to Reject Would Mean
-
-If the $P$-value were not small, the correct conclusion would be that the data do not provide enough evidence against $H_0$. It would not be correct to claim that
-
-- the null hypothesis has been proved
-- the population mean equals the null value exactly
-- no meaningful difference exists
-
-A non-significant result may come from a small effect, high variability, a small sample or a combination of these.
 
 ---
 
 ## Matched Pairs $t$ Procedures
 
-Many studies measure the same subject twice, or match different subjects on relevant characteristics. Common matched-pairs designs include
+A **matched-pairs design** compares two related measurements, either from the same individual or from two similar individuals. Pairing accounts for individual differences, so we can focus on the effect of interest.
 
-- Measurements before and after treatment on the same individual
-- Two treatments applied to the same experimental unit at different times
-- Two individuals matched on age, sex, species, baseline condition or another relevant characteristic
+Common paired designs:
 
-The matching creates dependence between the two observations in each pair.
+- Before and after treatment on the same individual
+- Both treatments given to each subject at different times
+- Subjects matched on demographics
 
-### Reduce Each Pair to One Difference
-
-For pair $i$, define
+For each pair, compute **one difference**:
 
 $$
-d_i
-=
-\text{response under condition 2}
--
-\text{response under condition 1}
+d_i=\text{(condition 2)}-\text{(condition 1)}
 $$
 
-The paired analysis then applies the one-sample $t$ procedures to $d_1,d_2,\ldots,d_n$. The parameter is $\mu_d$, the population mean paired difference, and $\operatorname{df}=n-1$, where $n$ is the **number of pairs**.
+Then apply the one-sample $t$ procedures to $d_1,\ldots,d_n$. The parameter is $\mu_d$, and $\operatorname{df}=n-1$, where $n$ is the **number of pairs**, not the number of measurements.
 
-### The Direction of the Difference
+### Choosing the Alternative Hypothesis
 
-The sign of the difference must be defined before the hypotheses are written. Reversing the subtraction reverses the signs of $\bar{d}$ and the test statistic, and it reverses the direction of a one-sided alternative.
+The alternative depends on **how the difference is defined** and what counts as an improvement. Suppose a treatment is intended to reduce PWV, so a lower PWV after treatment is an improvement.
 
 | Definition | Improvement means | Alternative |
 |:--|:--|:--|
-| $d=\text{after}-\text{before}$ | negative differences | $H_a:\mu_d<0$ |
-| $d=\text{before}-\text{after}$ | positive differences | $H_a:\mu_d>0$ |
+| $d=\text{after}-\text{before}$ | Negative $d$ | $H_a:\mu_d<0$ |
+| $d=\text{before}-\text{after}$ | Positive $d$ | $H_a:\mu_d>0$ |
 
-Either definition is valid if it is stated clearly and used consistently.
+**Why does the direction change?** Suppose PWV decreases from $12$ m/s to $8$ m/s. Then
 
-### Conditions for Matched Pairs
+$$
+d=\text{after}-\text{before}=8-12=-4
+$$
 
-The one-sample conditions apply to the **differences**:
+A reduction produces a negative difference, so we test
 
-1. The pairs should be independent of one another
-2. The pairs should represent the target population or come from an appropriate randomized design
-3. The distribution of the differences should be close enough to Normal for the sample size, with particular attention to outliers
+$$
+H_0:\mu_d=0
+\qquad
+\boxed{H_a:\mu_d<0}
+$$
 
-The two observations *within* a pair are expected to be dependent. That dependence is the reason the paired design is used.
+Both definitions test the same treatment effect. Changing the order of subtraction reverses the sign of the differences and the direction of the alternative.
 
-### Example 17.4: Treatment for Progeria
+---
 
-The $18$ children in the PWV study received lonafarnib for two years. PWV was measured before and after treatment.
+## Example 17.4: Does Lonafarnib Lower PWV?
+
+The same $18$ children were treated with lonafarnib for two years. PWV was measured before and after.
 
 | Child | Before | After | $d$ | Child | Before | After | $d$ |
 |:--:|--:|--:|--:|:--:|--:|--:|--:|
@@ -1250,17 +1123,11 @@ The $18$ children in the PWV study received lonafarnib for two years. PWV was me
 | $8$ | $13.1$ | $7.7$ | $-5.4$ | $17$ | $8.3$ | $5.7$ | $-2.6$ |
 | $9$ | $12.9$ | $6.8$ | $-6.1$ | $18$ | $7.2$ | $9.1$ | $1.9$ |
 
-The sample for the analysis is the $18$ differences, not the $36$ raw measurements.
+The sample is the $18$ differences, not the $36$ raw measurements.
 
-### Example 17.4: Hypotheses and Data Check
+### Hypotheses and Data Check
 
-**PLAN:** Define
-
-$$
-d=\text{after-treatment PWV}-\text{before-treatment PWV}
-$$
-
-so a reduction gives a negative difference. Let $\mu_d$ be the population mean of $d$. The treatment is expected to reduce PWV:
+**PLAN:** Define $d=\text{after}-\text{before}$, so a reduction gives a negative $d$. Test
 
 $$
 H_0:\mu_d=0
@@ -1272,318 +1139,124 @@ $$
 knitr::include_graphics(c("slide_ch17_before_after.png", "slide_ch17_differences.png"))
 ```
 
-The connecting lines keep the pairing visible and show that PWV fell for $17$ of the $18$ children. The differences are mildly skewed but contain no severe outlier. With $n=18$, the paired $t$ procedure is reasonable.
+PWV fell for $17$ of the $18$ children. The differences are mildly skewed with no extreme outlier, so a paired $t$ procedure is reasonable.
 
-### Example 17.4: Test Statistic and P-Value
+### Test Statistic and $P$-Value
 
-**SOLVE:** For the $18$ paired differences,
+**SOLVE:**
 
-$$
-n=18,\qquad \bar{d}\approx-3.917,\qquad s_d\approx2.644
-$$
+**Summary of the differences**
 
 $$
-\operatorname{SE}(\bar{d})
-=
-\frac{s_d}{\sqrt{n}}
-=
-\frac{2.644}{\sqrt{18}}
-\approx
-0.623
+n=18,\qquad \bar{d}=-3.917,\qquad s_d=2.644
 $$
 
-The test statistic, with $\operatorname{df}=17$, is
+**Standard error**
 
 $$
-t
-=
-\frac{\bar{d}-0}{s_d/\sqrt{n}}
-=
-\frac{-3.917}{0.623}
-\approx
--6.286
+SE_{\bar{d}}=\frac{2.644}{\sqrt{18}}=0.623
 $$
 
-Because the alternative is lower-tailed,
+**Test statistic**, with $\operatorname{df}=17$
 
 $$
-P\text{-value}
-=
-P(T_{17}\leq-6.286)
-\approx
-4.10\times10^{-6}
+t=\frac{-3.917-0}{0.623}=-6.29
 $$
 
-**CONCLUDE:** The data provide very strong evidence that the treatment lowers mean PWV for comparable children with progeria.
+**$P$-value** (lower tail). By symmetry, and since $6.29>3.965$ in the $\operatorname{df}=17$ row,
 
-### Manual Paired Calculation in R
+$$
+P(T_{17}\leq-6.29)=P(T_{17}\geq6.29)<0.0005
+$$
 
-```{r paired-manual-calculation}
-n_difference <- length(difference)
-mean_difference <- mean(difference)
-sd_difference <- sd(difference)
-se_difference <- sd_difference / sqrt(n_difference)
-
-t_difference <- mean_difference / se_difference
-p_difference <- pt(q = t_difference, df = n_difference - 1)
-
-c(
-  mean_difference = mean_difference,
-  standard_deviation = sd_difference,
-  standard_error = se_difference,
-  t_statistic = t_difference,
-  p_value = p_difference
-)
-```
-
-### Direct Paired Test in R
-
-```{r paired-direct-test}
-t.test(
-  x = after,
-  y = before,
-  paired = TRUE,
-  alternative = "less"
-)
-```
-
-The argument `paired = TRUE` is essential. It tells R to calculate the within-child differences, `after - before`, before carrying out the one-sample analysis. An equivalent command applies `t.test()` to the differences directly:
-
-```{r paired-equivalent-test}
-t.test(
-  x = difference,
-  mu = 0,
-  alternative = "less"
-)
-```
-
-Both commands use the same $18$ differences and give the same test statistic and $P$-value.
+**CONCLUDE:** Since the $P$-value is less than $0.05$, we reject $H_0:\mu_d=0$. There is very strong evidence that lonafarnib lowers mean PWV in comparable children with progeria.
 
 ### Confidence Interval for the Mean Change
 
-A $95\%$ interval for the mean difference uses $t^*=2.110$ with $\operatorname{df}=17$:
+**Step 1. Critical value.** For a $95\%$ interval, each tail contains $0.025$, and $\operatorname{df}=17$. From the $t$-table:
 
 $$
-\bar{d}\pm t^*\frac{s_d}{\sqrt{n}}
-=
--3.917\pm2.110(0.623)
+\boxed{t^*=2.110}
+$$
+
+**Step 2. Margin of error**
+
+$$
+m=t^*\,SE_{\bar{d}}=2.110(0.623)=1.315
+$$
+
+**Step 3. Confidence interval**
+
+$$
+\bar{d}\pm m=-3.917\pm1.315
 \quad\Longrightarrow\quad
-(-5.231,\ -2.602)\text{ m/s}
+\boxed{(-5.23,\ -2.60)\text{ m/s}}
 $$
 
-```{r paired-confidence-interval}
-t.test(
-  x = after,
-  y = before,
-  paired = TRUE,
-  conf.level = 0.95
-)$conf.int
+We are $95\%$ confident that the population mean difference (after $-$ before) is between $-5.23$ and $-2.60$ m/s. Equivalently, the estimated mean **reduction** is between $2.60$ and $5.23$ m/s.
+
+### In R
+
+```{r paired-direct-test}
+t.test(after, before, paired = TRUE, alternative = "less")
+
+t.test(after, before, paired = TRUE, conf.level = 0.95)$conf.int
 ```
 
-Equivalently, the estimated mean **reduction** (before minus after) is between about $2.60$ and $5.23$ m/s.
-
-The interval describes the plausible size of the population mean change. Whether a reduction in this range is clinically important requires subject-matter judgment, including how PWV relates to health outcomes, the treatment's side effects and how much responses vary between patients.
-
-### Why the Pairing Must Not Be Ignored
-
-The before and after samples are not independent: each after-treatment value is linked to the same child's before-treatment value. An independent two-sample procedure would treat the $36$ measurements as if they came from $36$ unrelated children.
-
-```{r paired-vs-independent-plot, echo=FALSE}
-knitr::include_graphics("slide_ch17_paired_vs_independent.png")
-```
-
-Both analyses give the same estimate, $-3.917$ m/s. However, ignoring the pairing raises the standard error from $0.623$ to $0.966$ and widens the interval considerably. This happens because the independent analysis counts the large child-to-child differences in baseline PWV as noise. The paired analysis removes them by comparing each child with themselves.
-
-```{r paired-vs-independent-code}
-t.test(after, before, paired = TRUE)$conf.int   # correct: paired
-t.test(after, before)$conf.int                  # incorrect: ignores pairing
-```
-
-> **Design determines analysis**
->
-> When observations are paired, analyze the paired differences. When samples are genuinely independent, use an independent-samples procedure.
-
-### When Matching Helps
-
-Matching is useful when the two observations within a pair tend to be similar for reasons unrelated to the treatment. Baseline vascular condition varies a lot among children, so comparing each child's post-treatment measurement with their own baseline removes much of that variation from the treatment comparison.
-
-Poor or arbitrary matching may provide little benefit. Matching variables should be chosen because they are scientifically related to the response.
+The argument `paired = TRUE` is essential. It tells R to calculate the within-child differences, `after - before`, and then carry out the one-sample analysis on them.
 
 ---
 
 ## Robustness of the $t$ Procedures
 
-A procedure is **robust** when its confidence level or $P$-value changes little under moderate departures from its conditions.
+The $t$ procedures assume the data come from a random sample (or a comparable design) and that the population is Normal. Real populations are rarely exactly Normal, so the practical question is whether the procedure is still reliable.
 
-The one-sample $t$ procedures are generally robust to moderate non-Normality, especially as the sample size increases. They are **not** robust to outliers, because both $\bar{x}$ and $s$ are sensitive to extreme observations.
+A procedure is **robust** if moderate violations of its conditions barely change its confidence level or $P$-values. The $t$ procedures are robust to non-Normality, but **not to outliers**, because both $\bar{x}$ and $s$ are sensitive to extreme observations.
 
-### Practical Guidelines
-
-| Sample size | Practical guidance |
+| Sample size | Guideline |
 |:--|:--|
-| $n<15$ | Use $t$ procedures only when the data are close to symmetric, single-peaked and free of outliers |
-| $15\leq n<40$ | Mild or moderate skewness is usually acceptable, but strong skewness and outliers remain concerns |
-| $n\geq40$ | Strong skewness is often manageable, but influential outliers and the scientific structure still need attention |
+| $n<15$ | Use $t$ only if the data are close to symmetric and single-peaked, with no outliers |
+| $15\leq n<40$ | Mild skewness is fine. Strong skewness or outliers are a concern |
+| $n\geq40$ | Even strong skewness is usually fine. Still investigate influential outliers |
 
-These cutoffs are guidelines rather than automatic rules. How severe the departure is, and the purpose of the analysis, also matter.
+These are guidelines, not automatic rules.
+
+### Three Illustrations
 
 ```{r robustness-plot, echo=FALSE}
 knitr::include_graphics("slide_ch17_robustness.png")
 ```
 
-The figure uses illustrative datasets:
-
-- The small sample contains a clear outlier, so the $t$ procedure is not reliable without further investigation
-- The moderate sample has mild right skewness without an extreme value, so a $t$ procedure is generally reasonable
-- The large sample is strongly right-skewed, but by the Central Limit Theorem the sampling distribution of the mean is still approximately Normal
-
-### Example 17.5: Assessing Several Samples
-
-The chapter describes four settings.
-
-| Dataset | Sample size | Assessment |
-|:--|--:|:--|
-| Oak acorn volumes | $11$ | A clear extreme outlier makes a one-sample $t$ analysis unreliable |
-| Aleppo pine needle lengths | $15$ | Mild right skewness without outliers is acceptable |
-| Brown treesnake weights | About $500$ | The large sample handles substantial skewness, but the heaviest snake should still be investigated |
-| Wild bee cocoon widths | About $800$ | The calculation is stable, but clear bimodality makes one overall mean hard to interpret |
-
-The bee-cocoon example shows an important distinction: a method can be mathematically stable while the chosen parameter is scientifically unhelpful. The two modes correspond to female and male cocoons. An overall mean depends on the sex ratio in the sample, so it can change even when neither group changes. Reporting separate means for females and males is more informative.
-
-### Why Outliers Matter
-
-An extreme observation can affect the sample mean, the sample standard deviation, the standard error, the $t$ statistic and the interval endpoints. The effects do not necessarily cancel: an outlier may pull the mean, inflate the standard deviation or do both.
-
-An unusual value should be investigated rather than deleted automatically. Possible explanations include
-
-- a data-entry or measurement error
-- a genuine but rare observation
-- a member of a different population or subgroup
-- a strongly skewed population distribution
-
-Any decision to correct or exclude a value should be documented and justified using information about the observation, never just because removing it gives a preferred result.
-
-### Sensitivity Analysis
-
-When an unusual observation is present, calculate the result both with and without it. This comparison is called a **sensitivity analysis**, and it asks whether the main conclusion depends heavily on one value. Report both results and the reason for the comparison. A large change means the conclusion is sensitive and should be interpreted cautiously.
-
-### Large Samples Do Not Solve Every Problem
-
-A large $n$ can improve the shape of the sampling distribution of $\bar{x}$. It cannot
-
-- correct selection bias
-- create independence
-- remove confounding
-- repair systematic measurement error
-- turn a mixture of distinct populations into one homogeneous population
-- guarantee practical importance
-
-The Central Limit Theorem is a statement about the sampling distribution of a statistic under a probability model. It does not guarantee that every large dataset produces trustworthy conclusions.
+- **Small sample with an outlier:** the one extreme value pulls $\bar{x}$ and inflates $s$, so the $t$ procedure is not reliable
+- **Moderate sample, mild skew:** acceptable
+- **Large sample, strong skew:** by the Central Limit Theorem, $\bar{x}$ is still approximately Normal
 
 ---
 
-## Choosing the Correct Procedure
-
-The study design and the parameter determine the method.
-
-| Study structure | Parameter | Procedure |
-|:--|:--|:--|
-| One quantitative sample | Population mean $\mu$ | One-sample $t$ interval or test |
-| Same subjects measured twice | Mean paired difference $\mu_d$ | Paired $t$ interval or test |
-| Matched pairs of subjects | Mean paired difference $\mu_d$ | Paired $t$ interval or test |
-| Two unrelated groups | Difference between two population means | Two-sample $t$ procedure (Chapter 18) |
-
-An independent two-sample procedure should never be substituted for a paired procedure when the observations are linked.
-
-### A Decision Checklist
-
-Before using a one-sample or paired $t$ procedure, ask:
-
-1. What is the target population?
-2. What population mean is being estimated or tested?
-3. How were the observations selected or assigned?
-4. Are the observational units independent?
-5. Are the observations paired or unpaired?
-6. What does a graph show about shape, outliers and subgroups?
-7. Is the sample size adequate for the observed shape?
-8. Does the direction of the alternative match the research question?
-9. Are the confidence interval and $P$-value interpreted for the correct population?
-10. Are statistical significance and practical importance kept separate?
-
----
-
-## Common Errors and How to Correct Them
+## Common Errors
 
 | Error | Correction |
 |:--|:--|
 | Using $z^*$ or $N(0,1)$ when $\sigma$ is unknown | Use $t$ with $\operatorname{df}=n-1$ |
 | Using $s$ (or $s/n$) as the standard error | The standard error is $s/\sqrt{n}$ |
 | Choosing the tail after seeing the data | Choose the alternative from the research question beforehand |
-| Reporting $P=0$ from software output | Report $P<0.001$ or the value in scientific notation |
+| Forgetting to double the one-tail area in a two-sided test | Two-sided $P$-value $=2P(T\geq|t|)$ |
+| Reporting $P=0$ from software output | Report $P<0.001$ |
 | Treating a small $P$-value as a large effect | Report the estimate and a confidence interval |
-| Analyzing paired data as two independent samples | Analyze the $n$ differences, with $\operatorname{df}=n-1$ (not $2n-2$) |
-| Generalizing beyond the population the design supports | Match the scope of the conclusion to how the data were collected |
-
-Changing a two-sided question to a one-sided test after seeing the direction of the data halves the $P$-value. The test then no longer has the error rate it claims.
-
-A precise confidence interval from a convenience sample can still be biased for the intended population. The interval measures random sampling variation under the assumed model, not every source of error.
-
----
-
-## A Complete Reporting Template
-
-### Confidence Interval
-
-A complete confidence-interval report includes the target population and parameter, the estimate, the confidence level, the endpoints with units, an interpretation in context and any important limitations. A useful sentence structure is:
-
-> We are [confidence level] confident that the population mean [variable] for [population] lies between [lower endpoint] and [upper endpoint] [units], under the stated sampling and model conditions.
-
-### Hypothesis Test
-
-A complete hypothesis-test report includes the parameter and hypotheses, the test statistic and degrees of freedom, the $P$-value, the decision when $\alpha$ is specified, a conclusion in context and a distinction between statistical and practical importance. A useful sentence structure is:
-
-> The data provide [strength of evidence] that the population mean [variable] is [direction stated in the alternative]. The conclusion applies to [population supported by the design] under the stated conditions.
-
-Avoid saying that the null hypothesis has been proved or that a non-significant result shows no effect.
+| Using $2n$ measurements for paired data | Analyze the $n$ differences, with $\operatorname{df}=n-1$ |
+| Interpreting the CI as a range for individuals | The CI estimates the population *mean* |
 
 ---
 
 ## Chapter Summary
 
-### Standard Error and the $t$ Statistic
-
-When $\sigma$ is unknown, estimate it with $s$. The estimated standard error of the sample mean is $s/\sqrt{n}$, and the one-sample $t$ statistic
-
-$$
-t
-=
-\frac{\bar{x}-\mu}{s/\sqrt{n}}
-$$
-
-has a $t$ distribution with $\operatorname{df}=n-1$.
-
-### The $t$ Distributions
-
-- The $t$ distributions are symmetric and bell-shaped, with heavier tails than the Standard Normal
-- Smaller degrees of freedom produce greater spread
-- The $t$ distributions approach $N(0,1)$ as the degrees of freedom increase
-- R uses `pt()` for probabilities and `qt()` for critical values
-
-### One-Sample Interval and Test
-
-A level $C$ confidence interval for $\mu$ is $\bar{x}\pm t^*s/\sqrt{n}$. To test $H_0:\mu=\mu_0$, calculate $t=(\bar{x}-\mu_0)/(s/\sqrt{n})$. The alternative determines whether the $P$-value is a left-tail, right-tail or two-tail area under $t(n-1)$.
-
-### Matched Pairs
-
-For paired data, calculate one difference within each pair and apply the one-sample $t$ procedures to the differences. The parameter is $\mu_d$, and the order of subtraction determines the sign of $\bar{d}$ and the direction of a one-sided alternative.
-
-### Robustness
-
-- Random sampling or an appropriate design matters more than exact Normality
-- Small samples need data that are close to symmetric and free of outliers
-- Moderate samples tolerate mild skewness
-- Large samples tolerate stronger skewness, but influential observations still need investigation
-- A large sample does not repair bias, dependence or an inappropriate summary
+- The standard error $s/\sqrt{n}$ measures how precisely $\bar{x}$ estimates $\mu$. Multiplying $n$ by $4$ halves it
+- When $\sigma$ is unknown, $t=(\bar{x}-\mu)/(s/\sqrt{n})$ has a $t(n-1)$ distribution, with heavier tails than $N(0,1)$
+- $\operatorname{df}=n-1$ because the deviations from $\bar{x}$ must sum to zero
+- **Interval:** $\bar{x}\pm t^*s/\sqrt{n}$
+- **Test:** $t=(\bar{x}-\mu_0)/(s/\sqrt{n})$, with the tail(s) set by $H_a$. A two-sided test at level $\alpha$ agrees with the $(1-\alpha)$ confidence interval
+- **Matched pairs:** compute one difference per pair and apply the one-sample procedures to the differences. The order of subtraction sets the sign of $\bar{d}$ and the direction of $H_a$
+- **Robustness:** $t$ procedures tolerate non-Normality, especially for larger $n$, but not outliers
 
 ### R Functions
 
@@ -1593,19 +1266,5 @@ For paired data, calculate one difference within each pair and apply the one-sam
 | Right-tail $t$ probability | `pt(t, df, lower.tail = FALSE)` |
 | $t$ critical value | `qt(probability, df)` |
 | One-sample interval | `t.test(x, conf.level = C)` |
-| One-sample upper-tail test | `t.test(x, mu = mu0, alternative = "greater")` |
-| One-sample lower-tail test | `t.test(x, mu = mu0, alternative = "less")` |
+| One-sample test | `t.test(x, mu = mu0, alternative = "greater")` |
 | Paired test | `t.test(after, before, paired = TRUE)` |
-
-### Final Workflow
-
-1. Define the population, parameter and research question
-2. Decide whether the data are one-sample, paired or independent
-3. Examine how the observations were obtained
-4. Graph the observations or paired differences
-5. Assess sample size, skewness and outliers
-6. Calculate the standard error and degrees of freedom
-7. Construct the interval, or calculate the test statistic and $P$-value
-8. Interpret the result for the population the design supports
-9. Report effect size, precision and study limitations
-10. Keep statistical evidence separate from scientific or clinical importance

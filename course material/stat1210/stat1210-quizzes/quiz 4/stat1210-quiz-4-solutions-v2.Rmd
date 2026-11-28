@@ -19,60 +19,82 @@ header-includes:
 ---
 
 
-## Question 1: Shell Length of Cultured PEI Mussels (8 marks)
+## Answer Key
 
-1. **Parameter and hypotheses (2 marks).** Let $\mu$ be the population mean shell length, in millimetres, of all harvest-ready blue mussels in the grower's lease this season. The hypotheses are
-$$H_0:\mu=60$$
-$$H_a:\mu\ne60$$
-The alternative is two-sided because the grower asks whether the current population mean differs from $60$ mm in either direction.
-2. **Standard error, test statistic and degrees of freedom (2 marks).** The estimated standard error is
-$$SE=\frac{s}{\sqrt{n}}=\frac{5.5}{\sqrt{25}}=\frac{5.5}{5}=1.100\text{ mm}$$
-The test statistic is
-$$t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}}=\frac{62.5-60}{1.100}=\frac{2.5}{1.100}\approx2.273$$
-The degrees of freedom are
+| Question 1 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 |
+|:--|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| Answer | C | A | D | B | C | D | A | B | D | A | C | B | D |
+
+| Question 2 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|:--|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| Answer | A | C | B | D | A | C | B |
+
+
+## Question 1: Inference about a Population Mean (13 marks)
+
+### Part A: Oyster Shell Height at a New Lease Site
+
+1. **C.** $\mu$ is the population mean shell height of all market-size oysters at the new lease site. $81.9$ mm is the sample mean (a statistic), and $80$ mm is the null value.
+2. **A.** Hypotheses are about the parameter $\mu$, and the grower asks whether the mean is *greater than* $80$ mm:
+$$H_0:\mu=80\qquad H_a:\mu>80$$
+3. **D.**
+$$SE=\frac{s}{\sqrt{n}}=\frac{5.0}{\sqrt{25}}=\frac{5.0}{5}=1.000\text{ mm}$$
+Option C divides by $n$, option B divides by $\sqrt{n-1}$, and option A is $s$ itself.
+4. **B.**
+$$t=\frac{81.9-80}{1.000}=\frac{1.9}{1.000}=1.900$$
 $$df=n-1=25-1=24$$
-3. **Table-based P-value range (2 marks).** Use $t=2.273$ and the row for $df=24$. The table gives
-$$2.064<2.273<2.492$$
-The corresponding right-tail probabilities are $0.025$ and $0.010$, so the one-sided tail area satisfies
-$$0.010<P(T\ge 2.273)<0.025$$
-The alternative is two-sided, so both tails are included:
-$$\boxed{0.020<P\text{-value}<0.050}$$
-For reference, the exact two-sided P-value is approximately $0.0323$. Because the P-value is less than $\alpha=0.05$, reject $H_0$: the data provide statistically significant evidence that this season's population mean shell length differs from $60$ mm. The sample suggests the mussels are longer.
+5. **C.** In the $df=24$ row,
+$$1.711<1.900<2.064$$
+which correspond to upper-tail probabilities $0.050$ and $0.025$. The alternative is upper-tailed, so
+$$0.025<P\text{-value}<0.050$$
+(The exact P-value is about $0.035$.)
+6. **D.** Because $P<0.05$, reject $H_0$. The conclusion is about the population mean, not the sample mean (B), and a test never proves an exact value (A).
+7. **A.** A two-sided test doubles the one-tail area:
+$$2(0.025)<P\text{-value}<2(0.050)\quad\Longrightarrow\quad 0.050<P\text{-value}<0.100$$
+Since $P>0.05$, fail to reject $H_0$. This is why the alternative must be chosen before seeing the data.
 
-4. **Confidence interval (2 marks).** The margin of error is
-$$m=t^*SE=2.064(1.100)=2.2704$$
-Therefore, the $95\%$ confidence interval is
-$$62.5\pm2.2704$$
-$$\boxed{(60.230,\ 64.770)\text{ mm}}$$
-The interval does not contain $60$, which agrees with rejecting $H_0$.
+### Part B: Resting Heart Rate of Racehorses
+
+8. **B.** Each horse is measured twice, so the before and after values are linked. The analysis uses one sample of $15$ differences, with $df=15-1=14$ (the number of pairs minus one).
+9. **D.** With $d=\text{after}-\text{before}$, a lower heart rate after the program gives a negative $d$:
+$$H_0:\mu_d=0\qquad H_a:\mu_d<0$$
+10. **A.**
+$$SE_{\bar{d}}=\frac{s_d}{\sqrt{n}}=\frac{5.0}{\sqrt{15}}=1.291$$
+$$t=\frac{\bar{d}-0}{SE_{\bar{d}}}=\frac{-4.0}{1.291}=-3.098$$
+11. **C.** By symmetry, use $|t|=3.098$ in the $df=14$ row:
+$$2.977<3.098<3.326$$
+which correspond to upper-tail probabilities $0.005$ and $0.0025$. The alternative is lower-tailed (one tail), so
+$$0.0025<P\text{-value}<0.005$$
+Option B is the two-sided range. (The exact P-value is about $0.0039$.) Since $P<0.05$, the trainer would reject $H_0$.
+12. **B.**
+$$m=t^*\,SE_{\bar{d}}=2.145(1.291)=2.769$$
+$$\bar{d}\pm m=-4.0\pm2.769\quad\Longrightarrow\quad(-6.769,\ -1.231)$$
+Option D uses $z^*=1.960$, option C uses $s_d$ instead of the standard error, and option A has the wrong sign.
+13. **D.** Reversing the subtraction flips the sign of every difference, so $\bar{d}=4.0$ and $t=3.098$. A reduction in heart rate now gives a positive difference, so $H_a:\mu_d>0$. The standard error, degrees of freedom, P-value and conclusion are unchanged.
 
 
-## Question 2: Varroa Mites in PEI Honeybee Colonies (12 marks)
+## Question 2: Nitrate in PEI Private Wells (7 marks)
 
-1. **Parameter and hypotheses (2 marks).** Let $p$ be the proportion of all honeybee colonies in PEI's registered apiaries that have varroa mite levels above the treatment threshold this spring. The hypotheses are
-$$H_0:p=0.21$$
-$$H_a:p\ne0.21$$
-The alternative is two-sided because the apiarist asks whether the proportion has changed in either direction.
-2. **Condition, sample proportion, null standard error and test statistic (3 marks).** The test uses the expected counts under $H_0$:
-$$np_0=320(0.21)=67.2\ge10\qquad n(1-p_0)=320(0.79)=252.8\ge10$$
-The condition is satisfied. The colonies are a random sample, and $320$ is far less than $10\%$ of the several thousand colonies. The sample proportion is
-$$\hat{p}=\frac{88}{320}=0.275$$
+1. **A.** $p$ is the proportion of all private wells in PEI with nitrate above the guideline this year. $0.13$ is the sample proportion and $0.10$ is the null value.
+2. **C.** The agency asks whether the proportion has *changed*, in either direction:
+$$H_0:p=0.10\qquad H_a:p\neq0.10$$
+3. **B.** The test uses expected counts under $H_0$:
+$$np_0=900(0.10)=90\ge10\qquad n(1-p_0)=900(0.90)=810\ge10$$
+Option D is the condition for the confidence interval (observed counts), not the test.
+4. **D.**
+$$\hat{p}=\frac{117}{900}=0.130$$
 The null standard error uses $p_0$, not $\hat{p}$:
-$$SE_0=\sqrt{\frac{p_0(1-p_0)}{n}}=\sqrt{\frac{(0.21)(0.79)}{320}}=\sqrt{0.000518}\approx0.02277$$
-The test statistic is
-$$z=\frac{0.275-0.21}{0.02277}=\frac{0.065}{0.02277}\approx2.855$$
-3. **Table-based P-value range and conclusion (2 marks).** Use the $df=\infty$ row. The table gives
-$$2.807<2.855<3.090$$
-The corresponding right-tail probabilities are $0.0025$ and $0.001$, so
-$$0.001<P(Z\ge2.855)<0.0025$$
-Doubling for the two-sided alternative,
-$$\boxed{0.002<P\text{-value}<0.005}$$
-The exact two-sided P-value is approximately $0.0043$. Because the P-value is less than $\alpha=0.05$, reject $H_0$. The data provide strong evidence that the proportion of PEI colonies above the varroa treatment threshold has changed from $21\%$. The sample suggests it has increased.
-4. **Confidence interval and consistency (3 marks).** The interval uses the observed counts:
-$$X=88\ge15\qquad n-X=232\ge15$$
-so the large-sample interval is appropriate. The standard error uses $\hat{p}$:
-$$SE=\sqrt{\frac{(0.275)(0.725)}{320}}=\sqrt{0.000623}\approx0.02496$$
-$$m=1.960(0.02496)\approx0.04892$$
-$$0.275\pm0.04892$$
-$$\boxed{(0.226,\ 0.324)}$$
-We are $95\%$ confident that between about $22.6\%$ and $32.4\%$ of colonies in PEI's registered apiaries are above the treatment threshold. The interval does not contain $0.21$, which is consistent with rejecting $H_0$ at $\alpha=0.05$.
+$$SE_0=\sqrt{\frac{(0.10)(0.90)}{900}}=\sqrt{0.0001}=0.010$$
+$$z=\frac{0.130-0.10}{0.010}=3.000$$
+Option A wrongly uses $\hat{p}$ in the test's standard error.
+5. **A.** In the $df=\infty$ row,
+$$2.807<3.000<3.090$$
+which correspond to upper-tail probabilities $0.0025$ and $0.001$. Doubling for the two-sided alternative,
+$$0.002<P\text{-value}<0.005$$
+Since $P<0.05$, reject $H_0$. Option D is the one-tail range. (The exact P-value is about $0.0027$.)
+6. **C.** The interval uses $\hat{p}$ in the standard error:
+$$SE=\sqrt{\frac{(0.13)(0.87)}{900}}=0.01121$$
+$$m=1.960(0.01121)=0.02197$$
+$$0.130\pm0.02197\quad\Longrightarrow\quad(0.108,\ 0.152)$$
+The observed counts $X=117\ge15$ and $n-X=783\ge15$ support the large-sample interval. Option A wrongly uses $SE_0$, option B is centred at $p_0$, and option D uses $z^*=1.645$.
+7. **B.** The confidence level describes the long-run success rate of the method, not a probability for one interval (C), and the interval estimates a population proportion, not a range for individual wells (D). The interval excludes $0.10$, which agrees with rejecting $H_0$ at $\alpha=0.05$.

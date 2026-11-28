@@ -298,12 +298,15 @@ A random sample of $640$ little brown bats captured at hibernation sites in Nova
 <ol>
   <li><b>Random:</b> the bats are a random sample. <b>Independence:</b> the bat population across hibernation sites is much larger than $10\times640$. <b>Large counts:</b> there are $X=112\ge15$ successes and $n-X=528\ge15$ failures. All conditions are met.</li>
   <li>
-  $$\hat{p}=\frac{112}{640}=0.175\qquad SE=\sqrt{\frac{(0.175)(0.825)}{640}}=0.0150$$
-  $$m=1.960(0.0150)=0.0294\quad\Longrightarrow\quad 0.175\pm0.0294=\boxed{(0.1456,\ 0.2044)}$$
+  $$\hat{p}=\frac{112}{640}=0.175$$
+  $$SE=\sqrt{\frac{(0.175)(0.825)}{640}}=0.0150$$
+  $$m=1.960(0.0150)=0.0294$$
+  $$0.175\pm0.0294=\boxed{(0.1456,\ 0.2044)}$$
   </li>
   <li>We are $95\%$ confident that between about $14.6\%$ and $20.4\%$ of little brown bats at these hibernation sites show visible signs of white-nose syndrome.</li>
   <li>With $z^*=2.576$:
-  $$m=2.576(0.0150)=0.0387\quad\Longrightarrow\quad 0.175\pm0.0387=\boxed{(0.1363,\ 0.2137)}$$
+  $$m=2.576(0.0150)=0.0387$$
+  $$0.175\pm0.0387=\boxed{(0.1363,\ 0.2137)}$$
   </li>
   <li>To capture $p$ more often in repeated sampling ($99\%$ instead of $95\%$), the interval needs a larger critical value, so it is wider. The trade-off is between <b>confidence</b> and <b>precision</b>: more confidence means a less precise estimate, unless the sample size is increased.</li>
 </ol>
@@ -348,95 +351,6 @@ A news report on the bat survey in Question $3$ makes the statements below. For 
 ::: {.question-card}
 ### Question $5$
 
-A herpetologist swabs a random sample of $48$ wood frogs from a wetland complex and finds that $3$ carry the chytrid fungus.
-
-1. Calculate $\hat{p}$. Check whether the large-sample interval is appropriate.
-2. Calculate the $95\%$ large-sample interval anyway. What is wrong with its lower endpoint?
-3. Check the conditions for a plus four interval.
-4. Construct the $95\%$ plus four interval.
-5. Interpret the plus four interval and explain why it is preferred here.
-
-<details class="solution">
-<summary>Show solution</summary>
-<div class="solution-body">
-<ol>
-  <li>$\hat{p}=3/48=\boxed{0.0625}$. The large-sample interval needs at least $15$ successes, but there are only $X=3$. It is <b>not appropriate</b>.</li>
-  <li>
-  $$SE=\sqrt{\frac{(0.0625)(0.9375)}{48}}=0.0349\qquad 0.0625\pm1.960(0.0349)=\boxed{(-0.0060,\ 0.1310)}$$
-  The lower endpoint is <b>negative</b>, which is impossible for a proportion. This is a clear sign that the Normal approximation fails with so few successes.</li>
-  <li>The frogs are a random sample, the frog population is much larger than $480$, the confidence level is $95\%\ge90\%$, and $n=48\ge10$. Plus four is appropriate.</li>
-  <li>
-  $$\widetilde{p}=\frac{3+2}{48+4}=\frac{5}{52}=0.0962\qquad SE=\sqrt{\frac{(0.0962)(0.9038)}{52}}=0.0409$$
-  $$0.0962\pm1.960(0.0409)=0.0962\pm0.0801=\boxed{(0.0160,\ 0.1763)}$$
-  </li>
-  <li>We are $95\%$ confident that between about $1.6\%$ and $17.6\%$ of wood frogs in this wetland complex carry the chytrid fungus. Plus four is preferred because, with only $3$ successes, the ordinary interval's actual coverage is well below $95\%$ and it can even give impossible values. Adding two successes and two failures pulls the estimate toward $0.5$ and gives much more reliable coverage.</li>
-</ol>
-
-```{r q5-check, echo=TRUE}
-x <- 3; n <- 48
-p_tilde <- (x + 2) / (n + 4)
-p_tilde + c(-1, 1) * qnorm(0.975) * sqrt(p_tilde * (1 - p_tilde) / (n + 4))
-```
-
-```{r q5-plot, fig.height=2.6}
-ci_plot(
-  data.frame(method = factor(c("Ordinary", "Plus four"), levels = c("Plus four", "Ordinary")),
-             est = c(0.0625, 0.0962), lo = c(-0.0060, 0.0160), hi = c(0.1310, 0.1763)),
-  xlab = "Proportion of frogs carrying chytrid",
-  title = "The Ordinary Interval Goes Below Zero",
-  ref = 0
-)
-```
-</div>
-</details>
-:::
-
-::: {.question-card}
-### Question $6$
-
-The PEI Department of Agriculture plans a survey to estimate the proportion of potato farms that have adopted a new soil-conservation practice. It wants a $95\%$ confidence interval with a margin of error of no more than $0.03$.
-
-1. Calculate the required sample size with no prior information about $p$.
-2. A pilot study suggests that about $15\%$ of farms have adopted the practice. Calculate the required sample size using this planning value.
-3. Explain why the answers to parts 1 and 2 differ so much.
-4. Only about $70\%$ of farms are expected to respond. Using the answer to part 2, how many farms should be contacted?
-5. How large a sample would be needed (with $p^*=0.5$) for a $90\%$ confidence level instead?
-
-<details class="solution">
-<summary>Show solution</summary>
-<div class="solution-body">
-<ol>
-  <li>Use $p^*=0.5$:
-  $$n=\left(\frac{1.960}{0.03}\right)^2(0.5)(0.5)=1067.1\quad\Longrightarrow\quad\boxed{n=1068}$$
-  </li>
-  <li>
-  $$n=\left(\frac{1.960}{0.03}\right)^2(0.15)(0.85)=544.2\quad\Longrightarrow\quad\boxed{n=545}$$
-  </li>
-  <li>The product $p^*(1-p^*)$ is largest at $p^*=0.5$ ($0.25$) and much smaller at $p^*=0.15$ ($0.1275$). Proportions near $0$ or $1$ vary less from sample to sample, so fewer observations are needed. Using $p^*=0.5$ is the safe, conservative choice when nothing is known. If the pilot estimate is too low, the sample from part 2 could give a margin slightly larger than $0.03$.</li>
-  <li>
-  $$\frac{545}{0.70}=778.6\quad\Longrightarrow\quad\boxed{\text{contact }779\text{ farms}}$$
-  This ensures enough <i>completed</i> responses, but it does not fix nonresponse bias. Farms that adopted the practice may be more willing to respond.</li>
-  <li>With $z^*=1.645$:
-  $$n=\left(\frac{1.645}{0.03}\right)^2(0.25)=751.7\quad\Longrightarrow\quad\boxed{n=752}$$
-  Lower confidence needs a smaller sample for the same margin of error.</li>
-</ol>
-
-```{r q6-check, echo=TRUE}
-n_needed <- function(m, p_star, conf = 0.95) {
-  z_star <- qnorm(1 - (1 - conf) / 2)
-  ceiling((z_star / m)^2 * p_star * (1 - p_star))
-}
-n_needed(0.03, 0.50)
-n_needed(0.03, 0.15)
-n_needed(0.03, 0.50, conf = 0.90)
-```
-</div>
-</details>
-:::
-
-::: {.question-card}
-### Question $7$
-
 Historically, $70\%$ of piping plover eggs on a protected PEI beach hatch successfully. After a season with unusually high storm activity, biologists monitor a random sample of $150$ eggs and find that $93$ hatch. They want to know whether the hatching rate has dropped.
 
 1. State the hypotheses.
@@ -454,7 +368,8 @@ Historically, $70\%$ of piping plover eggs on a protected PEI beach hatch succes
   The alternative is lower-tailed because the question asks whether the rate has <i>dropped</i>.</li>
   <li>The eggs are a random sample, and the expected counts <b>under $H_0$</b> are $np_0=150(0.70)=105\ge10$ and $n(1-p_0)=150(0.30)=45\ge10$. The conditions are met. Eggs in the same nest may not be fully independent, which is a limitation worth noting.</li>
   <li>
-  $$\hat{p}=\frac{93}{150}=0.62\qquad SE_0=\sqrt{\frac{(0.70)(0.30)}{150}}=0.0374$$
+  $$\hat{p}=\frac{93}{150}=0.62$$
+  $$SE_0=\sqrt{\frac{(0.70)(0.30)}{150}}=0.0374$$
   $$z=\frac{0.62-0.70}{0.0374}=\boxed{-2.138}$$
   Note that the standard error uses $p_0=0.70$, not $\hat{p}$.</li>
   <li>
@@ -464,18 +379,18 @@ Historically, $70\%$ of piping plover eggs on a protected PEI beach hatch succes
   The biologists <b>cannot</b> conclude that the storms caused the drop. This is an observational comparison with a historical rate, and other factors that changed this season, such as predators, temperature or human disturbance, could also be responsible.</li>
 </ol>
 
-```{r q7-check, echo=TRUE}
+```{r q5-check, echo=TRUE}
 p_hat <- 93 / 150
 z <- (p_hat - 0.70) / sqrt(0.70 * 0.30 / 150)
 c(z = z, p_value = pnorm(z))
 ```
 
-```{r q7-plot}
+```{r q5-plot}
 g <- seq(-4, 4, length.out = 800)
-q7 <- data.frame(z = g, d = dnorm(g))
+q5 <- data.frame(z = g, d = dnorm(g))
 
-ggplot(q7, aes(z, d)) +
-  geom_area(data = subset(q7, z <= -2.138), fill = hw_red, alpha = 0.6) +
+ggplot(q5, aes(z, d)) +
+  geom_area(data = subset(q5, z <= -2.138), fill = hw_red, alpha = 0.6) +
   geom_line(colour = hw_blue, linewidth = 1.1) +
   geom_vline(xintercept = -2.138, linetype = "dashed", colour = hw_red) +
   annotate("text", x = -3.1, y = 0.08, label = "P = 0.0163", colour = hw_red) +
@@ -488,7 +403,7 @@ ggplot(q7, aes(z, d)) +
 :::
 
 ::: {.question-card}
-### Question $8$
+### Question $6$
 
 Are toads "right-pawed"? A researcher observes a random sample of $60$ cane toads removing a strip of paper from their snouts. $36$ use their right forelimb. If toads have no preference, the proportion using the right forelimb would be $0.5$.
 
@@ -506,17 +421,20 @@ Are toads "right-pawed"? A researcher observes a random sample of $60$ cane toad
   $$H_0:p=0.5\qquad H_a:p\neq0.5$$
   The alternative is two-sided because a preference in <i>either</i> direction counts.</li>
   <li>The expected counts are $60(0.5)=30\ge10$ for each side, so the conditions are met.
-  $$\hat{p}=\frac{36}{60}=0.60\qquad SE_0=\sqrt{\frac{(0.5)(0.5)}{60}}=0.0645$$
-  $$z=\frac{0.60-0.50}{0.0645}=\boxed{1.549}\qquad P=2P(Z\ge1.549)\approx\boxed{0.1213}$$
+  $$\hat{p}=\frac{36}{60}=0.60$$
+  $$SE_0=\sqrt{\frac{(0.5)(0.5)}{60}}=0.0645$$
+  $$z=\frac{0.60-0.50}{0.0645}=\boxed{1.549}$$
+  $$P=2P(Z\ge1.549)\approx\boxed{0.1213}$$
   </li>
   <li>Because $0.1213>0.05$, fail to reject $H_0$. The data do not give significant evidence of a forelimb preference.</li>
   <li>The observed counts are $36\ge15$ and $24\ge15$.
-  $$SE=\sqrt{\frac{(0.60)(0.40)}{60}}=0.0632\qquad 0.60\pm1.960(0.0632)=\boxed{(0.476,\ 0.724)}$$
+  $$SE=\sqrt{\frac{(0.60)(0.40)}{60}}=0.0632$$
+  $$0.60\pm1.960(0.0632)=\boxed{(0.476,\ 0.724)}$$
   The interval contains $0.5$, which is consistent with failing to reject. (The interval and test use slightly different standard errors, based on $\hat{p}$ and $p_0$ respectively, so they can occasionally disagree when a result is near the cutoff.)</li>
   <li>Failing to reject $H_0$ does not prove $H_0$. The interval shows that values from about $0.48$ up to $0.72$ are all plausible, so a fairly strong right-paw preference has not been ruled out. With only $60$ toads, the study may simply lack the precision to detect a moderate preference. The correct statement is: "The data do not provide convincing evidence of a preference."</li>
 </ol>
 
-```{r q8-plot, fig.height=2.6}
+```{r q6-plot, fig.height=2.6}
 ci_plot(
   data.frame(method = factor("95% CI"), est = 0.60, lo = 0.476, hi = 0.724),
   xlab = "Proportion using the right forelimb",
@@ -530,7 +448,7 @@ ci_plot(
 :::
 
 ::: {.question-card}
-### Question $9$
+### Question $7$
 
 A veterinary student tests whether more than $30\%$ of dairy cows in a region have subclinical mastitis. In a random sample of $120$ cows, $45$ test positive. The student's work is shown below.
 
@@ -559,7 +477,8 @@ $z=(0.375-0.30)/0.0442=1.697$, so $P=0.0449$<br>
   $$SE_0=\sqrt{\frac{(0.30)(0.70)}{120}}=\boxed{0.0418}$$
   </li>
   <li>
-  $$z=\frac{0.375-0.30}{0.0418}=\boxed{1.793}\qquad P=P(Z\ge1.793)\approx\boxed{0.0365}$$
+  $$z=\frac{0.375-0.30}{0.0418}=\boxed{1.793}$$
+  $$P=P(Z\ge1.793)\approx\boxed{0.0365}$$
   The expected counts $120(0.30)=36$ and $120(0.70)=84$ are both at least $10$, so the test is valid.</li>
   <li>A test never "proves" anything, and a $P$-value just below $0.05$ is moderate evidence, not certainty. A correct conclusion: "Because $P=0.0365<0.05$, we reject $H_0$. There is significant evidence that more than $30\%$ of dairy cows in the region have subclinical mastitis."</li>
   <li>No. A confidence interval has <b>no null value</b>, so it uses the observed $\hat{p}$:
@@ -571,14 +490,14 @@ $z=(0.375-0.30)/0.0442=1.697$, so $P=0.0449$<br>
 :::
 
 ::: {.question-card}
-### Question $10$
+### Question $8$
 
 Public health researchers drag cloths along trails in a random sample of Nova Scotia parks and collect $300$ blacklegged ticks. Laboratory testing finds that $66$ carry *Borrelia burgdorferi*, the bacterium that causes Lyme disease. A report from five years ago estimated that $18\%$ of ticks in the province were infected.
 
 1. **State and plan.** Define $p$, and state hypotheses to test whether the infection rate has changed from $18\%$.
 2. **Solve: test.** Check the conditions, then calculate the test statistic and two-sided $P$-value. State the conclusion at $\alpha=0.05$.
 3. **Solve: interval.** Construct a $95\%$ confidence interval for $p$ and interpret it. Is it consistent with the test?
-4. **Plan the next study.** How many ticks would be needed to estimate $p$ within $\pm0.02$ with $95\%$ confidence, using the current estimate as the planning value?
+4. **Compare.** The test in part 2 and the interval in part 3 use different standard errors. State both values and explain why they differ.
 5. **Scope.** Ticks were only collected along accessible trails. Explain how this could affect the conclusions, and whether a larger sample would fix the problem.
 
 <details class="solution">
@@ -589,34 +508,35 @@ Public health researchers drag cloths along trails in a random sample of Nova Sc
   $$H_0:p=0.18\qquad H_a:p\neq0.18$$
   The alternative is two-sided because the question asks whether the rate has <i>changed</i>, in either direction.</li>
   <li><b>Conditions:</b> the parks were randomly sampled, the tick population is far larger than $3000$, and the expected counts under $H_0$ are $300(0.18)=54\ge10$ and $300(0.82)=246\ge10$.
-  $$\hat{p}=\frac{66}{300}=0.22\qquad SE_0=\sqrt{\frac{(0.18)(0.82)}{300}}=0.0222$$
-  $$z=\frac{0.22-0.18}{0.0222}=\boxed{1.803}\qquad P=2P(Z\ge1.803)\approx\boxed{0.0713}$$
+  $$\hat{p}=\frac{66}{300}=0.22$$
+  $$SE_0=\sqrt{\frac{(0.18)(0.82)}{300}}=0.0222$$
+  $$z=\frac{0.22-0.18}{0.0222}=\boxed{1.803}$$
+  $$P=2P(Z\ge1.803)\approx\boxed{0.0713}$$
   Because $0.0713>0.05$, fail to reject $H_0$. The data do not give significant evidence at the $5\%$ level that the infection rate has changed from $18\%$, although the sample rate of $22\%$ is suggestive.</li>
   <li>The observed counts are $66\ge15$ and $234\ge15$.
-  $$SE=\sqrt{\frac{(0.22)(0.78)}{300}}=0.0239\qquad 0.22\pm1.960(0.0239)=\boxed{(0.173,\ 0.267)}$$
+  $$SE=\sqrt{\frac{(0.22)(0.78)}{300}}=0.0239$$
+  $$m=1.960(0.0239)=0.0469$$
+  $$0.22\pm0.0469=\boxed{(0.173,\ 0.267)}$$
   We are $95\%$ confident that between about $17.3\%$ and $26.7\%$ of ticks in these parks are infected. The interval contains $0.18$, which is consistent with failing to reject. It also shows that rates as high as about $27\%$ are plausible, so a meaningful increase has not been ruled out.</li>
-  <li>Using $p^*=0.22$:
-  $$n=\left(\frac{1.960}{0.02}\right)^2(0.22)(0.78)=1648.0\quad\Longrightarrow\quad\boxed{n=1648}$$
-  (Rounding up: R gives $1647.99$, which becomes $1648$.)</li>
+  <li>The test uses $SE_0=0.0222$, and the interval uses $SE=0.0239$. A test assumes $H_0$ is true, so its standard error is calculated under the null value $p_0=0.18$. A confidence interval has no null value, so it can only use the observed $\hat{p}=0.22$. The same reasoning explains why the test's conditions use expected counts ($np_0$, $n(1-p_0)$) while the interval's conditions use observed counts ($X$, $n-X$).</li>
   <li>Ticks along accessible trails may not represent ticks in the wider park, for example in dense forest or leaf litter away from trails. Trail-side habitat may also be visited by different host animals, which could make infection rates higher or lower there. This is <b>selection bias</b>. The results apply most directly to ticks along trails, which is still relevant for hikers. A larger sample would shrink the margin of error, but it would <b>not</b> fix the bias. It would just give a more precise estimate of the wrong population. Fixing the problem requires changing <i>how</i> ticks are sampled, not <i>how many</i>.</li>
 </ol>
 
-```{r q10-check, echo=TRUE}
+```{r q8-check, echo=TRUE}
 x <- 66; n <- 300; p0 <- 0.18
 p_hat <- x / n
 
 # Test (standard error uses p0)
-z <- (p_hat - p0) / sqrt(p0 * (1 - p0) / n)
-c(z = z, p_value = 2 * pnorm(-abs(z)))
+se_null <- sqrt(p0 * (1 - p0) / n)
+z <- (p_hat - p0) / se_null
+c(se_null = se_null, z = z, p_value = 2 * pnorm(-abs(z)))
 
 # Interval (standard error uses p_hat)
-p_hat + c(-1, 1) * qnorm(0.975) * sqrt(p_hat * (1 - p_hat) / n)
-
-# Sample size for margin 0.02
-ceiling((qnorm(0.975) / 0.02)^2 * 0.22 * 0.78)
+se_ci <- sqrt(p_hat * (1 - p_hat) / n)
+c(se_ci = se_ci, p_hat + c(-1, 1) * qnorm(0.975) * se_ci)
 ```
 
-```{r q10-plot, fig.height=2.6}
+```{r q8-plot, fig.height=2.6}
 ci_plot(
   data.frame(method = factor("95% CI"), est = 0.22, lo = 0.173, hi = 0.267),
   xlab = "Proportion of ticks carrying B. burgdorferi",

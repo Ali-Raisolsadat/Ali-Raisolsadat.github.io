@@ -360,8 +360,8 @@ $$
 1. Describe the most important feature of the distribution.
 2. Is a one-sample $t$ confidence interval appropriate without further investigation? Explain.
 3. Why can the unusual value affect both $\bar{x}$ and $s$?
-4. What should the botanist check before deciding how to proceed?
-5. If $17.2$ is confirmed as a valid observation, should it be deleted just because it changes the result?
+4. According to the robustness guidelines, what would a sample of $11$ observations need to look like for a $t$ procedure to be appropriate?
+5. Suppose instead the botanist had a sample of $50$ acorns that included the same extreme value. Would the larger sample size remove the concern? Explain.
 
 <details class="solution">
 <summary>Show solution</summary>
@@ -369,9 +369,9 @@ $$
 <ol>
   <li>Ten observations lie between $3.8$ and $5.0$ cm$^3$, while $17.2$ cm$^3$ is an extreme high outlier, more than three times the next largest value.</li>
   <li>No. The sample is small ($n<15$) and contains an extreme outlier. One-sample $t$ procedures are not robust to outliers, especially with only $11$ observations.</li>
-  <li>The outlier pulls the mean upward: $\bar{x}=5.573$ with it, compared with $4.410$ without it. It also inflates the standard deviation, because its squared distance from the mean is very large: $s=3.875$ with it, compared with $0.396$ without it. Both the centre and the estimated standard error of the interval change dramatically.</li>
-  <li>The botanist should check the units, the decimal placement (for example, $17.2$ might be a mistyped $1.72$ or $4.72$), data entry and the measurement procedure. They should also ask whether the acorn really came from the intended population or from a different species or subgroup.</li>
-  <li>No. A valid observation should not be removed just to get a preferred result. Any exclusion needs a scientific or measurement-based reason and should be reported openly. A sensitivity analysis, which reports results with and without the value, is a transparent approach.</li>
+  <li>The outlier pulls the mean upward: $\bar{x}=5.573$ with it, compared with $4.410$ without it. It also inflates the standard deviation, because its squared distance from the mean is very large: $s=3.875$ with it, compared with $0.396$ without it. Both the centre and the standard error of the interval change dramatically.</li>
+  <li>For $n<15$, the data should be close to symmetric and single-peaked, with <b>no outliers</b>. The first ten values alone would meet this guideline, but the full sample does not.</li>
+  <li>No. The $t$ procedures are robust to non-Normality for larger samples, but they are <b>not robust to outliers</b>. Even with $n\ge40$, an influential outlier still pulls $\bar{x}$ and inflates $s$, so it must be investigated before the result can be trusted.</li>
 </ol>
 
 ```{r q5-plot, fig.height=2.6}
@@ -410,7 +410,8 @@ A wildlife hospital evaluates a new rehabilitation protocol for grey seals. Hist
   $$\operatorname{SE}=\frac{7.5}{\sqrt{20}}\approx\boxed{1.677\text{ days}}$$
   </li>
   <li>
-  $$t=\frac{42.8-46}{1.677}\approx\boxed{-1.908},\qquad df=20-1=\boxed{19}$$
+  $$t=\frac{42.8-46}{1.677}\approx\boxed{-1.908}$$
+  $$df=20-1=\boxed{19}$$
   </li>
   <li>Because the alternative is lower-tailed,
   $$P=P(T_{19}\leq-1.908)\approx\boxed{0.0358}$$
@@ -462,13 +463,16 @@ A reference source states that the population mean serum thyroxine concentration
   </li>
   <li>
   $$\operatorname{SE}=\frac{0.75}{\sqrt{25}}=0.150$$
-  $$t=\frac{2.65-3.0}{0.150}=\boxed{-2.333},\qquad df=24$$
+  $$t=\frac{2.65-3.0}{0.150}=\boxed{-2.333}$$
+  $$df=24$$
   </li>
   <li>
   $$P=2P(T_{24}\leq-2.333)\approx\boxed{0.0283}$$
   </li>
   <li>Because $0.0283<0.05$, reject $H_0$. The data give statistically significant evidence that the regional mean thyroxine concentration differs from $3.0$ $\mu$g/dL. The sample suggests it is lower.</li>
-  <li>The margin of error is $m=2.064(0.150)=0.3096$, so
+  <li>The margin of error is
+  $$m=2.064(0.150)=0.3096$$
+  so
   $$2.65\pm0.3096=\boxed{(2.340,\ 2.960)\ \mu\text{g/dL}}$$
   We are $95\%$ confident that the regional population mean is between about $2.340$ and $2.960$ $\mu$g/dL. The interval excludes $3.0$, which agrees with the two-sided test at $\alpha=0.05$.</li>
 </ol>
@@ -493,11 +497,14 @@ A PEI mussel grower historically harvested mussels with population mean shell le
 <ol>
   <li>The standard error is
   $$\operatorname{SE}=\frac{6}{\sqrt{36}}=1.000\text{ mm}$$
-  The margin of error is $2.030(1)=2.030$ mm, so
+  The margin of error is
+  $$m=2.030(1)=2.030\text{ mm}$$
+  so
   $$58.1\pm2.030=\boxed{(56.070,\ 60.130)\text{ mm}}$$
   </li>
   <li>
-  $$t=\frac{58.1-60}{1.000}=\boxed{-1.900},\qquad df=35$$
+  $$t=\frac{58.1-60}{1.000}=\boxed{-1.900}$$
+  $$df=35$$
   </li>
   <li>
   $$P=2P(T_{35}\leq-1.900)\approx\boxed{0.0657}$$
@@ -545,7 +552,8 @@ A freshwater ecologist studies dissolved oxygen in a stream where a management b
   </li>
   <li>
   $$\operatorname{SE}=\frac{1.1}{\sqrt{15}}\approx0.284$$
-  $$t=\frac{8.4-8.0}{0.284}\approx\boxed{1.408},\qquad df=14$$
+  $$t=\frac{8.4-8.0}{0.284}\approx\boxed{1.408}$$
+  $$df=14$$
   </li>
   <li>
   $$P=P(T_{14}\geq1.408)\approx\boxed{0.0904}$$
@@ -590,12 +598,15 @@ $$
   $$\operatorname{SE}=\frac{2.878}{\sqrt{8}}\approx\boxed{1.018\text{ mmHg}}$$
   </li>
   <li>
-  $$t=\frac{-6.5-0}{1.018}\approx\boxed{-6.387},\qquad df=7$$
+  $$t=\frac{-6.5-0}{1.018}\approx\boxed{-6.387}$$
+  $$df=7$$
   </li>
   <li>
   $$P=P(T_7\leq-6.387)\approx\boxed{0.0002}$$
   The data give very strong evidence that the mean after-minus-before difference is negative. In other words, blood pressure tends to fall after treatment.</li>
-  <li>The margin of error is $m=2.365(1.018)\approx2.406$, so
+  <li>The margin of error is
+  $$m=2.365(1.018)\approx2.406$$
+  so
   $$-6.500\pm2.406=\boxed{(-8.906,\ -4.094)\text{ mmHg}}$$
   We are $95\%$ confident that, for dogs like those studied, mean systolic blood pressure falls by between about $4.1$ and $8.9$ mmHg after treatment. With no untreated control group, part of this drop could be due to something other than the treatment, such as dogs getting used to the procedure.</li>
 </ol>
@@ -644,7 +655,9 @@ $$
   $$s_d\approx\boxed{0.569\text{ cm}}$$
   $$\operatorname{SE}=\frac{0.569}{\sqrt{10}}\approx\boxed{0.180\text{ cm}}$$
   </li>
-  <li>The margin of error is $m=2.262(0.180)\approx0.407$, so
+  <li>The margin of error is
+  $$m=2.262(0.180)\approx0.407$$
+  so
   $$1.780\pm0.407=\boxed{(1.373,\ 2.187)\text{ cm}}$$
   </li>
   <li>We are $95\%$ confident that the population mean increase in stride length after the program is between about $1.37$ and $2.19$ cm.</li>
@@ -662,11 +675,11 @@ t.test(stride, conf.level = 0.95)$conf.int
 ::: {.question-card}
 ### Question $12$
 
-For each study, decide whether the data are one sample, matched pairs or two independent samples. State the appropriate $t$ procedure.
+For each study, decide whether the data are one sample or matched pairs. State the appropriate $t$ procedure and its degrees of freedom.
 
 1. Blood glucose is measured in $18$ dogs before and after insulin treatment.
 2. Body mass is measured for a random sample of $30$ adult raccoons.
-3. Wing length is compared between unrelated samples of male and female songbirds.
+3. Shell thickness is measured for a random sample of $40$ snails from one pond.
 4. Twelve agricultural fields are grouped into six matched pairs based on soil type, and the two fertilizers are randomly assigned within each pair.
 5. Each of $20$ laboratory specimens is measured twice, once with each of two different instruments.
 
@@ -676,8 +689,8 @@ For each study, decide whether the data are one sample, matched pairs or two ind
 <ol>
   <li><b>Matched pairs.</b> Each dog gives two linked measurements. Calculate the after-minus-before difference for each dog and use a one-sample $t$ procedure on the $18$ differences ($df=17$).</li>
   <li><b>One sample.</b> Use a one-sample $t$ procedure for the population mean raccoon mass ($df=29$).</li>
-  <li><b>Two independent samples.</b> The male and female birds are unrelated individuals, so use a two-sample $t$ procedure (Chapter $18$). A paired analysis would be wrong because there is nothing to pair.</li>
-  <li><b>Matched pairs.</b> The fields were deliberately matched. Calculate the fertilizer difference within each of the six pairs and use a one-sample $t$ procedure on those differences ($df=5$).</li>
+  <li><b>One sample.</b> Each snail gives one measurement. Use a one-sample $t$ procedure for the population mean shell thickness ($df=39$).</li>
+  <li><b>Matched pairs.</b> The fields were deliberately matched. Calculate the fertilizer difference within each of the six pairs and use a one-sample $t$ procedure on those differences ($df=5$, the number of pairs minus one, not $12-1$).</li>
   <li><b>Matched pairs.</b> Both measurements come from the same specimen. Calculate one instrument difference per specimen and use a paired $t$ procedure on the $20$ differences ($df=19$).</li>
 </ol>
 </div>
@@ -702,7 +715,7 @@ A researcher is considering one-sample $t$ inference in each situation below. Fo
   <li><b>Reasonable.</b> For $n<15$, the data must be close to symmetric with no outliers, and they are.</li>
   <li><b>Not reliable.</b> Strong skewness in a sample this small means the sampling distribution of $\bar{x}$ may be far from Normal.</li>
   <li><b>Generally reasonable.</b> For $15\le n<40$, mild skewness with no outliers is acceptable.</li>
-  <li><b>Generally reasonable.</b> With $n\ge40$, the Central Limit Theorem makes $\bar{x}$ approximately Normal even for a strongly skewed population. The researcher should still check that the largest values are not overly influential and that a mean is a sensible summary of a skewed variable.</li>
+  <li><b>Generally reasonable.</b> With $n\ge40$, the Central Limit Theorem makes $\bar{x}$ approximately Normal even for a strongly skewed population. The researcher should still check that the largest values are not overly influential.</li>
   <li><b>Not appropriate for generalizing.</b> A Normal shape and a large $n$ do not fix the sampling problem. A convenience sample may be biased, and no sample size removes bias. The calculation can describe the observed data, but it does not justify conclusions about a wider population.</li>
 </ol>
 </div>
@@ -790,10 +803,13 @@ The reference population mean is $130$ mmol/L.
   $$H_0:\mu=130\qquad H_a:\mu\neq130$$
   </li>
   <li>
-  $$t=\frac{132.583-130}{0.802}\approx\boxed{3.221},\qquad df=11$$
+  $$t=\frac{132.583-130}{0.802}\approx\boxed{3.221}$$
+  $$df=11$$
   $$P=2P(T_{11}\geq3.221)\approx\boxed{0.0081}$$
   </li>
-  <li>The margin of error is $m=2.201(0.802)\approx1.765$, so
+  <li>The margin of error is
+  $$m=2.201(0.802)\approx1.765$$
+  so
   $$132.583\pm1.765=\boxed{(130.818,\ 134.349)\text{ mmol/L}}$$
   </li>
   <li>Because $0.0081<0.05$, reject $H_0$. The data give statistically significant evidence that the population mean sodium concentration differs from $130$ mmol/L. We are $95\%$ confident that it lies between about $130.8$ and $134.3$ mmol/L, which is above the reference value.<br>
@@ -849,7 +865,7 @@ A dairy researcher records the daily milk yield, in kg/day, of the same $10$ cow
 2. Calculate the ten differences, $\bar{d}$, $s_d$ and the standard error.
 3. Calculate the test statistic, degrees of freedom and $P$-value. State a conclusion at $\alpha=0.05$.
 4. Construct a $95\%$ confidence interval for $\mu_d$ using $t^*=2.262$ and interpret it.
-5. A classmate ignores the pairing and analyzes the data as two independent samples. They get a standard error of $1.298$ kg/day and a one-sided $P$-value of $0.194$. Explain why their result is so different, and why it is wrong.
+5. A classmate defines the difference the other way, as $d=\text{before}-\text{after}$. What would their $\bar{d}$, test statistic, alternative hypothesis and confidence interval be? Would their conclusion change?
 
 <details class="solution">
 <summary>Show solution</summary>
@@ -862,28 +878,35 @@ A dairy researcher records the daily milk yield, in kg/day, of the same $10$ cow
   </li>
   <li>The differences are
   $$1.5,\ 0.8,\ 1.7,\ 0.4,\ 1.8,\ -0.1,\ 1.6,\ 0.9,\ 1.6,\ 1.3$$
-  $$\bar{d}=\frac{11.5}{10}=\boxed{1.150\text{ kg/day}}\qquad s_d\approx\boxed{0.631\text{ kg/day}}$$
+  $$\bar{d}=\frac{11.5}{10}=\boxed{1.150\text{ kg/day}}$$
+  $$s_d\approx\boxed{0.631\text{ kg/day}}$$
   $$\operatorname{SE}=\frac{0.631}{\sqrt{10}}\approx\boxed{0.200\text{ kg/day}}$$
   </li>
   <li>
-  $$t=\frac{1.150-0}{0.200}\approx\boxed{5.762},\qquad df=9$$
+  $$t=\frac{1.150-0}{0.200}\approx\boxed{5.762}$$
+  $$df=9$$
   $$P=P(T_9\ge5.762)\approx\boxed{0.0001}$$
   Because $0.0001<0.05$, reject $H_0$. There is very strong evidence that mean milk yield increased after the switch to the new feed.</li>
-  <li>The margin of error is $m=2.262(0.200)\approx0.451$, so
+  <li>The margin of error is
+  $$m=2.262(0.200)\approx0.451$$
+  so
   $$1.150\pm0.451=\boxed{(0.699,\ 1.601)\text{ kg/day}}$$
   We are $95\%$ confident that the mean increase in daily milk yield is between about $0.70$ and $1.60$ kg/day.<br>
   <b>Caution:</b> there was no control group and the feed was not randomized, so changes over time, such as season or stage of lactation, could also explain part of the increase.</li>
-  <li>Cows differ greatly from one another: their yields range from about $25$ to $35$ kg/day. The independent-samples analysis treats all of that cow-to-cow variation as noise, so its standard error is $1.298$, about six times the paired SE of $0.200$. The same $1.15$ kg/day increase then looks small, giving $P=0.194$.<br>
-  The analysis is wrong because the two samples are <b>not independent</b>: they are the same cows. Pairing removes the cow-to-cow variation by comparing each cow with itself. The analysis must match the design.</li>
+  <li>Reversing the subtraction flips every sign:
+  $$\bar{d}=\boxed{-1.150\text{ kg/day}}\qquad t=\boxed{-5.762}$$
+  An increase in yield now gives a <i>negative</i> difference, so the alternative becomes
+  $$H_a:\mu_d<0$$
+  The interval becomes $\boxed{(-1.601,\ -0.699)}$ kg/day. The standard error, degrees of freedom and $P$-value ($0.0001$) are unchanged, so the conclusion is exactly the same. Both definitions test the same effect, as long as the alternative is written to match how $d$ is defined.</li>
 </ol>
 
 ```{r q16-check, echo=TRUE}
 before <- c(28.4, 31.2, 25.6, 34.0, 29.8, 27.1, 32.5, 30.3, 26.9, 33.6)
 after  <- c(29.9, 32.0, 27.3, 34.4, 31.6, 27.0, 34.1, 31.2, 28.5, 34.9)
 
-t.test(after, before, paired = TRUE, alternative = "greater")   # correct
+t.test(after, before, paired = TRUE, alternative = "greater")   # d = after - before
 t.test(after, before, paired = TRUE)$conf.int
-t.test(after, before, alternative = "greater")                  # ignores pairing
+t.test(before, after, paired = TRUE, alternative = "less")      # d = before - after
 ```
 
 ```{r q16-plot, fig.height=3.8}
@@ -897,7 +920,7 @@ ggplot(cows, aes(time, yield, group = cow)) +
   geom_line(colour = hw_grey, linewidth = 0.9) +
   geom_point(size = 2.8, colour = hw_blue) +
   labs(title = "Each Line Is One Cow",
-       subtitle = "Cows differ a lot from each other, but almost every line rises",
+       subtitle = "Almost every line rises after the switch to the new feed",
        x = NULL, y = "Milk yield (kg/day)") +
   hw_theme
 ```

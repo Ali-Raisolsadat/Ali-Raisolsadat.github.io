@@ -703,6 +703,7 @@ Since $6.6$ is \textbf{outside} this interval, we reject $H_0$. So the general r
 \end{block}
 \end{frame}
 
+% 30
 % ---------- BREAK SLIDE ----------
 \begin{frame}[plain]
   \centering
@@ -715,47 +716,66 @@ Since $6.6$ is \textbf{outside} this interval, we reject $H_0$. So the general r
 \section{Matched Pairs}
 % =============================================================
 
-% 28
+% 31
 \begin{frame}{Matched Pairs: Two Measurements Become One Sample}
+A \textbf{matched-pairs design} compares two related measurements, either from the same individual or from two similar individuals. Pairing helps account for individual differences, allowing us to focus on the effect of interest.
+
+\vspace{0.2cm}
 \textbf{Common paired designs}
 \begin{itemize}
   \item Before and after treatment on the same individual
   \item Both treatments given to each subject at different times
-  \item Subjects matched on age, sex, baseline condition and so on
+  \item Subjects matched on demographics
 \end{itemize}
 
 \vspace{0.2cm}
 For each pair, compute \textbf{one difference}:
-\[
-d_i=\text{(condition 2)}-\text{(condition 1)}
-\]
-Then apply the one-sample $t$ procedures to $d_1,\ldots,d_n$. The parameter is $\mu_d$, and $df=n-1$, where $n$ is the \textbf{number of pairs}.
+$$d_i=\text{(condition 2)}-\text{(condition 1)}$$
+
+\vspace{0.1cm}
+Then apply the one-sample $t$ procedures to $d_1,\ldots,d_n$.
+
+The parameter is $\mu_d$, and $df=n-1$, where $n$ is the \textbf{number of pairs}, not the number of measurements.
 \end{frame}
 
-% 29
-\begin{frame}{Direction of the Difference and Conditions}
+% 32
+\begin{frame}{Matched Pairs: Choosing the Alternative Hypothesis}
+
+\small
+In a matched-pairs test, the alternative hypothesis depends on \textbf{how we define the difference} and what we consider an improvement.
+
+\vspace{0.1cm}
+\textbf{Example:} Suppose a treatment is intended to reduce PWV. A lower PWV after treatment indicates improvement.
 \begin{center}
-\begin{tabularx}{0.80\textwidth}{>{\RaggedRight\arraybackslash}p{0.30\textwidth} X X}
+\small
+\begin{tabularx}{0.90\textwidth}{
+>{\RaggedRight\arraybackslash}p{0.33\textwidth}
+>{\centering\arraybackslash}X
+>{\centering\arraybackslash}X}
 \toprule
 \textbf{Definition} & \textbf{Improvement means} & \textbf{Alternative} \\
 \midrule
-$d=\text{after}-\text{before}$ & negative $d$ & $H_a:\mu_d<0$ \\
-$d=\text{before}-\text{after}$ & positive $d$ & $H_a:\mu_d>0$ \\
+$d=\text{after}-\text{before}$
+& Negative $d$
+& $H_a:\mu_d<0$ \\[0.15cm]
+$d=\text{before}-\text{after}$
+& Positive $d$
+& $H_a:\mu_d>0$ \\
 \bottomrule
 \end{tabularx}
 \end{center}
-Either works. Define it \textbf{before} writing the hypotheses and use it consistently.
+\textbf{Why does the direction change?}
 
-\vspace{0.3cm}
-\textbf{The conditions apply to the differences:}
-\begin{itemize}
-  \item The pairs are independent of one another
-  \item The differences are close enough to Normal for $n$, especially with no outliers
-\end{itemize}
-The two values \emph{within} a pair are expected to be dependent. That is the reason for pairing them.
+Suppose PWV decreases from $12$ m/s to $8$ m/s.
+$$d=\text{after}-\text{before}=8-12=-4$$
+
+A reduction produces a negative difference, so we test:
+$$H_0:\mu_d=0 \qquad \boxed{H_a:\mu_d<0}$$
+
+\textbf{Note}:Both definitions test the same treatment effect. Changing the order of subtraction reverses the sign of the differences and the direction of the alternative hypothesis.
 \end{frame}
 
-% 30
+% 33
 \begin{frame}{Example 17.4: Does Lonafarnib Lower PWV?}
 The same 18 children were treated with lonafarnib for two years. PWV was measured before and after.
 
@@ -783,9 +803,11 @@ The same 18 children were treated with lonafarnib for two years. PWV was measure
 The sample is the $18$ differences, not the $36$ raw measurements.
 \end{frame}
 
-% 31
+% 34
 \begin{frame}{Example 17.4: Hypotheses and Data Check}
-\step{Plan} Define $d=\text{after}-\text{before}$, so a reduction gives a negative $d$. Test $H_0:\mu_d=0$ against $H_a:\mu_d<0$.
+\step{Plan} Define $d=\text{after}-\text{before}$, so a reduction gives a negative $d$. 
+
+Test $H_0:\mu_d=0$ against $H_a:\mu_d<0$.
 
 \vspace{0.1cm}
 \begin{columns}[T]
@@ -803,87 +825,92 @@ The sample is the $18$ differences, not the $36$ raw measurements.
 PWV fell for 17 of the 18 children. The differences are mildly skewed with no extreme outlier.
 \end{frame}
 
-% 32
+% 35
 \begin{frame}{Example 17.4: Test Statistic and $P$-Value}
 \step{Solve}
-\begin{columns}[T]
-\begin{column}{0.46\textwidth}
 \textbf{Summary of the differences}
-\[
-n=18,\quad\bar{d}=-3.917,\quad s_d=2.644
-\]
+$$n=18,\quad\bar{d}=-3.917,\quad s_d=2.644$$
 \textbf{Standard error}
-\[
-SE_{\bar{d}}=\frac{2.644}{\sqrt{18}}=0.623
-\]
-\end{column}
-\begin{column}{0.50\textwidth}
+$$SE_{\bar{d}}=\frac{2.644}{\sqrt{18}}=0.623$$
 \textbf{Test statistic}, $df=17$
-\[
-t=\frac{-3.917-0}{0.623}=-6.29
-\]
+$$t=\frac{-3.917-0}{0.623}=-6.29$$
 \textbf{$P$-value} (lower tail)
-\[
-P(T\le-6.29)\approx0.0000041
-\]
-\end{column}
-\end{columns}
+$$P(T\le-6.29)=P(T\geq6.29)<0.0005$$
 
 \vspace{0.3cm}
-\step{Conclude} There is very strong evidence that lonafarnib lowers mean PWV in comparable children with progeria.
+\step{Conclude} Since $\text{p-value} < 0.05$ then there is very strong evidence that lonafarnib lowers mean PWV in comparable children with progeria. So we reject the $H_0:\mu_d=0$.
 \end{frame}
 
-% 33
-\begin{frame}[fragile]{Example 17.4: Confidence Interval and R}
-\begin{columns}[T]
-\begin{column}{0.42\textwidth}
-\textbf{95\% CI for $\mu_d$} ($t^*=2.110$)
-\[
--3.917\pm2.110(0.623)
-\]
-\[
-\boxed{(-5.23,\ -2.60)\text{ m/s}}
-\]
-The estimated mean \textbf{reduction} is between $2.60$ and $5.23$ m/s.
-\end{column}
-\begin{column}{0.54\textwidth}
+% 36
+\begin{frame}{Example 17.4: Confidence Interval Calculation}
+
+\small
+\textbf{Step 1:} Find the critical $t$ value.
+For a $95\%$ CI, $\alpha=0.05$, so each tail contains $0.025$ and $df=n-1=18-1=17$
+
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{3.2pt}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{c|ccccccccccc}
+\toprule
+\textbf{Upper tail}
+& $.25$ & $.20$ & $.15$ & $.10$ & $.05$
+& $\mathbf{.025}$ & $.01$ & $.005$ & $.0025$
+& $.001$ & $.0005$ \\
+\midrule
+$\mathbf{17}$
+& $.689$ & $.863$ & $1.069$ & $1.333$
+& $1.740$ & $\mathbf{2.110}$ & $2.567$ & $2.898$
+& $3.222$ & $3.646$ & $3.965$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+$$\boxed{t^*=2.110}$$
+
+\vspace{0.05cm}
+\textbf{Step 2:} Calculate the margin of error.
+$$m=t^*SE_{\bar{d}}=2.110(0.623)=1.315$$
+
+\vspace{0.05cm}
+\textbf{Step 3:} Construct the confidence interval.
+$$\bar{d}\pm m=-3.917\pm1.315$$
+$$\boxed{(-5.23,\ -2.60)\text{ m/s}}$$
+\end{frame}
+
+% 37
+\begin{frame}[fragile]{Example 17.4: R Calculation and Interpretation}
+
+\small
+\textbf{Paired $t$ test in R}
 \begin{lstlisting}[style=Rstyle]
 t.test(after, before, paired = TRUE,
        alternative = "less")
-# t = -6.2858, df = 17, p = 4.1e-06
 
-t.test(after, before,
-       paired = TRUE)$conf.int
-# [1] -5.231289 -2.602044
+# t = -6.2858, df = 17
+# p-value = 4.1e-06
 \end{lstlisting}
-\small R computes \texttt{after - before}, which matches our definition of $d$.
-\end{column}
-\end{columns}
-
-\vspace{0.3cm}
-Whether a reduction of this size is \emph{clinically} important depends on how PWV relates to health outcomes, on side effects and on how much responses vary between patients.
-\end{frame}
-
-% 34
-\begin{frame}{Why the Pairing Must Be Preserved}
-\slidefig[0.40]{slide_ch17_paired_vs_independent.png}
-
-\vspace{-0.2cm}
-\begin{itemize}
-  \item Each child acts as their own control, which removes the large child-to-child differences in baseline PWV
-  \item Treating the 36 values as two unrelated groups gives the same estimate, but the SE grows from $0.62$ to $0.97$
-  \item Without \texttt{paired = TRUE}, R runs exactly this wrong analysis
-\end{itemize}
 
 \vspace{0.1cm}
-\centering\textbf{The analysis must match the design.}
+\textbf{95\% confidence interval in R}
+\begin{lstlisting}[style=Rstyle]
+t.test(after, before, paired = TRUE,
+       conf.level = 0.95)$conf.int
+
+# [1] -5.231289 -2.602044
+\end{lstlisting}
+$$\boxed{95\%\text{ CI}=(-5.23,\ -2.60)\text{ m/s}}$$
+\begin{block}{Interpretation}
+We are $95\%$ confident that the population mean difference (after $-$ before) is between $-5.23$ and $-2.60$ m/s. Equivalently, the estimated mean \textbf{reduction} is between $2.60$ and $5.23$ m/s.
+\end{block}
 \end{frame}
+
 
 % =============================================================
 \section{Robustness}
 % =============================================================
 
-% 35
+% 38
 \begin{frame}{Robustness of $t$ Procedures}
 A procedure is \textbf{robust} if moderate violations of its conditions barely change its confidence level or $P$-values.
 
@@ -906,7 +933,7 @@ $n\ge40$ & Even strong skewness is usually fine. Still investigate influential o
 These are guidelines, not automatic rules.
 \end{frame}
 
-% 36
+% 39
 \begin{frame}{Sample Size and Shape: Three Illustrations}
 \slidefig[0.50]{slide_ch17_robustness.png}
 
@@ -915,89 +942,6 @@ These are guidelines, not automatic rules.
   \item \textbf{Moderate sample, mild skew:} acceptable
   \item \textbf{Large sample, strong skew:} by the CLT, $\bar{x}$ is still approximately Normal
 \end{itemize}
-\end{frame}
-
-% 37
-\begin{frame}{Example 17.5: Four Real Samples}
-\begin{center}
-\begin{tabularx}{0.95\textwidth}{>{\RaggedRight\arraybackslash}p{0.24\textwidth} >{\centering\arraybackslash}p{0.09\textwidth} X}
-\toprule
-\textbf{Dataset} & \textbf{$n$} & \textbf{Assessment} \\
-\midrule
-Oak acorn volumes & $11$ & One extreme outlier: $t$ is \textcolor{CourseRed}{\textbf{unreliable}} \\
-Aleppo pine needles & $15$ & Mild right skew, no outliers: \textcolor{CourseGreen}{\textbf{acceptable}} \\
-Brown treesnake weights & $\approx500$ & Strong skew is fine at this $n$, but check the heaviest snake \\
-Wild bee cocoon widths & $\approx800$ & The calculation is stable, but the distribution is \textbf{bimodal} \\
-\bottomrule
-\end{tabularx}
-\end{center}
-
-\vspace{0.2cm}
-\begin{block}{The Bee Lesson}
-The two peaks are females and males. A pooled mean depends on the sex ratio in the sample, so separate means answer the biological question better. A method can be mathematically stable while the parameter is scientifically unhelpful.
-\end{block}
-\end{frame}
-
-% 38
-\begin{frame}{When You Find an Outlier}
-\textbf{Investigate it. Do not delete it automatically.}
-\begin{enumerate}
-  \setlength{\itemsep}{0.1cm}
-  \item Check for data-entry, unit or measurement errors
-  \item Ask whether the observation belongs to the target population
-  \item Run a \textbf{sensitivity analysis}: compute the result with and without it, and report both
-  \item Justify any exclusion. Never remove a value just because it gives a preferred result
-\end{enumerate}
-
-\vspace{0.2cm}
-\begin{block}{What a Large $n$ Cannot Do}
-It cannot correct selection bias, create independence, remove confounding, repair measurement error or turn a mixture of groups into one population.
-\end{block}
-\end{frame}
-
-% =============================================================
-\section{Summary}
-% =============================================================
-
-% 39
-\begin{frame}{Choosing the Correct Procedure}
-\begin{center}
-\begin{tabularx}{0.92\textwidth}{>{\RaggedRight\arraybackslash}p{0.34\textwidth} >{\centering\arraybackslash}p{0.12\textwidth} X}
-\toprule
-\textbf{Study structure} & \textbf{Parameter} & \textbf{Procedure} \\
-\midrule
-One quantitative sample & $\mu$ & One-sample $t$ interval or test \\
-Same subjects measured twice & $\mu_d$ & Paired $t$ on the differences \\
-Matched pairs of subjects & $\mu_d$ & Paired $t$ on the differences \\
-Two unrelated groups & $\mu_1-\mu_2$ & Two-sample $t$ (Chapter 18) \\
-\bottomrule
-\end{tabularx}
-\end{center}
-
-\vspace{0.3cm}
-\textbf{Before any $t$ procedure, ask:}
-\begin{itemize}
-  \item What is the population, and how were the data obtained?
-  \item Are the observations paired? What does the graph show?
-  \item Does the alternative match the research question?
-\end{itemize}
-\end{frame}
-
-% 40
-\begin{frame}{Chapter 17 Summary}
-\begin{itemize}
-  \setlength{\itemsep}{0.12cm}
-  \item When $\sigma$ is unknown, use the standard error $s/\sqrt{n}$ and the $t(n-1)$ distribution
-  \item \textbf{Interval:} $\bar{x}\pm t^*\,s/\sqrt{n}$ \qquad \textbf{Test:} $t=(\bar{x}-\mu_0)/(s/\sqrt{n})$
-  \item \textbf{Matched pairs:} take the differences, then use one-sample $t$ with $df=n_{\text{pairs}}-1$
-  \item \textbf{Robustness:} non-Normality is tolerated as $n$ grows. Outliers and bad design are not
-  \item \textbf{R:} \texttt{pt()}, \texttt{qt()}, \texttt{t.test(x, mu = , alternative = )}, \texttt{t.test(after, before, paired = TRUE)}
-\end{itemize}
-
-\vspace{0.2cm}
-\begin{block}{Final Principle}
-The calculation measures sampling uncertainty. The design, data quality and scientific context decide what the result means.
-\end{block}
 \end{frame}
 
 \end{document}
